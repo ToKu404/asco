@@ -276,7 +276,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 12.0),
                     child: Text(
-                      "Lanjutkan untuk mulai menggunakan asco. Aplikasi ini khusus asisten dan praktikan.",
+                      "Aplikasi ini khusus asisten dan praktikan. Tekan lanjutkan untuk mulai menggunakan.",
                     ),
                   ),
                   const SizedBox(
