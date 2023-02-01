@@ -1,4 +1,9 @@
+import 'dart:async';
+import 'package:asco/core/constants/asset_path.dart';
+import 'package:asco/core/constants/color_const.dart';
+import 'package:asco/src/presentations/features/login/welcome_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -9,7 +14,73 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   @override
+  void didChangeDependencies() {
+    // Will change page after two second
+    super.didChangeDependencies();
+    Timer(const Duration(seconds: 5), () {
+      if (mounted) {
+        showWelcomePage(context: context);
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: Container(
+                color: Palette.purple80,
+              ),
+            ),
+            Positioned(
+              top: 0,
+              left: 0,
+              child: SvgPicture.asset(
+                AssetPath.getVector('bg_attribute.svg'),
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: RotatedBox(
+                quarterTurns: -2,
+                child: SvgPicture.asset(
+                  AssetPath.getVector('bg_attribute.svg'),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 116,
+                    width: 116,
+                    child: SvgPicture.asset(
+                      AssetPath.getVector('logo1.svg'),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 4,
+                  ),
+                  const Text(
+                    'asco',
+                    style: TextStyle(
+                        fontSize: 44,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w500,
+                        color: Palette.white),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

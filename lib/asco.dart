@@ -1,3 +1,4 @@
+import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/src/presentations/features/initial/splash_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,12 +13,12 @@ class AscoApp extends StatelessWidget {
       DeviceOrientation.portraitDown,
     ]);
 
-    // SystemChrome.setSystemUIOverlayStyle(
-    //   const SystemUiOverlayStyle(
-    //     systemNavigationBarColor: Palette.primary,
-    //     statusBarColor: Palette.teritory,
-    //   ),
-    // );
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        systemNavigationBarColor: Palette.purple80,
+        statusBarColor: Palette.purple80,
+      ),
+    );
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,

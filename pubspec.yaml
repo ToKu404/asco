@@ -13,6 +13,7 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.2
   flutter_svg: ^1.1.6
+  rive: ^0.10.0
 
 dev_dependencies:
   flutter_test:
@@ -26,13 +27,19 @@ flutter:
   assets:
     - assets/icons/
     - assets/images/
+    - assets/vectors/
+    - assets/rive_assets/
+
+
 
   fonts:
     - family: Poppins
       fonts:
         - asset: fonts/Poppins-Regular.ttf
         - asset: fonts/Poppins-SemiBold.ttf
-          weight: 700
+          weight: 500
+        - asset: fonts/Poppins-ExtraBold.ttf
+          weight: 900
 
 flutter_icons:
   android: "launcher_icon"
