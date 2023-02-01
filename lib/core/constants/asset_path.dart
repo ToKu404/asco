@@ -10,4 +10,8 @@ class AssetPath {
   static String getImage(String fileName) {
     return 'assets/images/$fileName';
   }
+
+  static String getIcons(String fileName) {
+    return 'assets/icons/$fileName';
+  }
 }

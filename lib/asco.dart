@@ -15,8 +15,8 @@ class AscoApp extends StatelessWidget {
 
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
-        systemNavigationBarColor: Palette.purple80,
-        statusBarColor: Palette.purple80,
+        systemNavigationBarColor: Palette.blackPurple,
+        statusBarColor: Palette.blackPurple,
       ),
     );
 

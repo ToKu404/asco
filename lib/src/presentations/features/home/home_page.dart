@@ -1,9 +1,12 @@
+import 'dart:math';
+
 import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/presentations/widgets/app_bar_title.dart';
+import 'package:asco/src/presentations/widgets/side_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -19,8 +22,156 @@ void showHomePage({required BuildContext context}) {
       (route) => false);
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
+  final ValueNotifier<bool> isSideMenuClosed = ValueNotifier(true);
+
+  @override
+  void dispose() {
+    super.dispose();
+    isSideMenuClosed.dispose();
+  }
+
+  late AnimationController _animationController;
+  late Animation<double> animation;
+  late Animation<double> radiusAnimation;
+  late Animation<double> scaleAnimation;
+
+  @override
+  void initState() {
+    _animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 200))
+      ..addListener(() {
+        setState(() {});
+      });
+
+    animation = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
+        parent: _animationController, curve: Curves.fastOutSlowIn));
+    scaleAnimation = Tween<double>(begin: 1, end: 0.8).animate(CurvedAnimation(
+        parent: _animationController, curve: Curves.fastOutSlowIn));
+    radiusAnimation = Tween<double>(begin: 0, end: 16).animate(CurvedAnimation(
+        parent: _animationController, curve: Curves.fastOutSlowIn));
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Palette.blackPurple,
+      resizeToAvoidBottomInset: false,
+      extendBody: true,
+      body: SafeArea(
+        child: ValueListenableBuilder(
+            valueListenable: isSideMenuClosed,
+            builder: (context, value, _) {
+              return WillPopScope(
+                onWillPop: () async {
+                  if (!value) {
+                    _animationController.reverse();
+                    isSideMenuClosed.value = true;
+                    return false;
+                  }
+                  return true;
+                },
+                child: Stack(
+                  children: [
+                    AnimatedPositioned(
+                      duration: const Duration(milliseconds: 200),
+                      curve: Curves.fastOutSlowIn,
+                      width: AppSize.getAppWidth(context) * .7,
+                      left: value ? -AppSize.getAppWidth(context) * .7 : 0,
+                      height: MediaQuery.of(context).size.height,
+                      child: const SideMenu(),
+                    ),
+                    Transform(
+                      alignment: Alignment.center,
+                      transform: Matrix4.identity()
+                        ..setEntry(
+                          3,
+                          2,
+                          0.001,
+                        )
+                        ..rotateY(
+                            animation.value - 30 * animation.value * pi / 180),
+                      child: Transform.translate(
+                        offset: Offset(
+                            animation.value *
+                                (AppSize.getAppWidth(context) * .7 - 15),
+                            0),
+                        child: Transform.scale(
+                          scale: scaleAnimation.value,
+                          child: ClipRRect(
+                            borderRadius:
+                                BorderRadius.circular(radiusAnimation.value),
+                            child: const _BuildBody(),
+                          ),
+                        ),
+                      ),
+                    ),
+                    AnimatedPositioned(
+                      duration: const Duration(milliseconds: 200),
+                      left: value ? 0 : AppSize.getAppWidth(context) * .7 - 40,
+                      curve: Curves.fastOutSlowIn,
+                      top: 12,
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          left: 16,
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            if (value) {
+                              _animationController.forward();
+                              isSideMenuClosed.value = false;
+                            } else {
+                              _animationController.reverse();
+                              isSideMenuClosed.value = true;
+                            }
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            padding: const EdgeInsets.all(8.0),
+                            height: 36,
+                            width: 36,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  offset: Offset(0, 3),
+                                  blurRadius: 8,
+                                ),
+                              ],
+                            ),
+                            child: SvgPicture.asset(
+                              value
+                                  ? AssetPath.getIcons('hamburger.svg')
+                                  : AssetPath.getIcons('close.svg'),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
+      ),
+    );
+  }
+}
+
+class _BuildBody extends StatelessWidget {
+  const _BuildBody({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
