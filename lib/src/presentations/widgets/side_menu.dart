@@ -2,10 +2,8 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:rive/rive.dart';
 
 class MenuHelper {
   final String title;
@@ -58,6 +56,16 @@ class _SideMenuState extends State<SideMenu> {
       unselectedIconPath: AssetPath.getIcons('people_outlined.svg'),
       selectedIconPath: AssetPath.getIcons('people_filled.svg'),
     ),
+    MenuHelper(
+      title: 'Tentang',
+      unselectedIconPath: AssetPath.getIcons('info_outlined.svg'),
+      selectedIconPath: AssetPath.getIcons('info_filled.svg'),
+    ),
+    MenuHelper(
+      title: 'Keluar',
+      unselectedIconPath: AssetPath.getIcons('logout_outlined.svg'),
+      selectedIconPath: AssetPath.getIcons('logout_outlined.svg'),
+    ),
   ];
 
   @override
@@ -70,44 +78,69 @@ class _SideMenuState extends State<SideMenu> {
         height: double.infinity,
         color: Palette.blackPurple,
         child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const InfoCard(
-                title: 'ToKu404',
-                subtitle: 'Asisten',
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 24,
-                  top: 24,
-                  bottom: 16,
-                ),
-                child: Text("JELAJAH",
-                    style: kTextTheme.subtitle2?.copyWith(
-                      color: Palette.disable,
-                    )),
-              ),
-              ValueListenableBuilder(
-                  valueListenable: selectedMenu,
-                  builder: (context, value, _) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ...listMenu.map((menu) {
-                          return SideMenuTile(
-                            menu: menu,
-                            press: () {
-                              selectedMenu.value = menu;
-                            },
-                            isActive: value == menu,
-                          );
-                        }).toList()
-                      ],
-                    );
-                  }),
-            ],
-          ),
+          child: ValueListenableBuilder(
+              valueListenable: selectedMenu,
+              builder: (context, value, _) {
+                return Column(
+                  children: [
+                    const InfoCard(
+                      title: 'ToKu404',
+                      subtitle: 'Asisten',
+                    ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 24,
+                                top: 24,
+                                bottom: 16,
+                              ),
+                              child: Text("JELAJAH",
+                                  style: kTextTheme.subtitle2?.copyWith(
+                                    color: Palette.disable,
+                                  )),
+                            ),
+                            for (int i = 0; i < listMenu.length - 2; i++)
+                              SideMenuTile(
+                                menu: listMenu[i],
+                                press: () {
+                                  selectedMenu.value = listMenu[i];
+                                },
+                                isActive: value == listMenu[i],
+                              ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 24,
+                                top: 24,
+                                bottom: 16,
+                              ),
+                              child: Text(
+                                "Lainnya",
+                                style: kTextTheme.subtitle2?.copyWith(
+                                  color: Palette.disable,
+                                ),
+                              ),
+                            ),
+                            for (int i = listMenu.length - 2;
+                                i < listMenu.length;
+                                i++)
+                              SideMenuTile(
+                                menu: listMenu[i],
+                                press: () {
+                                  selectedMenu.value = listMenu[i];
+                                },
+                                isActive: value == listMenu[i],
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }),
         ),
       ),
     );
@@ -180,6 +213,52 @@ class InfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Row(
+        children: [
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              border: Border.all(
+                width: 1,
+                color: Palette.greyDark,
+              ),
+              shape: BoxShape.circle,
+              color: Palette.disable,
+              image: DecorationImage(
+                image: AssetImage(
+                  AssetPath.getImage('avatar1.jpg'),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(
+            width: 8,
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: kTextTheme.subtitle2?.copyWith(
+                      color: Palette.white, fontWeight: FontWeight.w600),
+                ),
+                Text(
+                  subtitle,
+                  style: kTextTheme.subtitle2?.copyWith(
+                    color: Palette.white,
+                    height: 1,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
     return ListTile(
       leading: Container(
         width: 40,
