@@ -1,4 +1,0 @@
-#Wed Feb 01 15:04:51 WITA 2023
-base.0=/home/toku/Documents/self_project/asco/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
-renamed.0=classes.dex
-path.0=classes.dex
