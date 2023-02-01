@@ -338,6 +338,15 @@ class _SignInFormState extends State<_SignInForm> {
                       ),
                       borderRadius: BorderRadius.circular(16.0),
                     ),
+                    errorStyle: const TextStyle(height: 1),
+                    focusedErrorBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Palette.plum60),
+                      borderRadius: BorderRadius.circular(16.0),
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Palette.plum60),
+                      borderRadius: BorderRadius.circular(16.0),
+                    ),
                     prefixIcon: Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 8,
@@ -387,6 +396,15 @@ class _SignInFormState extends State<_SignInForm> {
                       borderSide: const BorderSide(
                         color: Palette.purple80,
                       ),
+                      borderRadius: BorderRadius.circular(16.0),
+                    ),
+                    errorStyle: const TextStyle(height: 1),
+                    focusedErrorBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Palette.plum60),
+                      borderRadius: BorderRadius.circular(16.0),
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Palette.plum60),
                       borderRadius: BorderRadius.circular(16.0),
                     ),
                     prefixIcon: Padding(
