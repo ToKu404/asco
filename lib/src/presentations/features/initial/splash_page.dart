@@ -70,10 +70,11 @@ class _SplashPageState extends State<SplashPage> {
                   const Text(
                     'asco',
                     style: TextStyle(
-                        fontSize: 44,
-                        fontFamily: 'Poppins',
-                        fontWeight: FontWeight.w500,
-                        color: Palette.white),
+                      fontSize: 44,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w700,
+                      color: Palette.white,
+                    ),
                   )
                 ],
               ),

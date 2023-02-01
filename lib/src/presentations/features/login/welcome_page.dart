@@ -3,10 +3,12 @@ import 'dart:ui';
 import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
+import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/core/utils/rive_utils.dart';
+import 'package:asco/src/presentations/features/home/home_page.dart';
+import 'package:asco/src/presentations/widgets/app_bar_title.dart';
 import 'package:asco/src/presentations/widgets/blur_background.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:rive/rive.dart';
 
 void showWelcomePage({required BuildContext context}) {
@@ -63,41 +65,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   const SizedBox(
                     height: 16,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        AssetPath.getVector(
-                          'logo2.svg',
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 2,
-                      ),
-                      RichText(
-                        text: const TextSpan(
-                          text: 'as',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            color: Palette.purple100,
-                            fontSize: 24,
-                            fontFamily: 'Poppins',
-                          ),
-                          children: [
-                            TextSpan(
-                              text: 'co',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                color: Palette.purple60,
-                                fontSize: 24,
-                                fontFamily: 'Poppins',
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
+                  const AppBarTitle(),
                   const Spacer(),
                   SizedBox(
                     width: 240,
@@ -106,23 +74,20 @@ class _WelcomePageState extends State<WelcomePage> {
                         height: 16,
                       ),
                       RichText(
-                        text: const TextSpan(
+                        text: TextSpan(
                             text: 'Sistem Kelola',
-                            style: TextStyle(
-                                fontSize: 42,
-                                fontWeight: FontWeight.w600,
-                                color: Palette.black,
-                                fontFamily: 'Poppins',
-                                height: 1.1),
+                            style: kTextTheme.headline1?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              height: 1.05,
+                              color: Palette.black,
+                            ),
                             children: [
                               TextSpan(
                                 text: '\nPraktikum & Asistensi',
-                                style: TextStyle(
-                                  fontSize: 42,
+                                style: kTextTheme.headline1?.copyWith(
                                   fontWeight: FontWeight.w600,
+                                  height: 1.05,
                                   color: Palette.purple60,
-                                  fontFamily: 'Poppins',
-                                  height: 1.1,
                                 ),
                               )
                             ]),
@@ -199,15 +164,15 @@ class _WelcomePageState extends State<WelcomePage> {
                                       clipBehavior: Clip.none,
                                       children: [
                                         Column(
-                                          children: const [
+                                          children: [
                                             Text(
                                               'Masuk',
-                                              style: TextStyle(
-                                                fontSize: 28,
-                                                fontWeight: FontWeight.w700,
+                                              style: kTextTheme.headline2
+                                                  ?.copyWith(
+                                                fontWeight: FontWeight.w600,
                                               ),
                                             ),
-                                            Padding(
+                                            const Padding(
                                               padding: EdgeInsets.symmetric(
                                                   vertical: 16),
                                               child: Text(
@@ -215,7 +180,7 @@ class _WelcomePageState extends State<WelcomePage> {
                                                 textAlign: TextAlign.center,
                                               ),
                                             ),
-                                            SignInForm(),
+                                            const _SignInForm(),
                                           ],
                                         ),
                                         Positioned(
@@ -292,14 +257,14 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 }
 
-class SignInForm extends StatefulWidget {
-  const SignInForm({super.key});
+class _SignInForm extends StatefulWidget {
+  const _SignInForm();
 
   @override
-  State<SignInForm> createState() => _SignInFormState();
+  State<_SignInForm> createState() => _SignInFormState();
 }
 
-class _SignInFormState extends State<SignInForm> {
+class _SignInFormState extends State<_SignInForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool isShowLoading = false;
@@ -320,12 +285,9 @@ class _SignInFormState extends State<SignInForm> {
             isShowLoading = false;
           });
 
-          // Future.delayed(const Duration(seconds: 1), () {
-          //   Navigator.push(
-          //     context,
-          //     MaterialPageRoute(builder: (context) => const EntryPoint()),
-          //   );
-          // });
+          Future.delayed(const Duration(seconds: 1), () {
+            showHomePage(context: context);
+          });
         });
       } else {
         error.fire();

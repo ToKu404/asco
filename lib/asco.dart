@@ -26,6 +26,9 @@ class AscoApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         fontFamily: 'Poppins',
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.transparent,
+        ),
       ),
       home: const SplashPage(),
     );
