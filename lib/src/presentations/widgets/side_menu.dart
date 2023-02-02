@@ -18,7 +18,11 @@ class MenuHelper {
 }
 
 class SideMenu extends StatefulWidget {
-  const SideMenu({super.key});
+  final ValueNotifier<int> selectedIndex;
+  const SideMenu({
+    super.key,
+    required this.selectedIndex,
+  });
 
   @override
   State<SideMenu> createState() => _SideMenuState();
@@ -26,11 +30,11 @@ class SideMenu extends StatefulWidget {
 
 class _SideMenuState extends State<SideMenu> {
   final listMenu = [
-    MenuHelper(
-      title: 'Beranda',
-      unselectedIconPath: AssetPath.getIcons('home_outlined.svg'),
-      selectedIconPath: AssetPath.getIcons('home_filled.svg'),
-    ),
+    // MenuHelper(
+    //   title: 'Beranda',
+    //   unselectedIconPath: AssetPath.getIcons('home_outlined.svg'),
+    //   selectedIconPath: AssetPath.getIcons('home_filled.svg'),
+    // ),
     MenuHelper(
       title: 'Laboratorium',
       unselectedIconPath: AssetPath.getIcons('class_outlined.svg'),
@@ -56,22 +60,20 @@ class _SideMenuState extends State<SideMenu> {
       unselectedIconPath: AssetPath.getIcons('people_outlined.svg'),
       selectedIconPath: AssetPath.getIcons('people_filled.svg'),
     ),
-    MenuHelper(
-      title: 'Tentang',
-      unselectedIconPath: AssetPath.getIcons('info_outlined.svg'),
-      selectedIconPath: AssetPath.getIcons('info_filled.svg'),
-    ),
-    MenuHelper(
-      title: 'Keluar',
-      unselectedIconPath: AssetPath.getIcons('logout_outlined.svg'),
-      selectedIconPath: AssetPath.getIcons('logout_outlined.svg'),
-    ),
+    // MenuHelper(
+    //   title: 'Tentang',
+    //   unselectedIconPath: AssetPath.getIcons('info_outlined.svg'),
+    //   selectedIconPath: AssetPath.getIcons('info_filled.svg'),
+    // ),
+    // MenuHelper(
+    //   title: 'Keluar',
+    //   unselectedIconPath: AssetPath.getIcons('logout_outlined.svg'),
+    //   selectedIconPath: AssetPath.getIcons('logout_outlined.svg'),
+    // ),
   ];
 
   @override
   Widget build(BuildContext context) {
-    final ValueNotifier<MenuHelper> selectedMenu =
-        ValueNotifier(listMenu.first);
     return Scaffold(
       body: Container(
         width: AppSize.getAppWidth(context) * .7,
@@ -79,7 +81,7 @@ class _SideMenuState extends State<SideMenu> {
         color: Palette.blackPurple,
         child: SafeArea(
           child: ValueListenableBuilder(
-              valueListenable: selectedMenu,
+              valueListenable: widget.selectedIndex,
               builder: (context, value, _) {
                 return Column(
                   children: [
@@ -103,37 +105,37 @@ class _SideMenuState extends State<SideMenu> {
                                     color: Palette.disable,
                                   )),
                             ),
-                            for (int i = 0; i < listMenu.length - 2; i++)
+                            for (int i = 0; i < listMenu.length; i++)
                               SideMenuTile(
                                 menu: listMenu[i],
                                 press: () {
-                                  selectedMenu.value = listMenu[i];
+                                  widget.selectedIndex.value = i;
                                 },
-                                isActive: value == listMenu[i],
+                                isActive: value == i,
                               ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                left: 24,
-                                top: 24,
-                                bottom: 16,
-                              ),
-                              child: Text(
-                                "Lainnya",
-                                style: kTextTheme.subtitle2?.copyWith(
-                                  color: Palette.disable,
-                                ),
-                              ),
-                            ),
-                            for (int i = listMenu.length - 2;
-                                i < listMenu.length;
-                                i++)
-                              SideMenuTile(
-                                menu: listMenu[i],
-                                press: () {
-                                  selectedMenu.value = listMenu[i];
-                                },
-                                isActive: value == listMenu[i],
-                              ),
+                            // Padding(
+                            //   padding: const EdgeInsets.only(
+                            //     left: 24,
+                            //     top: 24,
+                            //     bottom: 16,
+                            //   ),
+                            //   child: Text(
+                            //     "Lainnya",
+                            //     style: kTextTheme.subtitle2?.copyWith(
+                            //       color: Palette.disable,
+                            //     ),
+                            //   ),
+                            // ),
+                            // for (int i = listMenu.length - 2;
+                            //     i < listMenu.length;
+                            //     i++)
+                            //   SideMenuTile(
+                            //     menu: listMenu[i],
+                            //     press: () {
+                            //       widget.selectedIndex.value = i;
+                            //     },
+                            //     isActive: value == i,
+                            //   ),
                           ],
                         ),
                       ),
@@ -214,7 +216,12 @@ class InfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(12.0),
+      padding: const EdgeInsets.only(
+        top: 12,
+        bottom: 12,
+        left: 16.0,
+        right: 40,
+      ),
       child: Row(
         children: [
           Container(
@@ -257,37 +264,6 @@ class InfoCard extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-    return ListTile(
-      leading: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          border: Border.all(
-            width: 1,
-            color: Palette.greyDark,
-          ),
-          shape: BoxShape.circle,
-          color: Palette.disable,
-          image: DecorationImage(
-            image: AssetImage(
-              AssetPath.getImage('avatar1.jpg'),
-            ),
-          ),
-        ),
-      ),
-      title: Text(
-        title,
-        style: kTextTheme.subtitle2
-            ?.copyWith(color: Palette.white, fontWeight: FontWeight.w600),
-      ),
-      subtitle: Text(
-        subtitle,
-        style: kTextTheme.subtitle2?.copyWith(
-          color: Palette.white,
-          height: 1,
-        ),
       ),
     );
   }
