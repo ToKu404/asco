@@ -25,6 +25,7 @@ class Palette {
   static const Color salmon40 = Color(0xFFDD8585);
   static const Color salmon20 = Color(0xFFF2AEAE);
 
+  static const Color plum80 = Color(0xFF842469);
   static const Color plum60 = Color(0xFFDD85AF);
   static const Color plum40 = Color(0xFFDD85AF);
   static const Color plum20 = Color(0xFFF2AECF);

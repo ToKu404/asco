@@ -1,6 +1,7 @@
 import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/presentations/features/menu/people/people_page.dart';
 import 'package:asco/src/presentations/widgets/side_menu_parent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -57,13 +58,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
         style: kTextTheme.displayLarge?.copyWith(color: Palette.black),
       ),
     ),
-    Scaffold(
-      backgroundColor: Palette.grey,
-      body: Text(
-        'Halaman 5',
-        style: kTextTheme.displayLarge?.copyWith(color: Palette.black),
-      ),
-    ),
+    const StudentPeoplePage(),
   ];
 
   @override
