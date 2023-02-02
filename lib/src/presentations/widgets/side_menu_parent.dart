@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
@@ -91,6 +92,7 @@ class _SideMenuParentState extends State<SideMenuParent>
                                 value ? -AppSize.getAppWidth(context) * .7 : 0,
                             height: MediaQuery.of(context).size.height,
                             child: SideMenu(
+                              onSelect: widget.onSelect,
                               selectedIndex: _selectedIndex,
                             ),
                           ),
@@ -365,7 +367,7 @@ class CourseCard extends StatelessWidget {
                           width: 200,
                           child: Text(
                             title,
-                            style: kTextTheme.headline5?.copyWith(
+                            style: kTextTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.w600,
                               color: Palette.white,
                               height: 1.1,
@@ -387,7 +389,7 @@ class CourseCard extends StatelessWidget {
                     ),
                     Text(
                       time,
-                      style: kTextTheme.bodyText1?.copyWith(
+                      style: kTextTheme.bodyMedium?.copyWith(
                         color: Palette.white,
                       ),
                     ),
@@ -409,7 +411,7 @@ class CourseCard extends StatelessWidget {
                                 child: Center(
                                   child: Text(
                                     '+10',
-                                    style: kTextTheme.bodyText2?.copyWith(
+                                    style: kTextTheme.bodySmall?.copyWith(
                                       fontWeight: FontWeight.w600,
                                       color: Palette.black,
                                     ),
