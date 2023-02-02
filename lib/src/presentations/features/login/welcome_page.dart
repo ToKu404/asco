@@ -76,7 +76,7 @@ class _WelcomePageState extends State<WelcomePage> {
                       RichText(
                         text: TextSpan(
                             text: 'Sistem Kelola',
-                            style: kTextTheme.headline1?.copyWith(
+                            style: kTextTheme.displayLarge?.copyWith(
                               fontWeight: FontWeight.w600,
                               height: 1.05,
                               color: Palette.black,
@@ -84,7 +84,7 @@ class _WelcomePageState extends State<WelcomePage> {
                             children: [
                               TextSpan(
                                 text: '\nPraktikum & Asistensi',
-                                style: kTextTheme.headline1?.copyWith(
+                                style: kTextTheme.displayLarge?.copyWith(
                                   fontWeight: FontWeight.w600,
                                   height: 1.05,
                                   color: Palette.purple60,
@@ -167,7 +167,7 @@ class _WelcomePageState extends State<WelcomePage> {
                                           children: [
                                             Text(
                                               'Masuk',
-                                              style: kTextTheme.headline2
+                                              style: kTextTheme.headlineLarge
                                                   ?.copyWith(
                                                 fontWeight: FontWeight.w600,
                                               ),
