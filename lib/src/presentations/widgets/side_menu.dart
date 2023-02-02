@@ -19,9 +19,12 @@ class MenuHelper {
 
 class SideMenu extends StatefulWidget {
   final ValueNotifier<int> selectedIndex;
+  final Function(int)? onSelect;
+
   const SideMenu({
     super.key,
     required this.selectedIndex,
+    required this.onSelect,
   });
 
   @override
@@ -101,7 +104,7 @@ class _SideMenuState extends State<SideMenu> {
                                 bottom: 16,
                               ),
                               child: Text("JELAJAH",
-                                  style: kTextTheme.subtitle2?.copyWith(
+                                  style: kTextTheme.bodyLarge?.copyWith(
                                     color: Palette.disable,
                                   )),
                             ),
@@ -110,6 +113,7 @@ class _SideMenuState extends State<SideMenu> {
                                 menu: listMenu[i],
                                 press: () {
                                   widget.selectedIndex.value = i;
+                                  widget.onSelect!(i);
                                 },
                                 isActive: value == i,
                               ),
@@ -121,7 +125,7 @@ class _SideMenuState extends State<SideMenu> {
                             //   ),
                             //   child: Text(
                             //     "Lainnya",
-                            //     style: kTextTheme.subtitle2?.copyWith(
+                            //     style: kTextTheme.bodyLarge?.copyWith(
                             //       color: Palette.disable,
                             //     ),
                             //   ),
@@ -198,7 +202,7 @@ class SideMenuTile extends StatelessWidget {
                     color: Palette.white,
                   )),
               title: Text(menu.title,
-                  style: kTextTheme.subtitle2?.copyWith(color: Palette.white)),
+                  style: kTextTheme.bodyLarge?.copyWith(color: Palette.white)),
             ),
           ],
         ),
@@ -250,12 +254,12 @@ class InfoCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: kTextTheme.subtitle2?.copyWith(
+                  style: kTextTheme.bodyLarge?.copyWith(
                       color: Palette.white, fontWeight: FontWeight.w600),
                 ),
                 Text(
                   subtitle,
-                  style: kTextTheme.subtitle2?.copyWith(
+                  style: kTextTheme.bodyLarge?.copyWith(
                     color: Palette.white,
                     height: 1,
                   ),

@@ -1,43 +1,53 @@
 import 'package:flutter/material.dart';
 
-const TextTheme kTextTheme = TextTheme(
-  headline1: TextStyle(
+TextTheme kTextTheme = const TextTheme(
+  displayLarge: TextStyle(
     fontFamily: 'Poppins',
     fontSize: 42,
   ),
-  headline2: TextStyle(
+  //
+  displayMedium: TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 36,
+  ),
+  displaySmall: TextStyle(
     fontFamily: 'Poppins',
     fontSize: 32,
   ),
-  headline3: TextStyle(
+  //
+  headlineLarge: TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 28,
+  ),
+  headlineMedium: TextStyle(
     fontFamily: 'Poppins',
     fontSize: 24,
   ),
-  headline4: TextStyle(
+  headlineSmall: TextStyle(
     fontFamily: 'Poppins',
     fontSize: 22,
   ),
-  headline5: TextStyle(
+  titleLarge: TextStyle(
     fontFamily: 'Poppins',
     fontSize: 20,
   ),
-  headline6: TextStyle(
+  titleMedium: TextStyle(
     fontFamily: 'Poppins',
     fontSize: 18,
   ),
-  subtitle1: TextStyle(
+  titleSmall: TextStyle(
     fontFamily: 'Poppins',
     fontSize: 16,
   ),
-  subtitle2: TextStyle(
+  bodyLarge: TextStyle(
     fontFamily: 'Poppins',
     fontSize: 14,
   ),
-  bodyText1: TextStyle(
+  bodyMedium: TextStyle(
     fontFamily: 'Poppins',
     fontSize: 12,
   ),
-  bodyText2: TextStyle(
+  bodySmall: TextStyle(
     fontFamily: 'Poppins',
     fontSize: 10,
   ),

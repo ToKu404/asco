@@ -33,35 +33,35 @@ class _MainMenuPageState extends State<MainMenuPage> {
       backgroundColor: Palette.grey,
       body: Text(
         'Halaman 1',
-        style: kTextTheme.headline1?.copyWith(color: Palette.black),
+        style: kTextTheme.displayLarge?.copyWith(color: Palette.black),
       ),
     ),
     Scaffold(
       backgroundColor: Palette.grey,
       body: Text(
         'Halaman 2',
-        style: kTextTheme.headline1?.copyWith(color: Palette.black),
+        style: kTextTheme.displayLarge?.copyWith(color: Palette.black),
       ),
     ),
     Scaffold(
       backgroundColor: Palette.grey,
       body: Text(
         'Halaman 3',
-        style: kTextTheme.headline1?.copyWith(color: Palette.black),
+        style: kTextTheme.displayLarge?.copyWith(color: Palette.black),
       ),
     ),
     Scaffold(
       backgroundColor: Palette.grey,
       body: Text(
         'Halaman 4',
-        style: kTextTheme.headline1?.copyWith(color: Palette.black),
+        style: kTextTheme.displayLarge?.copyWith(color: Palette.black),
       ),
     ),
     Scaffold(
       backgroundColor: Palette.grey,
       body: Text(
         'Halaman 5',
-        style: kTextTheme.headline1?.copyWith(color: Palette.black),
+        style: kTextTheme.displayLarge?.copyWith(color: Palette.black),
       ),
     ),
   ];

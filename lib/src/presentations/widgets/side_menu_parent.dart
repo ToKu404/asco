@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
@@ -91,6 +92,7 @@ class _SideMenuParentState extends State<SideMenuParent>
                                 value ? -AppSize.getAppWidth(context) * .7 : 0,
                             height: MediaQuery.of(context).size.height,
                             child: SideMenu(
+                              onSelect: widget.onSelect,
                               selectedIndex: _selectedIndex,
                             ),
                           ),
@@ -113,7 +115,8 @@ class _SideMenuParentState extends State<SideMenuParent>
                                 scale: scaleAnimation.value,
                                 child: AnimatedContainer(
                                   duration: const Duration(milliseconds: 200),
-                                  margin: isSideMenuClosed.value
+                                  margin: isSideMenuClosed.value &&
+                                          widget.isShowBottomNav
                                       ? const EdgeInsets.only(bottom: 57)
                                       : EdgeInsets.zero,
                                   child: ClipRRect(
@@ -171,80 +174,81 @@ class _SideMenuParentState extends State<SideMenuParent>
                               ),
                             ),
                           ),
-                          AnimatedPositioned(
-                            duration: const Duration(milliseconds: 200),
-                            bottom: value ? 0 : -65,
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(12),
-                                topRight: Radius.circular(12),
-                              ),
-                              child: Container(
-                                width: AppSize.getAppWidth(context),
-                                color: Palette.blackPurple,
-                                height: 65,
-                                child: Row(
-                                  children: [
-                                    TabIcon(
-                                      isActive: selectValue == 0,
-                                      onPress: () {
-                                        widget.onSelect!(0);
-                                        _selectedIndex.value = 0;
-                                      },
-                                      selectedIconPath: AssetPath.getIcons(
-                                          'class_filled.svg'),
-                                      unselectedIconPath: AssetPath.getIcons(
-                                          'class_outlined.svg'),
-                                    ),
-                                    TabIcon(
-                                      isActive: selectValue == 1,
-                                      onPress: () {
-                                        widget.onSelect!(1);
-                                        _selectedIndex.value = 1;
-                                      },
-                                      selectedIconPath: AssetPath.getIcons(
-                                          'assistance_filled.svg'),
-                                      unselectedIconPath: AssetPath.getIcons(
-                                          'assistance_outlined.svg'),
-                                    ),
-                                    TabIcon(
-                                      isActive: selectValue == 2,
-                                      onPress: () {
-                                        widget.onSelect!(2);
-                                        _selectedIndex.value = 2;
-                                      },
-                                      selectedIconPath: AssetPath.getIcons(
-                                          'leaderboard_filled.svg'),
-                                      unselectedIconPath: AssetPath.getIcons(
-                                          'leaderboard_outlined.svg'),
-                                    ),
-                                    TabIcon(
-                                      isActive: selectValue == 3,
-                                      onPress: () {
-                                        widget.onSelect!(3);
-                                        _selectedIndex.value = 3;
-                                      },
-                                      selectedIconPath: AssetPath.getIcons(
-                                          'extras_filled.svg'),
-                                      unselectedIconPath: AssetPath.getIcons(
-                                          'extras_outlined.svg'),
-                                    ),
-                                    TabIcon(
-                                      isActive: selectValue == 4,
-                                      onPress: () {
-                                        widget.onSelect!(4);
-                                        _selectedIndex.value = 4;
-                                      },
-                                      selectedIconPath: AssetPath.getIcons(
-                                          'people_filled.svg'),
-                                      unselectedIconPath: AssetPath.getIcons(
-                                          'people_outlined.svg'),
-                                    ),
-                                  ],
+                          if (widget.isShowBottomNav)
+                            AnimatedPositioned(
+                              duration: const Duration(milliseconds: 200),
+                              bottom: value ? 0 : -65,
+                              child: ClipRRect(
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(12),
+                                  topRight: Radius.circular(12),
+                                ),
+                                child: Container(
+                                  width: AppSize.getAppWidth(context),
+                                  color: Palette.blackPurple,
+                                  height: 65,
+                                  child: Row(
+                                    children: [
+                                      TabIcon(
+                                        isActive: selectValue == 0,
+                                        onPress: () {
+                                          widget.onSelect!(0);
+                                          _selectedIndex.value = 0;
+                                        },
+                                        selectedIconPath: AssetPath.getIcons(
+                                            'class_filled.svg'),
+                                        unselectedIconPath: AssetPath.getIcons(
+                                            'class_outlined.svg'),
+                                      ),
+                                      TabIcon(
+                                        isActive: selectValue == 1,
+                                        onPress: () {
+                                          widget.onSelect!(1);
+                                          _selectedIndex.value = 1;
+                                        },
+                                        selectedIconPath: AssetPath.getIcons(
+                                            'assistance_filled.svg'),
+                                        unselectedIconPath: AssetPath.getIcons(
+                                            'assistance_outlined.svg'),
+                                      ),
+                                      TabIcon(
+                                        isActive: selectValue == 2,
+                                        onPress: () {
+                                          widget.onSelect!(2);
+                                          _selectedIndex.value = 2;
+                                        },
+                                        selectedIconPath: AssetPath.getIcons(
+                                            'leaderboard_filled.svg'),
+                                        unselectedIconPath: AssetPath.getIcons(
+                                            'leaderboard_outlined.svg'),
+                                      ),
+                                      TabIcon(
+                                        isActive: selectValue == 3,
+                                        onPress: () {
+                                          widget.onSelect!(3);
+                                          _selectedIndex.value = 3;
+                                        },
+                                        selectedIconPath: AssetPath.getIcons(
+                                            'extras_filled.svg'),
+                                        unselectedIconPath: AssetPath.getIcons(
+                                            'extras_outlined.svg'),
+                                      ),
+                                      TabIcon(
+                                        isActive: selectValue == 4,
+                                        onPress: () {
+                                          widget.onSelect!(4);
+                                          _selectedIndex.value = 4;
+                                        },
+                                        selectedIconPath: AssetPath.getIcons(
+                                            'people_filled.svg'),
+                                        unselectedIconPath: AssetPath.getIcons(
+                                            'people_outlined.svg'),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
                         ],
                       ),
                     );
@@ -365,7 +369,7 @@ class CourseCard extends StatelessWidget {
                           width: 200,
                           child: Text(
                             title,
-                            style: kTextTheme.headline5?.copyWith(
+                            style: kTextTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.w600,
                               color: Palette.white,
                               height: 1.1,
@@ -387,7 +391,7 @@ class CourseCard extends StatelessWidget {
                     ),
                     Text(
                       time,
-                      style: kTextTheme.bodyText1?.copyWith(
+                      style: kTextTheme.bodyMedium?.copyWith(
                         color: Palette.white,
                       ),
                     ),
@@ -409,7 +413,7 @@ class CourseCard extends StatelessWidget {
                                 child: Center(
                                   child: Text(
                                     '+10',
-                                    style: kTextTheme.bodyText2?.copyWith(
+                                    style: kTextTheme.bodySmall?.copyWith(
                                       fontWeight: FontWeight.w600,
                                       color: Palette.black,
                                     ),
