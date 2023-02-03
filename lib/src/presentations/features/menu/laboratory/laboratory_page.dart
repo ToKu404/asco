@@ -110,7 +110,7 @@ class StudentLaboratoryPage extends StatelessWidget {
                         style: kTextTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.w600,
                           color: Palette.white,
-                          height: 1.5,
+                          height: 1.2,
                         ),
                       ),
                       const SizedBox(height: 8),

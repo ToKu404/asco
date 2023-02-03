@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "251873935086",
+    "project_id": "asco-1a937",
+    "storage_bucket": "asco-1a937.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:251873935086:android:799539d3827225abd83dff",
+        "android_client_info": {
+          "package_name": "com.example.asco"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "251873935086-5ticllpjqu2dm9e9qhb9iole43spg9cu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBd7QJQpcOLQyOZYITy-ffBXusRCjFmXbI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "251873935086-5ticllpjqu2dm9e9qhb9iole43spg9cu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
