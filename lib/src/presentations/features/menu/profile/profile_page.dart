@@ -289,7 +289,7 @@ class IdCardFrontSide extends StatelessWidget {
                             ),
                             Expanded(
                               child: Text(
-                                'github.com/yukiao',
+                                '@yukiao',
                                 style: kTextTheme.bodyMedium?.copyWith(
                                   height: 1,
                                   color: Palette.white,

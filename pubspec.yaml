@@ -17,6 +17,10 @@ dependencies:
   flip_card: ^0.7.0
   qr: ^3.0.1
 
+  # firebase
+  firebase_core: ^2.4.1
+  cloud_firestore: ^4.3.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
