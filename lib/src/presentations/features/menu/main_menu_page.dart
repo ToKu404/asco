@@ -1,6 +1,7 @@
 import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/presentations/features/menu/laboratory/laboratory_page.dart';
 import 'package:asco/src/presentations/features/menu/people/people_page.dart';
 import 'package:asco/src/presentations/features/menu/profile/profile_page.dart';
 import 'package:asco/src/presentations/widgets/side_menu_parent.dart';
@@ -31,13 +32,7 @@ class MainMenuPage extends StatefulWidget {
 class _MainMenuPageState extends State<MainMenuPage> {
   int _selectedIndex = 0;
   final _pages = [
-    Scaffold(
-      backgroundColor: Palette.grey,
-      body: Text(
-        'Halaman 1',
-        style: kTextTheme.displayLarge?.copyWith(color: Palette.black),
-      ),
-    ),
+    const StudentLaboratoryPage(),
     Scaffold(
       backgroundColor: Palette.grey,
       body: Text(
