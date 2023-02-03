@@ -88,9 +88,15 @@ class _SideMenuState extends State<SideMenu> {
               builder: (context, value, _) {
                 return Column(
                   children: [
-                    const InfoCard(
-                      title: 'ToKu404',
-                      subtitle: 'Asisten',
+                    GestureDetector(
+                      onTap: () {
+                        widget.selectedIndex.value = -1;
+                        widget.onSelect!(-1);
+                      },
+                      child: const UserProfileCard(
+                        title: 'ToKu404',
+                        subtitle: 'Asisten',
+                      ),
                     ),
                     Expanded(
                       child: SingleChildScrollView(
@@ -211,10 +217,10 @@ class SideMenuTile extends StatelessWidget {
   }
 }
 
-class InfoCard extends StatelessWidget {
+class UserProfileCard extends StatelessWidget {
   final String title;
   final String subtitle;
-  const InfoCard({Key? key, required this.subtitle, required this.title})
+  const UserProfileCard({Key? key, required this.subtitle, required this.title})
       : super(key: key);
 
   @override

@@ -122,7 +122,11 @@ class _SideMenuParentState extends State<SideMenuParent>
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(
                                         radiusAnimation.value),
-                                    child: widget.body,
+                                    child: AbsorbPointer(
+                                        absorbing: isSideMenuClosed.value
+                                            ? false
+                                            : true,
+                                        child: widget.body),
                                   ),
                                 ),
                               ),
@@ -256,48 +260,6 @@ class _SideMenuParentState extends State<SideMenuParent>
             ),
           );
         });
-  }
-}
-
-class _BuildBody extends StatelessWidget {
-  const _BuildBody({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Palette.grey,
-      appBar: AppBar(
-        title: const AppBarTitle(),
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(
-            16,
-          ),
-          child: Column(
-            children: [
-              CourseCard(
-                badge: AssetPath.getVector('badge_android.svg'),
-                colorBg: Palette.purple60,
-                time: 'Setiap hari Senin Pukul 10.10 - 12.40',
-                title: 'Pemrograman Mobile A',
-              ),
-              const SizedBox(
-                height: 12,
-              ),
-              CourseCard(
-                badge: AssetPath.getVector('badge_oop.svg'),
-                colorBg: Palette.azure40,
-                time: 'Setiap hari Senin Pukul 10.10 - 12.40',
-                title: 'Pemrograman Berbasis Objek B',
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }
 

@@ -20,6 +20,7 @@ class Palette {
   static const Color orange10 = Color(0xFFFFEFE2);
 
   static const Color violet60 = Color(0xFFE24EE8);
+  static const Color violet30 = Color(0xFFF2B5F5);
   static const Color violet10 = Color(0xFFFEEEFF);
 
   static const Color salmon40 = Color(0xFFDD8585);
