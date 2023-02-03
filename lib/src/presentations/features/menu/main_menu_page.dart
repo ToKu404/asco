@@ -3,6 +3,7 @@ import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/laboratory_page.dart';
 import 'package:asco/src/presentations/features/menu/people/people_page.dart';
+import 'package:asco/src/presentations/features/menu/profile/profile_page.dart';
 import 'package:asco/src/presentations/widgets/side_menu_parent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -64,15 +65,21 @@ class _MainMenuPageState extends State<MainMenuPage> {
           _selectedIndex = index;
         });
       },
-      body: Scaffold(
-        appBar: AppBar(
-          title: const AppBarTitle(),
-        ),
-        backgroundColor: Palette.grey,
-        body: SafeArea(
-          child: _pages[_selectedIndex],
-        ),
-      ),
+      isShowBottomNav: _selectedIndex == -1 ? false : true,
+      body: Builder(builder: (context) {
+        if (_selectedIndex == -1) {
+          return const StudentProfilePage();
+        }
+        return Scaffold(
+          appBar: AppBar(
+            title: const AppBarTitle(),
+          ),
+          backgroundColor: Palette.grey,
+          body: SafeArea(
+            child: _pages[_selectedIndex],
+          ),
+        );
+      }),
     );
   }
 }
