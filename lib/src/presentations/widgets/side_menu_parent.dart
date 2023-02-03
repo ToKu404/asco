@@ -42,6 +42,7 @@ class _SideMenuParentState extends State<SideMenuParent>
   late Animation<double> animation;
   late Animation<double> radiusAnimation;
   late Animation<double> scaleAnimation;
+  bool isDragging = false;
 
   @override
   void initState() {
@@ -82,178 +83,200 @@ class _SideMenuParentState extends State<SideMenuParent>
                         }
                         return true;
                       },
-                      child: Stack(
-                        children: [
-                          AnimatedPositioned(
-                            duration: const Duration(milliseconds: 200),
-                            curve: Curves.fastOutSlowIn,
-                            width: AppSize.getAppWidth(context) * .7,
-                            left:
-                                value ? -AppSize.getAppWidth(context) * .7 : 0,
-                            height: MediaQuery.of(context).size.height,
-                            child: SideMenu(
-                              onSelect: widget.onSelect,
-                              selectedIndex: _selectedIndex,
-                            ),
-                          ),
-                          Transform(
-                            alignment: Alignment.center,
-                            transform: Matrix4.identity()
-                              ..setEntry(
-                                3,
-                                2,
-                                0.001,
-                              )
-                              ..rotateY(animation.value -
-                                  30 * animation.value * pi / 180),
-                            child: Transform.translate(
-                              offset: Offset(
-                                  animation.value *
-                                      (AppSize.getAppWidth(context) * .7 - 15),
-                                  0),
-                              child: Transform.scale(
-                                scale: scaleAnimation.value,
-                                child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 200),
-                                  margin: isSideMenuClosed.value &&
-                                          widget.isShowBottomNav
-                                      ? const EdgeInsets.only(bottom: 57)
-                                      : EdgeInsets.zero,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(
-                                        radiusAnimation.value),
-                                    child: AbsorbPointer(
-                                        absorbing: isSideMenuClosed.value
-                                            ? false
-                                            : true,
-                                        child: widget.body),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          AnimatedPositioned(
-                            duration: const Duration(milliseconds: 200),
-                            left: value
-                                ? 0
-                                : AppSize.getAppWidth(context) * .7 - 40,
-                            curve: Curves.fastOutSlowIn,
-                            top: 12,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                left: 16,
-                              ),
-                              child: InkWell(
-                                onTap: () {
-                                  if (value) {
-                                    _animationController.forward();
-                                    isSideMenuClosed.value = false;
-                                  } else {
-                                    _animationController.reverse();
-                                    isSideMenuClosed.value = true;
-                                  }
-                                },
-                                child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 200),
-                                  padding: const EdgeInsets.all(8.0),
-                                  height: 36,
-                                  width: 36,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black12,
-                                        offset: Offset(0, 3),
-                                        blurRadius: 8,
-                                      ),
-                                    ],
-                                  ),
-                                  child: SvgPicture.asset(
-                                    value
-                                        ? AssetPath.getIcons('hamburger.svg')
-                                        : AssetPath.getIcons('close.svg'),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          if (widget.isShowBottomNav)
+                      child: GestureDetector(
+                        onHorizontalDragStart: (details) => isDragging = true,
+                        onHorizontalDragUpdate: (details) {
+                          if (!isDragging && isSideMenuClosed.value) return;
+                          const delta = 1;
+                          if (details.delta.dx < -delta) {
+                            _animationController.reverse();
+                            isSideMenuClosed.value = true;
+                          } else if (details.delta.dx > delta) {
+                            _animationController.forward();
+                            isSideMenuClosed.value = false;
+                          }
+                          isDragging = false;
+                        },
+                        child: Stack(
+                          children: [
                             AnimatedPositioned(
                               duration: const Duration(milliseconds: 200),
-                              bottom: value ? 0 : -65,
-                              child: ClipRRect(
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(12),
-                                  topRight: Radius.circular(12),
-                                ),
-                                child: Container(
-                                  width: AppSize.getAppWidth(context),
-                                  color: Palette.blackPurple,
-                                  height: 65,
-                                  child: Row(
-                                    children: [
-                                      TabIcon(
-                                        isActive: selectValue == 0,
-                                        onPress: () {
-                                          widget.onSelect!(0);
-                                          _selectedIndex.value = 0;
-                                        },
-                                        selectedIconPath: AssetPath.getIcons(
-                                            'class_filled.svg'),
-                                        unselectedIconPath: AssetPath.getIcons(
-                                            'class_outlined.svg'),
-                                      ),
-                                      TabIcon(
-                                        isActive: selectValue == 1,
-                                        onPress: () {
-                                          widget.onSelect!(1);
-                                          _selectedIndex.value = 1;
-                                        },
-                                        selectedIconPath: AssetPath.getIcons(
-                                            'assistance_filled.svg'),
-                                        unselectedIconPath: AssetPath.getIcons(
-                                            'assistance_outlined.svg'),
-                                      ),
-                                      TabIcon(
-                                        isActive: selectValue == 2,
-                                        onPress: () {
-                                          widget.onSelect!(2);
-                                          _selectedIndex.value = 2;
-                                        },
-                                        selectedIconPath: AssetPath.getIcons(
-                                            'leaderboard_filled.svg'),
-                                        unselectedIconPath: AssetPath.getIcons(
-                                            'leaderboard_outlined.svg'),
-                                      ),
-                                      TabIcon(
-                                        isActive: selectValue == 3,
-                                        onPress: () {
-                                          widget.onSelect!(3);
-                                          _selectedIndex.value = 3;
-                                        },
-                                        selectedIconPath: AssetPath.getIcons(
-                                            'extras_filled.svg'),
-                                        unselectedIconPath: AssetPath.getIcons(
-                                            'extras_outlined.svg'),
-                                      ),
-                                      TabIcon(
-                                        isActive: selectValue == 4,
-                                        onPress: () {
-                                          widget.onSelect!(4);
-                                          _selectedIndex.value = 4;
-                                        },
-                                        selectedIconPath: AssetPath.getIcons(
-                                            'people_filled.svg'),
-                                        unselectedIconPath: AssetPath.getIcons(
-                                            'people_outlined.svg'),
-                                      ),
-                                    ],
+                              curve: Curves.fastOutSlowIn,
+                              width: AppSize.getAppWidth(context) * .7,
+                              left: value
+                                  ? -AppSize.getAppWidth(context) * .7
+                                  : 0,
+                              height: MediaQuery.of(context).size.height,
+                              child: SideMenu(
+                                onSelect: widget.onSelect,
+                                selectedIndex: _selectedIndex,
+                              ),
+                            ),
+                            Transform(
+                              alignment: Alignment.center,
+                              transform: Matrix4.identity()
+                                ..setEntry(
+                                  3,
+                                  2,
+                                  0.001,
+                                )
+                                ..rotateY(animation.value -
+                                    30 * animation.value * pi / 180),
+                              child: Transform.translate(
+                                offset: Offset(
+                                    animation.value *
+                                        (AppSize.getAppWidth(context) * .7 -
+                                            15),
+                                    0),
+                                child: Transform.scale(
+                                  scale: scaleAnimation.value,
+                                  child: AnimatedContainer(
+                                    duration: const Duration(milliseconds: 200),
+                                    margin: isSideMenuClosed.value &&
+                                            widget.isShowBottomNav
+                                        ? const EdgeInsets.only(bottom: 57)
+                                        : EdgeInsets.zero,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(
+                                          radiusAnimation.value),
+                                      child: AbsorbPointer(
+                                          absorbing: isSideMenuClosed.value
+                                              ? false
+                                              : true,
+                                          child: widget.body),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                        ],
+                            AnimatedPositioned(
+                              duration: const Duration(milliseconds: 200),
+                              left: value
+                                  ? 0
+                                  : AppSize.getAppWidth(context) * .7 - 40,
+                              curve: Curves.fastOutSlowIn,
+                              top: 12,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 16,
+                                ),
+                                child: InkWell(
+                                  onTap: () {
+                                    if (value) {
+                                      _animationController.forward();
+                                      isSideMenuClosed.value = false;
+                                    } else {
+                                      _animationController.reverse();
+                                      isSideMenuClosed.value = true;
+                                    }
+                                  },
+                                  child: AnimatedContainer(
+                                    duration: const Duration(milliseconds: 200),
+                                    padding: const EdgeInsets.all(8.0),
+                                    height: 36,
+                                    width: 36,
+                                    decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      shape: BoxShape.circle,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black12,
+                                          offset: Offset(0, 3),
+                                          blurRadius: 8,
+                                        ),
+                                      ],
+                                    ),
+                                    child: SvgPicture.asset(
+                                      value
+                                          ? AssetPath.getIcons('hamburger.svg')
+                                          : AssetPath.getIcons('close.svg'),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            if (widget.isShowBottomNav)
+                              AnimatedPositioned(
+                                duration: const Duration(milliseconds: 200),
+                                bottom: value ? 0 : -65,
+                                child: ClipRRect(
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(12),
+                                    topRight: Radius.circular(12),
+                                  ),
+                                  child: Container(
+                                    width: AppSize.getAppWidth(context),
+                                    color: Palette.blackPurple,
+                                    height: 65,
+                                    child: Row(
+                                      children: [
+                                        TabIcon(
+                                          isActive: selectValue == 0,
+                                          onPress: () {
+                                            widget.onSelect!(0);
+                                            _selectedIndex.value = 0;
+                                          },
+                                          selectedIconPath: AssetPath.getIcons(
+                                              'class_filled.svg'),
+                                          unselectedIconPath:
+                                              AssetPath.getIcons(
+                                                  'class_outlined.svg'),
+                                        ),
+                                        TabIcon(
+                                          isActive: selectValue == 1,
+                                          onPress: () {
+                                            widget.onSelect!(1);
+                                            _selectedIndex.value = 1;
+                                          },
+                                          selectedIconPath: AssetPath.getIcons(
+                                              'assistance_filled.svg'),
+                                          unselectedIconPath:
+                                              AssetPath.getIcons(
+                                                  'assistance_outlined.svg'),
+                                        ),
+                                        TabIcon(
+                                          isActive: selectValue == 2,
+                                          onPress: () {
+                                            widget.onSelect!(2);
+                                            _selectedIndex.value = 2;
+                                          },
+                                          selectedIconPath: AssetPath.getIcons(
+                                              'leaderboard_filled.svg'),
+                                          unselectedIconPath:
+                                              AssetPath.getIcons(
+                                                  'leaderboard_outlined.svg'),
+                                        ),
+                                        TabIcon(
+                                          isActive: selectValue == 3,
+                                          onPress: () {
+                                            widget.onSelect!(3);
+                                            _selectedIndex.value = 3;
+                                          },
+                                          selectedIconPath: AssetPath.getIcons(
+                                              'extras_filled.svg'),
+                                          unselectedIconPath:
+                                              AssetPath.getIcons(
+                                                  'extras_outlined.svg'),
+                                        ),
+                                        TabIcon(
+                                          isActive: selectValue == 4,
+                                          onPress: () {
+                                            widget.onSelect!(4);
+                                            _selectedIndex.value = 4;
+                                          },
+                                          selectedIconPath: AssetPath.getIcons(
+                                              'people_filled.svg'),
+                                          unselectedIconPath:
+                                              AssetPath.getIcons(
+                                                  'people_outlined.svg'),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
                       ),
                     );
                   }),
