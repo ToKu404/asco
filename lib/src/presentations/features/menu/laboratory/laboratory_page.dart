@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/presentations/features/menu/laboratory/laboratory_course_detail_page.dart';
 
 class StudentLaboratoryPage extends StatelessWidget {
   const StudentLaboratoryPage({super.key});
@@ -47,7 +49,7 @@ class StudentLaboratoryPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Palette.grey,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: <Widget>[
             _buildHeader(
@@ -194,18 +196,14 @@ class StudentLaboratoryPage extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        ListView.separated(
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
-            return MeetingCard(
-              course: courses[index],
-              courseNumberBackgroundColor: Palette.purple100,
-            );
-          },
-          separatorBuilder: (_, __) => const SizedBox(height: 8),
-          itemCount: courses.length,
-          shrinkWrap: true,
-        ),
+        ...courses
+            .map(
+              (course) => MeetingCard(
+                course: course,
+                courseNumberBackgroundColor: Palette.purple100,
+              ),
+            )
+            .toList(),
       ],
     );
   }
@@ -229,6 +227,7 @@ class MenuCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 0,
+      margin: EdgeInsets.zero,
       color: Palette.white,
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
@@ -294,59 +293,71 @@ class MeetingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      color: Palette.white,
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(40),
-      ),
-      child: InkWell(
-        onTap: () {},
-        child: SizedBox(
-          height: 80,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(4, 8, 16, 8),
-            child: Row(
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 40,
-                  backgroundColor: courseNumberBackgroundColor,
-                  child: Text(
-                    '#${course.number}',
-                    style: kTextTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: Palette.white,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Card(
+        elevation: 0,
+        margin: EdgeInsets.zero,
+        color: Palette.white,
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(40),
+        ),
+        child: InkWell(
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const StudentLaboratoriumCourseDetailPage(),
+              settings: const RouteSettings(
+                name: AppRoute.studentLaboratoriumCourseDetailPage,
+              ),
+            ),
+          ),
+          child: SizedBox(
+            height: 80,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 8, 16, 8),
+              child: Row(
+                children: <Widget>[
+                  CircleAvatar(
+                    radius: 40,
+                    backgroundColor: courseNumberBackgroundColor,
+                    child: Text(
+                      '#${course.number}',
+                      style: kTextTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: Palette.white,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        course.topic,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: kTextTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: Palette.purple100,
-                          height: 1.2,
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          course.topic,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: kTextTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: Palette.purple100,
+                            height: 1.2,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        course.date,
-                        style: kTextTheme.bodyMedium?.copyWith(
-                          color: Palette.purple60,
+                        const SizedBox(height: 4),
+                        Text(
+                          course.date,
+                          style: kTextTheme.bodyMedium?.copyWith(
+                            color: Palette.purple60,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
