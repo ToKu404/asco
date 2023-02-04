@@ -1,11 +1,11 @@
 class AppRoute {
   static const welcomePage = '/welcome';
   static const homePage = '/home';
-  static const studentMainMenuPage = '/student/main-menu';
 
   // student
+  static const studentMainMenuPage = '/student/main-menu';
   static const studentLaboratoriumCourseDetailPage =
-      '/student/laboratory/course-detail';
+      '/student/main-menu/laboratory-course-detail';
 
   // admin
   static const adminHomePage = '/admin/home';
