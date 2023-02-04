@@ -204,7 +204,7 @@ class StudentLaboratoriumCourseDetailPage extends StatelessWidget {
                           center: Container(
                             width: 100,
                             height: 100,
-                            margin: const EdgeInsets.all(15),
+                            margin: const EdgeInsets.all(9),
                             decoration: const BoxDecoration(
                               shape: BoxShape.circle,
                               color: Palette.purple80,
@@ -220,7 +220,7 @@ class StudentLaboratoriumCourseDetailPage extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 12),
+                        const SizedBox(width: 16),
                         Expanded(
                           child: Column(
                             children: <Widget>[
@@ -239,7 +239,7 @@ class StudentLaboratoriumCourseDetailPage extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 8),
+                              const SizedBox(height: 12),
                               Container(
                                 width: double.infinity,
                                 height: 24,
@@ -499,7 +499,7 @@ class QuizAssessmentBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 78,
+      width: 80,
       padding: const EdgeInsets.fromLTRB(12, 20, 12, 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),

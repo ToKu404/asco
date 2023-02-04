@@ -5,7 +5,6 @@ TextTheme kTextTheme = const TextTheme(
     fontFamily: 'Poppins',
     fontSize: 42,
   ),
-  //
   displayMedium: TextStyle(
     fontFamily: 'Poppins',
     fontSize: 36,
@@ -14,7 +13,6 @@ TextTheme kTextTheme = const TextTheme(
     fontFamily: 'Poppins',
     fontSize: 32,
   ),
-  //
   headlineLarge: TextStyle(
     fontFamily: 'Poppins',
     fontSize: 28,
