@@ -231,7 +231,6 @@ class StudentLaboratoriumCourseDetailPage extends StatelessWidget {
                             const SizedBox(height: 12),
                             Container(
                               width: double.infinity,
-                              height: 24,
                               padding: const EdgeInsets.all(4),
                               decoration: BoxDecoration(
                                 color: const Color(0xFFF2CF74),
@@ -239,23 +238,27 @@ class StudentLaboratoriumCourseDetailPage extends StatelessWidget {
                               ),
                               child: Row(
                                 children: <Widget>[
-                                  const Badge(
-                                    label: Text(
-                                      '+10',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
+                                  const Flexible(
+                                    child: Badge(
+                                      label: Text(
+                                        '+10',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
+                                      textColor: Color(0xFFF2CF74),
+                                      backgroundColor: Palette.white,
                                     ),
-                                    textColor: Color(0xFFF2CF74),
-                                    backgroundColor: Palette.white,
                                   ),
                                   const SizedBox(width: 6),
-                                  Text(
-                                    'Poin Bonus',
-                                    style: kTextTheme.bodyMedium?.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                      color: Palette.white,
-                                      height: 1,
+                                  Expanded(
+                                    child: Text(
+                                      'Poin Bonus',
+                                      style: kTextTheme.bodyMedium?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        color: Palette.white,
+                                        height: 1,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -324,10 +327,7 @@ class ContainerSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(
-        vertical: 16,
-        horizontal: 20,
-      ),
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
       decoration: BoxDecoration(
         color: Palette.white,
         borderRadius: BorderRadius.circular(12),
@@ -494,7 +494,6 @@ class QuizAssessmentBox extends StatelessWidget {
         children: <Text>[
           Text(
             '$value',
-            maxLines: 1,
             style: kTextTheme.headlineMedium?.copyWith(
               fontWeight: FontWeight.w700,
               color: Palette.grey,
@@ -503,7 +502,6 @@ class QuizAssessmentBox extends StatelessWidget {
           ),
           Text(
             title,
-            maxLines: 1,
             style: kTextTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.w500,
               color: Palette.grey,

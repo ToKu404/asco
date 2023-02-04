@@ -102,6 +102,7 @@ class StudentLaboratoryPage extends StatelessWidget {
                             ],
                           ),
                         ),
+                        const SizedBox(width: 8),
                         SizedBox(
                           width: 43,
                           height: 47,
@@ -322,6 +323,8 @@ class MeetingCard extends StatelessWidget {
                         const SizedBox(height: 4),
                         Text(
                           course.date,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: kTextTheme.bodyMedium?.copyWith(
                             color: Palette.purple60,
                           ),
