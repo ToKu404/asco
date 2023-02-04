@@ -52,159 +52,132 @@ class StudentLaboratoryPage extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: <Widget>[
-            _buildHeader(
-              context,
-              title: 'Pemrograman Mobile A',
-              subtitle: 'Setiap hari Senin Pukul 10.10 - 12.40',
-              badgeAssetName: 'badge_android.svg',
-            ),
-            const SizedBox(height: 24),
-            _buildMenuCards(labMenuCards),
-            const SizedBox(height: 16),
-            _buildMeetingHeader(),
-            _buildMeetingBody(labCourses),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Stack _buildHeader(
-    BuildContext context, {
-    required String title,
-    required String subtitle,
-    required String badgeAssetName,
-  }) {
-    return Stack(
-      clipBehavior: Clip.none,
-      alignment: AlignmentDirectional.center,
-      children: <Widget>[
-        Positioned(
-          bottom: -8,
-          child: Container(
-            width: AppSize.getAppWidth(context) - 80,
-            height: 16,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.vertical(
-                bottom: Radius.circular(16),
-              ),
-              color: Palette.purple100,
-            ),
-          ),
-        ),
-        Container(
-          width: AppSize.getAppWidth(context),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            color: Palette.purple60,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Stack(
+              clipBehavior: Clip.none,
+              alignment: AlignmentDirectional.center,
               children: <Widget>[
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        title,
-                        style: kTextTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: Palette.white,
-                          height: 1.2,
-                        ),
+                Positioned(
+                  bottom: -8,
+                  child: Container(
+                    width: AppSize.getAppWidth(context) - 80,
+                    height: 16,
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.vertical(
+                        bottom: Radius.circular(16),
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        subtitle,
-                        style: kTextTheme.bodyMedium?.copyWith(
-                          color: Palette.white,
-                        ),
-                      ),
-                    ],
+                      color: Palette.purple100,
+                    ),
                   ),
                 ),
-                SizedBox(
-                  width: 43,
-                  height: 47,
-                  child: SvgPicture.asset(
-                    AssetPath.getVector(badgeAssetName),
+                Container(
+                  width: AppSize.getAppWidth(context),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    color: Palette.purple60,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                'Pemrograman Mobile A',
+                                style: kTextTheme.headlineMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: Palette.white,
+                                  height: 1.2,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Setiap hari Senin Pukul 10.10 - 12.40',
+                                style: kTextTheme.bodyMedium?.copyWith(
+                                  color: Palette.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          width: 43,
+                          height: 47,
+                          child: SvgPicture.asset(
+                            AssetPath.getVector('badge_android.svg'),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
             ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Padding _buildMenuCards(List<MenuCard> labMenuCards) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: labMenuCards,
-      ),
-    );
-  }
-
-  Padding _buildMeetingHeader() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Text(
-            'Pertemuan',
-            style: kTextTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w700,
-              color: Palette.purple100,
-            ),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: SvgPicture.asset(
-              AssetPath.getIcons('arrow_sort_filled.svg'),
-              color: Palette.purple100,
-              width: 20,
-            ),
-            tooltip: 'Sort',
-          )
-        ],
-      ),
-    );
-  }
-
-  Column _buildMeetingBody(List<Course> courses) {
-    return Column(
-      children: <Widget>[
-        SizedBox(
-          width: double.infinity,
-          height: 44,
-          child: OutlinedButton(
-            onPressed: null,
-            style: OutlinedButton.styleFrom(
-              side: const BorderSide(width: 2, color: Palette.white),
-              foregroundColor: Palette.white,
-              disabledForegroundColor: Palette.white,
-              backgroundColor: Palette.purple60.withOpacity(.4),
-              disabledBackgroundColor: Palette.purple60.withOpacity(.4),
-            ),
-            child: const Text('Pertemuan 4 Segera...'),
-          ),
-        ),
-        const SizedBox(height: 8),
-        ...courses
-            .map(
-              (course) => MeetingCard(
-                course: course,
-                courseNumberBackgroundColor: Palette.purple100,
+            const SizedBox(height: 24),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: labMenuCards,
               ),
-            )
-            .toList(),
-      ],
+            ),
+            const SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    'Pertemuan',
+                    style: kTextTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: Palette.purple100,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: SvgPicture.asset(
+                      AssetPath.getIcons('arrow_sort_filled.svg'),
+                      color: Palette.purple100,
+                      width: 20,
+                    ),
+                    tooltip: 'Sort',
+                  )
+                ],
+              ),
+            ),
+            SizedBox(
+              width: double.infinity,
+              height: 44,
+              child: OutlinedButton(
+                onPressed: null,
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(
+                    width: 2,
+                    color: Palette.white,
+                  ),
+                  foregroundColor: Palette.white,
+                  disabledForegroundColor: Palette.white,
+                  backgroundColor: Palette.purple60.withOpacity(.4),
+                  disabledBackgroundColor: Palette.purple60.withOpacity(.4),
+                ),
+                child: const Text('Pertemuan 4 Segera...'),
+              ),
+            ),
+            const SizedBox(height: 8),
+            ...labCourses
+                .map(
+                  (course) => MeetingCard(
+                    course: course,
+                    courseNumberBackgroundColor: Palette.purple100,
+                  ),
+                )
+                .toList(),
+          ],
+        ),
+      ),
     );
   }
 }
