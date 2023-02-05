@@ -40,7 +40,7 @@ class StudentLaboratoriumCourseDetailPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 40, 16, 12),
+                          padding: const EdgeInsets.fromLTRB(16, 32, 16, 12),
                           child: Text(
                             'Mengenal Bahasa Pemrograman Kotlin',
                             style: kTextTheme.headlineMedium?.copyWith(

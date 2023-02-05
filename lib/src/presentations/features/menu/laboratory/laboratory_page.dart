@@ -287,7 +287,7 @@ class MeetingCard extends StatelessWidget {
         color: Palette.white,
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(40),
+          borderRadius: BorderRadius.circular(99),
         ),
         child: InkWell(
           onTap: () => Navigator.push(
@@ -300,13 +300,12 @@ class MeetingCard extends StatelessWidget {
             ),
           ),
           child: SizedBox(
-            height: 80,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 8, 16, 8),
+              padding: const EdgeInsets.all(8),
               child: Row(
                 children: <Widget>[
                   CircleAvatar(
-                    radius: 40,
+                    radius: 36,
                     backgroundColor: courseNumberBackgroundColor,
                     child: Text(
                       '#${course.number}',
@@ -316,7 +315,7 @@ class MeetingCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
