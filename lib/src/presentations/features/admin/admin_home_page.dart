@@ -6,6 +6,7 @@ import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/presentations/features/admin/users_page/users_page.dart';
 import 'package:asco/src/presentations/features/login/welcome_page.dart';
 import 'package:asco/src/presentations/widgets/app_bar_title.dart';
+import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -39,7 +40,7 @@ class AdminHomePage extends StatefulWidget {
 class _AdminHomePageState extends State<AdminHomePage> {
   @override
   Widget build(BuildContext context) {
-    final _listAdminPage = [
+    final listAdminPage = [
       AdminPageHelper(
         'Data Pengguna',
         Icons.person_2_rounded,
@@ -154,71 +155,65 @@ class _AdminHomePageState extends State<AdminHomePage> {
             GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: _listAdminPage.length,
+                itemCount: listAdminPage.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 8,
                   mainAxisSpacing: 8,
-                  childAspectRatio: 1.3,
+                  childAspectRatio: 1.2,
                 ),
                 itemBuilder: (context, index) {
-                  return InkWell(
-                    borderRadius: BorderRadius.circular(12),
-                    onTap: _listAdminPage[index].page,
-                    child: Stack(
-                      children: [
-                        Positioned.fill(
-                          child: Container(
-                            margin: const EdgeInsets.only(left: 4, top: 3),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: Palette.purple80,
-                            ),
+                  return Stack(
+                    children: [
+                      Positioned.fill(
+                        child: Container(
+                          margin: const EdgeInsets.only(left: 4, top: 3),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Palette.purple80,
                           ),
                         ),
-                        Positioned.fill(
-                          child: Container(
-                            margin: const EdgeInsets.only(right: 4, bottom: 3),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: Palette.white,
-                              border:
-                                  Border.all(width: 1, color: Palette.purple60),
-                            ),
-                            padding: const EdgeInsets.all(20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  width: 32,
-                                  height: 32,
-                                  decoration: BoxDecoration(
-                                    color: Palette.purple60,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Icon(
-                                    _listAdminPage[index].icon,
-                                    color: Palette.white,
-                                    size: 20,
-                                  ),
+                      ),
+                      Positioned.fill(
+                        child: InkWellContainer(
+                          border: Border.all(width: 1, color: Palette.purple60),
+                          radius: 12,
+                          margin: const EdgeInsets.only(right: 4, bottom: 3),
+                          onTap: listAdminPage[index].page,
+                          color: Palette.white,
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 32,
+                                height: 32,
+                                decoration: BoxDecoration(
+                                  color: Palette.purple60,
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
-                                const SizedBox(
-                                  height: 12,
+                                child: Icon(
+                                  listAdminPage[index].icon,
+                                  color: Palette.white,
+                                  size: 20,
                                 ),
-                                Text(
-                                  _listAdminPage[index].title,
-                                  style: kTextTheme.bodyLarge?.copyWith(
-                                      color: Palette.purple80,
-                                      fontWeight: FontWeight.w600,
-                                      height: 1.05),
-                                  maxLines: 2,
-                                )
-                              ],
-                            ),
+                              ),
+                              const SizedBox(
+                                height: 12,
+                              ),
+                              Text(
+                                listAdminPage[index].title,
+                                style: kTextTheme.bodyLarge?.copyWith(
+                                    color: Palette.purple80,
+                                    fontWeight: FontWeight.w600,
+                                    height: 1.05),
+                                maxLines: 2,
+                              )
+                            ],
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   );
                 })
           ],

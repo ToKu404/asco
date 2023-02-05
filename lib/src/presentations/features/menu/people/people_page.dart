@@ -1,6 +1,7 @@
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/presentations/widgets/custom_badge.dart';
 import 'package:flutter/material.dart';
 
 class StudentPeoplePage extends StatelessWidget {
@@ -181,13 +182,6 @@ class StudentPeoplePage extends StatelessWidget {
   }
 }
 
-class TempBadgeHelper {
-  final int badgeId;
-  final String title;
-
-  TempBadgeHelper({required this.badgeId, required this.title});
-}
-
 class _BuildPeopleCard extends StatelessWidget {
   final String path;
   final String name;
@@ -200,13 +194,6 @@ class _BuildPeopleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _badge = [
-      Palette.purple100,
-      Palette.purple80,
-      Palette.plum80,
-      Palette.purple60
-    ];
-
     return Row(
       children: [
         Container(
@@ -242,23 +229,8 @@ class _BuildPeopleCard extends StatelessWidget {
               children: [
                 ...listBadgeModel
                     .map(
-                      (badgeModel) => Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 4,
-                          vertical: 2,
-                        ),
-                        margin: const EdgeInsets.only(right: 8),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: _badge[badgeModel.badgeId],
-                        ),
-                        child: Text(
-                          badgeModel.title,
-                          style: kTextTheme.bodySmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: Palette.white,
-                          ),
-                        ),
+                      (badgeModel) => BuildBadge(
+                        badgeHelper: badgeModel,
                       ),
                     )
                     .toList()

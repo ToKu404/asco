@@ -12,4 +12,5 @@ class AppRoute {
   // admin
   static const adminHomePage = '/admin/home';
   static const adminUsersPage = '/admin/users';
+  static const adminDetailUserPage = '/admin/users/user-detail';
 }
