@@ -48,7 +48,7 @@ class LoginModal extends StatelessWidget {
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 16),
                       child: Text(
-                        'Untuk mendapatkan informasi akun anda sialhkan hubungi kordinator lab.',
+                        'Untuk mendapatkan informasi akun anda silahkan hubungi kordinator lab.',
                         textAlign: TextAlign.center,
                       ),
                     ),

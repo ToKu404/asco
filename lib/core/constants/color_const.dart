@@ -6,18 +6,22 @@ class Palette {
 
   static const Color white = Color(0xFFFFFFFF);
   static const Color grey = Color(0xFFF2F6FE);
+  static const Color grey10 = Color(0xFFEDF2FB);
   static const Color disable = Color(0xFFA8B2C3);
   static const Color greyDark = Color(0xFF6884B6);
   static const Color purple100 = Color(0xFF1E0059);
   static const Color purple80 = Color(0xFF3E2484);
   static const Color purple60 = Color(0xFF744BE4);
+  static const Color purple50 = Color(0xFF9088E6);
   static const Color purple40 = Color(0xFF8172F4);
+  static const Color purple30 = Color(0xFF938AE5);
   static const Color purple20 = Color(0xFFBBAEF2);
   static const Color purple10 = Color(0xFFF1ECFF);
 
   // another color
   static const Color orange60 = Color(0xFFDA8535);
   static const Color orange10 = Color(0xFFFFEFE2);
+  static const Color orange20 = Color(0xFFFFB37F);
 
   static const Color violet60 = Color(0xFFE24EE8);
   static const Color violet30 = Color(0xFFF2B5F5);
