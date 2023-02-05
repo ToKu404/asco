@@ -1,6 +1,7 @@
 import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/presentations/features/menu/assistance/assistance_page.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/laboratory_page.dart';
 import 'package:asco/src/presentations/features/menu/people/people_page.dart';
 import 'package:asco/src/presentations/features/menu/profile/profile_page.dart';
@@ -33,13 +34,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
   int _selectedIndex = 0;
   final _pages = [
     const StudentLaboratoryPage(),
-    Scaffold(
-      backgroundColor: Palette.grey,
-      body: Text(
-        'Halaman 2',
-        style: kTextTheme.displayLarge?.copyWith(color: Palette.black),
-      ),
-    ),
+    const StudentAssistancePage(),
     Scaffold(
       backgroundColor: Palette.grey,
       body: Text(
