@@ -95,14 +95,12 @@ class StudentLaboratoriumCourseDetailPage extends StatelessWidget {
                 width: double.infinity,
                 child: TextButton.icon(
                   onPressed: () {},
-                  icon: SvgPicture.asset(
-                    AssetPath.getIcons('book_open_outlined.svg'),
-                    width: 20,
-                    color: Palette.purple100,
+                  icon: const Icon(
+                    Icons.auto_stories_outlined,
+                    size: 20,
                   ),
                   label: const Text('Buka Modul'),
                   style: TextButton.styleFrom(
-                    foregroundColor: Palette.purple100,
                     backgroundColor: Palette.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -111,146 +109,136 @@ class StudentLaboratoriumCourseDetailPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                  vertical: 16,
-                  horizontal: 20,
-                ),
-                decoration: BoxDecoration(
-                  color: Palette.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    const TitleSection(title: 'Status Pertemuan'),
-                    const StatusBadge(
-                      text: 'Selesai',
-                      color: Color(0xFF1D673F),
+              ContainerSection(
+                children: <Widget>[
+                  const TitleSection(title: 'Status Pertemuan'),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 4,
+                      horizontal: 8,
                     ),
-                    const SizedBox(height: 24),
-                    const TitleSection(title: 'Quiz'),
-                    CourseDetailTile(
-                      title: 'Quiz Pertemuan 1',
-                      subtitle: '10 Menit',
-                      hasTwoSubtitles: true,
-                      secondSubtitle: '5 Soal',
-                      titleColor: Palette.purple100,
-                      subtitleColor: Palette.purple60,
-                      backgroundColor: Palette.purple10,
-                      leadingBackgroundColor: Palette.purple20,
-                      leading: SvgPicture.asset(
-                        AssetPath.getVector('logo2.svg'),
-                        width: 24,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1D673F).withOpacity(.2),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      'Selesai',
+                      style: kTextTheme.bodyMedium?.copyWith(
+                        color: const Color(0xFF1D673F),
                       ),
                     ),
-                    const SizedBox(height: 24),
-                    const TitleSection(title: 'Absensi'),
-                    CourseDetailTile(
-                      title: 'Hadir',
-                      subtitle: 'Terlambat 15 Menit',
-                      titleColor: Palette.purple100,
-                      subtitleColor: Palette.salmon40,
-                      backgroundColor: Palette.white,
-                      leadingBackgroundColor: const Color(0xFF86DEAF),
-                      leading: SvgPicture.asset(
-                        AssetPath.getIcons('check.svg'),
-                        width: 24,
-                      ),
-                      tileShadow: const <BoxShadow>[
-                        BoxShadow(
-                          offset: Offset(0, 0),
-                          spreadRadius: 2,
-                          color: Palette.purple100,
-                        ),
-                        BoxShadow(
-                          offset: Offset(4, 2),
-                          spreadRadius: 2,
-                          color: Palette.purple100,
-                        ),
-                      ],
+                  ),
+                  const SizedBox(height: 24),
+                  const TitleSection(title: 'Quiz'),
+                  CourseDetailTile(
+                    title: 'Quiz Pertemuan 1',
+                    subtitle: '10 Menit',
+                    hasTwoSubtitles: true,
+                    secondSubtitle: '5 Soal',
+                    titleColor: Palette.purple100,
+                    subtitleColor: Palette.purple60,
+                    backgroundColor: Palette.purple10,
+                    leadingBackgroundColor: Palette.purple20,
+                    leading: SvgPicture.asset(
+                      AssetPath.getVector('logo2.svg'),
+                      width: 24,
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 24),
+                  const TitleSection(title: 'Absensi'),
+                  const CourseDetailTile(
+                    title: 'Hadir',
+                    subtitle: 'Terlambat 15 Menit',
+                    titleColor: Palette.purple100,
+                    subtitleColor: Palette.salmon40,
+                    backgroundColor: Palette.white,
+                    leadingBackgroundColor: Color(0xFF86DEAF),
+                    leading: Icon(
+                      Icons.check_rounded,
+                      size: 20,
+                      color: Palette.white,
+                    ),
+                    tileShadow: <BoxShadow>[
+                      BoxShadow(
+                        offset: Offset(0, 0),
+                        spreadRadius: 2,
+                        color: Palette.purple100,
+                      ),
+                      BoxShadow(
+                        offset: Offset(4, 2),
+                        spreadRadius: 2,
+                        color: Palette.purple100,
+                      ),
+                    ],
+                  ),
+                ],
               ),
               const SizedBox(height: 20),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                  vertical: 16,
-                  horizontal: 20,
-                ),
-                decoration: BoxDecoration(
-                  color: Palette.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    const TitleSection(title: 'Nilai Quiz'),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        CircularPercentIndicator(
-                          animation: true,
-                          curve: Curves.easeOut,
-                          radius: 50,
-                          lineWidth: 10,
-                          percent: .78,
-                          progressColor: Palette.purple60,
-                          backgroundColor: Colors.transparent,
-                          circularStrokeCap: CircularStrokeCap.round,
-                          center: Container(
-                            width: 100,
-                            height: 100,
-                            margin: const EdgeInsets.all(9),
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Palette.purple80,
-                            ),
-                            child: Center(
-                              child: Text(
-                                '78.0',
-                                style: kTextTheme.headlineMedium?.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                  color: Palette.white,
-                                ),
+              ContainerSection(
+                children: <Widget>[
+                  const TitleSection(title: 'Nilai Quiz'),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      CircularPercentIndicator(
+                        animation: true,
+                        curve: Curves.easeOut,
+                        radius: 50,
+                        lineWidth: 10,
+                        percent: .78,
+                        progressColor: Palette.purple60,
+                        backgroundColor: Colors.transparent,
+                        circularStrokeCap: CircularStrokeCap.round,
+                        center: Container(
+                          width: 100,
+                          height: 100,
+                          margin: const EdgeInsets.all(9),
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Palette.purple80,
+                          ),
+                          child: Center(
+                            child: Text(
+                              '78.0',
+                              style: kTextTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: Palette.white,
                               ),
                             ),
                           ),
                         ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            children: <Widget>[
-                              Row(
-                                children: const <Widget>[
-                                  QuizAssessmentBox(
-                                    title: 'Benar',
-                                    value: 4,
-                                    backgroundColor: Palette.azure20,
-                                  ),
-                                  Spacer(),
-                                  QuizAssessmentBox(
-                                    title: 'Salah',
-                                    value: 1,
-                                    backgroundColor: Palette.plum20,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 12),
-                              Container(
-                                width: double.infinity,
-                                height: 24,
-                                padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFF2CF74),
-                                  borderRadius: BorderRadius.circular(24),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          children: <Widget>[
+                            Row(
+                              children: const <Widget>[
+                                QuizAssessmentBox(
+                                  title: 'Benar',
+                                  value: 4,
+                                  backgroundColor: Palette.azure20,
                                 ),
-                                child: Row(
-                                  children: <Widget>[
-                                    const Badge(
+                                Spacer(),
+                                QuizAssessmentBox(
+                                  title: 'Salah',
+                                  value: 1,
+                                  backgroundColor: Palette.plum20,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFF2CF74),
+                                borderRadius: BorderRadius.circular(24),
+                              ),
+                              child: Row(
+                                children: <Widget>[
+                                  const Flexible(
+                                    child: Badge(
                                       label: Text(
                                         '+10',
                                         style: TextStyle(
@@ -260,8 +248,10 @@ class StudentLaboratoriumCourseDetailPage extends StatelessWidget {
                                       textColor: Color(0xFFF2CF74),
                                       backgroundColor: Palette.white,
                                     ),
-                                    const SizedBox(width: 6),
-                                    Text(
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Expanded(
+                                    child: Text(
                                       'Poin Bonus',
                                       style: kTextTheme.bodyMedium?.copyWith(
                                         fontWeight: FontWeight.w600,
@@ -269,16 +259,16 @@ class StudentLaboratoriumCourseDetailPage extends StatelessWidget {
                                         height: 1,
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ],
           ),
@@ -327,6 +317,28 @@ class MentorTile extends StatelessWidget {
   }
 }
 
+class ContainerSection extends StatelessWidget {
+  final List<Widget> children;
+
+  const ContainerSection({super.key, required this.children});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
+      decoration: BoxDecoration(
+        color: Palette.white,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: children,
+      ),
+    );
+  }
+}
+
 class TitleSection extends StatelessWidget {
   final String title;
 
@@ -342,35 +354,6 @@ class TitleSection extends StatelessWidget {
           fontWeight: FontWeight.w600,
           color: Palette.purple80,
         ),
-      ),
-    );
-  }
-}
-
-class StatusBadge extends StatelessWidget {
-  final String text;
-  final Color color;
-
-  const StatusBadge({
-    super.key,
-    required this.text,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        vertical: 4,
-        horizontal: 8,
-      ),
-      decoration: BoxDecoration(
-        color: color.withOpacity(.2),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Text(
-        text,
-        style: kTextTheme.bodyMedium?.copyWith(color: color),
       ),
     );
   }
@@ -510,7 +493,6 @@ class QuizAssessmentBox extends StatelessWidget {
         children: <Text>[
           Text(
             '$value',
-            maxLines: 1,
             style: kTextTheme.headlineMedium?.copyWith(
               fontWeight: FontWeight.w700,
               color: Palette.grey,
@@ -519,7 +501,6 @@ class QuizAssessmentBox extends StatelessWidget {
           ),
           Text(
             title,
-            maxLines: 1,
             style: kTextTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.w500,
               color: Palette.grey,

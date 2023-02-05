@@ -41,9 +41,21 @@ class StudentLaboratoryPage extends StatelessWidget {
     ];
 
     const labCourses = <Course>[
-      Course(3, 'Studi Kasus: E-Wallet App', '10 Maret 2023'),
-      Course(2, 'Buat Aplikasi Android Pertamamu!', '3 Maret 2023'),
-      Course(1, 'Mengenal Bahasa Pemrograman Kotlin', '27 Februari 2023'),
+      Course(
+        3,
+        'Studi Kasus: E-Wallet App',
+        '10 Maret 2023',
+      ),
+      Course(
+        2,
+        'Buat Aplikasi Android Pertamamu!',
+        '3 Maret 2023',
+      ),
+      Course(
+        1,
+        'Mengenal Bahasa Pemrograman Kotlin',
+        '27 Februari 2023',
+      ),
     ];
 
     return Scaffold(
@@ -102,6 +114,7 @@ class StudentLaboratoryPage extends StatelessWidget {
                             ],
                           ),
                         ),
+                        const SizedBox(width: 8),
                         SizedBox(
                           width: 43,
                           height: 47,
@@ -144,7 +157,7 @@ class StudentLaboratoryPage extends StatelessWidget {
                       width: 20,
                     ),
                     tooltip: 'Sort',
-                  )
+                  ),
                 ],
               ),
             ),
@@ -322,6 +335,8 @@ class MeetingCard extends StatelessWidget {
                         const SizedBox(height: 4),
                         Text(
                           course.date,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: kTextTheme.bodyMedium?.copyWith(
                             color: Palette.purple60,
                           ),
@@ -343,6 +358,7 @@ class Course {
   final int number;
   final String topic;
   final String date;
+  final bool? isLocked;
 
-  const Course(this.number, this.topic, this.date);
+  const Course(this.number, this.topic, this.date, {this.isLocked = true});
 }
