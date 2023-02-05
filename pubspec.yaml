@@ -18,10 +18,15 @@ dependencies:
   get_it: ^7.2.0
   qr: ^3.0.1
   percent_indicator: ^4.2.2
+  equatable: ^2.0.5
+  shared_preferences: ^2.0.17
+
+
 
   # firebase
   firebase_core: ^2.4.1
   cloud_firestore: ^4.3.1
+  dartz: ^0.10.1
 
 dev_dependencies:
   flutter_test:
