@@ -3,6 +3,7 @@ import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/presentations/features/menu/assistance/assistance_page.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/laboratory_page.dart';
+import 'package:asco/src/presentations/features/menu/leaderboard/leaderboard_page.dart';
 import 'package:asco/src/presentations/features/menu/people/people_page.dart';
 import 'package:asco/src/presentations/features/menu/profile/profile_page.dart';
 import 'package:asco/src/presentations/widgets/side_menu_parent.dart';
@@ -35,13 +36,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
   final _pages = [
     const StudentLaboratoryPage(),
     const StudentAssistancePage(),
-    Scaffold(
-      backgroundColor: Palette.grey,
-      body: Text(
-        'Halaman 3',
-        style: kTextTheme.displayLarge?.copyWith(color: Palette.black),
-      ),
-    ),
+    const LeaderboardPage(),
     Scaffold(
       backgroundColor: Palette.grey,
       body: Text(
