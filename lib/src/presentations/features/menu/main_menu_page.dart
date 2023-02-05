@@ -61,9 +61,14 @@ class _MainMenuPageState extends State<MainMenuPage> {
           return const StudentProfilePage();
         }
         return Scaffold(
-          appBar: AppBar(
-            title: const AppBarTitle(),
-          ),
+          appBar: _selectedIndex == 2
+              ? AppBar(
+                  backgroundColor: Palette.purple80,
+                  leading: const SizedBox.shrink(),
+                )
+              : AppBar(
+                  title: const AppBarTitle(),
+                ),
           backgroundColor: Palette.grey,
           body: SafeArea(
             child: _pages[_selectedIndex],
