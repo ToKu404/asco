@@ -1,6 +1,5 @@
 import 'dart:math' as math;
 
-import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/laboratory_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';

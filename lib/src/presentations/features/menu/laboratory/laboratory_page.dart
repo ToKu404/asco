@@ -131,8 +131,13 @@ class StudentLaboratoryPage extends StatelessWidget {
             const SizedBox(height: 24),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: GridView.count(
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: 2,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                childAspectRatio: 16 / 7,
+                shrinkWrap: true,
                 children: labMenuCards,
               ),
             ),
@@ -221,45 +226,43 @@ class MenuCard extends StatelessWidget {
       ),
       child: InkWell(
         onTap: () {},
-        child: SizedBox(
-          width: 68,
-          height: 92,
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: fillColor,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        width: 2,
-                        color: strokeColor,
-                      ),
-                    ),
-                    child: Center(
-                      child: SvgPicture.asset(
-                        AssetPath.getIcons(iconName),
-                      ),
-                    ),
+        child: Padding(
+          padding: const EdgeInsets.only(
+            left: 8,
+            right: 16,
+          ),
+          child: Row(
+            children: <Widget>[
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: fillColor,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    width: 2,
+                    color: strokeColor,
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(
+                child: Center(
+                  child: SvgPicture.asset(
+                    AssetPath.getIcons(iconName),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
                   title,
                   maxLines: 2,
-                  textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
                   style: kTextTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: strokeColor,
-                    letterSpacing: 0,
-                    height: 1,
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
