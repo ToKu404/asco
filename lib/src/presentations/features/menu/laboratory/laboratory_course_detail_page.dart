@@ -95,14 +95,12 @@ class StudentLaboratoriumCourseDetailPage extends StatelessWidget {
                 width: double.infinity,
                 child: TextButton.icon(
                   onPressed: () {},
-                  icon: SvgPicture.asset(
-                    AssetPath.getIcons('book_open_outlined.svg'),
-                    width: 20,
-                    color: Palette.purple100,
+                  icon: const Icon(
+                    Icons.auto_stories_outlined,
+                    size: 20,
                   ),
                   label: const Text('Buka Modul'),
                   style: TextButton.styleFrom(
-                    foregroundColor: Palette.purple100,
                     backgroundColor: Palette.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -148,18 +146,19 @@ class StudentLaboratoriumCourseDetailPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   const TitleSection(title: 'Absensi'),
-                  CourseDetailTile(
+                  const CourseDetailTile(
                     title: 'Hadir',
                     subtitle: 'Terlambat 15 Menit',
                     titleColor: Palette.purple100,
                     subtitleColor: Palette.salmon40,
                     backgroundColor: Palette.white,
-                    leadingBackgroundColor: const Color(0xFF86DEAF),
-                    leading: SvgPicture.asset(
-                      AssetPath.getIcons('check.svg'),
-                      width: 24,
+                    leadingBackgroundColor: Color(0xFF86DEAF),
+                    leading: Icon(
+                      Icons.check_rounded,
+                      size: 20,
+                      color: Palette.white,
                     ),
-                    tileShadow: const <BoxShadow>[
+                    tileShadow: <BoxShadow>[
                       BoxShadow(
                         offset: Offset(0, 0),
                         spreadRadius: 2,
