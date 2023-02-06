@@ -174,79 +174,18 @@ class StudentAssistanceCourseDetailPage extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               const TitleSection(title: 'Absensi'),
-              Column(
-                children: <Widget>[
-                  Container(
-                    width: AppSize.getAppWidth(context),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: Palette.white,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 16,
-                        horizontal: 20,
-                      ),
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            flex: 2,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  'Asistensi 1',
-                                  style: kTextTheme.titleSmall?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: Palette.purple100,
-                                  ),
-                                ),
-                                Text(
-                                  '20 Februari 2022',
-                                  style: kTextTheme.bodyMedium?.copyWith(
-                                    color: const Color(0xFF97979A),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 4,
-                                horizontal: 8,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Palette.purple60.withOpacity(.2),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'Tepat Waktu',
-                                  style: kTextTheme.bodySmall?.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    color: Palette.purple60,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: 40,
-                    width: AppSize.getAppWidth(context) - 60,
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.vertical(
-                        bottom: Radius.circular(16),
-                      ),
-                      color: Palette.purple80,
-                    ),
-                  )
-                ],
+              const AttendanceCard(
+                date: '20 Februari 2021',
+                notes: 'Tidak ada catatan',
+                statusBadgeText: 'Tepat Waktu',
+                statusBadgeColor: Palette.purple60,
+              ),
+              const SizedBox(height: 16),
+              const AttendanceCard(
+                date: '22 Februari 2021',
+                notes: 'Minimal bawa makanan lah',
+                statusBadgeText: 'Terlambat',
+                statusBadgeColor: Color(0xFFD35380),
               ),
             ],
           ),
@@ -272,6 +211,118 @@ class TitleSection extends StatelessWidget {
           color: Palette.purple100,
         ),
       ),
+    );
+  }
+}
+
+class AttendanceCard extends StatelessWidget {
+  final String date;
+  final String statusBadgeText;
+  final Color statusBadgeColor;
+  final String notes;
+
+  const AttendanceCard({
+    super.key,
+    required this.date,
+    required this.statusBadgeText,
+    required this.statusBadgeColor,
+    required this.notes,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Container(
+          width: AppSize.getAppWidth(context),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: Palette.white,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 16,
+              horizontal: 20,
+            ),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        'Asistensi 1',
+                        style: kTextTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: Palette.purple100,
+                        ),
+                      ),
+                      Text(
+                        date,
+                        style: kTextTheme.bodyMedium?.copyWith(
+                          color: const Color(0xFF97979A),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 4,
+                      horizontal: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: statusBadgeColor.withOpacity(.2),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Center(
+                      child: Text(
+                        statusBadgeText,
+                        style: kTextTheme.bodySmall?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: statusBadgeColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Container(
+          width: AppSize.getAppWidth(context) - 56,
+          padding: const EdgeInsets.all(16),
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.vertical(
+              bottom: Radius.circular(12),
+            ),
+            color: Palette.purple80,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'Catatan Asisten',
+                style: kTextTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: Palette.white,
+                ),
+              ),
+              Text(
+                '"$notes"',
+                style: kTextTheme.bodyMedium?.copyWith(
+                  color: Palette.white,
+                ),
+              ),
+            ],
+          ),
+        )
+      ],
     );
   }
 }

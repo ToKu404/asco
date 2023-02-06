@@ -215,20 +215,24 @@ class StudentLaboratoriumCourseDetailPage extends StatelessWidget {
                           children: <Widget>[
                             Row(
                               children: const <Widget>[
-                                QuizAssessmentBox(
-                                  title: 'Benar',
-                                  value: 4,
-                                  backgroundColor: Palette.azure20,
+                                Expanded(
+                                  child: QuizAssessmentBox(
+                                    title: 'Benar',
+                                    value: 4,
+                                    backgroundColor: Palette.azure20,
+                                  ),
                                 ),
-                                Spacer(),
-                                QuizAssessmentBox(
-                                  title: 'Salah',
-                                  value: 1,
-                                  backgroundColor: Palette.plum20,
+                                SizedBox(width: 8),
+                                Expanded(
+                                  child: QuizAssessmentBox(
+                                    title: 'Salah',
+                                    value: 1,
+                                    backgroundColor: Palette.plum20,
+                                  ),
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 12),
+                            const SizedBox(height: 8),
                             Container(
                               width: double.infinity,
                               padding: const EdgeInsets.all(4),
@@ -483,7 +487,6 @@ class QuizAssessmentBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 80,
       padding: const EdgeInsets.fromLTRB(12, 20, 12, 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
