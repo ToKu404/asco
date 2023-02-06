@@ -6,6 +6,8 @@ class AppRoute {
   static const studentMainMenuPage = '/student/main-menu';
   static const studentLaboratoriumCourseDetailPage =
       '/student/main-menu/laboratory-course-detail';
+  static const studentAssistanceCourseDetailPage =
+      '/student/main-menu/assistance-course-detail';
 
   // admin
   static const adminHomePage = '/admin/home';

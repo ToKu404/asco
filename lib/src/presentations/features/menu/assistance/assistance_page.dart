@@ -1,13 +1,15 @@
 import 'dart:math' as math;
 
-import 'package:asco/src/presentations/features/menu/laboratory/laboratory_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/presentations/features/menu/assistance/assistance_course_detail_page.dart';
+import 'package:asco/src/presentations/features/menu/laboratory/laboratory_page.dart';
 
 class StudentAssistancePage extends StatelessWidget {
   const StudentAssistancePage({super.key});
@@ -275,13 +277,15 @@ class StudentAvatar extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          Text(
-            student.name,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: kTextTheme.bodySmall?.copyWith(
-              color: Palette.purple100,
+          Expanded(
+            child: Text(
+              student.name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: kTextTheme.bodySmall?.copyWith(
+                color: Palette.purple100,
+              ),
             ),
           )
         ],
@@ -308,11 +312,21 @@ class ControlCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
         ),
         child: InkWell(
-          onTap: () {},
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const StudentAssistanceCourseDetailPage(),
+              settings: const RouteSettings(
+                name: AppRoute.studentAssistanceCourseDetailPage,
+              ),
+            ),
+          ),
           child: SizedBox(
-            height: 88,
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(
+                vertical: 20,
+                horizontal: 16,
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -381,23 +395,15 @@ class ControlCard extends StatelessWidget {
                         const AssistanceStatusBadge(),
                       ] else ...[
                         const AssistanceStatusBadge(
-                          borderColor: Color(0xFF33138A),
+                          borderColor: Palette.purple80,
                           fillColor: Palette.purple60,
-                          centerChild: Icon(
-                            Icons.check_rounded,
-                            size: 16,
-                            color: Palette.white,
-                          ),
+                          icon: Icons.check_rounded,
                         ),
                         const SizedBox(width: 4),
                         const AssistanceStatusBadge(
                           borderColor: Color(0xFFD35380),
                           fillColor: Color(0xFFFA78A6),
-                          centerChild: Icon(
-                            Icons.close_rounded,
-                            size: 16,
-                            color: Palette.white,
-                          ),
+                          icon: Icons.close_rounded,
                         ),
                       ],
                     ],
@@ -415,13 +421,13 @@ class ControlCard extends StatelessWidget {
 class AssistanceStatusBadge extends StatelessWidget {
   final Color? borderColor;
   final Color? fillColor;
-  final Widget? centerChild;
+  final IconData? icon;
 
   const AssistanceStatusBadge({
     super.key,
     this.borderColor,
     this.fillColor,
-    this.centerChild,
+    this.icon,
   });
 
   @override
@@ -437,7 +443,11 @@ class AssistanceStatusBadge extends StatelessWidget {
         ),
       ),
       child: Center(
-        child: centerChild,
+        child: Icon(
+          icon,
+          size: 16,
+          color: Palette.white,
+        ),
       ),
     );
   }
