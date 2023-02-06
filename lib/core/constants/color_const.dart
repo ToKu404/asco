@@ -40,4 +40,6 @@ class Palette {
 
   static const Color tosca40 = Color(0xFF85D8DD);
   static const Color tosca20 = Color(0xFFAEF2DE);
+
+  static const Color red = Color(0xFFE44B70);
 }

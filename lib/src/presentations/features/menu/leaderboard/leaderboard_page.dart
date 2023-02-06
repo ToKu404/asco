@@ -77,7 +77,7 @@ class LeaderboardPage extends StatelessWidget {
                     child: CardTile(
                       name: 'Erwin',
                       value: 88.0,
-                      position: index + 3,
+                      position: index + 4,
                       assetName: 'avatar1.jpg',
                     ),
                   );
