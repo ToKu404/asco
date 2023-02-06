@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:percent_indicator/percent_indicator.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
@@ -20,7 +20,7 @@ class StudentLaboratoriumCourseDetailPage extends StatelessWidget {
         onPressedBackButton: () => Navigator.pop(context),
       ),
       body: NestedScrollView(
-        headerSliverBuilder: (BuildContext _, bool __) {
+        headerSliverBuilder: (_, __) {
           return <Widget>[
             SliverToBoxAdapter(
               child: Container(
@@ -182,6 +182,7 @@ class StudentLaboratoriumCourseDetailPage extends StatelessWidget {
                     children: <Widget>[
                       CircularPercentIndicator(
                         animation: true,
+                        animationDuration: 3000,
                         curve: Curves.easeOut,
                         radius: 50,
                         lineWidth: 10,

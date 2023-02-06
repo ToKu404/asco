@@ -1,13 +1,15 @@
 import 'dart:math' as math;
 
-import 'package:asco/src/presentations/features/menu/laboratory/laboratory_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/presentations/features/menu/assistance/assistance_course_detail_page.dart';
+import 'package:asco/src/presentations/features/menu/laboratory/laboratory_page.dart';
 
 class StudentAssistancePage extends StatelessWidget {
   const StudentAssistancePage({super.key});
@@ -310,7 +312,15 @@ class ControlCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
         ),
         child: InkWell(
-          onTap: () {},
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const StudentAssistanceCourseDetailPage(),
+              settings: const RouteSettings(
+                name: AppRoute.studentAssistanceCourseDetailPage,
+              ),
+            ),
+          ),
           child: SizedBox(
             child: Padding(
               padding: const EdgeInsets.symmetric(
@@ -385,7 +395,7 @@ class ControlCard extends StatelessWidget {
                         const AssistanceStatusBadge(),
                       ] else ...[
                         const AssistanceStatusBadge(
-                          borderColor: Color(0xFF33138A),
+                          borderColor: Palette.purple80,
                           fillColor: Palette.purple60,
                           icon: Icons.check_rounded,
                         ),

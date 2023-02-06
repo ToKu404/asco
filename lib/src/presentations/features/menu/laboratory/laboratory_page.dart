@@ -168,7 +168,6 @@ class StudentLaboratoryPage extends StatelessWidget {
             ),
             SizedBox(
               width: double.infinity,
-              height: 44,
               child: OutlinedButton(
                 onPressed: null,
                 style: OutlinedButton.styleFrom(
