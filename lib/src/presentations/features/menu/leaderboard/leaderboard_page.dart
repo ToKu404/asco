@@ -33,7 +33,7 @@ class LeaderboardPage extends StatelessWidget {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ValueRecap(),
+                  builder: (context) => const ValueRecap(),
                   settings: const RouteSettings(
                     name: AppRoute.valueRecapLeaderboardPage,
                   ),
@@ -52,7 +52,7 @@ class LeaderboardPage extends StatelessWidget {
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ValueRecap(),
+                    builder: (context) => const ValueRecap(),
                     settings: const RouteSettings(
                       name: AppRoute.valueRecapLeaderboardPage,
                     ),
