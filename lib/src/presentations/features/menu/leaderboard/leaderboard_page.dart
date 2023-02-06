@@ -1,6 +1,8 @@
+import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/presentations/features/menu/leaderboard/value_recap.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -27,16 +29,35 @@ class LeaderboardPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            const LeaderboardCard(
-              leaderboard: '#4',
-              text: 'Kamu memperoleh nilai sementara 80.2',
-              detail: 'Klik untuk melihat detail',
+            InkWell(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ValueRecap(),
+                  settings: const RouteSettings(
+                    name: AppRoute.valueRecapLeaderboardPage,
+                  ),
+                ),
+              ),
+              child: const LeaderboardCard(
+                leaderboard: '#4',
+                text: 'Kamu memperoleh nilai sementara 80.2',
+                detail: 'Klik untuk melihat detail',
+              ),
             ),
             const SizedBox(height: 12),
             Align(
               alignment: Alignment.topRight,
               child: InkWell(
-                onTap: () {},
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ValueRecap(),
+                    settings: const RouteSettings(
+                      name: AppRoute.valueRecapLeaderboardPage,
+                    ),
+                  ),
+                ),
                 splashColor: Colors.transparent,
                 child: Container(
                   decoration: BoxDecoration(
