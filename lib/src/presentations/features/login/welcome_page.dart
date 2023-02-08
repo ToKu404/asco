@@ -141,6 +141,7 @@ class _WelcomePageState extends State<WelcomePage> {
                           pageBuilder: (context, _, __) {
                             return const LoginModal();
                           },
+                          
                         );
                       },
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,

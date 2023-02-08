@@ -7,7 +7,7 @@ import 'package:asco/src/presentations/features/menu/laboratory/laboratory_page.
 import 'package:asco/src/presentations/features/menu/leaderboard/leaderboard_page.dart';
 import 'package:asco/src/presentations/features/menu/people/people_page.dart';
 import 'package:asco/src/presentations/features/menu/profile/profile_page.dart';
-import 'package:asco/src/presentations/widgets/side_menu_parent.dart';
+import 'package:asco/src/presentations/widgets/side_menu/side_menu_parent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 

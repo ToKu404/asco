@@ -5,7 +5,7 @@ import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/presentations/features/menu/main_menu_page.dart';
 import 'package:asco/src/presentations/widgets/app_bar_title.dart';
-import 'package:asco/src/presentations/widgets/side_menu_parent.dart';
+import 'package:asco/src/presentations/widgets/side_menu/side_menu_parent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 

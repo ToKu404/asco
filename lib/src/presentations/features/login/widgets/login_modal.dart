@@ -1,13 +1,15 @@
-import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/core/services/auth_service.dart';
-import 'package:asco/core/utils/rive_utils.dart';
+import 'package:asco/core/state/request_state.dart';
 import 'package:asco/src/presentations/features/admin/admin_home_page.dart';
 import 'package:asco/src/presentations/features/home/home_page.dart';
+import 'package:asco/src/presentations/providers/auth_notifier.dart';
+import 'package:asco/src/presentations/widgets/asco_loading.dart';
 import 'package:asco/src/presentations/widgets/blur_background.dart';
 import 'package:flutter/material.dart';
-import 'package:rive/rive.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:provider/provider.dart';
 
 class LoginModal extends StatelessWidget {
   const LoginModal({
@@ -61,6 +63,7 @@ class LoginModal extends StatelessWidget {
                   bottom: -48,
                   child: InkWell(
                     onTap: () {
+                      context.read<AuthNotifier>().reset();
                       Navigator.pop(context);
                     },
                     child: const CircleAvatar(
@@ -95,7 +98,7 @@ class _SignInFormState extends State<_SignInForm> {
   final TextEditingController _passwordController = TextEditingController();
   ValueNotifier<bool> isHide = ValueNotifier(true);
 
-  bool isShowLoading = false;
+  bool isLoadingStart = false;
 
   @override
   void dispose() {
@@ -105,45 +108,57 @@ class _SignInFormState extends State<_SignInForm> {
     super.dispose();
   }
 
-  late SMITrigger check;
-  late SMITrigger error;
-  late SMITrigger reset;
-
   void signIn(BuildContext context) {
-    setState(() {
-      isShowLoading = true;
-    });
-    Future.delayed(const Duration(seconds: 1), () {
-      if (_formKey.currentState!.validate()) {
-        check.fire();
-        Future.delayed(const Duration(seconds: 2), () {
-          setState(() {
-            isShowLoading = false;
-          });
+    FocusScope.of(context).unfocus();
 
-          Future.delayed(const Duration(seconds: 1), () {
-            if (_usernameController.text.trim() == 'superadmin' &&
-                AuthService.hashPassword(_passwordController.text.trim()) ==
-                    AuthService.nowPasswordTemp) {
-              showAdminHomePage(context: context);
-            } else {
-              showHomePage(context: context);
-            }
-          });
-        });
-      } else {
-        error.fire();
-        Future.delayed(const Duration(seconds: 2), () {
-          setState(() {
-            isShowLoading = false;
-          });
-        });
-      }
-    });
+    if (_formKey.currentState!.validate()) {
+      final provider = context.read<AuthNotifier>();
+      final username = _usernameController.text.trim();
+      final password =
+          AuthService.hashPassword(_passwordController.text.trim());
+      provider.login(username, password);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.watch<AuthNotifier>();
+
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      if (provider.loginState == RequestState.error) {
+        Future.delayed(const Duration(seconds: 2), () {
+          if (isLoadingStart) Navigator.pop(context);
+          isLoadingStart = false;
+        });
+      } else if (provider.loginState == RequestState.loading) {
+        isLoadingStart = true;
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) {
+            return const AscoLoading();
+          },
+        );
+      } else if (provider.loginState == RequestState.success) {
+        Future.delayed(const Duration(seconds: 2), () {
+          if (isLoadingStart) Navigator.pop(context);
+          isLoadingStart = false;
+
+          if (provider.userCredentialEntity != null) {
+            final credentialData = provider.userCredentialEntity!;
+            if (credentialData.roleId == 0) {
+              showAdminHomePage(context: context);
+            } else if (credentialData.roleId == 1) {
+              showHomePage(context: context);
+            } else if (credentialData.roleId == 2) {
+              showHomePage(context: context);
+            }
+          }
+          provider.reset();
+        });
+      }
+    });
+
     return Stack(
       children: [
         Form(
@@ -168,10 +183,6 @@ class _SignInFormState extends State<_SignInForm> {
                     }
                     return null;
                   },
-
-                  // onSaved: (id) {
-                  //   username = id ?? '';
-                  // },
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.symmetric(vertical: 8),
                     enabledBorder: OutlineInputBorder(
@@ -234,9 +245,6 @@ class _SignInFormState extends State<_SignInForm> {
                           }
                           return null;
                         },
-                        // onSaved: (pass) {
-                        //   password = pass ?? '';
-                        // },
                         obscureText: data,
                         decoration: InputDecoration(
                           contentPadding:
@@ -325,48 +333,7 @@ class _SignInFormState extends State<_SignInForm> {
             ],
           ),
         ),
-        isShowLoading
-            ? _CustomPositioned(
-                size: 100,
-                child: RiveAnimation.asset(
-                  AssetPath.getRive('checkerror.riv'),
-                  onInit: (artboard) {
-                    StateMachineController controller =
-                        RiveUtils.getRiveController(artboard);
-                    check = controller.findSMI("Check") as SMITrigger;
-                    error = controller.findSMI("Error") as SMITrigger;
-                    reset = controller.findSMI("Reset") as SMITrigger;
-                  },
-                ),
-              )
-            : const SizedBox.shrink(),
       ],
-    );
-  }
-}
-
-class _CustomPositioned extends StatelessWidget {
-  const _CustomPositioned({required this.child, required this.size});
-
-  final double size;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned.fill(
-      child: Column(
-        children: [
-          const Spacer(),
-          SizedBox(
-            width: size,
-            height: size,
-            child: child,
-          ),
-          const Spacer(
-            flex: 2,
-          )
-        ],
-      ),
     );
   }
 }
