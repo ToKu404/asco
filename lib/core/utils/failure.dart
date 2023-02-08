@@ -12,3 +12,7 @@ abstract class Failure extends Equatable {
 class FirestoreFailure extends Failure {
   const FirestoreFailure(super.message);
 }
+
+class PreferencesFailure extends Failure {
+  const PreferencesFailure(super.message);
+}

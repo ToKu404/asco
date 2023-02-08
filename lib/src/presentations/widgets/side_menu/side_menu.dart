@@ -68,11 +68,11 @@ class _SideMenuState extends State<SideMenu> {
     //   unselectedIconPath: AssetPath.getIcons('info_outlined.svg'),
     //   selectedIconPath: AssetPath.getIcons('info_filled.svg'),
     // ),
-    // MenuHelper(
-    //   title: 'Keluar',
-    //   unselectedIconPath: AssetPath.getIcons('logout_outlined.svg'),
-    //   selectedIconPath: AssetPath.getIcons('logout_outlined.svg'),
-    // ),
+    MenuHelper(
+      title: 'Keluar',
+      unselectedIconPath: AssetPath.getIcons('logout_outlined.svg'),
+      selectedIconPath: AssetPath.getIcons('logout_outlined.svg'),
+    ),
   ];
 
   @override
@@ -114,7 +114,7 @@ class _SideMenuState extends State<SideMenu> {
                                     color: Palette.disable,
                                   )),
                             ),
-                            for (int i = 0; i < listMenu.length; i++)
+                            for (int i = 0; i < listMenu.length - 1; i++)
                               SideMenuTile(
                                 menu: listMenu[i],
                                 press: () {
@@ -123,29 +123,30 @@ class _SideMenuState extends State<SideMenu> {
                                 },
                                 isActive: value == i,
                               ),
-                            // Padding(
-                            //   padding: const EdgeInsets.only(
-                            //     left: 24,
-                            //     top: 24,
-                            //     bottom: 16,
-                            //   ),
-                            //   child: Text(
-                            //     "Lainnya",
-                            //     style: kTextTheme.bodyLarge?.copyWith(
-                            //       color: Palette.disable,
-                            //     ),
-                            //   ),
-                            // ),
-                            // for (int i = listMenu.length - 2;
-                            //     i < listMenu.length;
-                            //     i++)
-                            //   SideMenuTile(
-                            //     menu: listMenu[i],
-                            //     press: () {
-                            //       widget.selectedIndex.value = i;
-                            //     },
-                            //     isActive: value == i,
-                            //   ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 24,
+                                top: 24,
+                                bottom: 16,
+                              ),
+                              child: Text(
+                                "Lainnya",
+                                style: kTextTheme.bodyLarge?.copyWith(
+                                  color: Palette.disable,
+                                ),
+                              ),
+                            ),
+                            for (int i = listMenu.length - 1;
+                                i < listMenu.length;
+                                i++)
+                              SideMenuTile(
+                                menu: listMenu[i],
+                                press: () {
+                                  widget.selectedIndex.value = i;
+                                  widget.onSelect!(i);
+                                },
+                                isActive: value == i,
+                              ),
                           ],
                         ),
                       ),

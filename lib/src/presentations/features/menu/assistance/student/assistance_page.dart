@@ -1,5 +1,6 @@
 import 'dart:math' as math;
-
+import 'package:asco/src/presentations/features/menu/assistance/student/assistance_course_detail_page.dart';
+import 'package:asco/src/presentations/features/menu/laboratory/student/laboratory_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -8,8 +9,6 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/src/presentations/features/menu/assistance/assistance_course_detail_page.dart';
-import 'package:asco/src/presentations/features/menu/laboratory/laboratory_page.dart';
 
 class StudentAssistancePage extends StatelessWidget {
   const StudentAssistancePage({super.key});
