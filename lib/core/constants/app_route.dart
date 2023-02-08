@@ -11,6 +11,9 @@ class AppRoute {
       '/student/main-menu/assistance-course-detail';
   static const valueRecapLeaderboardPage = '/student/main-menu/value-recap';
 
+  // Assistant
+  static const assistantValueRecapLeaderboardPage =
+      '/assistant/main-menu/assistant-value-recap';
   // admin
   static const adminHomePage = '/admin/home';
   static const adminUsersPage = '/admin/users';
