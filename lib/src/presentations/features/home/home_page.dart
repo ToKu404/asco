@@ -88,7 +88,7 @@ class CourseCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         onTap: () {
-          showStudentMainMenuPage(context: context);
+          showMainMenuPage(context: context);
         },
         child: Stack(
           children: [

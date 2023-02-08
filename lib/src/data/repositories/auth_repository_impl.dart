@@ -10,7 +10,6 @@ class AuthRepositoryImpl implements AuthRepository {
   final AuthDataSources authDataSources;
 
   AuthRepositoryImpl({required this.authDataSources});
-  
 
   @override
   Future<Either<Failure, bool>> createUser(
@@ -33,6 +32,26 @@ class AuthRepositoryImpl implements AuthRepository {
       return Right(result);
     } catch (e) {
       return const Left(FirestoreFailure(''));
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserCredentialEntity?>> getUser() async {
+    try {
+      final result = await authDataSources.getUser();
+      return Right(result);
+    } catch (e) {
+      return Left(PreferencesFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> logOut() async {
+    try {
+      final result = await authDataSources.logOut();
+      return Right(result);
+    } catch (e) {
+      return Left(PreferencesFailure(e.toString()));
     }
   }
 }

@@ -1,16 +1,22 @@
 import 'package:asco/src/data/models/auth_models/user_credential.dart';
 import 'package:asco/src/data/models/auth_models/user_model.dart';
+import 'package:asco/src/data/services/preferences_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 abstract class AuthDataSources {
   Future<bool> createUser({required UserModel userModel});
   Future<UserCredentialModel> logIn(
       {required String username, required String password});
+  Future<UserCredentialModel?> getUser();
+  Future<bool> logOut();
 }
 
 class AuthDataSourcesImpl implements AuthDataSources {
   final FirebaseFirestore firestore;
-  AuthDataSourcesImpl({required this.firestore});
+  final AuthPreferenceHelper authPreferenceHelper;
+
+  AuthDataSourcesImpl(
+      {required this.firestore, required this.authPreferenceHelper});
 
   //! Membuat User baru di firebase
   @override
@@ -54,8 +60,10 @@ class AuthDataSourcesImpl implements AuthDataSources {
         if (passwordFromDb == password) {
           print('disini3');
 
-          return UserCredentialModel(
+          final userCredential = UserCredentialModel(
               username: username, roleId: snapshot.docs[0].get('roleId'));
+          authPreferenceHelper.setUserData(userCredential);
+          return userCredential;
         } else {
           throw Exception();
         }
@@ -66,6 +74,29 @@ class AuthDataSourcesImpl implements AuthDataSources {
       print('disini2');
 
       print(e.toString());
+      throw Exception();
+    }
+  }
+
+  @override
+  Future<UserCredentialModel?> getUser() async {
+    try {
+      final credential = await authPreferenceHelper.getUser();
+      if (credential != null) {
+        return credential;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      throw Exception();
+    }
+  }
+
+  @override
+  Future<bool> logOut() {
+    try {
+      return authPreferenceHelper.removeUserData();
+    } catch (e) {
       throw Exception();
     }
   }

@@ -2,12 +2,12 @@ import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/src/presentations/features/menu/leaderboard/value_recap.dart';
+import 'package:asco/src/presentations/features/menu/leaderboard/student/value_recap.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class LeaderboardPage extends StatelessWidget {
-  const LeaderboardPage({super.key});
+class StudentLeaderboardPage extends StatelessWidget {
+  const StudentLeaderboardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class LeaderboardPage extends StatelessWidget {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ValueRecap(),
+                  builder: (context) => const ValueRecap(),
                   settings: const RouteSettings(
                     name: AppRoute.valueRecapLeaderboardPage,
                   ),
@@ -52,7 +52,7 @@ class LeaderboardPage extends StatelessWidget {
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ValueRecap(),
+                    builder: (context) => const ValueRecap(),
                     settings: const RouteSettings(
                       name: AppRoute.valueRecapLeaderboardPage,
                     ),
