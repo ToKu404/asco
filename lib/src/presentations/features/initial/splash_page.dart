@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/src/presentations/features/initial/wrapper.dart';
-import 'package:asco/src/presentations/features/login/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 

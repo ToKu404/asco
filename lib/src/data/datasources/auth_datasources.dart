@@ -28,7 +28,6 @@ class AuthDataSourcesImpl implements AuthDataSources {
           .get();
 
       if (snapshot.docs.isNotEmpty) {
-        print('username sudah digunakan');
         return false;
       } else {
         return userCollectionRef
@@ -51,15 +50,12 @@ class AuthDataSourcesImpl implements AuthDataSources {
       final userCollectionRef = firestore.collection('users');
       QuerySnapshot snapshot =
           await userCollectionRef.where("username", isEqualTo: username).get();
-      print('disini5');
+
 
       if (snapshot.docs.isNotEmpty) {
-        print('disini4');
 
         String passwordFromDb = snapshot.docs[0].get('password');
         if (passwordFromDb == password) {
-          print('disini3');
-
           final userCredential = UserCredentialModel(
               username: username, roleId: snapshot.docs[0].get('roleId'));
           authPreferenceHelper.setUserData(userCredential);
@@ -71,9 +67,6 @@ class AuthDataSourcesImpl implements AuthDataSources {
         throw Exception();
       }
     } catch (e) {
-      print('disini2');
-
-      print(e.toString());
       throw Exception();
     }
   }
