@@ -4,7 +4,7 @@ import 'package:asco/core/state/request_state.dart';
 import 'package:asco/src/presentations/features/login/welcome_page.dart';
 import 'package:asco/src/presentations/features/menu/assistance/student/assistance_page.dart';
 import 'package:asco/src/presentations/features/menu/extras/extras_page.dart';
-import 'package:asco/src/presentations/features/menu/laboratory/assistant/assistant_laboratory_page.dart';
+import 'package:asco/src/presentations/features/menu/laboratory/assistant/laboratory_page.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/student/laboratory_page.dart';
 import 'package:asco/src/presentations/features/menu/leaderboard/student/leaderboard_page.dart';
 import 'package:asco/src/presentations/features/menu/people/assistant/assistant_people_page.dart';

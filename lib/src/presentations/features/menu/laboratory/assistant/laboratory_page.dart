@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/dummy_data.dart';
-import 'package:asco/src/presentations/features/menu/laboratory/student/laboratory_course_detail_page.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/widgets/meeting_card.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/widgets/menu_card.dart';
 
-class StudentLaboratoryPage extends StatelessWidget {
-  const StudentLaboratoryPage({super.key});
+class AssistantLaboratoryPage extends StatelessWidget {
+  const AssistantLaboratoryPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +36,10 @@ class StudentLaboratoryPage extends StatelessWidget {
         onTap: () {},
       ),
       MenuCard(
-        title: 'Riwayat Kehadiran',
+        title: 'Jadwal Pemateri',
         strokeColor: Palette.azure40,
         fillColor: Palette.azure20,
-        iconName: 'history_outlined.svg',
+        iconName: 'calendar_blank_outlined.svg',
         onTap: () {},
       ),
     ];
@@ -175,7 +173,7 @@ class StudentLaboratoryPage extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: OutlinedButton(
-                onPressed: null,
+                onPressed: () {},
                 style: OutlinedButton.styleFrom(
                   side: const BorderSide(
                     width: 2,
@@ -186,7 +184,7 @@ class StudentLaboratoryPage extends StatelessWidget {
                   backgroundColor: Palette.purple60.withOpacity(.4),
                   disabledBackgroundColor: Palette.purple60.withOpacity(.4),
                 ),
-                child: const Text('Pertemuan 4 Segera...'),
+                child: const Text('Tambah Pertemuan'),
               ),
             ),
             const SizedBox(height: 8),
@@ -194,17 +192,7 @@ class StudentLaboratoryPage extends StatelessWidget {
                 .map(
                   (course) => MeetingCard(
                     course: course,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) {
-                          return const StudentLaboratoriumCourseDetailPage();
-                        },
-                        settings: const RouteSettings(
-                          name: AppRoute.studentLaboratoriumCourseDetailPage,
-                        ),
-                      ),
-                    ),
+                    onTap: () {},
                   ),
                 )
                 .toList(),
