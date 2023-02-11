@@ -3,11 +3,17 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/core/state/request_state.dart';
 import 'package:asco/src/presentations/features/menu/main_menu_page.dart';
+import 'package:asco/src/presentations/features/menu/profile/assistant/assistant_profile_page.dart';
+import 'package:asco/src/presentations/features/menu/profile/student/profile_page.dart';
+import 'package:asco/src/presentations/providers/auth_notifier.dart';
 import 'package:asco/src/presentations/widgets/app_bar_title.dart';
+import 'package:asco/src/presentations/widgets/asco_loading.dart';
 import 'package:asco/src/presentations/widgets/side_menu/side_menu_parent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 void showHomePage({required BuildContext context}) {
   Navigator.pushAndRemoveUntil(
@@ -29,42 +35,67 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int _selectedIndex = -1;
+
   @override
   Widget build(BuildContext context) {
+    final userNotifier = context.watch<AuthNotifier>();
+
+    if (userNotifier.getUserstate == RequestState.loading ||
+        userNotifier.userCredentialEntity == null) {
+      return const AscoLoading(
+        withScaffold: true,
+      );
+    }
+    final roleId = userNotifier.userCredentialEntity?.roleId;
+
     return SideMenuParent(
+      onSelect: (index) {
+        setState(() {
+          _selectedIndex = index;
+        });
+      },
+      isMainMenu: false,
       isShowBottomNav: false,
-      body: Scaffold(
-        backgroundColor: Palette.grey,
-        appBar: AppBar(
-          title: const AppBarTitle(),
-        ),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(
-              16,
-            ),
-            child: Column(
-              children: [
-                CourseCard(
-                  badge: AssetPath.getVector('badge_android.svg'),
-                  colorBg: Palette.purple60,
-                  time: 'Setiap hari Senin Pukul 10.10 - 12.40',
-                  title: 'Pemrograman Mobile A',
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                CourseCard(
-                  badge: AssetPath.getVector('badge_oop.svg'),
-                  colorBg: Palette.azure40,
-                  time: 'Setiap hari Senin Pukul 10.10 - 12.40',
-                  title: 'Pemrograman Berbasis Objek B',
-                ),
-              ],
+      body: Builder(builder: (context) {
+        if (_selectedIndex == -2) {
+          return roleId == 1
+              ? const StudentProfilePage()
+              : const AssistantProfilePage();
+        }
+        return Scaffold(
+          backgroundColor: Palette.grey,
+          appBar: AppBar(
+            title: const AppBarTitle(),
+          ),
+          body: SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(
+                16,
+              ),
+              child: Column(
+                children: [
+                  CourseCard(
+                    badge: AssetPath.getVector('badge_android.svg'),
+                    colorBg: Palette.purple60,
+                    time: 'Setiap hari Senin Pukul 10.10 - 12.40',
+                    title: 'Pemrograman Mobile A',
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  CourseCard(
+                    badge: AssetPath.getVector('badge_oop.svg'),
+                    colorBg: Palette.azure40,
+                    time: 'Setiap hari Senin Pukul 10.10 - 12.40',
+                    title: 'Pemrograman Berbasis Objek B',
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }

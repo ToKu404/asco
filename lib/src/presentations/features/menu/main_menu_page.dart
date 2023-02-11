@@ -1,6 +1,7 @@
 import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/state/request_state.dart';
+import 'package:asco/src/presentations/features/home/home_page.dart';
 import 'package:asco/src/presentations/features/login/welcome_page.dart';
 import 'package:asco/src/presentations/features/menu/assistance/student/assistance_page.dart';
 import 'package:asco/src/presentations/features/menu/extras/extras_page.dart';
@@ -85,12 +86,21 @@ class _MainMenuPageState extends State<MainMenuPage> {
           _selectedIndex = index;
         });
       },
-      isShowBottomNav: _selectedIndex == -1 ? false : true,
+      isShowBottomNav: _selectedIndex == -2 ? false : true,
       body: Builder(builder: (context) {
-        if (_selectedIndex == -1) {
+        if (_selectedIndex == -2) {
           return roleId == 1
               ? const StudentProfilePage()
               : const AssistantProfilePage();
+        } else if (_selectedIndex == -1) {
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+            Future.delayed(const Duration(milliseconds: 500), () {
+              showHomePage(context: context);
+            });
+          });
+          return const Scaffold(
+            body: SizedBox.shrink(),
+          );
         } else if (_selectedIndex == 5) {
           SchedulerBinding.instance.addPostFrameCallback((_) {
             userNotifier.logOut();
