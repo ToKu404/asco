@@ -7,8 +7,7 @@ import 'package:asco/src/presentations/features/menu/extras/extras_page.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/assistant/assistant_laboratory_page.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/student/laboratory_page.dart';
 import 'package:asco/src/presentations/features/menu/leaderboard/student/leaderboard_page.dart';
-import 'package:asco/src/presentations/features/menu/people/assistant/assistant_people_page.dart';
-import 'package:asco/src/presentations/features/menu/people/student/people_page.dart';
+import 'package:asco/src/presentations/features/menu/people/people_page.dart';
 import 'package:asco/src/presentations/features/menu/profile/assistant/assistant_profile_page.dart';
 import 'package:asco/src/presentations/features/menu/profile/student/profile_page.dart';
 import 'package:asco/src/presentations/providers/auth_notifier.dart';
@@ -71,14 +70,14 @@ class _MainMenuPageState extends State<MainMenuPage> {
             const StudentAssistancePage(),
             const StudentLeaderboardPage(),
             const ExtrasPage(),
-            const StudentPeoplePage(),
+            const PeoplePage(),
           ]
         : [
             const AssistantLaboratoryPage(),
             const AssistantAssistancePage(),
             const AssistantLeaderboardPage(),
             const ExtrasPage(),
-            const AssistantPeoplePage(),
+            const PeoplePage(),
           ];
     return SideMenuParent(
       onSelect: (index) {
