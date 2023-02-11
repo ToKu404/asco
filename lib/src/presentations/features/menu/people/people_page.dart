@@ -4,8 +4,8 @@ import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/presentations/widgets/custom_badge.dart';
 import 'package:flutter/material.dart';
 
-class StudentPeoplePage extends StatelessWidget {
-  const StudentPeoplePage({super.key});
+class PeoplePage extends StatelessWidget {
+  const PeoplePage({super.key});
 
   @override
   Widget build(BuildContext context) {

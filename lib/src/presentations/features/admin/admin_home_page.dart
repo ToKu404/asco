@@ -163,62 +163,76 @@ class _AdminHomePageState extends State<AdminHomePage> {
                   childAspectRatio: 1.2,
                 ),
                 itemBuilder: (context, index) {
-                  return Stack(
-                    children: [
-                      Positioned.fill(
-                        child: Container(
-                          margin: const EdgeInsets.only(left: 4, top: 3),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Palette.purple80,
-                          ),
-                        ),
-                      ),
-                      Positioned.fill(
-                        child: InkWellContainer(
-                          border: Border.all(width: 1, color: Palette.purple60),
-                          radius: 12,
-                          margin: const EdgeInsets.only(right: 4, bottom: 3),
-                          onTap: listAdminPage[index].page,
-                          color: Palette.white,
-                          padding: const EdgeInsets.all(20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: 32,
-                                height: 32,
-                                decoration: BoxDecoration(
-                                  color: Palette.purple60,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Icon(
-                                  listAdminPage[index].icon,
-                                  color: Palette.white,
-                                  size: 20,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 12,
-                              ),
-                              Text(
-                                listAdminPage[index].title,
-                                style: kTextTheme.bodyLarge?.copyWith(
-                                    color: Palette.purple80,
-                                    fontWeight: FontWeight.w600,
-                                    height: 1.05),
-                                maxLines: 2,
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
+                  return AdminMenuCard(adminPage: listAdminPage[index]);
                 })
           ],
         ),
       ),
+    );
+  }
+}
+
+class AdminMenuCard extends StatelessWidget {
+  const AdminMenuCard({
+    super.key,
+    required this.adminPage,
+  });
+
+  final AdminPageHelper adminPage;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: Container(
+            margin: const EdgeInsets.only(left: 4, top: 3),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Palette.purple80,
+            ),
+          ),
+        ),
+        Positioned.fill(
+          child: InkWellContainer(
+            border: Border.all(width: 1, color: Palette.purple60),
+            radius: 12,
+            margin: const EdgeInsets.only(right: 4, bottom: 3),
+            onTap: adminPage.page,
+            color: Palette.white,
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    color: Palette.purple60,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    adminPage.icon,
+                    color: Palette.white,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(
+                  height: 12,
+                ),
+                Text(
+                  adminPage.title,
+                  style: kTextTheme.bodyLarge?.copyWith(
+                      color: Palette.purple80,
+                      fontWeight: FontWeight.w600,
+                      height: 1.05),
+                  maxLines: 2,
+                )
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
