@@ -7,8 +7,8 @@ import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/presentations/widgets/purple_app_bar.dart';
 
-class StudentLaboratoriumCourseDetailPage extends StatelessWidget {
-  const StudentLaboratoriumCourseDetailPage({super.key});
+class StudentLaboratoryCourseDetailPage extends StatelessWidget {
+  const StudentLaboratoryCourseDetailPage({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -6,7 +6,7 @@ import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/dummy_data.dart';
-import 'package:asco/src/presentations/features/menu/laboratory/student/laboratory_course_detail_page.dart';
+import 'package:asco/src/presentations/features/menu/laboratory/student/student_laboratory_course_detail_page.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/widgets/meeting_card.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/widgets/menu_card.dart';
 
@@ -198,7 +198,7 @@ class StudentLaboratoryPage extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (_) {
-                          return const StudentLaboratoriumCourseDetailPage();
+                          return const StudentLaboratoryCourseDetailPage();
                         },
                         settings: const RouteSettings(
                           name: AppRoute.studentLaboratoriumCourseDetailPage,
