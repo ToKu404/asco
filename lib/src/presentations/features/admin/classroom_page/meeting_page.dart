@@ -2,9 +2,9 @@ import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/data/dummy_data.dart';
 import 'package:asco/src/presentations/features/admin/classroom_page/create_meeting_page.dart';
 import 'package:asco/src/presentations/features/admin/classroom_page/meeting_detail_page.dart';
-import 'package:asco/src/presentations/features/menu/laboratory/dummy_data.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/widgets/meeting_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -123,7 +123,7 @@ class _AdminClassroomMeetingPageState extends State<AdminClassroomMeetingPage> {
               child: Column(
                 children: [
                   MeetingCard(
-                    course: Course(
+                    course: const Course(
                       2,
                       'Tipe Data dan Atribut',
                       '27 Februari 2023',
@@ -136,7 +136,7 @@ class _AdminClassroomMeetingPageState extends State<AdminClassroomMeetingPage> {
                     height: 8,
                   ),
                   MeetingCard(
-                    course: Course(
+                    course: const Course(
                       1,
                       'Tipe Data dan Atribut',
                       '27 Februari 2023',
