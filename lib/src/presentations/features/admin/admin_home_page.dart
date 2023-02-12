@@ -3,6 +3,7 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/presentations/features/admin/attendance_page/attendance_classroom_page.dart';
 import 'package:asco/src/presentations/features/admin/classroom_page/classroom_page.dart';
 import 'package:asco/src/presentations/features/admin/practicum_page/class_detail_page.dart';
 import 'package:asco/src/presentations/features/admin/practicum_page/practicum_page.dart';
@@ -62,7 +63,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
       AdminPageHelper(
         'Data Absensi Pertemuan',
         Icons.task_alt_rounded,
-        () => showAdminUsersPage(context: context),
+        () => showAdminAttendanceClassroomPage(context: context),
       ),
       AdminPageHelper(
         'Data Nilai',
