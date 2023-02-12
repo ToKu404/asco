@@ -54,9 +54,13 @@ class _WrapperState extends State<Wrapper> {
         if (user.roleId == 0) {
           return const AdminHomePage();
         } else if (user.roleId == 1) {
-          return const HomePage();
+          return HomePage(
+            roleId: user.roleId,
+          );
         } else if (user.roleId == 2) {
-          return const HomePage();
+          return HomePage(
+            roleId: user.roleId,
+          );
         } else {
           return const SizedBox.shrink();
         }

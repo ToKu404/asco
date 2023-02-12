@@ -149,9 +149,9 @@ class _SignInFormState extends State<_SignInForm> {
             if (credentialData.roleId == 0) {
               showAdminHomePage(context: context);
             } else if (credentialData.roleId == 1) {
-              showHomePage(context: context);
+              showHomePage(context: context, roleId: credentialData.roleId);
             } else if (credentialData.roleId == 2) {
-              showHomePage(context: context);
+              showHomePage(context: context, roleId: credentialData.roleId);
             }
           }
           provider.reset();

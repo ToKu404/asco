@@ -3,6 +3,7 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/presentations/features/admin/practicum_page/practicum_page.dart';
 import 'package:asco/src/presentations/features/admin/users_page/users_page.dart';
 import 'package:asco/src/presentations/features/login/welcome_page.dart';
 import 'package:asco/src/presentations/widgets/app_bar_title.dart';
@@ -49,7 +50,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
       AdminPageHelper(
         'Data Praktikum',
         Icons.class_rounded,
-        () => showAdminUsersPage(context: context),
+        () => showAdminPracticumPage(context: context),
       ),
       AdminPageHelper(
         'Data Kelas',
@@ -111,6 +112,8 @@ class _AdminHomePageState extends State<AdminHomePage> {
                     AssetPath.getVector(
                       'logo2.svg',
                     ),
+                    width: 24,
+                    height: 24,
                   ),
                   const SizedBox(
                     width: 16,
@@ -144,9 +147,13 @@ class _AdminHomePageState extends State<AdminHomePage> {
                     onPressed: () {
                       showWelcomePage(context: context);
                     },
-                    icon: SvgPicture.asset(
-                      AssetPath.getIcons('logout_outlined.svg'),
-                      color: Palette.white,
+                    icon: SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: SvgPicture.asset(
+                        AssetPath.getIcons('logout_outlined.svg'),
+                        color: Palette.white,
+                      ),
                     ),
                   )
                 ],

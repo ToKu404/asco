@@ -3,6 +3,7 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/presentations/features/admin/users_page/create_user_page.dart';
 import 'package:flutter/material.dart';
 
 void showAdminUserDetailPage({required BuildContext context}) {
@@ -37,7 +38,9 @@ class UserDetailPage extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              showAdminCreateUserPage(context: context, isEdit: true);
+            },
             icon: const Icon(
               Icons.edit_rounded,
               color: Palette.white,
