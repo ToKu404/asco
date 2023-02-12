@@ -1,6 +1,8 @@
+import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/presentations/features/menu/extras/lab_exam_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -43,7 +45,27 @@ class ExtrasPage extends StatelessWidget {
                   ),
                 ],
               ),
-            )
+            ),
+            const SizedBox(height: 12),
+            Flexible(
+              child: InkWell(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LabExamPage(),
+                    settings: const RouteSettings(
+                      name: AppRoute.labExamPage,
+                    ),
+                  ),
+                ),
+                child: const CardExtras(
+                  iconAsset: 'test.svg',
+                  title: 'Ujian Lab',
+                  text: 'Informasi seputar ujian lab',
+                  color: Palette.violet50,
+                ),
+              ),
+            ),
           ],
         ),
       ),

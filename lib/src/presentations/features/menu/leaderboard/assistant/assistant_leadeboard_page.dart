@@ -3,6 +3,7 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/presentations/features/menu/leaderboard/assistant/assistant_value_recap.dart';
+import 'package:asco/src/presentations/features/menu/leaderboard/assistant/assistant_value_student.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -33,9 +34,9 @@ class AssistantLeaderboardPage extends StatelessWidget {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const Placeholder(),
+                  builder: (context) => const AssistantValueStudent(),
                   settings: const RouteSettings(
-                    name: AppRoute.valueRecapLeaderboardPage,
+                    name: AppRoute.assistantValueRecapLeaderboardPage,
                   ),
                 ),
               ),
