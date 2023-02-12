@@ -6,6 +6,7 @@ import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/presentations/widgets/purple_app_bar.dart';
+import 'package:asco/src/presentations/widgets/title_section.dart';
 
 class StudentLaboratoryCourseDetailPage extends StatelessWidget {
   const StudentLaboratoryCourseDetailPage({super.key});
@@ -338,26 +339,6 @@ class ContainerSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: children,
-      ),
-    );
-  }
-}
-
-class TitleSection extends StatelessWidget {
-  final String title;
-
-  const TitleSection({super.key, required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Text(
-        title,
-        style: kTextTheme.titleMedium?.copyWith(
-          fontWeight: FontWeight.w600,
-          color: Palette.purple80,
-        ),
       ),
     );
   }
