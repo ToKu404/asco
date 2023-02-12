@@ -11,10 +11,12 @@ import 'package:flutter_svg/svg.dart';
 class SideMenuParent extends StatefulWidget {
   final Widget body;
   final Function(int)? onSelect;
+  final bool isMainMenu;
   final bool isShowBottomNav;
   const SideMenuParent({
     super.key,
     required this.body,
+    this.isMainMenu = true,
     this.isShowBottomNav = true,
     this.onSelect,
   });
@@ -26,7 +28,7 @@ class SideMenuParent extends StatefulWidget {
 class _SideMenuParentState extends State<SideMenuParent>
     with SingleTickerProviderStateMixin {
   final ValueNotifier<bool> isSideMenuClosed = ValueNotifier(true);
-  final ValueNotifier<int> _selectedIndex = ValueNotifier(0);
+  final ValueNotifier<int?> _selectedIndex = ValueNotifier(null);
 
   @override
   void dispose() {
@@ -43,6 +45,7 @@ class _SideMenuParentState extends State<SideMenuParent>
 
   @override
   void initState() {
+    _selectedIndex.value = widget.isMainMenu ? 0 : -1;
     _animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 200))
       ..addListener(() {
@@ -107,6 +110,7 @@ class _SideMenuParentState extends State<SideMenuParent>
                               child: SideMenu(
                                 onSelect: widget.onSelect,
                                 selectedIndex: _selectedIndex,
+                                isMainMenu: widget.isMainMenu,
                               ),
                             ),
                             Transform(

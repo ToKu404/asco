@@ -1,14 +1,14 @@
 import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/state/request_state.dart';
+import 'package:asco/src/presentations/features/home/home_page.dart';
 import 'package:asco/src/presentations/features/login/welcome_page.dart';
 import 'package:asco/src/presentations/features/menu/assistance/student/student_assistance_page.dart';
 import 'package:asco/src/presentations/features/menu/extras/extras_page.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/assistant/assistant_laboratory_page.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/student/student_laboratory_page.dart';
 import 'package:asco/src/presentations/features/menu/leaderboard/student/leaderboard_page.dart';
-import 'package:asco/src/presentations/features/menu/people/assistant/assistant_people_page.dart';
-import 'package:asco/src/presentations/features/menu/people/student/people_page.dart';
+import 'package:asco/src/presentations/features/menu/people/people_page.dart';
 import 'package:asco/src/presentations/features/menu/profile/assistant/assistant_profile_page.dart';
 import 'package:asco/src/presentations/features/menu/profile/student/profile_page.dart';
 import 'package:asco/src/presentations/providers/auth_notifier.dart';
@@ -71,14 +71,14 @@ class _MainMenuPageState extends State<MainMenuPage> {
             const StudentAssistancePage(),
             const StudentLeaderboardPage(),
             const ExtrasPage(),
-            const StudentPeoplePage(),
+            const PeoplePage(),
           ]
         : [
             const AssistantLaboratoryPage(),
             const AssistantAssistancePage(),
             const AssistantLeaderboardPage(),
             const ExtrasPage(),
-            const AssistantPeoplePage(),
+            const PeoplePage(),
           ];
     return SideMenuParent(
       onSelect: (index) {
@@ -86,12 +86,21 @@ class _MainMenuPageState extends State<MainMenuPage> {
           _selectedIndex = index;
         });
       },
-      isShowBottomNav: _selectedIndex == -1 ? false : true,
+      isShowBottomNav: _selectedIndex == -2 ? false : true,
       body: Builder(builder: (context) {
-        if (_selectedIndex == -1) {
+        if (_selectedIndex == -2) {
           return roleId == 1
               ? const StudentProfilePage()
               : const AssistantProfilePage();
+        } else if (_selectedIndex == -1) {
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+            Future.delayed(const Duration(milliseconds: 500), () {
+              showHomePage(context: context);
+            });
+          });
+          return const Scaffold(
+            body: SizedBox.shrink(),
+          );
         } else if (_selectedIndex == 5) {
           SchedulerBinding.instance.addPostFrameCallback((_) {
             userNotifier.logOut();

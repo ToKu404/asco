@@ -18,13 +18,15 @@ class MenuHelper {
 }
 
 class SideMenu extends StatefulWidget {
-  final ValueNotifier<int> selectedIndex;
+  final ValueNotifier<int?> selectedIndex;
   final Function(int)? onSelect;
+  final bool isMainMenu;
 
   const SideMenu({
     super.key,
     required this.selectedIndex,
     required this.onSelect,
+    required this.isMainMenu,
   });
 
   @override
@@ -33,11 +35,11 @@ class SideMenu extends StatefulWidget {
 
 class _SideMenuState extends State<SideMenu> {
   final listMenu = [
-    // MenuHelper(
-    //   title: 'Beranda',
-    //   unselectedIconPath: AssetPath.getIcons('home_outlined.svg'),
-    //   selectedIconPath: AssetPath.getIcons('home_filled.svg'),
-    // ),
+    MenuHelper(
+      title: 'Beranda',
+      unselectedIconPath: AssetPath.getIcons('home_outlined.svg'),
+      selectedIconPath: AssetPath.getIcons('home_filled.svg'),
+    ),
     MenuHelper(
       title: 'Laboratorium',
       unselectedIconPath: AssetPath.getIcons('class_outlined.svg'),
@@ -90,8 +92,8 @@ class _SideMenuState extends State<SideMenu> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        widget.selectedIndex.value = -1;
-                        widget.onSelect!(-1);
+                        widget.selectedIndex.value = -2;
+                        widget.onSelect!(-2);
                       },
                       child: const UserProfileCard(
                         title: 'ToKu404',
@@ -109,43 +111,53 @@ class _SideMenuState extends State<SideMenu> {
                                 top: 24,
                                 bottom: 16,
                               ),
-                              child: Text("JELAJAH",
+                              child: Text("MENU",
                                   style: kTextTheme.bodyLarge?.copyWith(
                                     color: Palette.disable,
                                   )),
                             ),
-                            for (int i = 0; i < listMenu.length - 1; i++)
-                              SideMenuTile(
-                                menu: listMenu[i],
-                                press: () {
-                                  widget.selectedIndex.value = i;
-                                  widget.onSelect!(i);
-                                },
-                                isActive: value == i,
-                              ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                left: 24,
-                                top: 24,
-                                bottom: 16,
-                              ),
-                              child: Text(
-                                "Lainnya",
-                                style: kTextTheme.bodyLarge?.copyWith(
-                                  color: Palette.disable,
+                            SideMenuTile(
+                              menu: listMenu[0],
+                              press: () {
+                                widget.selectedIndex.value = 0 - 1;
+                                widget.onSelect!(0 - 1);
+                              },
+                              isActive: value == 0 - 1,
+                            ),
+                            if (widget.isMainMenu)
+                              for (int i = 1; i < listMenu.length - 1; i++)
+                                SideMenuTile(
+                                  menu: listMenu[i],
+                                  press: () {
+                                    widget.selectedIndex.value = i - 1;
+                                    widget.onSelect!(i - 1);
+                                  },
+                                  isActive: value == i - 1,
+                                ),
+                            if (widget.isMainMenu)
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 24,
+                                  top: 24,
+                                  bottom: 16,
+                                ),
+                                child: Text(
+                                  "LAINNYA",
+                                  style: kTextTheme.bodyLarge?.copyWith(
+                                    color: Palette.disable,
+                                  ),
                                 ),
                               ),
-                            ),
                             for (int i = listMenu.length - 1;
                                 i < listMenu.length;
                                 i++)
                               SideMenuTile(
                                 menu: listMenu[i],
                                 press: () {
-                                  widget.selectedIndex.value = i;
-                                  widget.onSelect!(i);
+                                  widget.selectedIndex.value = i - 1;
+                                  widget.onSelect!(i - 1);
                                 },
-                                isActive: value == i,
+                                isActive: value == i - 1,
                               ),
                           ],
                         ),

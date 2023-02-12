@@ -1,3 +1,4 @@
+import 'package:asco/src/presentations/features/menu/laboratory/student/laboratory_course_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -194,25 +195,7 @@ class StudentAssistanceCourseDetailPage extends StatelessWidget {
   }
 }
 
-class TitleSection extends StatelessWidget {
-  final String title;
 
-  const TitleSection({super.key, required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Text(
-        title,
-        style: kTextTheme.titleSmall?.copyWith(
-          fontWeight: FontWeight.w600,
-          color: Palette.purple100,
-        ),
-      ),
-    );
-  }
-}
 
 class AttendanceCard extends StatelessWidget {
   final String date;
