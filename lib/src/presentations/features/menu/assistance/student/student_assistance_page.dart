@@ -6,58 +6,14 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/data/dummy_data.dart';
 import 'package:asco/src/presentations/features/menu/assistance/student/student_assistance_course_detail_page.dart';
-import 'package:asco/src/presentations/features/menu/laboratory/dummy_data.dart';
 
 class StudentAssistancePage extends StatelessWidget {
   const StudentAssistancePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const students = <Student>[
-      Student(1, 'You'),
-      Student(2, 'Silverius S.'),
-      Student(3, 'Muh. Ikhsan'),
-      Student(4, 'Eurico Devon'),
-      Student(5, 'Raf Mas'),
-      Student(2, 'Ucup Cam'),
-      Student(1, 'Muh. Ardan'),
-      Student(5, 'Fauzi Asham'),
-      Student(4, 'Muh. Cick'),
-      Student(3, 'Alif Setya'),
-    ];
-
-    const courses = <Course>[
-      Course(
-        1,
-        'Mengenal Bahasa Pemrograman Kotlin',
-        '27 Feb - 3 Mar',
-        isLocked: false,
-      ),
-      Course(
-        2,
-        'Buat Aplikasi Android Pertamamu!',
-        '5 Mar - 10 Mar',
-        isLocked: false,
-      ),
-      Course(
-        3,
-        'Studi Kasus: E-Wallet App',
-        '13 Mar - 29 Apr',
-        isLocked: false,
-      ),
-      Course(
-        4,
-        'Migrase ke Framework Flutter',
-        'Coming Soon',
-      ),
-      Course(
-        5,
-        'Statefull dan Stateless Widget',
-        'Coming Soon',
-      ),
-    ];
-
     return Scaffold(
       backgroundColor: Palette.grey,
       body: SingleChildScrollView(
@@ -319,95 +275,93 @@ class ControlCard extends StatelessWidget {
               ),
             ),
           ),
-          child: SizedBox(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 20,
-                horizontal: 16,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: Palette.grey,
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        width: 1.5,
-                        color: Palette.greyDark,
-                      ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 20,
+              horizontal: 16,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: Palette.grey,
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      width: 1.5,
+                      color: Palette.greyDark,
                     ),
-                    child: Center(
-                      child: course.isLocked!
-                          ? const Icon(
-                              Icons.lock_outline_rounded,
-                              size: 20,
+                  ),
+                  child: Center(
+                    child: course.isLocked!
+                        ? const Icon(
+                            Icons.lock_outline_rounded,
+                            size: 20,
+                            color: Palette.greyDark,
+                          )
+                        : Text(
+                            '${course.number}',
+                            style: kTextTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.w600,
                               color: Palette.greyDark,
-                            )
-                          : Text(
-                              '${course.number}',
-                              style: kTextTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: Palette.greyDark,
-                              ),
                             ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          course.topic,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: kTextTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: Palette.purple100,
-                            height: 1.2,
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          course.date,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: kTextTheme.bodySmall?.copyWith(
-                            color: Palette.purple60,
-                          ),
-                        ),
-                      ],
-                    ),
                   ),
-                  const SizedBox(width: 8),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      if (course.isLocked!) ...[
-                        const AssistanceStatusBadge(),
-                        const SizedBox(width: 4),
-                        const AssistanceStatusBadge(),
-                      ] else ...[
-                        const AssistanceStatusBadge(
-                          borderColor: Palette.purple80,
-                          fillColor: Palette.purple60,
-                          icon: Icons.check_rounded,
+                      Text(
+                        course.topic,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: kTextTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: Palette.purple100,
+                          height: 1.2,
                         ),
-                        const SizedBox(width: 4),
-                        const AssistanceStatusBadge(
-                          borderColor: Color(0xFFD35380),
-                          fillColor: Color(0xFFFA78A6),
-                          icon: Icons.close_rounded,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        course.date,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: kTextTheme.bodySmall?.copyWith(
+                          color: Palette.purple60,
                         ),
-                      ],
+                      ),
                     ],
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(width: 8),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    if (course.isLocked!) ...[
+                      const AssistanceStatusBadge(),
+                      const SizedBox(width: 4),
+                      const AssistanceStatusBadge(),
+                    ] else ...[
+                      const AssistanceStatusBadge(
+                        borderColor: Palette.purple80,
+                        fillColor: Palette.purple60,
+                        icon: Icons.check_rounded,
+                      ),
+                      const SizedBox(width: 4),
+                      const AssistanceStatusBadge(
+                        borderColor: Color(0xFFD35380),
+                        fillColor: Color(0xFFFA78A6),
+                        icon: Icons.close_rounded,
+                      ),
+                    ],
+                  ],
+                ),
+              ],
             ),
           ),
         ),
@@ -449,11 +403,4 @@ class AssistanceStatusBadge extends StatelessWidget {
       ),
     );
   }
-}
-
-class Student {
-  final int id;
-  final String name;
-
-  const Student(this.id, this.name);
 }

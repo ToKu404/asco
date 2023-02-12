@@ -4,13 +4,18 @@ import 'package:asco/core/constants/text_const.dart';
 
 class TitleSection extends StatelessWidget {
   final String title;
+  final double paddingBottom;
 
-  const TitleSection({super.key, required this.title});
+  const TitleSection({
+    super.key,
+    required this.title,
+    this.paddingBottom = 8,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: EdgeInsets.only(bottom: paddingBottom),
       child: Text(
         title,
         style: kTextTheme.titleSmall?.copyWith(

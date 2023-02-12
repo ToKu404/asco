@@ -5,7 +5,7 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/src/presentations/features/menu/laboratory/dummy_data.dart';
+import 'package:asco/src/data/dummy_data.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/student/student_laboratory_course_detail_page.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/widgets/meeting_card.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/widgets/menu_card.dart';
@@ -43,24 +43,6 @@ class StudentLaboratoryPage extends StatelessWidget {
         fillColor: Palette.azure20,
         iconName: 'history_outlined.svg',
         onTap: () {},
-      ),
-    ];
-
-    const labCourses = <Course>[
-      Course(
-        3,
-        'Studi Kasus: E-Wallet App',
-        '10 Maret 2023',
-      ),
-      Course(
-        2,
-        'Buat Aplikasi Android Pertamamu!',
-        '3 Maret 2023',
-      ),
-      Course(
-        1,
-        'Mengenal Bahasa Pemrograman Kotlin',
-        '27 Februari 2023',
       ),
     ];
 
@@ -190,7 +172,8 @@ class StudentLaboratoryPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            ...labCourses
+            ...courses
+                .where((course) => course.isLocked == false)
                 .map(
                   (course) => MeetingCard(
                     course: course,

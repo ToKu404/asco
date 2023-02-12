@@ -59,11 +59,11 @@ class StudentAssistanceCourseDetailPage extends StatelessWidget {
               automaticallyImplyLeading: false,
               toolbarHeight: 6,
               flexibleSpace: Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     colors: <Color>[
-                      Palette.violet60.withOpacity(.8),
-                      Palette.violet60.withOpacity(.4),
+                      Palette.violet60,
+                      Palette.violet30,
                     ],
                   ),
                 ),
@@ -174,14 +174,16 @@ class StudentAssistanceCourseDetailPage extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               const TitleSection(title: 'Absensi'),
-              const AttendanceCard(
+              const AttendanceAssistanceCard(
+                number: 1,
                 date: '20 Februari 2021',
                 notes: 'Tidak ada catatan',
                 statusBadgeText: 'Tepat Waktu',
                 statusBadgeColor: Palette.purple60,
               ),
               const SizedBox(height: 16),
-              const AttendanceCard(
+              const AttendanceAssistanceCard(
+                number: 2,
                 date: '22 Februari 2021',
                 notes: 'Minimal bawa makanan lah',
                 statusBadgeText: 'Terlambat',
@@ -195,14 +197,16 @@ class StudentAssistanceCourseDetailPage extends StatelessWidget {
   }
 }
 
-class AttendanceCard extends StatelessWidget {
+class AttendanceAssistanceCard extends StatelessWidget {
+  final int number;
   final String date;
   final String statusBadgeText;
   final Color statusBadgeColor;
   final String notes;
 
-  const AttendanceCard({
+  const AttendanceAssistanceCard({
     super.key,
+    required this.number,
     required this.date,
     required this.statusBadgeText,
     required this.statusBadgeColor,
@@ -233,7 +237,7 @@ class AttendanceCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        'Asistensi 1',
+                        'Asistensi $number',
                         style: kTextTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.w600,
                           color: Palette.purple100,
