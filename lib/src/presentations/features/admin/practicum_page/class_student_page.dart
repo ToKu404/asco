@@ -3,18 +3,14 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/src/presentations/features/admin/users_page/create_user_page.dart';
-import 'package:asco/src/presentations/features/admin/users_page/user_detail_page.dart';
-import 'package:asco/src/presentations/widgets/custom_badge.dart';
-import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-void showAdminUsersPage({required BuildContext context}) {
+void showAdminClassStudentPage({required BuildContext context}) {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => const AdminUserPage(),
+      builder: (context) => const AdminClassStudentPage(),
       settings: const RouteSettings(
         name: AppRoute.adminUsersPage,
       ),
@@ -22,14 +18,16 @@ void showAdminUsersPage({required BuildContext context}) {
   );
 }
 
-class AdminUserPage extends StatefulWidget {
-  const AdminUserPage({super.key});
+class AdminClassStudentPage extends StatefulWidget {
+  const AdminClassStudentPage({super.key});
 
   @override
-  State<AdminUserPage> createState() => _AdminUserPageState();
+  State<AdminClassStudentPage> createState() =>
+      _AdminClassStudentPageState();
 }
 
-class _AdminUserPageState extends State<AdminUserPage> {
+class _AdminClassStudentPageState
+    extends State<AdminClassStudentPage> {
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -53,23 +51,21 @@ class _AdminUserPageState extends State<AdminUserPage> {
             color: Palette.white,
           ),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.check_rounded,
+              color: Palette.white,
+            ),
+          )
+        ],
         title: Text(
-          'Data Pengguna',
+          'Daftar Asisten',
           style: kTextTheme.titleSmall?.copyWith(color: Palette.white),
         ),
         centerTitle: true,
       ),
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: Palette.blackPurple,
-          shape: const CircleBorder(
-              side: BorderSide(width: 1, color: Palette.purple60)),
-          child: const Icon(
-            Icons.add_rounded,
-            color: Palette.white,
-          ),
-          onPressed: () {
-            showAdminCreateUserPage(context: context);
-          }),
       body: SafeArea(
         child: Column(
           children: [
@@ -86,7 +82,7 @@ class _AdminUserPageState extends State<AdminUserPage> {
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.zero,
                   isDense: true,
-                  hintText: 'Cari nama atau nim',
+                  hintText: 'Cari nama atau username',
                   hintStyle:
                       kTextTheme.bodyLarge?.copyWith(color: Palette.disable),
                   filled: true,
@@ -122,7 +118,7 @@ class _AdminUserPageState extends State<AdminUserPage> {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 children: const [
-                  UserCard(),
+                  SelectUserCard(),
                 ],
               ),
             )),
@@ -133,62 +129,78 @@ class _AdminUserPageState extends State<AdminUserPage> {
   }
 }
 
-class UserCard extends StatelessWidget {
-  const UserCard({
+class SelectUserCard extends StatelessWidget {
+  const SelectUserCard({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return InkWellContainer(
-      color: Colors.white,
-      onTap: () {
-        showAdminUserDetailPage(context: context);
-      },
-      radius: 12,
-      child: Container(
-        width: AppSize.getAppWidth(context),
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 30,
-              backgroundImage: AssetImage(AssetPath.getImage('avatar1.jpg')),
+    return Container(
+      width: AppSize.getAppWidth(context),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(12)),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          CircleAvatar(
+            radius: 24,
+            backgroundImage: AssetImage(AssetPath.getImage('avatar1.jpg')),
+          ),
+          const SizedBox(
+            width: 12,
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'H071191049',
+                  style: kTextTheme.bodyMedium?.copyWith(
+                    color: Palette.purple60,
+                  ),
+                ),
+                Text(
+                  'Ikhsan',
+                  style: kTextTheme.bodyLarge?.copyWith(
+                    color: Palette.purple80,
+                    fontWeight: FontWeight.w600,
+                    height: 1.1,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(
-              width: 12,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'H071191049',
-                    style: kTextTheme.bodyMedium?.copyWith(
-                      color: Palette.purple60,
-                      height: 1.1,
-                    ),
-                  ),
-                  Text(
-                    'Ikhsan',
-                    style: kTextTheme.bodyLarge?.copyWith(
-                      color: Palette.purple80,
-                      fontWeight: FontWeight.w600,
-                      height: 1.1,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 6,
-                  ),
-                  BuildBadge(
-                    badgeHelper:
-                        TempBadgeHelper(badgeId: 3, title: 'Mahasiswa'),
-                  ),
-                ],
+          ),
+          Container(
+            width: 24,
+            height: 24,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                width: 1,
+                color: Palette.greyDark,
               ),
-            )
-          ],
-        ),
+              color: Palette.purple60,
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: ClipOval(
+                child: InkWell(
+                  onTap: () {},
+                  child: const Icon(
+                    Icons.check_rounded,
+                    color: Palette.white,
+                    size: 15,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(
+            width: 4,
+          ),
+        ],
       ),
     );
   }

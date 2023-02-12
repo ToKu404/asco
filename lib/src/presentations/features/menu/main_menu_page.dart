@@ -95,7 +95,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
         } else if (_selectedIndex == -1) {
           SchedulerBinding.instance.addPostFrameCallback((_) {
             Future.delayed(const Duration(milliseconds: 500), () {
-              showHomePage(context: context);
+              showHomePage(context: context, roleId: roleId!);
             });
           });
           return const Scaffold(

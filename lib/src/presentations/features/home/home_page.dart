@@ -3,23 +3,25 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/core/state/request_state.dart';
+import 'package:asco/src/presentations/features/login/welcome_page.dart';
 import 'package:asco/src/presentations/features/menu/main_menu_page.dart';
 import 'package:asco/src/presentations/features/menu/profile/assistant/assistant_profile_page.dart';
 import 'package:asco/src/presentations/features/menu/profile/student/profile_page.dart';
 import 'package:asco/src/presentations/providers/auth_notifier.dart';
 import 'package:asco/src/presentations/widgets/app_bar_title.dart';
-import 'package:asco/src/presentations/widgets/asco_loading.dart';
 import 'package:asco/src/presentations/widgets/side_menu/side_menu_parent.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-void showHomePage({required BuildContext context}) {
+void showHomePage({required BuildContext context, required int roleId}) {
   Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
-        builder: (context) => const HomePage(),
+        builder: (context) => HomePage(
+          roleId: roleId,
+        ),
         settings: const RouteSettings(
           name: AppRoute.homePage,
         ),
@@ -28,7 +30,8 @@ void showHomePage({required BuildContext context}) {
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final int roleId;
+  const HomePage({super.key, required this.roleId});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -39,16 +42,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final userNotifier = context.watch<AuthNotifier>();
-
-    if (userNotifier.getUserstate == RequestState.loading ||
-        userNotifier.userCredentialEntity == null) {
-      return const AscoLoading(
-        withScaffold: true,
-      );
-    }
-    final roleId = userNotifier.userCredentialEntity?.roleId;
-
     return SideMenuParent(
       onSelect: (index) {
         setState(() {
@@ -59,9 +52,17 @@ class _HomePageState extends State<HomePage> {
       isShowBottomNav: false,
       body: Builder(builder: (context) {
         if (_selectedIndex == -2) {
-          return roleId == 1
+          return widget.roleId == 1
               ? const StudentProfilePage()
               : const AssistantProfilePage();
+        } else if (_selectedIndex == 5) {
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+            context.read<AuthNotifier>().logOut();
+            showWelcomePage(context: context);
+          });
+          return const Scaffold(
+            body: SizedBox.shrink(),
+          );
         }
         return Scaffold(
           backgroundColor: Palette.grey,

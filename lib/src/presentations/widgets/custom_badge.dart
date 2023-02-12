@@ -23,12 +23,12 @@ class BuildBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: 4,
-        vertical: 2,
+        horizontal: 8,
+        vertical: 4,
       ),
       margin: const EdgeInsets.only(right: 8),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(12),
         color: _badge[badgeHelper.badgeId],
       ),
       child: Text(
@@ -36,6 +36,7 @@ class BuildBadge extends StatelessWidget {
         style: kTextTheme.bodySmall?.copyWith(
           fontWeight: FontWeight.w600,
           color: Palette.white,
+          height: 1,
         ),
       ),
     );

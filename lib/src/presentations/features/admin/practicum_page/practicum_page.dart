@@ -3,18 +3,18 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/presentations/features/admin/practicum_page/create_practicum_page.dart';
+import 'package:asco/src/presentations/features/admin/practicum_page/practicum_detail_page.dart';
 import 'package:asco/src/presentations/features/admin/users_page/create_user_page.dart';
-import 'package:asco/src/presentations/features/admin/users_page/user_detail_page.dart';
-import 'package:asco/src/presentations/widgets/custom_badge.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-void showAdminUsersPage({required BuildContext context}) {
+void showAdminPracticumPage({required BuildContext context}) {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => const AdminUserPage(),
+      builder: (context) => const AdminPracticumPage(),
       settings: const RouteSettings(
         name: AppRoute.adminUsersPage,
       ),
@@ -22,14 +22,14 @@ void showAdminUsersPage({required BuildContext context}) {
   );
 }
 
-class AdminUserPage extends StatefulWidget {
-  const AdminUserPage({super.key});
+class AdminPracticumPage extends StatefulWidget {
+  const AdminPracticumPage({super.key});
 
   @override
-  State<AdminUserPage> createState() => _AdminUserPageState();
+  State<AdminPracticumPage> createState() => _AdminPracticumPageState();
 }
 
-class _AdminUserPageState extends State<AdminUserPage> {
+class _AdminPracticumPageState extends State<AdminPracticumPage> {
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -54,7 +54,7 @@ class _AdminUserPageState extends State<AdminUserPage> {
           ),
         ),
         title: Text(
-          'Data Pengguna',
+          'Data Praktikum',
           style: kTextTheme.titleSmall?.copyWith(color: Palette.white),
         ),
         centerTitle: true,
@@ -68,7 +68,7 @@ class _AdminUserPageState extends State<AdminUserPage> {
             color: Palette.white,
           ),
           onPressed: () {
-            showAdminCreateUserPage(context: context);
+            showAdminCreatePracticumPage(context: context);
           }),
       body: SafeArea(
         child: Column(
@@ -86,7 +86,7 @@ class _AdminUserPageState extends State<AdminUserPage> {
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.zero,
                   isDense: true,
-                  hintText: 'Cari nama atau nim',
+                  hintText: 'Cari nama praktikum',
                   hintStyle:
                       kTextTheme.bodyLarge?.copyWith(color: Palette.disable),
                   filled: true,
@@ -122,7 +122,11 @@ class _AdminUserPageState extends State<AdminUserPage> {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 children: const [
-                  UserCard(),
+                  PracticumCard(),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  PracticumCard(),
                 ],
               ),
             )),
@@ -133,8 +137,9 @@ class _AdminUserPageState extends State<AdminUserPage> {
   }
 }
 
-class UserCard extends StatelessWidget {
-  const UserCard({
+
+class PracticumCard extends StatelessWidget {
+  const PracticumCard({
     super.key,
   });
 
@@ -143,7 +148,7 @@ class UserCard extends StatelessWidget {
     return InkWellContainer(
       color: Colors.white,
       onTap: () {
-        showAdminUserDetailPage(context: context);
+        showAdminPracticumDetailPage(context: context);
       },
       radius: 12,
       child: Container(
@@ -151,9 +156,12 @@ class UserCard extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         child: Row(
           children: [
-            CircleAvatar(
-              radius: 30,
-              backgroundImage: AssetImage(AssetPath.getImage('avatar1.jpg')),
+            SizedBox(
+              width: 50,
+              height: 50,
+              child: SvgPicture.asset(
+                AssetPath.getVector('badge_android.svg'),
+              ),
             ),
             const SizedBox(
               width: 12,
@@ -163,26 +171,17 @@ class UserCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'H071191049',
-                    style: kTextTheme.bodyMedium?.copyWith(
-                      color: Palette.purple60,
-                      height: 1.1,
-                    ),
-                  ),
-                  Text(
-                    'Ikhsan',
+                    'Pemrograman Mobile',
                     style: kTextTheme.bodyLarge?.copyWith(
                       color: Palette.purple80,
                       fontWeight: FontWeight.w600,
-                      height: 1.1,
                     ),
                   ),
-                  const SizedBox(
-                    height: 6,
-                  ),
-                  BuildBadge(
-                    badgeHelper:
-                        TempBadgeHelper(badgeId: 3, title: 'Mahasiswa'),
+                  Text(
+                    '5 Kelas',
+                    style: kTextTheme.bodyMedium?.copyWith(
+                      color: Palette.purple60,
+                    ),
                   ),
                 ],
               ),

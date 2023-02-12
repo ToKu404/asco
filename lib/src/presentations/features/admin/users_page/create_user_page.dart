@@ -10,11 +10,12 @@ import 'package:asco/src/presentations/widgets/input_field/input_text_field.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-void showAdminCreateUserPage({required BuildContext context}) {
+void showAdminCreateUserPage(
+    {required BuildContext context, bool isEdit = false}) {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => const CreateUserPage(),
+      builder: (context) => CreateUserPage(isEdit: isEdit),
       settings: const RouteSettings(
         name: AppRoute.adminUsersPage,
       ),
@@ -23,7 +24,8 @@ void showAdminCreateUserPage({required BuildContext context}) {
 }
 
 class CreateUserPage extends StatefulWidget {
-  const CreateUserPage({super.key});
+  final bool isEdit;
+  const CreateUserPage({super.key, required this.isEdit});
 
   @override
   State<CreateUserPage> createState() => _CreateUserPageState();
@@ -89,7 +91,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
           )
         ],
         title: Text(
-          'Tambah Data',
+          widget.isEdit ? 'Edit Data' : 'Tambah Data',
           style: kTextTheme.titleSmall?.copyWith(
             color: Palette.white,
             fontWeight: FontWeight.w500,
