@@ -22,6 +22,7 @@ class PurpleAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       elevation: 0,
       backgroundColor: Palette.purple80,
+      surfaceTintColor: Colors.transparent,
       title: Text(titleText),
       centerTitle: true,
       titleTextStyle: kTextTheme.titleMedium?.copyWith(

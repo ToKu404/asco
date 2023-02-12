@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/src/presentations/features/menu/laboratory/dummy_data.dart';
+import 'package:asco/src/data/dummy_data.dart';
 
 class MeetingCard extends StatelessWidget {
   final Course course;
@@ -29,7 +29,7 @@ class MeetingCard extends StatelessWidget {
           onTap: onTap,
           child: SizedBox(
             child: Padding(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.fromLTRB(8, 8, 16, 8),
               child: Row(
                 children: <Widget>[
                   CircleAvatar(

@@ -5,6 +5,7 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/presentations/features/menu/laboratory/widgets/mentor_tile.dart';
 import 'package:asco/src/presentations/widgets/purple_app_bar.dart';
 import 'package:asco/src/presentations/widgets/title_section.dart';
 
@@ -72,11 +73,11 @@ class StudentLaboratoryCourseDetailPage extends StatelessWidget {
               automaticallyImplyLeading: false,
               toolbarHeight: 6,
               flexibleSpace: Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     colors: <Color>[
-                      Palette.violet60.withOpacity(.8),
-                      Palette.violet60.withOpacity(.4),
+                      Palette.violet60,
+                      Palette.violet30,
                     ],
                   ),
                 ),
@@ -277,45 +278,6 @@ class StudentLaboratoryCourseDetailPage extends StatelessWidget {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class MentorTile extends StatelessWidget {
-  final String name;
-  final String role;
-  final String assetName;
-
-  const MentorTile({
-    super.key,
-    required this.name,
-    required this.role,
-    required this.assetName,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: CircleAvatar(
-        radius: 22,
-        backgroundColor: Palette.disable,
-        foregroundImage: AssetImage(
-          AssetPath.getImage(assetName),
-        ),
-      ),
-      title: Text(
-        name,
-        style: const TextStyle(
-          fontWeight: FontWeight.w600,
-          color: Palette.white,
-        ),
-      ),
-      subtitle: Text(
-        role,
-        style: TextStyle(
-          color: Palette.white.withOpacity(.75),
         ),
       ),
     );
