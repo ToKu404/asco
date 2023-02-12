@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/presentations/features/menu/laboratory/assistant/assistant_laboratory_course_detail_page.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/dummy_data.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/widgets/meeting_card.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/widgets/menu_card.dart';
@@ -192,7 +194,17 @@ class AssistantLaboratoryPage extends StatelessWidget {
                 .map(
                   (course) => MeetingCard(
                     course: course,
-                    onTap: () {},
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) {
+                          return const AssistantLaboratoryCourseDetailPage();
+                        },
+                        settings: const RouteSettings(
+                          name: AppRoute.assistantLaboratoryCourseDetailPage,
+                        ),
+                      ),
+                    ),
                   ),
                 )
                 .toList(),

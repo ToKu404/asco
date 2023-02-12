@@ -201,7 +201,7 @@ class StudentLaboratoryPage extends StatelessWidget {
                           return const StudentLaboratoryCourseDetailPage();
                         },
                         settings: const RouteSettings(
-                          name: AppRoute.studentLaboratoriumCourseDetailPage,
+                          name: AppRoute.studentLaboratoryCourseDetailPage,
                         ),
                       ),
                     ),
