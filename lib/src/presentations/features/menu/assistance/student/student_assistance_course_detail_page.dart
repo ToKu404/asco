@@ -1,13 +1,12 @@
-import 'package:asco/src/presentations/features/menu/laboratory/student/laboratory_course_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/presentations/widgets/purple_app_bar.dart';
+import 'package:asco/src/presentations/widgets/title_section.dart';
 
 class StudentAssistanceCourseDetailPage extends StatelessWidget {
   const StudentAssistanceCourseDetailPage({super.key});
@@ -195,8 +194,6 @@ class StudentAssistanceCourseDetailPage extends StatelessWidget {
     );
   }
 }
-
-
 
 class AttendanceCard extends StatelessWidget {
   final String date;

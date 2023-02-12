@@ -3,10 +3,10 @@ import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/state/request_state.dart';
 import 'package:asco/src/presentations/features/home/home_page.dart';
 import 'package:asco/src/presentations/features/login/welcome_page.dart';
-import 'package:asco/src/presentations/features/menu/assistance/student/assistance_page.dart';
+import 'package:asco/src/presentations/features/menu/assistance/student/student_assistance_page.dart';
 import 'package:asco/src/presentations/features/menu/extras/extras_page.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/assistant/assistant_laboratory_page.dart';
-import 'package:asco/src/presentations/features/menu/laboratory/student/laboratory_page.dart';
+import 'package:asco/src/presentations/features/menu/laboratory/student/student_laboratory_page.dart';
 import 'package:asco/src/presentations/features/menu/leaderboard/student/leaderboard_page.dart';
 import 'package:asco/src/presentations/features/menu/people/people_page.dart';
 import 'package:asco/src/presentations/features/menu/profile/assistant/assistant_profile_page.dart';
@@ -20,7 +20,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 import '../../widgets/app_bar_title.dart';
-import 'assistance/assistant/assitant_assitance_page.dart';
+import 'assistance/assistant/assistant_assitance_page.dart';
 import 'leaderboard/assistant/assistant_leadeboard_page.dart';
 
 void showMainMenuPage({required BuildContext context}) {

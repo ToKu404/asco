@@ -1,42 +1,48 @@
-import 'package:asco/src/presentations/features/menu/laboratory/student/laboratory_course_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/presentations/features/menu/laboratory/dummy_data.dart';
+import 'package:asco/src/presentations/features/menu/laboratory/student/student_laboratory_course_detail_page.dart';
+import 'package:asco/src/presentations/features/menu/laboratory/widgets/meeting_card.dart';
+import 'package:asco/src/presentations/features/menu/laboratory/widgets/menu_card.dart';
 
 class StudentLaboratoryPage extends StatelessWidget {
   const StudentLaboratoryPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const labMenuCards = <MenuCard>[
+    List<MenuCard> labMenuCards = <MenuCard>[
       MenuCard(
         title: 'Tata Tertib',
         strokeColor: Palette.purple40,
         fillColor: Palette.purple20,
         iconName: 'card_list_outlined.svg',
+        onTap: () {},
       ),
       MenuCard(
         title: 'Kontrak Kuliah',
         strokeColor: Palette.salmon40,
         fillColor: Palette.salmon20,
         iconName: 'file_contract_outlined.svg',
+        onTap: () {},
       ),
       MenuCard(
         title: 'Rekap Materi',
         strokeColor: Palette.plum40,
         fillColor: Palette.plum20,
         iconName: 'book_outlined.svg',
+        onTap: () {},
       ),
       MenuCard(
         title: 'Riwayat Kehadiran',
         strokeColor: Palette.azure40,
         fillColor: Palette.azure20,
         iconName: 'history_outlined.svg',
+        onTap: () {},
       ),
     ];
 
@@ -188,7 +194,17 @@ class StudentLaboratoryPage extends StatelessWidget {
                 .map(
                   (course) => MeetingCard(
                     course: course,
-                    courseNumberBackgroundColor: Palette.purple100,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) {
+                          return const StudentLaboratoryCourseDetailPage();
+                        },
+                        settings: const RouteSettings(
+                          name: AppRoute.studentLaboratoryCourseDetailPage,
+                        ),
+                      ),
+                    ),
                   ),
                 )
                 .toList(),
@@ -197,169 +213,4 @@ class StudentLaboratoryPage extends StatelessWidget {
       ),
     );
   }
-}
-
-class MenuCard extends StatelessWidget {
-  final String title;
-  final Color strokeColor;
-  final Color fillColor;
-  final String iconName;
-
-  const MenuCard({
-    super.key,
-    required this.title,
-    required this.strokeColor,
-    required this.fillColor,
-    required this.iconName,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      margin: EdgeInsets.zero,
-      color: Palette.white,
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: InkWell(
-        onTap: () {},
-        child: Padding(
-          padding: const EdgeInsets.only(
-            left: 8,
-            right: 16,
-          ),
-          child: Row(
-            children: <Widget>[
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: fillColor,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    width: 2,
-                    color: strokeColor,
-                  ),
-                ),
-                child: Center(
-                  child: SvgPicture.asset(
-                    AssetPath.getIcons(iconName),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  title,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: kTextTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: strokeColor,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class MeetingCard extends StatelessWidget {
-  final Course course;
-  final Color courseNumberBackgroundColor;
-
-  const MeetingCard({
-    super.key,
-    required this.course,
-    required this.courseNumberBackgroundColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Card(
-        elevation: 0,
-        margin: EdgeInsets.zero,
-        color: Palette.white,
-        clipBehavior: Clip.antiAlias,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(99),
-        ),
-        child: InkWell(
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const StudentLaboratoriumCourseDetailPage(),
-              settings: const RouteSettings(
-                name: AppRoute.studentLaboratoriumCourseDetailPage,
-              ),
-            ),
-          ),
-          child: SizedBox(
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Row(
-                children: <Widget>[
-                  CircleAvatar(
-                    radius: 36,
-                    backgroundColor: courseNumberBackgroundColor,
-                    child: Text(
-                      '#${course.number}',
-                      style: kTextTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: Palette.white,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          course.topic,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: kTextTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: Palette.purple100,
-                            height: 1.2,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          course.date,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: kTextTheme.bodyMedium?.copyWith(
-                            color: Palette.purple60,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class Course {
-  final int number;
-  final String topic;
-  final String date;
-  final bool? isLocked;
-
-  const Course(this.number, this.topic, this.date, {this.isLocked = true});
 }
