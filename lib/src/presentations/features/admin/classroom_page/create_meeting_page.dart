@@ -1,16 +1,16 @@
 import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/src/presentations/widgets/inkwell_container.dart';
+import 'package:asco/src/presentations/widgets/input_field/input_dropdown_field.dart';
 import 'package:asco/src/presentations/widgets/input_field/input_text_field.dart';
 import 'package:flutter/material.dart';
 
-void showAdminCreatePracticumPage(
+void showAdminCreateMeetingPage(
     {required BuildContext context, bool isEdit = false}) {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => CreatePracticumPage(isEdit: isEdit),
+      builder: (context) => CreateMeetingPage(isEdit: isEdit),
       settings: const RouteSettings(
         name: AppRoute.adminUsersPage,
       ),
@@ -18,16 +18,27 @@ void showAdminCreatePracticumPage(
   );
 }
 
-class CreatePracticumPage extends StatefulWidget {
+class CreateMeetingPage extends StatefulWidget {
   final bool isEdit;
-  const CreatePracticumPage({super.key, required this.isEdit});
+  const CreateMeetingPage({super.key, required this.isEdit});
 
   @override
-  State<CreatePracticumPage> createState() => _CreatePracticumPageState();
+  State<CreateMeetingPage> createState() => _CreateMeetingPageState();
 }
 
-class _CreatePracticumPageState extends State<CreatePracticumPage> {
-  final TextEditingController _courseController = TextEditingController();
+class _CreateMeetingPageState extends State<CreateMeetingPage> {
+  final TextEditingController _topicController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+
+  final ValueNotifier<String?> _assistant1 = ValueNotifier(null);
+  final ValueNotifier<String?> _assistant2 = ValueNotifier(null);
+
+  final _listAssistant = [
+    'Richard',
+    'Ucup',
+    'Alip',
+    'Sony',
+  ];
 
   @override
   void initState() {
@@ -36,8 +47,10 @@ class _CreatePracticumPageState extends State<CreatePracticumPage> {
 
   @override
   void dispose() {
-    _courseController.dispose();
-
+    _topicController.dispose();
+    _dateController.dispose();
+    _assistant1.dispose();
+    _assistant2.dispose();
     super.dispose();
   }
 
@@ -82,39 +95,17 @@ class _CreatePracticumPageState extends State<CreatePracticumPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Badge',
-              style: kTextTheme.titleSmall?.copyWith(
-                color: Palette.black,
-              ),
-            ),
-            const SizedBox(
-              height: 2,
-            ),
-            SizedBox(
-              width: 58,
-              height: 58,
-              child: InkWellContainer(
-                color: Colors.white,
-                onTap: () {},
-                child: Center(
-                  child: Icon(
-                    Icons.add_rounded,
-                  ),
-                ),
-                border: Border.all(width: 1, style: BorderStyle.values[1]),
-                radius: 12,
-              ),
-            ),
+            InputTextField(controller: _topicController, title: 'Materi'),
             const SizedBox(
               height: 16,
             ),
-            InputTextField(controller: _courseController, title: 'Matakuliah'),
+            InputTextField(
+                controller: _dateController, title: 'Tanggal Pertemuan'),
             const SizedBox(
               height: 16,
             ),
             Text(
-              'Kontrak Kuliah',
+              'Modul',
               style: kTextTheme.titleSmall?.copyWith(
                 color: Palette.black,
               ),
@@ -183,6 +174,22 @@ class _CreatePracticumPageState extends State<CreatePracticumPage> {
                   ),
                 )
               ],
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            InputDropdownField(
+              selectItem: _assistant1,
+              title: 'Pemateri',
+              listItem: _listAssistant,
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            InputDropdownField(
+              selectItem: _assistant2,
+              title: 'Pendamping',
+              listItem: _listAssistant,
             ),
           ],
         ),
