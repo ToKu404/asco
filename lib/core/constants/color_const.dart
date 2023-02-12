@@ -25,6 +25,7 @@ class Palette {
   static const Color orange20 = Color(0xFFFFB37F);
 
   static const Color violet60 = Color(0xFFE24EE8);
+  static const Color violet50 = Color(0xFFE44BC2);
   static const Color violet30 = Color(0xFFF2B5F5);
   static const Color violet10 = Color(0xFFFEEEFF);
 
@@ -32,6 +33,7 @@ class Palette {
   static const Color salmon20 = Color(0xFFF2AEAE);
 
   static const Color plum80 = Color(0xFF842469);
+  static const Color plum70 = Color(0xFFE44B94);
   static const Color plum60 = Color(0xFFDD85AF);
   static const Color plum40 = Color(0xFFDD85AF);
   static const Color plum20 = Color(0xFFF2AECF);
@@ -43,4 +45,5 @@ class Palette {
   static const Color tosca20 = Color(0xFFAEF2DE);
 
   static const Color red = Color(0xFFE44B70);
+  static const Color yellow = Color(0xFFFFD37F);
 }
