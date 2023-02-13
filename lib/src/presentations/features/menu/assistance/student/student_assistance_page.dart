@@ -8,6 +8,7 @@ import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/data/dummy_data.dart';
 import 'package:asco/src/presentations/features/menu/assistance/student/student_assistance_course_detail_page.dart';
+import 'package:asco/src/presentations/widgets/circle_border_container.dart';
 
 class StudentAssistancePage extends StatelessWidget {
   const StudentAssistancePage({super.key});
@@ -164,8 +165,8 @@ class StudentAssistancePage extends StatelessWidget {
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                itemBuilder: ((_, i) => StudentAvatar(student: students[i])),
-                separatorBuilder: ((_, __) => const SizedBox(width: 10)),
+                itemBuilder: (_, i) => StudentAvatar(student: students[i]),
+                separatorBuilder: (_, __) => const SizedBox(width: 10),
                 itemCount: students.length,
               ),
             ),
@@ -269,7 +270,7 @@ class ControlCard extends StatelessWidget {
           onTap: () => Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const StudentAssistanceCourseDetailPage(),
+              builder: (_) => const StudentAssistanceCourseDetailPage(),
               settings: const RouteSettings(
                 name: AppRoute.studentAssistanceCourseDetailPage,
               ),
@@ -343,20 +344,30 @@ class ControlCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     if (course.isLocked!) ...[
-                      const AssistanceStatusBadge(),
+                      const CircleBorderContainer(size: 30),
                       const SizedBox(width: 4),
-                      const AssistanceStatusBadge(),
+                      const CircleBorderContainer(size: 30),
                     ] else ...[
-                      const AssistanceStatusBadge(
+                      const CircleBorderContainer(
+                        size: 30,
                         borderColor: Palette.purple80,
                         fillColor: Palette.purple60,
-                        icon: Icons.check_rounded,
+                        child: Icon(
+                          Icons.check_rounded,
+                          size: 16,
+                          color: Palette.white,
+                        ),
                       ),
                       const SizedBox(width: 4),
-                      const AssistanceStatusBadge(
+                      const CircleBorderContainer(
+                        size: 30,
                         borderColor: Color(0xFFD35380),
                         fillColor: Color(0xFFFA78A6),
-                        icon: Icons.close_rounded,
+                        child: Icon(
+                          Icons.close_rounded,
+                          size: 16,
+                          color: Palette.white,
+                        ),
                       ),
                     ],
                   ],
@@ -364,41 +375,6 @@ class ControlCard extends StatelessWidget {
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class AssistanceStatusBadge extends StatelessWidget {
-  final Color? borderColor;
-  final Color? fillColor;
-  final IconData? icon;
-
-  const AssistanceStatusBadge({
-    super.key,
-    this.borderColor,
-    this.fillColor,
-    this.icon,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 30,
-      height: 30,
-      decoration: BoxDecoration(
-        color: fillColor ?? Palette.grey,
-        shape: BoxShape.circle,
-        border: Border.all(
-          color: borderColor ?? Palette.greyDark,
-        ),
-      ),
-      child: Center(
-        child: Icon(
-          icon,
-          size: 16,
-          color: Palette.white,
         ),
       ),
     );

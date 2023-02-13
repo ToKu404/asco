@@ -5,8 +5,10 @@ import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/data/dummy_data.dart';
+import 'package:asco/src/presentations/features/menu/laboratory/widgets/attendance_dialog.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/widgets/mentor_tile.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/widgets/search_field.dart';
+import 'package:asco/src/presentations/widgets/circle_border_container.dart';
 import 'package:asco/src/presentations/widgets/purple_app_bar.dart';
 import 'package:asco/src/presentations/widgets/title_section.dart';
 
@@ -20,18 +22,18 @@ class AssistantLaboratoryCourseDetailPage extends StatefulWidget {
 
 class _AssistantLaboratoryCourseDetailPageState
     extends State<AssistantLaboratoryCourseDetailPage> {
-  late final ValueNotifier<String> _queryNotifier;
+  late final ValueNotifier<String> queryNotifier;
 
   @override
   void initState() {
-    _queryNotifier = ValueNotifier('');
+    queryNotifier = ValueNotifier('');
 
     super.initState();
   }
 
   @override
   void dispose() {
-    _queryNotifier.dispose();
+    queryNotifier.dispose();
 
     super.dispose();
   }
@@ -39,6 +41,7 @@ class _AssistantLaboratoryCourseDetailPageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Palette.grey,
       appBar: PurpleAppBar(
         titleText: 'Pertemuan 1',
@@ -65,7 +68,7 @@ class _AssistantLaboratoryCourseDetailPageState
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 32, 16, 12),
+                          padding: const EdgeInsets.fromLTRB(16, 24, 16, 12),
                           child: Text(
                             'Mengenal Bahasa Pemrograman Kotlin',
                             style: kTextTheme.headlineMedium?.copyWith(
@@ -210,54 +213,39 @@ class _AssistantLaboratoryCourseDetailPageState
             ),
           ];
         },
-        body: CustomScrollView(
-          slivers: <Widget>[
-            SliverAppBar(
-              elevation: 0,
-              pinned: true,
-              automaticallyImplyLeading: false,
-              backgroundColor: Palette.grey,
-              surfaceTintColor: Colors.transparent,
-              bottom: PreferredSize(
-                preferredSize: const Size.fromHeight(60),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      const TitleSection(title: 'Absensi'),
-                      ValueListenableBuilder<String>(
-                        valueListenable: _queryNotifier,
-                        builder: (context, value, child) {
-                          return SearchField(
-                            text: value,
-                            onChanged: (query) {
-                              _queryNotifier.value = query;
-                            },
-                          );
-                        },
-                      ),
-                    ],
+        body: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  const TitleSection(title: 'Absensi'),
+                  ValueListenableBuilder(
+                    valueListenable: queryNotifier,
+                    builder: (context, value, child) {
+                      return SearchField(
+                        text: value,
+                        onChanged: (query) => queryNotifier.value = query,
+                      );
+                    },
                   ),
-                ),
+                ],
               ),
             ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                childCount: students.length,
-                (_, index) {
-                  final isLast = (index == students.length - 1);
-
-                  return Padding(
-                    padding: EdgeInsets.only(
-                      left: 16,
-                      right: 16,
-                      bottom: isLast ? 24 : 10,
-                    ),
-                    child: StudentAttendanceCard(student: students[index]),
-                  );
+            Expanded(
+              child: ListView.separated(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                itemBuilder: (_, i) {
+                  return StudentAttendanceCard(student: students[i]);
                 },
+                separatorBuilder: (_, __) {
+                  return const SizedBox(height: 8);
+                },
+                itemCount: students.length,
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
               ),
             ),
           ],
@@ -297,7 +285,12 @@ class StudentAttendanceCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: InkWell(
-        onTap: () {},
+        onTap: () => showDialog(
+          context: context,
+          barrierLabel: '',
+          barrierDismissible: false,
+          builder: (_) => AttendanceDialog(student: student),
+        ),
         child: Padding(
           padding: const EdgeInsets.symmetric(
             vertical: 20,
@@ -350,55 +343,30 @@ class StudentAttendanceCard extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               if (student.isAttend!) ...[
-                const AttendanceStatusBadge(
+                const CircleBorderContainer(
+                  size: 32,
                   borderColor: Palette.purple80,
                   fillColor: Palette.purple60,
-                  icon: Icons.check_rounded,
+                  child: Icon(
+                    Icons.check_rounded,
+                    size: 18,
+                    color: Palette.white,
+                  ),
                 ),
               ] else ...[
-                const AttendanceStatusBadge(
+                const CircleBorderContainer(
+                  size: 32,
                   borderColor: Color(0xFF8A6913),
                   fillColor: Color(0xFFE4CC4B),
-                  icon: Icons.remove_rounded,
+                  child: Icon(
+                    Icons.remove_rounded,
+                    size: 18,
+                    color: Palette.white,
+                  ),
                 ),
               ],
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class AttendanceStatusBadge extends StatelessWidget {
-  final Color borderColor;
-  final Color fillColor;
-  final IconData icon;
-
-  const AttendanceStatusBadge({
-    super.key,
-    required this.borderColor,
-    required this.fillColor,
-    required this.icon,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 30,
-      height: 30,
-      decoration: BoxDecoration(
-        color: fillColor,
-        shape: BoxShape.circle,
-        border: Border.all(
-          color: borderColor,
-        ),
-      ),
-      child: Center(
-        child: Icon(
-          icon,
-          size: 16,
-          color: Palette.white,
         ),
       ),
     );
