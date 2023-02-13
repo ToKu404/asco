@@ -61,7 +61,7 @@ class _AdminAttendanceCardState extends State<AdminAttendanceCard> {
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 16,
           ),
           const _BuildMeetStat(),

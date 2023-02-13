@@ -8,7 +8,6 @@ import 'package:asco/src/presentations/features/admin/practicum_page/create_clas
 import 'package:asco/src/presentations/features/admin/practicum_page/create_practicum_page.dart';
 import 'package:asco/src/presentations/features/admin/practicum_page/practicum_assistant_page.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
-import 'package:asco/src/presentations/widgets/title_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -198,7 +197,7 @@ class PracticumDetailPage extends StatelessWidget {
                   ),
                 ],
               ),
-              Divider(),
+              const Divider(),
               const SizedBox(
                 height: 8,
               ),
