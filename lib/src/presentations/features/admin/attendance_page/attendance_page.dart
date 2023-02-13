@@ -1,14 +1,9 @@
 import 'package:asco/core/constants/app_route.dart';
-import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/src/presentations/features/admin/attendance_page/attendance_users_page.dart';
 import 'package:asco/src/presentations/features/admin/attendance_page/widgets/attendance_card.dart';
-import 'package:asco/src/presentations/features/menu/assistance/student/student_assistance_course_detail_page.dart';
-import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 void showAdminAttendancePage({required BuildContext context}) {
   Navigator.push(
@@ -90,11 +85,11 @@ class _AdminAttendancePageState extends State<AdminAttendancePage> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               const AdminAttendanceCard(),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               const AdminAttendanceCard(),

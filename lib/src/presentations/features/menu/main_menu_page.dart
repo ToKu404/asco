@@ -45,7 +45,6 @@ class MainMenuPage extends StatefulWidget {
 class _MainMenuPageState extends State<MainMenuPage> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Future.microtask(() => {
           Provider.of<AuthNotifier>(context, listen: false)..getUser(),

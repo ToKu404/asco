@@ -5,7 +5,6 @@ import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/presentations/features/admin/practicum_page/create_practicum_page.dart';
 import 'package:asco/src/presentations/features/admin/practicum_page/practicum_detail_page.dart';
-import 'package:asco/src/presentations/features/admin/users_page/create_user_page.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';

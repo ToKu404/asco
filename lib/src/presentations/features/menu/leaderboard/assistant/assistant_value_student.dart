@@ -92,13 +92,13 @@ class AssistantValueStudent extends StatelessWidget {
                       right: 0,
                       child: CornerBanner(
                         bannerColor: Palette.yellow,
+                        bannerPosition: CornerBannerPosition.topRight,
+                        elevation: 0,
                         child: Text(
                           'No 2',
                           style: kTextTheme.bodyMedium
                               ?.copyWith(color: Palette.white),
                         ),
-                        bannerPosition: CornerBannerPosition.topRight,
-                        elevation: 0,
                       ),
                     )
                   ],

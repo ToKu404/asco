@@ -97,13 +97,13 @@ class _CreatePracticumPageState extends State<CreatePracticumPage> {
               child: InkWellContainer(
                 color: Colors.white,
                 onTap: () {},
-                child: Center(
+                border: Border.all(width: 1, style: BorderStyle.values[1]),
+                radius: 12,
+                child: const Center(
                   child: Icon(
                     Icons.add_rounded,
                   ),
                 ),
-                border: Border.all(width: 1, style: BorderStyle.values[1]),
-                radius: 12,
               ),
             ),
             const SizedBox(

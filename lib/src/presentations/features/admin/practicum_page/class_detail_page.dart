@@ -5,9 +5,6 @@ import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/presentations/features/admin/practicum_page/class_student_page.dart';
 import 'package:asco/src/presentations/features/admin/practicum_page/create_practicum_page.dart';
-import 'package:asco/src/presentations/features/admin/practicum_page/practicum_assistant_page.dart';
-import 'package:asco/src/presentations/widgets/inkwell_container.dart';
-import 'package:asco/src/presentations/widgets/title_section.dart';
 import 'package:flutter/material.dart';
 
 void showAdminClassDetailPage({required BuildContext context}) {
@@ -166,21 +163,21 @@ class ClassDetailPage extends StatelessWidget {
                   ),
                 ],
               ),
-              Divider(),
-              UserCard(),
-              SizedBox(
+              const Divider(),
+              const UserCard(),
+              const SizedBox(
                 height: 8,
               ),
-              UserCard(),
-              SizedBox(
+              const UserCard(),
+              const SizedBox(
                 height: 8,
               ),
-              UserCard(),
-              SizedBox(
+              const UserCard(),
+              const SizedBox(
                 height: 8,
               ),
-              UserCard(),
-              SizedBox(
+              const UserCard(),
+              const SizedBox(
                 height: 8,
               ),
             ],

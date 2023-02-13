@@ -132,7 +132,7 @@ class _AdminClassroomMeetingPageState extends State<AdminClassroomMeetingPage> {
                       showAdminMeetingDetailPage(context: context);
                     },
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
                   MeetingCard(

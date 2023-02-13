@@ -5,7 +5,6 @@ import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/presentations/features/admin/attendance_page/attendance_classroom_page.dart';
 import 'package:asco/src/presentations/features/admin/classroom_page/classroom_page.dart';
-import 'package:asco/src/presentations/features/admin/practicum_page/class_detail_page.dart';
 import 'package:asco/src/presentations/features/admin/practicum_page/practicum_page.dart';
 import 'package:asco/src/presentations/features/admin/users_page/users_page.dart';
 import 'package:asco/src/presentations/features/login/welcome_page.dart';
