@@ -3,8 +3,11 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/presentations/features/admin/assistance_page/assistance_parcticum_page.dart';
 import 'package:asco/src/presentations/features/admin/attendance_page/attendance_classroom_page.dart';
 import 'package:asco/src/presentations/features/admin/classroom_page/classroom_page.dart';
+import 'package:asco/src/presentations/features/admin/control_card_page/control_card_parcticum_page.dart';
+import 'package:asco/src/presentations/features/admin/lab_rule_page/lab_rule_page.dart';
 import 'package:asco/src/presentations/features/admin/practicum_page/practicum_page.dart';
 import 'package:asco/src/presentations/features/admin/score_page/score_parcticum_page.dart';
 import 'package:asco/src/presentations/features/admin/users_page/users_page.dart';
@@ -73,17 +76,17 @@ class _AdminHomePageState extends State<AdminHomePage> {
       AdminPageHelper(
         'Data Asistensi',
         Icons.chat_bubble_rounded,
-        () => showAdminUsersPage(context: context),
+        () => showAdminAssistancePracticumPage(context: context),
       ),
       AdminPageHelper(
         'Kartu Kontrol',
         Icons.card_membership_rounded,
-        () => showAdminUsersPage(context: context),
+        () => showAdminControlCardPracticumPage(context: context),
       ),
       AdminPageHelper(
         'Data Tambahan Lab',
         Icons.settings_applications_rounded,
-        () => showAdminUsersPage(context: context),
+        () => showAdminLabRulePage(context: context),
       ),
     ];
 

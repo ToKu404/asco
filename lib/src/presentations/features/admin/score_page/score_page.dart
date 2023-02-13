@@ -6,7 +6,6 @@ import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/presentations/features/admin/practicum_page/create_practicum_page.dart';
 import 'package:asco/src/presentations/features/admin/practicum_page/practicum_detail_page.dart';
 import 'package:asco/src/presentations/features/menu/leaderboard/assistant/assistant_value_recap.dart';
-import 'package:asco/src/presentations/features/menu/leaderboard/assistant/assistant_value_student.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -236,7 +235,7 @@ class StudentScoreCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 4,
                       ),
                       Container(
