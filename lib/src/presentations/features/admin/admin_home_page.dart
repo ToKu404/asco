@@ -89,93 +89,98 @@ class _AdminHomePageState extends State<AdminHomePage> {
 
     return Scaffold(
       backgroundColor: Palette.grey,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(
-              height: 24,
-            ),
-            const AppBarTitle(),
-            const SizedBox(
-              height: 32,
-            ),
-            Container(
-              width: AppSize.getAppWidth(context),
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: Palette.white,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(
+                height: 24,
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SvgPicture.asset(
-                    AssetPath.getVector(
-                      'logo2.svg',
-                    ),
-                    width: 24,
-                    height: 24,
-                  ),
-                  const SizedBox(
-                    width: 16,
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Super Admin',
-                          style: kTextTheme.bodyMedium
-                              ?.copyWith(color: Palette.purple60),
-                        ),
-                        Text(
-                          'Koordinator Lab',
-                          style: kTextTheme.bodyLarge?.copyWith(
-                            color: Palette.purple80,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  IconButton(
-                    style: IconButton.styleFrom(
-                      backgroundColor: Palette.purple60,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    onPressed: () {
-                      showWelcomePage(context: context);
-                    },
-                    icon: SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: SvgPicture.asset(
-                        AssetPath.getIcons('logout_outlined.svg'),
-                        color: Palette.white,
-                      ),
-                    ),
-                  )
-                ],
+              const AppBarTitle(),
+              const SizedBox(
+                height: 32,
               ),
-            ),
-            GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: listAdminPage.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 8,
-                  mainAxisSpacing: 8,
-                  childAspectRatio: 1.2,
+              Container(
+                width: AppSize.getAppWidth(context),
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Palette.white,
                 ),
-                itemBuilder: (context, index) {
-                  return AdminMenuCard(adminPage: listAdminPage[index]);
-                })
-          ],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SvgPicture.asset(
+                      AssetPath.getVector(
+                        'logo2.svg',
+                      ),
+                      width: 24,
+                      height: 24,
+                    ),
+                    const SizedBox(
+                      width: 16,
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Super Admin',
+                            style: kTextTheme.bodyMedium
+                                ?.copyWith(color: Palette.purple60),
+                          ),
+                          Text(
+                            'Koordinator Lab',
+                            style: kTextTheme.bodyLarge?.copyWith(
+                              color: Palette.purple80,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      style: IconButton.styleFrom(
+                        backgroundColor: Palette.purple60,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      onPressed: () {
+                        showWelcomePage(context: context);
+                      },
+                      icon: SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: SvgPicture.asset(
+                          AssetPath.getIcons('logout_outlined.svg'),
+                          color: Palette.white,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: listAdminPage.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 8,
+                    mainAxisSpacing: 8,
+                    childAspectRatio: 1.2,
+                  ),
+                  itemBuilder: (context, index) {
+                    return AdminMenuCard(adminPage: listAdminPage[index]);
+                  })
+            ],
+          ),
         ),
       ),
     );
