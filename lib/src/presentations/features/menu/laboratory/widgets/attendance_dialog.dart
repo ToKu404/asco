@@ -1,9 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/data/dummy_data.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class AttendanceDialog extends StatefulWidget {
   final Student student;
@@ -15,11 +15,11 @@ class AttendanceDialog extends StatefulWidget {
 }
 
 class _AttendanceDialogState extends State<AttendanceDialog> {
-  late final ValueNotifier<bool> statusNotifier;
+  late final ValueNotifier<FaceStatus?> statusNotifier;
 
   @override
   void initState() {
-    statusNotifier = ValueNotifier(false);
+    statusNotifier = ValueNotifier(null);
 
     super.initState();
   }
@@ -33,16 +33,12 @@ class _AttendanceDialogState extends State<AttendanceDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final listStatus = <FaceStatus>[
-      FaceStatus(
-        statusText: 'Alfa',
-        faceIconName: 'face_dizzy_filled.svg',
-        
-      ),
-    ];
-
     return Dialog(
       elevation: 0,
+      insetPadding: const EdgeInsets.symmetric(
+        horizontal: 36.0,
+        vertical: 24.0,
+      ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
@@ -113,7 +109,15 @@ class _AttendanceDialogState extends State<AttendanceDialog> {
                     builder: (context, value, child) {
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: listStatus,
+                        children: listStatus
+                            .map(
+                              (status) => FaceStatusWidget(
+                                status: status,
+                                isSelected: value == status,
+                                onTap: () => statusNotifier.value = status,
+                              ),
+                            )
+                            .toList(),
                       );
                     },
                   ),
@@ -127,19 +131,15 @@ class _AttendanceDialogState extends State<AttendanceDialog> {
   }
 }
 
-class FaceStatus extends StatelessWidget {
-  final String statusText;
-  final Color? borderColor;
-  final Color? backgroundColor;
-  final String faceIconName;
+class FaceStatusWidget extends StatelessWidget {
+  final FaceStatus status;
   final VoidCallback? onTap;
+  final bool isSelected;
 
-  const FaceStatus({
+  const FaceStatusWidget({
     super.key,
-    required this.statusText,
-    this.borderColor,
-    this.backgroundColor,
-    required this.faceIconName,
+    required this.status,
+    this.isSelected = false,
     this.onTap,
   });
 
@@ -150,35 +150,29 @@ class FaceStatus extends StatelessWidget {
       children: <Widget>[
         Container(
           decoration: BoxDecoration(
-            color: backgroundColor ?? Palette.grey10,
+            color: Palette.grey10,
             borderRadius: BorderRadius.circular(8),
-            border: borderColor != null
-                ? Border.all(
-                    color: borderColor!,
-                  )
-                : null,
+            border: Border.all(
+              color: isSelected ? status.borderColor : Palette.grey10,
+            ),
           ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: onTap,
-              borderRadius: BorderRadius.circular(8),
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: SvgPicture.asset(
-                  AssetPath.getIcons(faceIconName),
-                  color: borderColor,
-                  width: 30,
-                ),
+          child: GestureDetector(
+            onTap: onTap,
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: SvgPicture.asset(
+                AssetPath.getIcons(status.iconName),
+                color: isSelected ? status.borderColor : Palette.grey50,
+                width: 30,
               ),
             ),
           ),
         ),
         const SizedBox(height: 2),
         Text(
-          statusText,
+          status.status,
           style: kTextTheme.bodyMedium?.copyWith(
-            color: borderColor,
+            color: isSelected ? status.borderColor : Palette.grey50,
           ),
         ),
       ],
