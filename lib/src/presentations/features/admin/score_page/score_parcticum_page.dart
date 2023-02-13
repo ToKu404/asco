@@ -5,15 +5,16 @@ import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/presentations/features/admin/practicum_page/create_practicum_page.dart';
 import 'package:asco/src/presentations/features/admin/practicum_page/practicum_detail_page.dart';
+import 'package:asco/src/presentations/features/admin/score_page/score_page.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-void showAdminPracticumPage({required BuildContext context}) {
+void showAdminScorePracticumPage({required BuildContext context}) {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => const AdminPracticumPage(),
+      builder: (context) => const AdminScorePracticumPage(),
       settings: const RouteSettings(
         name: AppRoute.adminUsersPage,
       ),
@@ -21,14 +22,15 @@ void showAdminPracticumPage({required BuildContext context}) {
   );
 }
 
-class AdminPracticumPage extends StatefulWidget {
-  const AdminPracticumPage({super.key});
+class AdminScorePracticumPage extends StatefulWidget {
+  const AdminScorePracticumPage({super.key});
 
   @override
-  State<AdminPracticumPage> createState() => _AdminPracticumPageState();
+  State<AdminScorePracticumPage> createState() =>
+      _AdminScorePracticumPageState();
 }
 
-class _AdminPracticumPageState extends State<AdminPracticumPage> {
+class _AdminScorePracticumPageState extends State<AdminScorePracticumPage> {
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -53,7 +55,7 @@ class _AdminPracticumPageState extends State<AdminPracticumPage> {
           ),
         ),
         title: Text(
-          'Data Praktikum',
+          'Data Nilai',
           style: kTextTheme.titleSmall?.copyWith(color: Palette.white),
         ),
         centerTitle: true,
@@ -146,7 +148,7 @@ class PracticumCard extends StatelessWidget {
     return InkWellContainer(
       color: Colors.white,
       onTap: () {
-        showAdminPracticumDetailPage(context: context);
+        showAdminScorePage(context: context);
       },
       radius: 12,
       child: Container(
