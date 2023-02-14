@@ -36,9 +36,9 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, UserCredentialEntity?>> getUser() async {
+  Future<Either<Failure, UserCredentialEntity?>> getUserCredential() async {
     try {
-      final result = await authDataSources.getUser();
+      final result = await authDataSources.getUserCredential();
       return Right(result);
     } catch (e) {
       return Left(PreferencesFailure(e.toString()));
@@ -53,5 +53,11 @@ class AuthRepositoryImpl implements AuthRepository {
     } catch (e) {
       return Left(PreferencesFailure(e.toString()));
     }
+  }
+
+  @override
+  Future<Either<Failure, bool>> deleteUser({required String username}) {
+    // TODO: implement deleteUser
+    throw UnimplementedError();
   }
 }
