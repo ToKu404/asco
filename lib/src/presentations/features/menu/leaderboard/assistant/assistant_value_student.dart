@@ -3,6 +3,7 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/presentations/features/menu/leaderboard/assistant/assistant_value_recap.dart';
+import 'package:asco/src/presentations/widgets/avatar.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:asco/src/presentations/widgets/purple_app_bar.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +62,7 @@ class StudentScoreCard extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             radius: 12,
             child: ListTile(
-              leading: const Avatar(imageAsset: 'avatar1.jpg'),
+              leading: const Avatar(imageAsset: 'avatar1.jpg', radius: 28),
               title: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,32 +120,6 @@ class StudentScoreCard extends StatelessWidget {
             ),
           )
         ],
-      ),
-    );
-  }
-}
-
-class Avatar extends StatelessWidget {
-  final String imageAsset;
-
-  const Avatar({
-    super.key,
-    required this.imageAsset,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        shape: BoxShape.circle,
-        color: Palette.white,
-      ),
-      padding: const EdgeInsets.all(2.0),
-      child: CircleAvatar(
-        radius: 28,
-        foregroundImage: AssetImage(
-          AssetPath.getImage(imageAsset),
-        ),
       ),
     );
   }
