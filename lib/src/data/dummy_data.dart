@@ -91,23 +91,23 @@ const students = <Student>[
 const listStatus = <FaceStatus>[
   FaceStatus(
     status: 'Alfa',
-    iconName: 'face_dizzy_filled.svg',
-    borderColor: Color(0xFFFA78A6),
+    icon: 'face_dizzy_filled.svg',
+    color: Color(0xFFFA78A6),
   ),
   FaceStatus(
     status: 'Izin',
-    iconName: 'face_neutral_filled.svg',
-    borderColor: Color(0xFF788DFA),
+    icon: 'face_neutral_filled.svg',
+    color: Color(0xFF788DFA),
   ),
   FaceStatus(
     status: 'Sakit',
-    iconName: 'face_sick_filled.svg',
-    borderColor: Color(0xFFFAC678),
+    icon: 'face_sick_filled.svg',
+    color: Color(0xFFFAC678),
   ),
   FaceStatus(
     status: 'Hadir',
-    iconName: 'face_smile_filled.svg',
-    borderColor: Palette.purple60,
+    icon: 'face_smile_filled.svg',
+    color: Palette.purple60,
   ),
 ];
 
@@ -132,12 +132,12 @@ class Student {
 // used at laboratorium attendance dialog
 class FaceStatus {
   final String status;
-  final String iconName;
-  final Color borderColor;
+  final String icon;
+  final Color color;
 
   const FaceStatus({
     required this.status,
-    required this.iconName,
-    required this.borderColor,
+    required this.icon,
+    required this.color,
   });
 }
