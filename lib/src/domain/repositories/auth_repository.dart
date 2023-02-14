@@ -7,7 +7,7 @@ abstract class AuthRepository {
   Future<Either<Failure, bool>> createUser({required UserEntity userEntity});
   Future<Either<Failure, UserCredentialEntity>> logIn(
       {required String username, required String password});
-  Future<Either<Failure, UserCredentialEntity?>> getUser();
-
+  Future<Either<Failure, UserCredentialEntity?>> getUserCredential();
+  Future<Either<Failure, bool>> deleteUser({required String username});
   Future<Either<Failure, bool>> logOut();
 }
