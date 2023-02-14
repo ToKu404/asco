@@ -143,6 +143,4 @@ class _LabRulePageState extends State<LabRulePage> {
       )),
     );
   }
-
-  void _onSubmit() {}
 }
