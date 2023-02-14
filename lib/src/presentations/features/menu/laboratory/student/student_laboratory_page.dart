@@ -15,7 +15,7 @@ class StudentLaboratoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<MenuCard> labMenuCards = <MenuCard>[
+    final labMenuCards = <MenuCard>[
       MenuCard(
         title: 'Tata Tertib',
         strokeColor: Palette.purple40,

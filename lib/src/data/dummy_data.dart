@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:asco/core/constants/color_const.dart';
+
 const courses = <Course>[
   Course(
     1,
@@ -85,6 +88,29 @@ const students = <Student>[
   ),
 ];
 
+const listStatus = <FaceStatus>[
+  FaceStatus(
+    status: 'Alfa',
+    icon: 'face_dizzy_filled.svg',
+    color: Color(0xFFFA78A6),
+  ),
+  FaceStatus(
+    status: 'Izin',
+    icon: 'face_neutral_filled.svg',
+    color: Color(0xFF788DFA),
+  ),
+  FaceStatus(
+    status: 'Sakit',
+    icon: 'face_sick_filled.svg',
+    color: Color(0xFFFAC678),
+  ),
+  FaceStatus(
+    status: 'Hadir',
+    icon: 'face_smile_filled.svg',
+    color: Palette.purple60,
+  ),
+];
+
 class Course {
   final int number;
   final String topic;
@@ -101,4 +127,17 @@ class Student {
   final bool? isAttend;
 
   const Student(this.id, this.name, this.nim, {this.isAttend = true});
+}
+
+// used at laboratorium attendance dialog
+class FaceStatus {
+  final String status;
+  final String icon;
+  final Color color;
+
+  const FaceStatus({
+    required this.status,
+    required this.icon,
+    required this.color,
+  });
 }
