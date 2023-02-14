@@ -333,7 +333,7 @@ class ControlCard extends StatelessWidget {
                         course.date,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: kTextTheme.bodySmall?.copyWith(
+                        style: kTextTheme.bodyMedium?.copyWith(
                           color: Palette.purple60,
                         ),
                       ),

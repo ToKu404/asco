@@ -321,15 +321,16 @@ class StudentAttendanceCard extends StatelessWidget {
                         color: Palette.purple60,
                       ),
                     ),
-                    const SizedBox(height: 1),
+                    const SizedBox(height: 2),
                     Text(
                       student.name,
                       style: kTextTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w600,
                         color: Palette.purple80,
+                        height: 1.2,
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: 4),
                     Text(
                       student.isAttend!
                           ? 'Waktu absensi: 23:59'

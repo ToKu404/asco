@@ -7,6 +7,7 @@ import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/data/dummy_data.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/assistant/assistant_laboratory_course_detail_page.dart';
+import 'package:asco/src/presentations/features/menu/laboratory/assistant/assistant_laboratory_schedule_page.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/widgets/meeting_card.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/widgets/menu_card.dart';
 
@@ -38,11 +39,19 @@ class AssistantLaboratoryPage extends StatelessWidget {
         onTap: () {},
       ),
       MenuCard(
-        title: 'Jadwal Pemateri',
+        title: 'Jadwal Asisten',
         strokeColor: Palette.azure40,
         fillColor: Palette.azure20,
         iconName: 'calendar_blank_outlined.svg',
-        onTap: () {},
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const AssistantLaboratorySchedulePage(),
+            settings: const RouteSettings(
+              name: AppRoute.assistantLaboratorySchedulePage,
+            ),
+          ),
+        ),
       ),
     ];
 
