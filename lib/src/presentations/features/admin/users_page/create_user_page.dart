@@ -7,6 +7,7 @@ import 'package:asco/src/presentations/providers/auth_notifier.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:asco/src/presentations/widgets/input_field/input_dropdown_field.dart';
 import 'package:asco/src/presentations/widgets/input_field/input_text_field.dart';
+import 'package:asco/src/presentations/widgets/input_field/field_title.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -35,13 +36,20 @@ class _CreateUserPageState extends State<CreateUserPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _fullnameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _githubController = TextEditingController();
+  final TextEditingController _instagramController = TextEditingController();
 
   final ValueNotifier<String?> _batchNotifier = ValueNotifier(null);
   final ValueNotifier<String?> _roleNotifier = ValueNotifier(null);
+  final ValueNotifier<String?> _genderNotifier = ValueNotifier(null);
 
   final _listRole = [
     'Praktikan',
     'Asisten',
+  ];
+  final _listGender = [
+    'Laki-laki',
+    'Perempuan',
   ];
   final _listBatch = [
     for (int i = 0; i < 7; i++) (DateTime.now().year - i).toString(),
@@ -51,6 +59,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
   void initState() {
     _batchNotifier.value = _listBatch.first;
     _roleNotifier.value = _listRole.first;
+    _genderNotifier.value = _listGender.first;
     super.initState();
   }
 
@@ -59,6 +68,8 @@ class _CreateUserPageState extends State<CreateUserPage> {
     _usernameController.dispose();
     _fullnameController.dispose();
     _passwordController.dispose();
+    _instagramController.dispose();
+    _githubController.dispose();
     _batchNotifier.dispose();
     _roleNotifier.dispose();
     super.dispose();
@@ -105,20 +116,59 @@ class _CreateUserPageState extends State<CreateUserPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            InputTextField(controller: _usernameController, title: 'Username'),
+            const FieldTitle(
+              title: 'Profile Photo',
+            ),
+            SizedBox(
+              width: 150,
+              height: 150,
+              child: InkWellContainer(
+                color: Colors.white,
+                onTap: () {},
+                border: Border.all(width: 1, style: BorderStyle.values[1]),
+                radius: 12,
+                child: const Center(
+                  child: Icon(
+                    Icons.add_rounded,
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(
               height: 16,
             ),
             InputTextField(
-                controller: _fullnameController, title: 'Nama Lengkap'),
+              controller: _usernameController,
+              title: 'Username',
+              isRequired: true,
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            InputTextField(
+                controller: _passwordController,
+                title: 'Password (Auto Generate)'),
+            const SizedBox(
+              height: 16,
+            ),
+            InputTextField(
+              controller: _fullnameController,
+              title: 'Nama Lengkap',
+              isRequired: true,
+            ),
             const SizedBox(
               height: 16,
             ),
             InputDropdownField(
               selectItem: _batchNotifier,
               title: 'Angkatan',
+              isRequired: true,
               listItem: _listBatch,
             ),
+            const SizedBox(
+              height: 16,
+            ),
+            _buildGenderCheckBox(),
             const SizedBox(
               height: 16,
             ),
@@ -126,7 +176,17 @@ class _CreateUserPageState extends State<CreateUserPage> {
             const SizedBox(
               height: 16,
             ),
-            InputTextField(controller: _passwordController, title: 'Password'),
+            InputTextField(
+              controller: _githubController,
+              title: 'Github',
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            InputTextField(
+              controller: _instagramController,
+              title: 'Instagram',
+            ),
           ],
         ),
       )),
@@ -148,6 +208,41 @@ class _CreateUserPageState extends State<CreateUserPage> {
     }
   }
 
+  Widget _buildGenderCheckBox() {
+    return ValueListenableBuilder(
+        valueListenable: _genderNotifier,
+        builder: (context, value, _) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const RequiredFieldTitle(
+                title: 'Jenis Kelamin',
+              ),
+              Row(
+                children: [
+                  Expanded(
+                      child: CustomCheckBoxItem(
+                    value: _listGender.first,
+                    isActive: value == _listGender.first,
+                    onTap: () => _genderNotifier.value = _listGender.first,
+                  )),
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  Expanded(
+                    child: CustomCheckBoxItem(
+                      value: _listGender.last,
+                      isActive: value == _listGender.last,
+                      onTap: () => _genderNotifier.value = _listGender.last,
+                    ),
+                  ),
+                ],
+              )
+            ],
+          );
+        });
+  }
+
   Widget _buildRoleCheckBox() {
     return ValueListenableBuilder(
         valueListenable: _roleNotifier,
@@ -155,14 +250,8 @@ class _CreateUserPageState extends State<CreateUserPage> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Role',
-                style: kTextTheme.titleSmall?.copyWith(
-                  color: Palette.black,
-                ),
-              ),
-              const SizedBox(
-                height: 2,
+              const RequiredFieldTitle(
+                title: 'Role',
               ),
               Row(
                 children: [

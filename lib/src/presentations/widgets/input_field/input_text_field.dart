@@ -1,12 +1,17 @@
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/presentations/widgets/input_field/field_title.dart';
 import 'package:flutter/material.dart';
 
 class InputTextField extends StatefulWidget {
   final TextEditingController controller;
   final String title;
+  final bool isRequired;
   const InputTextField(
-      {super.key, required this.controller, required this.title});
+      {super.key,
+      required this.controller,
+      required this.title,
+      this.isRequired = false});
 
   @override
   State<InputTextField> createState() => _InputTextFieldState();
@@ -18,15 +23,9 @@ class _InputTextFieldState extends State<InputTextField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          widget.title,
-          style: kTextTheme.titleSmall?.copyWith(
-            color: Palette.black,
-          ),
-        ),
-        const SizedBox(
-          height: 2,
-        ),
+        widget.isRequired
+            ? RequiredFieldTitle(title: widget.title)
+            : FieldTitle(title: widget.title),
         TextField(
           controller: widget.controller,
           onChanged: (value) {},
