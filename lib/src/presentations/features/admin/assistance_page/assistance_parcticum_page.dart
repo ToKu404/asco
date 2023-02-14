@@ -3,16 +3,16 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/src/presentations/features/admin/score_page/score_page.dart';
+import 'package:asco/src/presentations/features/admin/assistance_page/assistance_page.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-void showAdminScorePracticumPage({required BuildContext context}) {
+void showAdminAssistancePracticumPage({required BuildContext context}) {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => const AdminScorePracticumPage(),
+      builder: (context) => const AdminAssistancePracticumPage(),
       settings: const RouteSettings(
         name: AppRoute.adminUsersPage,
       ),
@@ -20,15 +20,16 @@ void showAdminScorePracticumPage({required BuildContext context}) {
   );
 }
 
-class AdminScorePracticumPage extends StatefulWidget {
-  const AdminScorePracticumPage({super.key});
+class AdminAssistancePracticumPage extends StatefulWidget {
+  const AdminAssistancePracticumPage({super.key});
 
   @override
-  State<AdminScorePracticumPage> createState() =>
-      _AdminScorePracticumPageState();
+  State<AdminAssistancePracticumPage> createState() =>
+      _AdminAssistancePracticumPageState();
 }
 
-class _AdminScorePracticumPageState extends State<AdminScorePracticumPage> {
+class _AdminAssistancePracticumPageState
+    extends State<AdminAssistancePracticumPage> {
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -53,7 +54,7 @@ class _AdminScorePracticumPageState extends State<AdminScorePracticumPage> {
           ),
         ),
         title: Text(
-          'Data Nilai',
+          'Data Asistensi',
           style: kTextTheme.titleSmall?.copyWith(color: Palette.white),
         ),
         centerTitle: true,
@@ -135,7 +136,7 @@ class PracticumCard extends StatelessWidget {
     return InkWellContainer(
       color: Colors.white,
       onTap: () {
-        showAdminScorePage(context: context);
+        showAdminAssistancePage(context: context);
       },
       radius: 12,
       child: Container(
@@ -165,7 +166,7 @@ class PracticumCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '5 Kelas',
+                    '10 Grup Asistensi',
                     style: kTextTheme.bodyMedium?.copyWith(
                       color: Palette.purple60,
                     ),
