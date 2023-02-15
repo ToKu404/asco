@@ -7,10 +7,11 @@ class UserProfileModel extends UserProfileEntity {
     super.fullName,
     super.gender,
     super.github,
-    super.id,
+    super.username,
     super.instagram,
     super.nickName,
     super.profilePhoto,
+    super.uid,
   });
 
   Map<String, dynamic> toDocument() {
@@ -19,10 +20,11 @@ class UserProfileModel extends UserProfileEntity {
       'full_name': fullName,
       'gender': gender,
       'github': github,
-      'id': id,
+      'username': username,
       'instagram': instagram,
       'nick_name': nickName,
       'profile_photo': profilePhoto,
+      'uid': uid,
     };
   }
 
@@ -32,10 +34,11 @@ class UserProfileModel extends UserProfileEntity {
       fullName: fullName,
       gender: gender,
       github: github,
-      id: id,
+      username: username,
       instagram: instagram,
       nickName: nickName,
       profilePhoto: profilePhoto,
+      uid: uid,
     );
   }
 
@@ -45,10 +48,11 @@ class UserProfileModel extends UserProfileEntity {
       fullName: documentSnapshot['full_name'],
       gender: documentSnapshot['gender'],
       github: documentSnapshot['github'],
-      id: documentSnapshot['id'],
+      username: documentSnapshot['username'],
       instagram: documentSnapshot['instagram'],
       nickName: documentSnapshot['nick_name'],
       profilePhoto: documentSnapshot['profile_photo'],
+      uid: documentSnapshot['uid'],
     );
   }
 
@@ -58,10 +62,11 @@ class UserProfileModel extends UserProfileEntity {
       fullName: userProfileEntity.fullName,
       gender: userProfileEntity.gender,
       github: userProfileEntity.github,
-      id: userProfileEntity.id,
+      username: userProfileEntity.username,
       instagram: userProfileEntity.instagram,
       nickName: userProfileEntity.nickName,
       profilePhoto: userProfileEntity.profilePhoto,
+      uid: userProfileEntity.uid,
     );
   }
 }
