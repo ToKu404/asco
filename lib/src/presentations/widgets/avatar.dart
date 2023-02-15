@@ -5,19 +5,21 @@ import 'package:flutter/material.dart';
 class Avatar extends StatelessWidget {
   final String imageAsset;
   final double radius;
+  final Color color;
 
   const Avatar({
     super.key,
     required this.imageAsset,
     required this.radius,
+    required this.color,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Palette.white,
+        color: color,
       ),
       padding: const EdgeInsets.all(2.0),
       child: CircleAvatar(
