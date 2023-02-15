@@ -1,6 +1,9 @@
+import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/presentations/features/menu/extras/input_value_exam.dart';
 import 'package:asco/src/presentations/widgets/avatar.dart';
+import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:asco/src/presentations/widgets/purple_app_bar.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
@@ -60,46 +63,46 @@ class LabExamPage extends StatelessWidget {
                 child: Row(
                   children: [
                     Expanded(
-                      child: InkWell(
+                      child: InkWellContainer(
+                        radius: 12,
+                        color: Palette.plum70,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10,
+                        ),
                         onTap: () {},
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Palette.plum70,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 10,
-                          ),
-                          child: Text(
-                            'Edit Info',
-                            textAlign: TextAlign.center,
-                            style: kTextTheme.bodyMedium?.copyWith(
-                              color: Palette.white,
-                            ),
+                        child: Text(
+                          'Edit Info',
+                          textAlign: TextAlign.center,
+                          style: kTextTheme.bodyMedium?.copyWith(
+                            color: Palette.white,
                           ),
                         ),
                       ),
                     ),
                     const SizedBox(width: 18),
                     Expanded(
-                      child: InkWell(
-                        onTap: () {},
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Palette.purple60,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 10,
-                          ),
-                          child: Text(
-                            'Input Nilai',
-                            textAlign: TextAlign.center,
-                            style: kTextTheme.bodyMedium?.copyWith(
-                              color: Palette.white,
+                      child: InkWellContainer(
+                        radius: 12,
+                        color: Palette.purple60,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10,
+                        ),
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const InputValueExam(),
+                            settings: const RouteSettings(
+                              name: AppRoute.inputValueExam,
                             ),
+                          ),
+                        ),
+                        child: Text(
+                          'Input Nilai',
+                          textAlign: TextAlign.center,
+                          style: kTextTheme.bodyMedium?.copyWith(
+                            color: Palette.white,
                           ),
                         ),
                       ),
@@ -207,7 +210,11 @@ class CardValue extends StatelessWidget {
       ),
       padding: const EdgeInsets.all(8),
       child: ListTile(
-        leading: const Avatar(imageAsset: 'avatar1.jpg', radius: 28),
+        leading: const Avatar(
+          imageAsset: 'avatar1.jpg',
+          radius: 28,
+          color: Palette.white,
+        ),
         title: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,

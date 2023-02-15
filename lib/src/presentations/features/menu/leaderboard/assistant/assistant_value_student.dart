@@ -61,7 +61,11 @@ class StudentScoreCard extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             radius: 12,
             child: ListTile(
-              leading: const Avatar(imageAsset: 'avatar1.jpg', radius: 28),
+              leading: const Avatar(
+                imageAsset: 'avatar1.jpg',
+                radius: 28,
+                color: Palette.white,
+              ),
               title: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
