@@ -78,7 +78,14 @@ class AuthDataSourcesImpl implements AuthDataSources {
     try {
       final credential = await authPreferenceHelper.getUser();
       if (credential != null) {
-        return credential;
+        QuerySnapshot snapshot = await userCollectionRef
+            .where("username", isEqualTo: credential.username)
+            .get();
+        if (snapshot.docs.isNotEmpty) {
+          return credential;
+        } else {
+          throw Exception();
+        }
       } else {
         return null;
       }

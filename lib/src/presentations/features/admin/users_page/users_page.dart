@@ -3,12 +3,16 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/core/state/request_state.dart';
+import 'package:asco/src/domain/entities/profile_entities/user_profile_entity.dart';
 import 'package:asco/src/presentations/features/admin/users_page/create_user_page.dart';
 import 'package:asco/src/presentations/features/admin/users_page/user_detail_page.dart';
+import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:asco/src/presentations/widgets/custom_badge.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 void showAdminUsersPage({required BuildContext context}) {
   Navigator.push(
@@ -31,6 +35,14 @@ class AdminUserPage extends StatefulWidget {
 
 class _AdminUserPageState extends State<AdminUserPage> {
   TextEditingController searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      Provider.of<ProfileNotifier>(context, listen: false).fetchAll();
+    });
+  }
 
   @override
   void dispose() {
@@ -118,14 +130,33 @@ class _AdminUserPageState extends State<AdminUserPage> {
               ),
             ),
             Expanded(
-                child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: const [
-                  UserCard(),
-                ],
-              ),
-            )),
+              child: Builder(builder: (context) {
+                final profileNotifier = context.watch<ProfileNotifier>();
+
+                // Todo : Add Shimmer
+                if (profileNotifier.fetchAllProfileState ==
+                    RequestState.loading) {
+                  return const SizedBox.shrink();
+                } else if (profileNotifier.fetchAllProfileState ==
+                    RequestState.error) {
+                  return const SizedBox.shrink();
+                }
+
+                return ListView.builder(
+                  padding: const EdgeInsets.only(
+                    left: 16,
+                    right: 16,
+                    bottom: 16 + 65,
+                  ),
+                  itemBuilder: (context, index) {
+                    return UserCard(
+                      profileData: profileNotifier.listProfile[index],
+                    );
+                  },
+                  itemCount: profileNotifier.listProfile.length,
+                );
+              }),
+            ),
           ],
         ),
       ),
@@ -134,7 +165,9 @@ class _AdminUserPageState extends State<AdminUserPage> {
 }
 
 class UserCard extends StatelessWidget {
+  final UserProfileEntity profileData;
   const UserCard({
+    required this.profileData,
     super.key,
   });
 
@@ -145,6 +178,7 @@ class UserCard extends StatelessWidget {
       onTap: () {
         showAdminUserDetailPage(context: context);
       },
+      margin: const EdgeInsets.only(bottom: 8),
       radius: 12,
       child: Container(
         width: AppSize.getAppWidth(context),
@@ -163,14 +197,16 @@ class UserCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'H071191049',
+                    profileData.userRole!.id! == 1
+                        ? profileData.username ?? ''
+                        : '@${profileData.username}',
                     style: kTextTheme.bodyMedium?.copyWith(
                       color: Palette.purple60,
                       height: 1.1,
                     ),
                   ),
                   Text(
-                    'Ikhsan',
+                    profileData.fullName ?? '',
                     style: kTextTheme.bodyLarge?.copyWith(
                       color: Palette.purple80,
                       fontWeight: FontWeight.w600,
@@ -181,12 +217,67 @@ class UserCard extends StatelessWidget {
                     height: 6,
                   ),
                   BuildBadge(
-                    badgeHelper:
-                        TempBadgeHelper(badgeId: 3, title: 'Mahasiswa'),
+                    badgeHelper: TempBadgeHelper(
+                        badgeId: profileData.userRole!.id! == 1 ? 3 : 4,
+                        title: profileData.userRole!.name!),
                   ),
                 ],
               ),
-            )
+            ),
+            const SizedBox(
+              width: 4,
+            ),
+            Column(
+              children: [
+                SizedBox(
+                  width: 30,
+                  height: 30,
+                  child: IconButton(
+                    style: IconButton.styleFrom(
+                      backgroundColor: Palette.purple70,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          8,
+                        ),
+                      ),
+                      padding: EdgeInsets.zero,
+                    ),
+                    onPressed: () {
+                      showAdminCreateUserPage(context: context, isEdit: true);
+                    },
+                    icon: const Icon(
+                      Icons.edit,
+                      color: Palette.white,
+                      size: 18,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 4,
+                ),
+                SizedBox(
+                  width: 30,
+                  height: 30,
+                  child: IconButton(
+                    style: IconButton.styleFrom(
+                      backgroundColor: Palette.purple80,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          8,
+                        ),
+                      ),
+                      padding: EdgeInsets.zero,
+                    ),
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.delete,
+                      color: Palette.white,
+                      size: 18,
+                    ),
+                  ),
+                )
+              ],
+            ),
           ],
         ),
       ),

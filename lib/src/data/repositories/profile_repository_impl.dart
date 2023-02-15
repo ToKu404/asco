@@ -23,9 +23,16 @@ class ProfileRepositoryImpl implements ProfileRepository {
   }
 
   @override
-  Future<Either<Failure, List<UserProfileEntity>>> find() async {
+  Future<Either<Failure, List<UserProfileEntity>>> find({
+    String? query,
+    int? byRole,
+  }) async {
     try {
-      final result = await profileDataSources.find();
+      final result = await profileDataSources.find(
+        query: query,
+        byRole: byRole,
+      );
+
       return Right(result);
     } catch (e) {
       return const Left(FirestoreFailure(''));
@@ -60,6 +67,16 @@ class ProfileRepositoryImpl implements ProfileRepository {
       final result = await profileDataSources.update(
         userProfileModel: UserProfileModel.fromEntity(userProfileEntity),
       );
+      return Right(result);
+    } catch (e) {
+      return const Left(FirestoreFailure(''));
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserProfileEntity>> me() async {
+    try {
+      final result = await profileDataSources.me();
       return Right(result);
     } catch (e) {
       return const Left(FirestoreFailure(''));
