@@ -16,7 +16,7 @@ class AttendanceDialog extends StatefulWidget {
 }
 
 class _AttendanceDialogState extends State<AttendanceDialog> {
-  final listPoint = <String>['+5', '+10', '+15', '+20', '+25', '+30'];
+  final listPoints = <String>['+5', '+10', '+15', '+20', '+25', '+30'];
 
   late final ValueNotifier<FaceStatus> statusNotifier;
   late final ValueNotifier<String> pointNotifier;
@@ -25,7 +25,7 @@ class _AttendanceDialogState extends State<AttendanceDialog> {
   @override
   void initState() {
     statusNotifier = ValueNotifier(listStatus.first);
-    pointNotifier = ValueNotifier(listPoint.first);
+    pointNotifier = ValueNotifier(listPoints.first);
     noteController = TextEditingController();
 
     super.initState();
@@ -117,7 +117,7 @@ class _AttendanceDialogState extends State<AttendanceDialog> {
                     statusNotifier: statusNotifier,
                     pointNotifier: pointNotifier,
                     noteController: noteController,
-                    listPoint: listPoint,
+                    listPoints: listPoints,
                   ),
                 ],
               ),
@@ -133,14 +133,14 @@ class AttendanceOptions extends StatelessWidget {
   final ValueNotifier<FaceStatus> statusNotifier;
   final ValueNotifier<String> pointNotifier;
   final TextEditingController noteController;
-  final List<String> listPoint;
+  final List<String> listPoints;
 
   const AttendanceOptions({
     super.key,
     required this.statusNotifier,
     required this.pointNotifier,
     required this.noteController,
-    required this.listPoint,
+    required this.listPoints,
   });
 
   @override
@@ -179,7 +179,7 @@ class AttendanceOptions extends StatelessWidget {
                 builder: (context, currentPoint, child) {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: listPoint
+                    children: listPoints
                         .map(
                           (point) => ExtraPointWidget(
                             point: point,
