@@ -1,44 +1,68 @@
 import 'package:asco/core/utils/failure.dart';
 import 'package:asco/src/data/datasources/profile_datasources.dart';
+import 'package:asco/src/data/models/profile_models/user_profile_model.dart';
 import 'package:asco/src/domain/entities/profile_entities/user_profile_entity.dart';
 import 'package:asco/src/domain/repositories/profile_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class ProfileRepositoryImpl implements ProfileRepository {
-  final ProfileDataSource authDataSources;
+  final ProfileDataSource profileDataSources;
 
-  ProfileRepositoryImpl({required this.authDataSources});
+  ProfileRepositoryImpl({required this.profileDataSources});
 
   @override
   Future<Either<Failure, bool>> create(
-      {required UserProfileEntity userProfileEntity}) {
-    // TODO: implement create
-    throw UnimplementedError();
+      {required UserProfileEntity userProfileEntity}) async {
+    try {
+      final result = await profileDataSources.create(
+          userProfileModel: UserProfileModel.fromEntity(userProfileEntity));
+      return Right(result);
+    } catch (e) {
+      return const Left(FirestoreFailure(''));
+    }
   }
 
   @override
-  Future<Either<Failure, List<UserProfileEntity>>> find() {
-    // TODO: implement find
-    throw UnimplementedError();
+  Future<Either<Failure, List<UserProfileEntity>>> find() async {
+    try {
+      final result = await profileDataSources.find();
+      return Right(result);
+    } catch (e) {
+      return const Left(FirestoreFailure(''));
+    }
   }
 
   @override
-  Future<Either<Failure, bool>> remove({required String id}) {
-    // TODO: implement remove
-    throw UnimplementedError();
+  Future<Either<Failure, bool>> remove({required String uid}) async {
+    try {
+      final result = await profileDataSources.remove(uid: uid);
+      return Right(result);
+    } catch (e) {
+      return const Left(FirestoreFailure(''));
+    }
   }
 
   @override
   Future<Either<Failure, UserProfileEntity>> single(
-      {required String username}) {
-    // TODO: implement single
-    throw UnimplementedError();
+      {required String uid}) async {
+    try {
+      final result = await profileDataSources.single(uid: uid);
+      return Right(result);
+    } catch (e) {
+      return const Left(FirestoreFailure(''));
+    }
   }
 
   @override
   Future<Either<Failure, bool>> update(
-      {required UserProfileEntity userProfileEntity, required String id}) {
-    // TODO: implement update
-    throw UnimplementedError();
+      {required UserProfileEntity userProfileEntity}) async {
+    try {
+      final result = await profileDataSources.update(
+        userProfileModel: UserProfileModel.fromEntity(userProfileEntity),
+      );
+      return Right(result);
+    } catch (e) {
+      return const Left(FirestoreFailure(''));
+    }
   }
 }
