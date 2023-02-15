@@ -1,7 +1,8 @@
+import 'package:asco/src/domain/entities/profile_entities/user_role_entity.dart';
 import 'package:equatable/equatable.dart';
 
 class UserProfileEntity extends Equatable {
-  final String? classOff;
+  final String? classOf;
   final String? fullName;
   final String? gender;
   final String? github;
@@ -10,9 +11,10 @@ class UserProfileEntity extends Equatable {
   final String? nickName;
   final String? uid;
   final String? profilePhoto;
+  final UserRoleEntity? userRole;
 
   const UserProfileEntity({
-    this.classOff,
+    this.classOf,
     this.fullName,
     this.gender,
     this.github,
@@ -21,11 +23,12 @@ class UserProfileEntity extends Equatable {
     this.nickName,
     this.uid,
     this.profilePhoto,
+    this.userRole,
   });
 
   @override
   List<Object?> get props => [
-        classOff,
+        classOf,
         fullName,
         gender,
         github,
@@ -34,5 +37,6 @@ class UserProfileEntity extends Equatable {
         nickName,
         profilePhoto,
         uid,
+        userRole,
       ];
 }

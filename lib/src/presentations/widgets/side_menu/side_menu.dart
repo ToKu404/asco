@@ -2,8 +2,12 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/core/services/user_service.dart';
+import 'package:asco/src/domain/entities/profile_entities/role_map.dart';
+import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 class MenuHelper {
   final String title;
@@ -34,6 +38,15 @@ class SideMenu extends StatefulWidget {
 }
 
 class _SideMenuState extends State<SideMenu> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.microtask(() {
+      Provider.of<ProfileNotifier>(context, listen: false).getSelfDetail();
+    });
+  }
+
   final listMenu = [
     MenuHelper(
       title: 'Beranda',
@@ -90,16 +103,22 @@ class _SideMenuState extends State<SideMenu> {
               builder: (context, value, _) {
                 return Column(
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        widget.selectedIndex.value = -2;
-                        widget.onSelect!(-2);
-                      },
-                      child: const UserProfileCard(
-                        title: 'ToKu404',
-                        subtitle: 'Asisten',
-                      ),
-                    ),
+                    Builder(builder: (context) {
+                      final userNotifier = context.watch<ProfileNotifier>();
+                      final profile = userNotifier.detailSelfProfile;
+                      print(profile);
+                      return GestureDetector(
+                        onTap: () {
+                          widget.selectedIndex.value = -2;
+                          widget.onSelect!(-2);
+                        },
+                        child: UserProfileCard(
+                          title: profile != null ? profile.nickName! : '',
+                          subtitle:
+                              profile != null ? profile.userRole!.name! : '',
+                        ),
+                      );
+                    }),
                     Expanded(
                       child: SingleChildScrollView(
                         child: Column(

@@ -6,9 +6,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 abstract class ProfileDataSource {
   Future<bool> create({required UserProfileModel userProfileModel});
   Future<UserProfileModel> single({required String uid});
+  Future<UserProfileModel> me();
+
   Future<bool> update({required UserProfileModel userProfileModel});
   Future<bool> remove({required String uid});
-  Future<List<UserProfileModel>> find();
+  Future<List<UserProfileModel>> find({
+    String? query,
+    int? byRole,
+  });
 }
 
 class ProfileDataSourceImpl implements ProfileDataSource {
@@ -36,7 +41,7 @@ class ProfileDataSourceImpl implements ProfileDataSource {
         return collectionReference
             .add(UserProfileModel(
               uid: id,
-              classOff: userProfileModel.classOff,
+              classOf: userProfileModel.classOf,
               fullName: userProfileModel.fullName,
               gender: userProfileModel.gender,
               github: userProfileModel.github,
@@ -44,6 +49,7 @@ class ProfileDataSourceImpl implements ProfileDataSource {
               nickName: userProfileModel.nickName,
               profilePhoto: userProfileModel.profilePhoto,
               username: userProfileModel.username,
+              userRole: userProfileModel.userRole,
             ).toDocument())
             .then((value) => true)
             .catchError((error) => false);
@@ -54,18 +60,33 @@ class ProfileDataSourceImpl implements ProfileDataSource {
   }
 
   @override
-  Future<List<UserProfileModel>> find() async {
+  Future<List<UserProfileModel>> find({
+    String? query,
+    int? byRole,
+  }) async {
     try {
-      final List<UserProfileModel> listUserProfile = [];
-      await collectionReference.get().then((value) => {
-            value.docs.forEach((element) {
-              listUserProfile.add(
-                UserProfileModel.fromSnapshot(element),
-              );
-            }),
-          });
-      return listUserProfile;
+      Future<QuerySnapshot> snapshot = collectionReference.get();
+      // Todo : Finish Search
+      if (query != null) {
+        if (query.isNotEmpty) {
+          snapshot =
+              collectionReference.where('username', isEqualTo: query).get();
+        }
+      }
+
+      //? by Role
+      if (byRole != null) {
+        snapshot =
+            collectionReference.where('role.id', isEqualTo: byRole).get();
+      }
+
+      //? all
+      return await snapshot.then(
+        (value) =>
+            value.docs.map((e) => UserProfileModel.fromSnapshot(e)).toList(),
+      );
     } catch (e) {
+      print(e);
       throw Exception();
     }
   }
@@ -106,7 +127,7 @@ class ProfileDataSourceImpl implements ProfileDataSource {
   Future<bool> update({required UserProfileModel userProfileModel}) async {
     try {
       UpdateHelper updateHelper = UpdateHelper();
-      updateHelper.onUpdate('class_of', userProfileModel.classOff);
+      updateHelper.onUpdate('class_of', userProfileModel.classOf);
       updateHelper.onUpdate('full_name', userProfileModel.fullName);
       updateHelper.onUpdate('gender', userProfileModel.gender);
       updateHelper.onUpdate('github', userProfileModel.github);
@@ -121,6 +142,27 @@ class ProfileDataSourceImpl implements ProfileDataSource {
           .then((value) => true)
           .catchError((e) => false);
     } catch (e) {
+      throw Exception();
+    }
+  }
+
+  @override
+  Future<UserProfileModel> me() async {
+    try {
+      final credential = await authPreferenceHelper.getUser();
+
+      QuerySnapshot snapshot = await collectionReference
+          .where("username", isEqualTo: credential!.username)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        print('call');
+        return UserProfileModel.fromSnapshot(snapshot.docs.first);
+      } else {
+        throw Exception();
+      }
+    } catch (e) {
+      print(e.toString());
       throw Exception();
     }
   }

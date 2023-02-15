@@ -1,14 +1,20 @@
 import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/core/services/auth_service.dart';
+import 'package:asco/core/services/user_service.dart';
+import 'package:asco/core/state/request_state.dart';
 import 'package:asco/src/domain/entities/auth_entities/user_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/role_map.dart';
+import 'package:asco/src/domain/entities/profile_entities/user_profile_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/user_role_entity.dart';
 import 'package:asco/src/presentations/providers/auth_notifier.dart';
+import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:asco/src/presentations/widgets/input_field/input_dropdown_field.dart';
 import 'package:asco/src/presentations/widgets/input_field/input_text_field.dart';
 import 'package:asco/src/presentations/widgets/input_field/field_title.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
 void showAdminCreateUserPage(
@@ -33,12 +39,14 @@ class CreateUserPage extends StatefulWidget {
 }
 
 class _CreateUserPageState extends State<CreateUserPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _fullnameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _githubController = TextEditingController();
   final TextEditingController _instagramController = TextEditingController();
-
+  final TextEditingController _nicknameController = TextEditingController();
   final ValueNotifier<String?> _batchNotifier = ValueNotifier(null);
   final ValueNotifier<String?> _roleNotifier = ValueNotifier(null);
   final ValueNotifier<String?> _genderNotifier = ValueNotifier(null);
@@ -72,11 +80,26 @@ class _CreateUserPageState extends State<CreateUserPage> {
     _githubController.dispose();
     _batchNotifier.dispose();
     _roleNotifier.dispose();
+    _nicknameController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final authNotifier = context.watch<AuthNotifier>();
+    final userNotifier = context.watch<AuthNotifier>();
+
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      if (authNotifier.createUserState == RequestState.success &&
+          userNotifier.createUserState == RequestState.success) {
+        Future.delayed(const Duration(seconds: 2), () {
+          Navigator.pop(context);
+        });
+        authNotifier.reset();
+        userNotifier.reset();
+      }
+    });
+
     return Scaffold(
       backgroundColor: Palette.grey,
       appBar: AppBar(
@@ -113,96 +136,148 @@ class _CreateUserPageState extends State<CreateUserPage> {
       body: SafeArea(
           child: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const FieldTitle(
-              title: 'Profile Photo',
-            ),
-            SizedBox(
-              width: 150,
-              height: 150,
-              child: InkWellContainer(
-                color: Colors.white,
-                onTap: () {},
-                border: Border.all(width: 1, style: BorderStyle.values[1]),
-                radius: 12,
-                child: const Center(
-                  child: Icon(
-                    Icons.add_rounded,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const FieldTitle(
+                title: 'Profile Photo',
+              ),
+              SizedBox(
+                width: 150,
+                height: 150,
+                child: InkWellContainer(
+                  color: Colors.white,
+                  onTap: () {},
+                  border: Border.all(width: 1, style: BorderStyle.values[1]),
+                  radius: 12,
+                  child: const Center(
+                    child: Icon(
+                      Icons.add_rounded,
+                    ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            InputTextField(
-              controller: _usernameController,
-              title: 'Username',
-              isRequired: true,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            InputTextField(
-                controller: _passwordController,
-                title: 'Password (Auto Generate)'),
-            const SizedBox(
-              height: 16,
-            ),
-            InputTextField(
-              controller: _fullnameController,
-              title: 'Nama Lengkap',
-              isRequired: true,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            InputDropdownField(
-              selectItem: _batchNotifier,
-              title: 'Angkatan',
-              isRequired: true,
-              listItem: _listBatch,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            _buildGenderCheckBox(),
-            const SizedBox(
-              height: 16,
-            ),
-            _buildRoleCheckBox(),
-            const SizedBox(
-              height: 16,
-            ),
-            InputTextField(
-              controller: _githubController,
-              title: 'Github',
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            InputTextField(
-              controller: _instagramController,
-              title: 'Instagram',
-            ),
-          ],
+              const SizedBox(
+                height: 16,
+              ),
+              InputTextField(
+                controller: _usernameController,
+                title: 'Username',
+                isRequired: true,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              InputTextField(
+                  controller: _passwordController,
+                  title: 'Password (Auto Generate)'),
+              const SizedBox(
+                height: 16,
+              ),
+              InputTextField(
+                controller: _fullnameController,
+                title: 'Nama Lengkap',
+                isRequired: true,
+                onEditingComplete: _nicknameController.text.trim().isEmpty
+                    ? () {
+                        _nicknameController.text =
+                            UserService.nicknameGenerator(
+                                _fullnameController.text);
+                      }
+                    : null,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              InputTextField(
+                controller: _nicknameController,
+                title: 'Nama Panggilan',
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              InputDropdownField(
+                selectItem: _batchNotifier,
+                title: 'Angkatan',
+                isRequired: true,
+                listItem: _listBatch,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              _buildGenderCheckBox(),
+              const SizedBox(
+                height: 16,
+              ),
+              _buildRoleCheckBox(),
+              const SizedBox(
+                height: 16,
+              ),
+              InputTextField(
+                controller: _githubController,
+                title: 'Github',
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              InputTextField(
+                controller: _instagramController,
+                title: 'Instagram',
+              ),
+            ],
+          ),
         ),
       )),
     );
   }
 
   void _onSubmit() {
+    FocusScope.of(context).unfocus();
     final authProvider = Provider.of<AuthNotifier>(context, listen: false);
+    final profileProvider =
+        Provider.of<ProfileNotifier>(context, listen: false);
 
-    if (_usernameController.text.isNotEmpty &&
-        _passwordController.text.isNotEmpty) {
+    if (_formKey.currentState!.validate() &&
+        _batchNotifier.value != null &&
+        _genderNotifier.value != null &&
+        _roleNotifier.value != null) {
+      /// Create new user
+      String password = '';
+      if (_passwordController.text.isEmpty) {
+        password = _usernameController.text;
+      } else {
+        password = _passwordController.text;
+      }
       authProvider.createUser(
         UserEntity(
           username: _usernameController.text,
-          password: AuthService.hashPassword(_passwordController.text),
+          password: UserService.hashPassword(password),
           roleId: _listRole.indexOf(_roleNotifier.value!) + 1,
+        ),
+      );
+
+      ///Create new profile
+      String nickName = '';
+      if (_nicknameController.text.isEmpty) {
+        nickName = UserService.nicknameGenerator(_fullnameController.text);
+      } else {
+        nickName = _nicknameController.text;
+      }
+      profileProvider.createProfile(
+        UserProfileEntity(
+          classOf: _batchNotifier.value,
+          fullName: UserService.titleMaker(_fullnameController.text),
+          gender: _genderNotifier.value,
+          github: _githubController.text,
+          instagram: _instagramController.text,
+          nickName: UserService.titleMaker(nickName),
+          profilePhoto: 'https://i.mydramalist.com/e3AQef.jpg',
+          username: _usernameController.text,
+          userRole: UserRoleEntity(
+              id: RoleHelper.nameToId(_roleNotifier.value!),
+              name: _roleNotifier.value!),
         ),
       );
     }
@@ -222,7 +297,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
                 children: [
                   Expanded(
                       child: CustomCheckBoxItem(
-                    value: _listGender.first,
+                    value: 'L',
                     isActive: value == _listGender.first,
                     onTap: () => _genderNotifier.value = _listGender.first,
                   )),
@@ -231,7 +306,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
                   ),
                   Expanded(
                     child: CustomCheckBoxItem(
-                      value: _listGender.last,
+                      value: 'P',
                       isActive: value == _listGender.last,
                       onTap: () => _genderNotifier.value = _listGender.last,
                     ),

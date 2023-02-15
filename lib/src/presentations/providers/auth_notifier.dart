@@ -5,6 +5,7 @@ import 'package:asco/src/domain/usecases/auth_usecases/create_user.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/get_user.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/login.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/logout.dart';
+import 'package:asco/src/domain/usecases/auth_usecases/remove_user.dart';
 import 'package:flutter/material.dart';
 
 class AuthNotifier extends ChangeNotifier {
@@ -12,17 +13,20 @@ class AuthNotifier extends ChangeNotifier {
   final Login loginUsecase;
   final LogOut logoutUsecase;
   final GetUser getUserUsecase;
+  final RemoveUser removeUserUsecase;
 
   AuthNotifier({
     required this.createUserUsecase,
     required this.loginUsecase,
     required this.logoutUsecase,
     required this.getUserUsecase,
+    required this.removeUserUsecase,
   });
 
   void reset() {
     _loginState == RequestState.init;
     _userCredentialEntity = null;
+    _createUserState = RequestState.init;
   }
 
   RequestState _createUserState = RequestState.init;

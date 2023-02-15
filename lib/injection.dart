@@ -13,8 +13,10 @@ import 'package:asco/src/domain/usecases/profile_usecases/create_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/get_list_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/get_single_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/remove_profile.dart';
+import 'package:asco/src/domain/usecases/profile_usecases/self_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/update_profile.dart';
 import 'package:asco/src/presentations/providers/auth_notifier.dart';
+import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
 
@@ -30,6 +32,18 @@ void init() {
       loginUsecase: locator(),
       getUserUsecase: locator(),
       logoutUsecase: locator(),
+      removeUserUsecase: locator(),
+    ),
+  );
+
+  locator.registerFactory(
+    () => ProfileNotifier(
+      createProfileUsecase: locator(),
+      getListProfileUsecase: locator(),
+      getSingleProfileUsecase: locator(),
+      removeProfileUsecase: locator(),
+      updateProfileUsecase: locator(),
+      selfProfileUsecase: locator(),
     ),
   );
 
@@ -85,6 +99,11 @@ void init() {
   );
   locator.registerLazySingleton(
     () => GetSingleProfile(
+      profileRepository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => SelfProfile(
       profileRepository: locator(),
     ),
   );

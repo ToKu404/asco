@@ -1,6 +1,6 @@
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/core/services/auth_service.dart';
+import 'package:asco/core/services/user_service.dart';
 import 'package:asco/core/state/request_state.dart';
 import 'package:asco/src/presentations/features/admin/admin_home_page.dart';
 import 'package:asco/src/presentations/features/home/home_page.dart';
@@ -115,7 +115,7 @@ class _SignInFormState extends State<_SignInForm> {
       final provider = context.read<AuthNotifier>();
       final username = _usernameController.text.trim();
       final password =
-          AuthService.hashPassword(_passwordController.text.trim());
+          UserService.hashPassword(_passwordController.text.trim());
       provider.login(username, password);
     }
   }
