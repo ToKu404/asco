@@ -3,16 +3,15 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/src/presentations/features/admin/score_page/score_page.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-void showAdminScorePracticumPage({required BuildContext context}) {
+void showAdminControlCardPage({required BuildContext context}) {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => const AdminScorePracticumPage(),
+      builder: (context) => const AdminControlCardPage(),
       settings: const RouteSettings(
         name: AppRoute.adminUsersPage,
       ),
@@ -20,15 +19,14 @@ void showAdminScorePracticumPage({required BuildContext context}) {
   );
 }
 
-class AdminScorePracticumPage extends StatefulWidget {
-  const AdminScorePracticumPage({super.key});
+class AdminControlCardPage extends StatefulWidget {
+  const AdminControlCardPage({super.key});
 
   @override
-  State<AdminScorePracticumPage> createState() =>
-      _AdminScorePracticumPageState();
+  State<AdminControlCardPage> createState() => _AdminControlCardPageState();
 }
 
-class _AdminScorePracticumPageState extends State<AdminScorePracticumPage> {
+class _AdminControlCardPageState extends State<AdminControlCardPage> {
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -53,7 +51,7 @@ class _AdminScorePracticumPageState extends State<AdminScorePracticumPage> {
           ),
         ),
         title: Text(
-          'Data Nilai',
+          'Pemrograman Mobile',
           style: kTextTheme.titleSmall?.copyWith(color: Palette.white),
         ),
         centerTitle: true,
@@ -61,8 +59,14 @@ class _AdminScorePracticumPageState extends State<AdminScorePracticumPage> {
       body: SafeArea(
         child: Column(
           children: [
+            const SizedBox(
+              height: 16,
+            ),
+            const SizedBox(
+              height: 12,
+            ),
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: TextField(
                 controller: searchController,
                 onChanged: (value) {},
@@ -74,7 +78,7 @@ class _AdminScorePracticumPageState extends State<AdminScorePracticumPage> {
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.zero,
                   isDense: true,
-                  hintText: 'Cari nama praktikum',
+                  hintText: 'Cari nim atau nama lengkap',
                   hintStyle:
                       kTextTheme.bodyLarge?.copyWith(color: Palette.disable),
                   filled: true,
@@ -105,20 +109,131 @@ class _AdminScorePracticumPageState extends State<AdminScorePracticumPage> {
                 ),
               ),
             ),
+            const SizedBox(
+              height: 12,
+            ),
             Expanded(
                 child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 children: const [
-                  PracticumCard(),
+                  StudentCard(),
                   SizedBox(
                     height: 8,
                   ),
-                  PracticumCard(),
+                  StudentCard(),
                 ],
               ),
             )),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class StudentCard extends StatelessWidget {
+  const StudentCard({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      child: Stack(
+        children: [
+          InkWellContainer(
+            color: Palette.white,
+            onTap: () {},
+            padding: const EdgeInsets.all(8),
+            radius: 12,
+            child: ListTile(
+              leading: const Avatar(imageAsset: 'avatar1.jpg'),
+              title: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    child: Text(
+                      'H071191049',
+                      style: kTextTheme.bodyMedium?.copyWith(
+                        color: Palette.purple60,
+                      ),
+                    ),
+                  ),
+                  Flexible(
+                    child: Text(
+                      'Erwin',
+                      style: kTextTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Palette.purple60,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        child: Text(
+                          'Kelas B',
+                          style: kTextTheme.bodySmall?.copyWith(
+                            color: Palette.white,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 4,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Palette.purple60,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        child: Text(
+                          'Group #4',
+                          style: kTextTheme.bodySmall?.copyWith(
+                            color: Palette.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Avatar extends StatelessWidget {
+  final String imageAsset;
+
+  const Avatar({
+    super.key,
+    required this.imageAsset,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        shape: BoxShape.circle,
+        color: Palette.white,
+      ),
+      padding: const EdgeInsets.all(2.0),
+      child: CircleAvatar(
+        radius: 28,
+        foregroundImage: AssetImage(
+          AssetPath.getImage(imageAsset),
         ),
       ),
     );
@@ -134,9 +249,7 @@ class PracticumCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWellContainer(
       color: Colors.white,
-      onTap: () {
-        showAdminScorePage(context: context);
-      },
+      onTap: () {},
       radius: 12,
       child: Container(
         width: AppSize.getAppWidth(context),

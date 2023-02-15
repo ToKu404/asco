@@ -5,9 +5,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 abstract class AuthDataSources {
   Future<bool> createUser({required UserModel userModel});
+  Future<bool> deleteUser({required String username});
   Future<UserCredentialModel> logIn(
       {required String username, required String password});
-  Future<UserCredentialModel?> getUser();
+  Future<UserCredentialModel?> getUserCredential();
   Future<bool> logOut();
 }
 
@@ -51,9 +52,7 @@ class AuthDataSourcesImpl implements AuthDataSources {
       QuerySnapshot snapshot =
           await userCollectionRef.where("username", isEqualTo: username).get();
 
-
       if (snapshot.docs.isNotEmpty) {
-
         String passwordFromDb = snapshot.docs[0].get('password');
         if (passwordFromDb == password) {
           final userCredential = UserCredentialModel(
@@ -72,7 +71,7 @@ class AuthDataSourcesImpl implements AuthDataSources {
   }
 
   @override
-  Future<UserCredentialModel?> getUser() async {
+  Future<UserCredentialModel?> getUserCredential() async {
     try {
       final credential = await authPreferenceHelper.getUser();
       if (credential != null) {
@@ -92,5 +91,11 @@ class AuthDataSourcesImpl implements AuthDataSources {
     } catch (e) {
       throw Exception();
     }
+  }
+
+  @override
+  Future<bool> deleteUser({required String username}) {
+    // TODO: implement remove
+    throw UnimplementedError();
   }
 }

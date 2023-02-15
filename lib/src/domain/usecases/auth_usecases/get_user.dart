@@ -8,6 +8,6 @@ class GetUser {
   GetUser({required this.authRepository});
 
   Future<Either<Failure, UserCredentialEntity?>> execute() {
-    return authRepository.getUser();
+    return authRepository.getUserCredential();
   }
 }

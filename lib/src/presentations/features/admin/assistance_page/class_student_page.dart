@@ -3,16 +3,14 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/src/presentations/features/admin/score_page/score_page.dart';
-import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-void showAdminScorePracticumPage({required BuildContext context}) {
+void showAdminAssistanceStudentPage({required BuildContext context}) {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => const AdminScorePracticumPage(),
+      builder: (context) => const AdminAssistanceStudentPage(),
       settings: const RouteSettings(
         name: AppRoute.adminUsersPage,
       ),
@@ -20,15 +18,16 @@ void showAdminScorePracticumPage({required BuildContext context}) {
   );
 }
 
-class AdminScorePracticumPage extends StatefulWidget {
-  const AdminScorePracticumPage({super.key});
+class AdminAssistanceStudentPage extends StatefulWidget {
+  const AdminAssistanceStudentPage({super.key});
 
   @override
-  State<AdminScorePracticumPage> createState() =>
-      _AdminScorePracticumPageState();
+  State<AdminAssistanceStudentPage> createState() =>
+      _AdminAssistanceStudentPageState();
 }
 
-class _AdminScorePracticumPageState extends State<AdminScorePracticumPage> {
+class _AdminAssistanceStudentPageState
+    extends State<AdminAssistanceStudentPage> {
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -52,8 +51,17 @@ class _AdminScorePracticumPageState extends State<AdminScorePracticumPage> {
             color: Palette.white,
           ),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.check_rounded,
+              color: Palette.white,
+            ),
+          )
+        ],
         title: Text(
-          'Data Nilai',
+          'Daftar Mahasiswa',
           style: kTextTheme.titleSmall?.copyWith(color: Palette.white),
         ),
         centerTitle: true,
@@ -74,7 +82,7 @@ class _AdminScorePracticumPageState extends State<AdminScorePracticumPage> {
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.zero,
                   isDense: true,
-                  hintText: 'Cari nama praktikum',
+                  hintText: 'Cari nama atau username',
                   hintStyle:
                       kTextTheme.bodyLarge?.copyWith(color: Palette.disable),
                   filled: true,
@@ -110,11 +118,7 @@ class _AdminScorePracticumPageState extends State<AdminScorePracticumPage> {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 children: const [
-                  PracticumCard(),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  PracticumCard(),
+                  SelectUserCard(),
                 ],
               ),
             )),
@@ -125,56 +129,78 @@ class _AdminScorePracticumPageState extends State<AdminScorePracticumPage> {
   }
 }
 
-class PracticumCard extends StatelessWidget {
-  const PracticumCard({
+class SelectUserCard extends StatelessWidget {
+  const SelectUserCard({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return InkWellContainer(
-      color: Colors.white,
-      onTap: () {
-        showAdminScorePage(context: context);
-      },
-      radius: 12,
-      child: Container(
-        width: AppSize.getAppWidth(context),
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          children: [
-            SizedBox(
-              width: 50,
-              height: 50,
-              child: SvgPicture.asset(
-                AssetPath.getVector('badge_android.svg'),
+    return Container(
+      width: AppSize.getAppWidth(context),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(12)),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          CircleAvatar(
+            radius: 24,
+            backgroundImage: AssetImage(AssetPath.getImage('avatar1.jpg')),
+          ),
+          const SizedBox(
+            width: 12,
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'H071191049',
+                  style: kTextTheme.bodyMedium?.copyWith(
+                    color: Palette.purple60,
+                  ),
+                ),
+                Text(
+                  'Ikhsan',
+                  style: kTextTheme.bodyLarge?.copyWith(
+                    color: Palette.purple80,
+                    fontWeight: FontWeight.w600,
+                    height: 1.1,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            width: 24,
+            height: 24,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                width: 1,
+                color: Palette.greyDark,
+              ),
+              color: Palette.purple60,
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: ClipOval(
+                child: InkWell(
+                  onTap: () {},
+                  child: const Icon(
+                    Icons.check_rounded,
+                    color: Palette.white,
+                    size: 15,
+                  ),
+                ),
               ),
             ),
-            const SizedBox(
-              width: 12,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Pemrograman Mobile',
-                    style: kTextTheme.bodyLarge?.copyWith(
-                      color: Palette.purple80,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Text(
-                    '5 Kelas',
-                    style: kTextTheme.bodyMedium?.copyWith(
-                      color: Palette.purple60,
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
+          ),
+          const SizedBox(
+            width: 4,
+          ),
+        ],
       ),
     );
   }
