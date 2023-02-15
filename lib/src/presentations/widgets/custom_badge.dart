@@ -14,9 +14,12 @@ class BuildBadge extends StatelessWidget {
     Palette.purple100,
     Palette.purple80,
     Palette.plum80,
-    Palette.purple60
+    Palette.purple60,
+    Palette.plum60,
   ];
+
   final TempBadgeHelper badgeHelper;
+
   BuildBadge({super.key, required this.badgeHelper});
 
   @override

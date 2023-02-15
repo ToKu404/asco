@@ -241,7 +241,7 @@ class _AssistantLaboratoryCourseDetailPageState
                   return StudentAttendanceCard(student: students[i]);
                 },
                 separatorBuilder: (_, __) {
-                  return const SizedBox(height: 8);
+                  return const SizedBox(height: 10);
                 },
                 itemCount: students.length,
                 keyboardDismissBehavior:

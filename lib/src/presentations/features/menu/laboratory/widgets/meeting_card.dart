@@ -5,18 +5,24 @@ import 'package:asco/src/data/dummy_data.dart';
 
 class MeetingCard extends StatelessWidget {
   final Course course;
+  final double paddingBottom;
+  final bool isThreeLine;
+  final Widget? thirdLine;
   final VoidCallback? onTap;
 
   const MeetingCard({
     super.key,
     required this.course,
+    this.paddingBottom = 10,
+    this.isThreeLine = false,
+    this.thirdLine,
     this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: EdgeInsets.only(bottom: paddingBottom),
       child: Card(
         elevation: 0,
         margin: EdgeInsets.zero,
@@ -32,7 +38,7 @@ class MeetingCard extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 CircleAvatar(
-                  radius: 35,
+                  radius: 36,
                   backgroundColor: Palette.purple80,
                   child: Text(
                     '#${course.number}',
@@ -67,6 +73,10 @@ class MeetingCard extends StatelessWidget {
                           color: Palette.purple60,
                         ),
                       ),
+                      if (isThreeLine) ...[
+                        const SizedBox(height: 4),
+                        thirdLine!,
+                      ]
                     ],
                   ),
                 ),

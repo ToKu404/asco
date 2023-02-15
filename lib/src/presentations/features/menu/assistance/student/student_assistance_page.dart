@@ -258,7 +258,7 @@ class ControlCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.only(bottom: 10),
       child: Card(
         elevation: 0,
         margin: EdgeInsets.zero,
