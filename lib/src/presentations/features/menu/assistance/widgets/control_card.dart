@@ -3,17 +3,19 @@ import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/data/dummy_data.dart';
 
-class MeetingCard extends StatelessWidget {
+class ControlCard extends StatelessWidget {
   final Course course;
-  final double paddingBottom;
+  final bool hasTrailing;
+  final Widget? trailing;
   final bool isThreeLine;
   final Widget? thirdLine;
   final VoidCallback? onTap;
 
-  const MeetingCard({
+  const ControlCard({
     super.key,
     required this.course,
-    this.paddingBottom = 10,
+    this.hasTrailing = false,
+    this.trailing,
     this.isThreeLine = false,
     this.thirdLine,
     this.onTap,
@@ -22,30 +24,50 @@ class MeetingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: paddingBottom),
+      padding: const EdgeInsets.only(bottom: 10),
       child: Card(
         elevation: 0,
         margin: EdgeInsets.zero,
         color: Palette.white,
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(99),
+          borderRadius: BorderRadius.circular(8),
         ),
         child: InkWell(
           onTap: onTap,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(8, 8, 20, 8),
+            padding: const EdgeInsets.symmetric(
+              vertical: 20,
+              horizontal: 16,
+            ),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                CircleAvatar(
-                  radius: 36,
-                  backgroundColor: Palette.purple80,
-                  child: Text(
-                    '#${course.number}',
-                    style: kTextTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: Palette.white,
+                Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Palette.grey,
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      width: 1.5,
+                      color: Palette.greyDark,
                     ),
+                  ),
+                  child: Center(
+                    child: course.isLocked
+                        ? const Icon(
+                            Icons.lock_outline_rounded,
+                            size: 20,
+                            color: Palette.greyDark,
+                          )
+                        : Text(
+                            '${course.number}',
+                            style: kTextTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: Palette.greyDark,
+                            ),
+                          ),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -60,7 +82,9 @@ class MeetingCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: kTextTheme.bodyLarge?.copyWith(
                           fontWeight: FontWeight.w600,
-                          color: Palette.purple100,
+                          color: course.isLocked
+                              ? Palette.greyDark
+                              : Palette.purple100,
                           height: 1.2,
                         ),
                       ),
@@ -70,16 +94,22 @@ class MeetingCard extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: kTextTheme.bodyMedium?.copyWith(
-                          color: Palette.purple60,
+                          color: course.isLocked
+                              ? Palette.grey50
+                              : Palette.purple60,
                         ),
                       ),
                       if (isThreeLine) ...[
-                        const SizedBox(height: 4),
+                        const SizedBox(height: 12),
                         thirdLine!,
                       ],
                     ],
                   ),
                 ),
+                if (hasTrailing) ...[
+                  const SizedBox(width: 8),
+                  trailing!,
+                ],
               ],
             ),
           ),
