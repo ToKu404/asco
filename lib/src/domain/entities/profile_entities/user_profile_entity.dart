@@ -5,9 +5,10 @@ class UserProfileEntity extends Equatable {
   final String? fullName;
   final String? gender;
   final String? github;
-  final String? id;
+  final String? username;
   final String? instagram;
   final String? nickName;
+  final String? uid;
   final String? profilePhoto;
 
   const UserProfileEntity({
@@ -15,9 +16,10 @@ class UserProfileEntity extends Equatable {
     this.fullName,
     this.gender,
     this.github,
-    this.id,
+    this.username,
     this.instagram,
     this.nickName,
+    this.uid,
     this.profilePhoto,
   });
 
@@ -27,9 +29,10 @@ class UserProfileEntity extends Equatable {
         fullName,
         gender,
         github,
-        id,
+        username,
         instagram,
         nickName,
         profilePhoto,
+        uid,
       ];
 }

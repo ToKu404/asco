@@ -8,8 +8,7 @@ class GetSingleProfile {
 
   GetSingleProfile({required this.profileRepository});
 
-  Future<Either<Failure, UserProfileEntity>> execute(
-      {required String username}) {
-    return profileRepository.single(username: username);
+  Future<Either<Failure, UserProfileEntity>> execute({required String uid}) {
+    return profileRepository.single(uid: uid);
   }
 }

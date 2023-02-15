@@ -241,7 +241,7 @@ class _AssistantLaboratoryCourseDetailPageState
                   return StudentAttendanceCard(student: students[i]);
                 },
                 separatorBuilder: (_, __) {
-                  return const SizedBox(height: 8);
+                  return const SizedBox(height: 10);
                 },
                 itemCount: students.length,
                 keyboardDismissBehavior:
@@ -321,15 +321,16 @@ class StudentAttendanceCard extends StatelessWidget {
                         color: Palette.purple60,
                       ),
                     ),
-                    const SizedBox(height: 1),
+                    const SizedBox(height: 2),
                     Text(
                       student.name,
                       style: kTextTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w600,
                         color: Palette.purple80,
+                        height: 1.2,
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: 4),
                     Text(
                       student.isAttend!
                           ? 'Waktu absensi: 23:59'

@@ -56,8 +56,12 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> deleteUser({required String username}) {
-    // TODO: implement deleteUser
-    throw UnimplementedError();
+  Future<Either<Failure, bool>> deleteUser({required String username}) async {
+    try {
+      final result = await authDataSources.deleteUser(username: username);
+      return Right(result);
+    } catch (e) {
+      return Left(PreferencesFailure(e.toString()));
+    }
   }
 }

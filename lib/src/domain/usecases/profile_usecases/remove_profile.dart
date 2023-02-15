@@ -7,7 +7,7 @@ class RemoveProfile {
 
   RemoveProfile({required this.profileRepository});
 
-  Future<Either<Failure, bool>> execute({required String id}) {
-    return profileRepository.remove(id: id);
+  Future<Either<Failure, bool>> execute({required String uid}) {
+    return profileRepository.remove(uid: uid);
   }
 }

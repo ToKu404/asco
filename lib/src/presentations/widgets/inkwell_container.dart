@@ -2,21 +2,22 @@ import 'package:flutter/material.dart';
 
 class InkWellContainer extends StatelessWidget {
   final double radius;
-  final Color color;
-  final VoidCallback onTap;
-  final Widget child;
+  final Color? color;
   final BoxBorder? border;
   final EdgeInsets? margin;
   final EdgeInsets? padding;
+  final VoidCallback? onTap;
+  final Widget? child;
+
   const InkWellContainer({
     super.key,
     this.radius = 0,
-    required this.color,
-    required this.onTap,
-    required this.child,
-    this.padding,
+    this.color,
     this.border,
     this.margin,
+    this.padding,
+    this.onTap,
+    this.child,
   });
 
   @override

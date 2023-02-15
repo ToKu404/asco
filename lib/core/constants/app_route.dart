@@ -14,6 +14,8 @@ class AppRoute {
   // Assistant routes
   static const assistantLaboratoryCourseDetailPage =
       '/assistant/main-menu/laboratory-course-detail';
+  static const assistantLaboratorySchedulePage =
+      '/assistant/main-menu/laboratory-schedule';
   static const assistantAssistanceCourseDetailPage =
       '/assistant/main-menu/assistance-course-detail';
   static const assistantValueRecapLeaderboardPage =
