@@ -1,6 +1,7 @@
 import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/presentations/features/menu/extras/edit_info_page.dart';
 import 'package:asco/src/presentations/features/menu/extras/input_value_exam.dart';
 import 'package:asco/src/presentations/widgets/avatar.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
@@ -70,7 +71,15 @@ class LabExamPage extends StatelessWidget {
                           horizontal: 16,
                           vertical: 10,
                         ),
-                        onTap: () {},
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const EditInfoPage(),
+                            settings: const RouteSettings(
+                              name: AppRoute.editInfoExam,
+                            ),
+                          ),
+                        ),
                         child: Text(
                           'Edit Info',
                           textAlign: TextAlign.center,
