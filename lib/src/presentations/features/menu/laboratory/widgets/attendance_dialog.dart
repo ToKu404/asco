@@ -56,74 +56,76 @@ class _AttendanceDialogState extends State<AttendanceDialog> {
           top: 8,
           bottom: 24,
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              child: Row(
-                children: <Widget>[
-                  IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(
-                      Icons.close_rounded,
-                      color: Palette.purple100,
-                    ),
-                    tooltip: 'Close',
-                  ),
-                  Expanded(
-                    child: Text(
-                      'Absensi',
-                      textAlign: TextAlign.center,
-                      style: kTextTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w700,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: Row(
+                  children: <Widget>[
+                    IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(
+                        Icons.close_rounded,
                         color: Palette.purple100,
                       ),
+                      tooltip: 'Close',
                     ),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.check_rounded,
-                      color: Palette.purple60,
+                    Expanded(
+                      child: Text(
+                        'Absensi',
+                        textAlign: TextAlign.center,
+                        style: kTextTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: Palette.purple100,
+                        ),
+                      ),
                     ),
-                    tooltip: 'Submit',
-                  ),
-                ],
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.check_rounded,
+                        color: Palette.purple60,
+                      ),
+                      tooltip: 'Submit',
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(18, 12, 18, 0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    widget.student.nim,
-                    style: kTextTheme.bodyLarge?.copyWith(
-                      color: Palette.purple60,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(18, 12, 18, 0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      widget.student.nim,
+                      style: kTextTheme.bodyLarge?.copyWith(
+                        color: Palette.purple60,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    widget.student.name,
-                    style: kTextTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: Palette.purple80,
+                    const SizedBox(height: 2),
+                    Text(
+                      widget.student.name,
+                      style: kTextTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: Palette.purple80,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 12),
-                  AttendanceOptions(
-                    statusNotifier: statusNotifier,
-                    pointNotifier: pointNotifier,
-                    noteController: noteController,
-                    listPoints: listPoints,
-                  ),
-                ],
+                    const SizedBox(height: 12),
+                    AttendanceOptions(
+                      statusNotifier: statusNotifier,
+                      pointNotifier: pointNotifier,
+                      noteController: noteController,
+                      listPoints: listPoints,
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -43,15 +43,7 @@ class AssistantLaboratoryPage extends StatelessWidget {
         strokeColor: Palette.azure40,
         fillColor: Palette.azure20,
         iconName: 'calendar_blank_outlined.svg',
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => const AssistantLaboratorySchedulePage(),
-            settings: const RouteSettings(
-              name: AppRoute.assistantLaboratorySchedulePage,
-            ),
-          ),
-        ),
+        onTap: () => showAssistantLaboratorySchedulePage(context),
       ),
     ];
 
@@ -186,22 +178,38 @@ class AssistantLaboratoryPage extends StatelessWidget {
                 .map(
                   (course) => MeetingCard(
                     course: course,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) {
-                          return const AssistantLaboratoryCourseDetailPage();
-                        },
-                        settings: const RouteSettings(
-                          name: AppRoute.assistantLaboratoryCourseDetailPage,
-                        ),
-                      ),
-                    ),
+                    onTap: () {
+                      showAssistantLaboratoryCourseDetailPage(context);
+                    },
                   ),
                 )
                 .toList()
                 .reversed,
           ],
+        ),
+      ),
+    );
+  }
+
+  void showAssistantLaboratorySchedulePage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const AssistantLaboratorySchedulePage(),
+        settings: const RouteSettings(
+          name: AppRoute.assistantLaboratorySchedulePage,
+        ),
+      ),
+    );
+  }
+
+  void showAssistantLaboratoryCourseDetailPage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const AssistantLaboratoryCourseDetailPage(),
+        settings: const RouteSettings(
+          name: AppRoute.assistantLaboratoryCourseDetailPage,
         ),
       ),
     );

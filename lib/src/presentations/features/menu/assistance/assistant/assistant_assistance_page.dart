@@ -228,32 +228,34 @@ class AssistantAssistancePage extends StatelessWidget {
     );
   }
 
-  ControlCard buildControlCard(BuildContext context, Course course) {
-    return ControlCard(
-      course: course,
-      verticalAlignment: CrossAxisAlignment.start,
-      isThreeLine: true,
-      thirdLine: const AssistanceStatistics(),
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => const AssistantAssistanceCourseDetailPage(),
-            settings: const RouteSettings(
-              name: AppRoute.assistantAssistanceCourseDetailPage,
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   Future<void> showGithubDialog(BuildContext context) async {
     showDialog(
       context: context,
       barrierLabel: '',
       barrierDismissible: false,
       builder: (_) => const GithubDialog(),
+    );
+  }
+
+  ControlCard buildControlCard(BuildContext context, Course course) {
+    return ControlCard(
+      course: course,
+      verticalAlignment: CrossAxisAlignment.start,
+      isThreeLine: true,
+      thirdLine: const AssistanceStatistics(),
+      onTap: () => showAssistantAssistanceCourseDetailPage(context),
+    );
+  }
+
+  void showAssistantAssistanceCourseDetailPage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const AssistantAssistanceCourseDetailPage(),
+        settings: const RouteSettings(
+          name: AppRoute.assistantAssistanceCourseDetailPage,
+        ),
+      ),
     );
   }
 }

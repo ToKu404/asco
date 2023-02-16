@@ -20,7 +20,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 import '../../widgets/app_bar_title.dart';
-import 'assistance/assistant/assistant_assitance_page.dart';
+import 'assistance/assistant/assistant_assistance_page.dart';
 import 'leaderboard/assistant/assistant_leadeboard_page.dart';
 
 void showMainMenuPage({required BuildContext context}) {

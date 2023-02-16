@@ -177,22 +177,26 @@ class StudentLaboratoryPage extends StatelessWidget {
                 .map(
                   (course) => MeetingCard(
                     course: course,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) {
-                          return const StudentLaboratoryCourseDetailPage();
-                        },
-                        settings: const RouteSettings(
-                          name: AppRoute.studentLaboratoryCourseDetailPage,
-                        ),
-                      ),
-                    ),
+                    onTap: () {
+                      showStudentLaboratoryCourseDetailPage(context);
+                    },
                   ),
                 )
                 .toList()
                 .reversed,
           ],
+        ),
+      ),
+    );
+  }
+
+  void showStudentLaboratoryCourseDetailPage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const StudentLaboratoryCourseDetailPage(),
+        settings: const RouteSettings(
+          name: AppRoute.studentLaboratoryCourseDetailPage,
         ),
       ),
     );
