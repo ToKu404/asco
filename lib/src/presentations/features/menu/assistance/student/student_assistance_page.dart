@@ -216,51 +216,64 @@ class StudentAssistancePage extends StatelessWidget {
     return ControlCard(
       course: course,
       hasTrailing: true,
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          if (course.isLocked) ...[
-            const CircleBorderContainer(size: 30),
-            const SizedBox(width: 4),
-            const CircleBorderContainer(size: 30),
-          ] else ...[
-            const CircleBorderContainer(
-              size: 30,
-              borderColor: Palette.purple80,
-              fillColor: Palette.purple60,
-              child: Icon(
-                Icons.check_rounded,
-                size: 16,
-                color: Palette.white,
-              ),
-            ),
-            const SizedBox(width: 4),
-            const CircleBorderContainer(
-              size: 30,
-              borderColor: Color(0xFFD35380),
-              fillColor: Color(0xFFFA78A6),
-              child: Icon(
-                Icons.close_rounded,
-                size: 16,
-                color: Palette.white,
-              ),
-            ),
-          ],
-        ],
-      ),
+      trailing: AssistanceBadgeStatus(course: course),
       onTap: course.isLocked
           ? null
-          : () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const StudentAssistanceCourseDetailPage(),
-                  settings: const RouteSettings(
-                    name: AppRoute.studentAssistanceCourseDetailPage,
-                  ),
-                ),
-              );
-            },
+          : () => showStudentAssistanceCourseDetailPage(context),
+    );
+  }
+
+  void showStudentAssistanceCourseDetailPage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const StudentAssistanceCourseDetailPage(),
+        settings: const RouteSettings(
+          name: AppRoute.studentAssistanceCourseDetailPage,
+        ),
+      ),
+    );
+  }
+}
+
+class AssistanceBadgeStatus extends StatelessWidget {
+  final Course course;
+
+  const AssistanceBadgeStatus({super.key, required this.course});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        if (course.isLocked) ...[
+          const CircleBorderContainer(size: 30),
+          const SizedBox(width: 4),
+          const CircleBorderContainer(size: 30),
+        ] else ...[
+          const CircleBorderContainer(
+            size: 30,
+            borderColor: Palette.purple80,
+            fillColor: Palette.purple60,
+            child: Icon(
+              Icons.check_rounded,
+              size: 16,
+              color: Palette.white,
+            ),
+          ),
+          const SizedBox(width: 4),
+          const CircleBorderContainer(
+            size: 30,
+            borderColor: Color(0xFFD35380),
+            fillColor: Color(0xFFFA78A6),
+            child: Icon(
+              Icons.close_rounded,
+              size: 16,
+              color: Palette.white,
+            ),
+          ),
+        ],
+      ],
     );
   }
 }

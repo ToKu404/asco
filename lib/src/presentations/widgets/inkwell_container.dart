@@ -6,6 +6,7 @@ class InkWellContainer extends StatelessWidget {
   final BoxBorder? border;
   final EdgeInsets? margin;
   final EdgeInsets? padding;
+  final List<BoxShadow>? boxShadow;
   final VoidCallback? onTap;
   final Widget? child;
 
@@ -16,6 +17,7 @@ class InkWellContainer extends StatelessWidget {
     this.border,
     this.margin,
     this.padding,
+    this.boxShadow,
     this.onTap,
     this.child,
   });
@@ -28,6 +30,7 @@ class InkWellContainer extends StatelessWidget {
         borderRadius: BorderRadius.circular(radius),
         color: color,
         border: border,
+        boxShadow: boxShadow,
       ),
       child: Material(
         color: Colors.transparent,

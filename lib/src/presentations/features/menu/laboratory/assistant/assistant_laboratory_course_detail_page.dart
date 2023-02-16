@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/data/dummy_data.dart';
+import 'package:asco/src/presentations/features/menu/laboratory/assistant/assistant_laboratory_quiz_value_input_page.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/widgets/attendance_dialog.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/widgets/mentor_tile.dart';
-import 'package:asco/src/presentations/features/menu/laboratory/widgets/search_field.dart';
 import 'package:asco/src/presentations/widgets/circle_border_container.dart';
+import 'package:asco/src/presentations/widgets/input_field/search_field.dart';
 import 'package:asco/src/presentations/widgets/purple_app_bar.dart';
 import 'package:asco/src/presentations/widgets/title_section.dart';
 
@@ -41,7 +43,6 @@ class _AssistantLaboratoryCourseDetailPageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       backgroundColor: Palette.grey,
       appBar: PurpleAppBar(
         titleText: 'Pertemuan 1',
@@ -195,7 +196,11 @@ class _AssistantLaboratoryCourseDetailPageState
                         const SizedBox(width: 8),
                         Expanded(
                           child: FilledButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              showAssistantLaboratoryQuizValueInputPage(
+                                context,
+                              );
+                            },
                             style: FilledButton.styleFrom(
                               backgroundColor: Palette.purple60,
                               shape: RoundedRectangleBorder(
@@ -213,39 +218,50 @@ class _AssistantLaboratoryCourseDetailPageState
             ),
           ];
         },
-        body: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  const TitleSection(title: 'Absensi'),
-                  ValueListenableBuilder(
-                    valueListenable: queryNotifier,
-                    builder: (context, value, child) {
-                      return SearchField(
-                        text: value,
-                        onChanged: (query) => queryNotifier.value = query,
-                      );
-                    },
+        body: CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              pinned: true,
+              elevation: 0,
+              toolbarHeight: 0,
+              automaticallyImplyLeading: false,
+              backgroundColor: Palette.grey,
+              surfaceTintColor: Colors.transparent,
+              bottom: PreferredSize(
+                preferredSize: const Size.fromHeight(kToolbarHeight + 64),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      const TitleSection(title: 'Absensi'),
+                      ValueListenableBuilder(
+                        valueListenable: queryNotifier,
+                        builder: (context, value, child) {
+                          return SearchField(
+                            text: value,
+                            onChanged: (query) => queryNotifier.value = query,
+                          );
+                        },
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
-            Expanded(
-              child: ListView.separated(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-                itemBuilder: (_, i) {
-                  return StudentAttendanceCard(student: students[i]);
-                },
-                separatorBuilder: (_, __) {
-                  return const SizedBox(height: 10);
-                },
-                itemCount: students.length,
-                keyboardDismissBehavior:
-                    ScrollViewKeyboardDismissBehavior.onDrag,
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 14),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  childCount: students.length,
+                  (_, index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: StudentAttendanceCard(student: students[index]),
+                    );
+                  },
+                ),
               ),
             ),
           ],
@@ -264,6 +280,18 @@ class _AssistantLaboratoryCourseDetailPageState
         ),
         tooltip: 'Scan QR',
         child: const Icon(Icons.qr_code_scanner_outlined),
+      ),
+    );
+  }
+
+  void showAssistantLaboratoryQuizValueInputPage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const AssistantLaboratoryQuizValueInputPage(),
+        settings: const RouteSettings(
+          name: AppRoute.assistantLaboratoryQuizValueInputPage,
+        ),
       ),
     );
   }
@@ -305,7 +333,7 @@ class StudentAttendanceCard extends StatelessWidget {
                 child: CircleAvatar(
                   radius: 26,
                   foregroundImage: AssetImage(
-                    AssetPath.getImage('avatar5.jpg'),
+                    AssetPath.getImage('avatar${student.id}.jpg'),
                   ),
                 ),
               ),
