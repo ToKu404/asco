@@ -1,11 +1,13 @@
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:asco/src/presentations/widgets/app_bar_title.dart';
 import 'package:asco/src/presentations/widgets/pretier_qr_widget.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 class StudentProfilePage extends StatefulWidget {
   const StudentProfilePage({super.key});
@@ -15,6 +17,15 @@ class StudentProfilePage extends StatefulWidget {
 }
 
 class _StudentProfilePageState extends State<StudentProfilePage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.microtask(() {
+      Provider.of<ProfileNotifier>(context, listen: false).getSelfDetail();
+    });
+  }
+
   GlobalKey<FlipCardState> cardKey = GlobalKey<FlipCardState>();
 
   @override
@@ -169,141 +180,148 @@ class IdCardFrontSide extends StatelessWidget {
                 child: AppBarTitle(),
               ),
             ),
-            Positioned.fill(
-                child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Container(
-                    margin: const EdgeInsets.only(
-                      top: 160 - 60,
-                    ),
-                    height: 120,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(52),
-                      border: Border.all(
-                        width: 4,
-                        strokeAlign: BorderSide.strokeAlignOutside,
-                        color: Palette.purple80,
+            Positioned.fill(child: Builder(builder: (context) {
+              final userNotifier = context.watch<ProfileNotifier>();
+              final profile = userNotifier.detailSelfProfile;
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Container(
+                      margin: const EdgeInsets.only(
+                        top: 160 - 60,
                       ),
-                      image: DecorationImage(
-                        image: AssetImage(
-                          AssetPath.getImage('avatar1.jpg'),
+                      height: 120,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(52),
+                        border: Border.all(
+                          width: 4,
+                          strokeAlign: BorderSide.strokeAlignOutside,
+                          color: Palette.purple80,
                         ),
-                        fit: BoxFit.cover,
+                        image: DecorationImage(
+                          image: AssetImage(
+                            AssetPath.getImage('avatar1.jpg'),
+                          ),
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(24.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'H071191049',
-                          style: kTextTheme.bodyLarge?.copyWith(
-                            color: Palette.violet30,
-                            fontWeight: FontWeight.w700,
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            profile != null ? profile.username ?? '' : '',
+                            style: kTextTheme.bodyLarge?.copyWith(
+                              color: Palette.violet30,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 24),
-                          child: RichText(
-                            text: TextSpan(
-                              text: 'Silverius Sony Lembang',
-                              style: kTextTheme.titleMedium?.copyWith(
-                                color: Palette.white,
-                                height: 1.05,
-                                fontWeight: FontWeight.w800,
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 24),
+                            child: RichText(
+                              text: TextSpan(
+                                text: profile != null
+                                    ? profile.fullName ?? ''
+                                    : '',
+                                style: kTextTheme.titleMedium?.copyWith(
+                                  color: Palette.white,
+                                  height: 1.05,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text:
+                                        ' (${profile != null ? profile.nickName ?? '' : ''})',
+                                    style: kTextTheme.titleMedium?.copyWith(
+                                      color: Palette.violet30,
+                                      height: 1.05,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              children: [
-                                TextSpan(
-                                  text: ' (Sony)',
-                                  style: kTextTheme.titleMedium?.copyWith(
-                                    color: Palette.violet30,
-                                    height: 1.05,
-                                    fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 12,
+                          ),
+                          Text(
+                            'SISTEM INFORMASI ${profile != null ? profile.classOf!.substring(2, 4) : ''}'
+                                .toUpperCase(),
+                            style: kTextTheme.bodyLarge?.copyWith(
+                              color: Palette.white,
+                            ),
+                          ),
+                          const Spacer(),
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: SvgPicture.asset(
+                                  AssetPath.getIcons(
+                                    'github_filled.svg',
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                              const SizedBox(
+                                width: 6,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  'github.com/yukiao',
+                                  style: kTextTheme.bodyMedium?.copyWith(
+                                    height: 1,
+                                    color: Palette.white,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                        const SizedBox(
-                          height: 12,
-                        ),
-                        Text(
-                          'SISTEM INFORMASI 21'.toUpperCase(),
-                          style: kTextTheme.bodyLarge?.copyWith(
-                            color: Palette.white,
+                          const SizedBox(
+                            height: 4,
                           ),
-                        ),
-                        const Spacer(),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: SvgPicture.asset(
-                                AssetPath.getIcons(
-                                  'github_filled.svg',
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: SvgPicture.asset(
+                                  AssetPath.getIcons(
+                                    'instagram_filled.svg',
+                                  ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(
-                              width: 6,
-                            ),
-                            Expanded(
-                              child: Text(
-                                'github.com/yukiao',
-                                style: kTextTheme.bodyMedium?.copyWith(
-                                  height: 1,
-                                  color: Palette.white,
+                              const SizedBox(
+                                width: 6,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  '@yukiao',
+                                  style: kTextTheme.bodyMedium?.copyWith(
+                                    height: 1,
+                                    color: Palette.white,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 4,
-                        ),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: SvgPicture.asset(
-                                AssetPath.getIcons(
-                                  'instagram_filled.svg',
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 6,
-                            ),
-                            Expanded(
-                              child: Text(
-                                '@yukiao',
-                                style: kTextTheme.bodyMedium?.copyWith(
-                                  height: 1,
-                                  color: Palette.white,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                )
-              ],
-            ))
+                  )
+                ],
+              );
+            }))
           ],
         ),
       ),
@@ -362,74 +380,80 @@ class IdCardBackSide extends StatelessWidget {
               ),
             ),
             Positioned.fill(
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: Palette.white),
-                      padding: const EdgeInsets.all(24),
-                      child: Column(
-                        children: [
-                          RichText(
-                            textAlign: TextAlign.center,
-                            text: TextSpan(
-                              text: 'Scan QR dibawah dengan ',
-                              style: kTextTheme.titleSmall?.copyWith(
-                                color: Palette.purple80,
-                                height: 1.05,
-                              ),
-                              children: [
-                                TextSpan(
-                                  text: 'asco',
-                                  style: kTextTheme.titleSmall?.copyWith(
-                                    color: Palette.violet30,
-                                    fontWeight: FontWeight.w700,
-                                    height: 1.05,
-                                  ),
+              child: Builder(builder: (context) {
+                final userNotifier = context.watch<ProfileNotifier>();
+                final profile = userNotifier.detailSelfProfile;
+                return Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Palette.white),
+                        padding: const EdgeInsets.all(24),
+                        child: Column(
+                          children: [
+                            RichText(
+                              textAlign: TextAlign.center,
+                              text: TextSpan(
+                                text: 'Scan QR dibawah dengan ',
+                                style: kTextTheme.titleSmall?.copyWith(
+                                  color: Palette.purple80,
+                                  height: 1.05,
                                 ),
-                              ],
+                                children: [
+                                  TextSpan(
+                                    text: 'asco',
+                                    style: kTextTheme.titleSmall?.copyWith(
+                                      color: Palette.violet30,
+                                      fontWeight: FontWeight.w700,
+                                      height: 1.05,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          const AspectRatio(
-                            aspectRatio: 1,
-                            child: BarcodeBox(
-                              data: 'github.com/toku404',
-                              backgroundColor: Palette.white,
-                              color: Palette.purple100,
+                            const SizedBox(
+                              height: 20,
                             ),
-                          ),
-                          const SizedBox(
-                            height: 24,
-                          ),
-                          Text(
-                            'Muh. Ikhsan',
-                            maxLines: 2,
-                            style: kTextTheme.titleSmall?.copyWith(
-                              color: Palette.purple100,
-                              fontWeight: FontWeight.w700,
-                              height: 1.2,
+                            AspectRatio(
+                              aspectRatio: 1,
+                              child: BarcodeBox(
+                                data: profile != null
+                                    ? profile.username ?? ''
+                                    : '',
+                                backgroundColor: Palette.white,
+                                color: Palette.purple100,
+                              ),
                             ),
-                          ),
-                          Text(
-                            'NIM. H071191049',
-                            style: kTextTheme.bodyLarge?.copyWith(
-                              color: Palette.purple60,
+                            const SizedBox(
+                              height: 24,
                             ),
-                          )
-                        ],
+                            Text(
+                              profile != null ? profile.fullName ?? '' : '',
+                              maxLines: 2,
+                              style: kTextTheme.titleSmall?.copyWith(
+                                color: Palette.purple100,
+                                fontWeight: FontWeight.w700,
+                                height: 1.2,
+                              ),
+                            ),
+                            Text(
+                              'NIM. ${profile != null ? profile.username ?? '' : ''}',
+                              style: kTextTheme.bodyLarge?.copyWith(
+                                color: Palette.purple60,
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
+                    ],
+                  ),
+                );
+              }),
             ),
           ],
         ),

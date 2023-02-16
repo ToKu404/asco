@@ -7,10 +7,12 @@ class InputTextField extends StatefulWidget {
   final TextEditingController controller;
   final String title;
   final bool isRequired;
+  final VoidCallback? onEditingComplete;
   const InputTextField(
       {super.key,
       required this.controller,
       required this.title,
+      this.onEditingComplete,
       this.isRequired = false});
 
   @override
@@ -26,9 +28,20 @@ class _InputTextFieldState extends State<InputTextField> {
         widget.isRequired
             ? RequiredFieldTitle(title: widget.title)
             : FieldTitle(title: widget.title),
-        TextField(
+        TextFormField(
+          validator: (value) {
+            if (!widget.isRequired) {
+              return null;
+            } else {
+              if (value!.isEmpty) {
+                return 'Field wajib diisi';
+              }
+            }
+            return null;
+          },
           controller: widget.controller,
           onChanged: (value) {},
+          onEditingComplete: widget.onEditingComplete ?? () {},
           keyboardType: TextInputType.text,
           style: kTextTheme.titleSmall?.copyWith(
             color: Palette.purple80,

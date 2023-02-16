@@ -9,10 +9,8 @@ class UpdateProfile {
   UpdateProfile({required this.profileRepository});
 
   Future<Either<Failure, bool>> execute({
-    required String username,
     required UserProfileEntity userProfileEntity,
   }) {
-    return profileRepository.update(
-        userProfileEntity: userProfileEntity, id: username);
+    return profileRepository.update(userProfileEntity: userProfileEntity);
   }
 }

@@ -3,18 +3,12 @@ import 'package:asco/src/domain/entities/profile_entities/user_profile_entity.da
 import 'package:asco/src/domain/repositories/profile_repository.dart';
 import 'package:dartz/dartz.dart';
 
-class GetListProfile {
+class SelfProfile {
   final ProfileRepository profileRepository;
 
-  GetListProfile({required this.profileRepository});
+  SelfProfile({required this.profileRepository});
 
-  Future<Either<Failure, List<UserProfileEntity>>> execute({
-    String? query,
-    int? byRole,
-  }) {
-    return profileRepository.find(
-      query: query,
-      byRole: byRole,
-    );
+  Future<Either<Failure, UserProfileEntity>> execute() {
+    return profileRepository.me();
   }
 }

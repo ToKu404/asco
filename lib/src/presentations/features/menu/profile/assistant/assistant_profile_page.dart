@@ -1,3 +1,4 @@
+import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:asco/core/constants/asset_path.dart';
@@ -5,9 +6,24 @@ import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/presentations/widgets/title_section.dart';
+import 'package:provider/provider.dart';
 
-class AssistantProfilePage extends StatelessWidget {
+class AssistantProfilePage extends StatefulWidget {
   const AssistantProfilePage({super.key});
+
+  @override
+  State<AssistantProfilePage> createState() => _AssistantProfilePageState();
+}
+
+class _AssistantProfilePageState extends State<AssistantProfilePage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.microtask(() {
+      Provider.of<ProfileNotifier>(context, listen: false).getSelfDetail();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,97 +96,101 @@ class AssistantProfilePage extends StatelessWidget {
               ),
             ),
           ),
-          Positioned(
-            top: 130,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 28.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        height: 100,
-                        width: 100,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            width: 2,
-                            strokeAlign: BorderSide.strokeAlignOutside,
-                            color: Colors.white,
+          Builder(builder: (context) {
+            final userNotifier = context.watch<ProfileNotifier>();
+            final profile = userNotifier.detailSelfProfile;
+            return Positioned(
+              top: 130,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 28.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          height: 100,
+                          width: 100,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              width: 2,
+                              strokeAlign: BorderSide.strokeAlignOutside,
+                              color: Colors.white,
+                            ),
+                            image: DecorationImage(
+                                image: AssetImage(
+                                  AssetPath.getImage('avatar1.jpg'),
+                                ),
+                                fit: BoxFit.cover),
                           ),
-                          image: DecorationImage(
-                              image: AssetImage(
-                                AssetPath.getImage('avatar1.jpg'),
-                              ),
-                              fit: BoxFit.cover),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Text(
+                      profile != null ? profile.fullName ?? '' : '',
+                      style: kTextTheme.titleLarge?.copyWith(
+                        color: Palette.purple80,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    Text(
+                      '@${profile != null ? profile.username ?? '' : ''}',
+                      style: kTextTheme.titleSmall
+                          ?.copyWith(color: Palette.purple70, height: 1.2),
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    SizedBox(
+                      width: 120,
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Palette.purple80,
+                        ),
+                        onPressed: () {},
+                        icon: SvgPicture.asset(
+                          AssetPath.getIcons(
+                            'edit.svg',
+                          ),
+                          color: Palette.white,
+                          width: 20,
+                          height: 20,
+                        ),
+                        label: Text(
+                          'Edit',
+                          style: kTextTheme.bodyMedium
+                              ?.copyWith(color: Palette.white),
                         ),
                       ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  Text(
-                    'Muh. Ikhsan',
-                    style: kTextTheme.titleLarge?.copyWith(
-                      color: Palette.purple80,
-                      fontWeight: FontWeight.w700,
                     ),
-                  ),
-                  Text(
-                    '@toku404',
-                    style: kTextTheme.titleSmall
-                        ?.copyWith(color: Palette.purple70, height: 1.2),
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  SizedBox(
-                    width: 120,
-                    child: ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Palette.purple80,
-                      ),
-                      onPressed: () {},
-                      icon: SvgPicture.asset(
-                        AssetPath.getIcons(
-                          'edit.svg',
-                        ),
-                        color: Palette.white,
-                        width: 20,
-                        height: 20,
-                      ),
-                      label: Text(
-                        'Edit',
-                        style: kTextTheme.bodyMedium
-                            ?.copyWith(color: Palette.white),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    const TitleSection(title: 'Badges'),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    BadgeCard(
+                      title: 'Asisten Pemrograman Mobile',
+                      badgePath: AssetPath.getVector(
+                        'badge_oop.svg',
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  const TitleSection(title: 'Badges'),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  BadgeCard(
-                    title: 'Asisten Pemrograman Mobile',
-                    badgePath: AssetPath.getVector(
-                      'badge_oop.svg',
+                    BadgeCard(
+                      title: 'Pemateri Pemrograman Mobile',
+                      badgePath: AssetPath.getVector(
+                        'badge_oop.svg',
+                      ),
                     ),
-                  ),
-                  BadgeCard(
-                    title: 'Pemateri Pemrograman Mobile',
-                    badgePath: AssetPath.getVector(
-                      'badge_oop.svg',
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          )
+            );
+          })
         ],
       ),
     );

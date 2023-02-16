@@ -17,13 +17,16 @@ class AuthDataSourcesImpl implements AuthDataSources {
   final AuthPreferenceHelper authPreferenceHelper;
 
   AuthDataSourcesImpl(
-      {required this.firestore, required this.authPreferenceHelper});
+      {required this.firestore, required this.authPreferenceHelper}) {
+    userCollectionRef = firestore.collection('users');
+  }
+
+  late CollectionReference userCollectionRef;
 
   //! Membuat User baru di firebase
   @override
   Future<bool> createUser({required UserModel userModel}) async {
     try {
-      final userCollectionRef = firestore.collection('users');
       QuerySnapshot snapshot = await userCollectionRef
           .where("username", isEqualTo: userModel.username)
           .get();
@@ -48,7 +51,6 @@ class AuthDataSourcesImpl implements AuthDataSources {
   Future<UserCredentialModel> logIn(
       {required String username, required String password}) async {
     try {
-      final userCollectionRef = firestore.collection('users');
       QuerySnapshot snapshot =
           await userCollectionRef.where("username", isEqualTo: username).get();
 
@@ -70,12 +72,20 @@ class AuthDataSourcesImpl implements AuthDataSources {
     }
   }
 
+  //! Get User Credential
   @override
   Future<UserCredentialModel?> getUserCredential() async {
     try {
       final credential = await authPreferenceHelper.getUser();
       if (credential != null) {
-        return credential;
+        QuerySnapshot snapshot = await userCollectionRef
+            .where("username", isEqualTo: credential.username)
+            .get();
+        if (snapshot.docs.isNotEmpty) {
+          return credential;
+        } else {
+          throw Exception();
+        }
       } else {
         return null;
       }
@@ -84,6 +94,7 @@ class AuthDataSourcesImpl implements AuthDataSources {
     }
   }
 
+  //! Logout
   @override
   Future<bool> logOut() {
     try {
@@ -93,9 +104,20 @@ class AuthDataSourcesImpl implements AuthDataSources {
     }
   }
 
+  //! Delete User
   @override
-  Future<bool> deleteUser({required String username}) {
-    // TODO: implement remove
-    throw UnimplementedError();
+  Future<bool> deleteUser({required String username}) async {
+    try {
+      QuerySnapshot querySnapshot =
+          await userCollectionRef.where("username", isEqualTo: username).get();
+      String uid = querySnapshot.docs.first.id;
+      return await userCollectionRef
+          .doc(uid)
+          .delete()
+          .then((value) => true)
+          .catchError((e) => false);
+    } catch (e) {
+      throw Exception();
+    }
   }
 }
