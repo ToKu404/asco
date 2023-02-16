@@ -115,7 +115,7 @@ class Course {
   final int number;
   final String topic;
   final String date;
-  final bool? isLocked;
+  final bool isLocked;
 
   const Course(this.number, this.topic, this.date, {this.isLocked = true});
 }
@@ -124,7 +124,7 @@ class Student {
   final int id;
   final String name;
   final String nim;
-  final bool? isAttend;
+  final bool isAttend;
 
   const Student(this.id, this.name, this.nim, {this.isAttend = true});
 }

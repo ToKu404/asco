@@ -332,7 +332,7 @@ class StudentAttendanceCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      student.isAttend!
+                      student.isAttend
                           ? 'Waktu absensi: 23:59'
                           : 'Terhalang Banjir',
                       style: kTextTheme.bodySmall?.copyWith(
@@ -343,7 +343,7 @@ class StudentAttendanceCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              if (student.isAttend!) ...[
+              if (student.isAttend) ...[
                 const CircleBorderContainer(
                   size: 32,
                   borderColor: Palette.purple80,

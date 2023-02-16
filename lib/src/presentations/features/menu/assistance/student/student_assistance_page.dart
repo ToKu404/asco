@@ -8,6 +8,8 @@ import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/data/dummy_data.dart';
 import 'package:asco/src/presentations/features/menu/assistance/student/student_assistance_course_detail_page.dart';
+import 'package:asco/src/presentations/features/menu/assistance/widgets/control_card.dart';
+import 'package:asco/src/presentations/features/menu/assistance/widgets/student_avatar.dart';
 import 'package:asco/src/presentations/widgets/circle_border_container.dart';
 
 class StudentAssistancePage extends StatelessWidget {
@@ -199,7 +201,7 @@ class StudentAssistancePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   ...courses
-                      .map((course) => ControlCard(course: course))
+                      .map((course) => buildControlCard(context, course))
                       .toList(),
                 ],
               ),
@@ -209,175 +211,56 @@ class StudentAssistancePage extends StatelessWidget {
       ),
     );
   }
-}
 
-class StudentAvatar extends StatelessWidget {
-  final Student student;
-
-  const StudentAvatar({super.key, required this.student});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 64,
-      child: Column(
+  ControlCard buildControlCard(BuildContext context, Course course) {
+    return ControlCard(
+      course: course,
+      hasTrailing: true,
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          CircleAvatar(
-            radius: 30,
-            backgroundColor: Palette.white,
-            child: CircleAvatar(
-              radius: 28,
-              foregroundImage: AssetImage(
-                AssetPath.getImage('avatar${student.id}.jpg'),
+          if (course.isLocked) ...[
+            const CircleBorderContainer(size: 30),
+            const SizedBox(width: 4),
+            const CircleBorderContainer(size: 30),
+          ] else ...[
+            const CircleBorderContainer(
+              size: 30,
+              borderColor: Palette.purple80,
+              fillColor: Palette.purple60,
+              child: Icon(
+                Icons.check_rounded,
+                size: 16,
+                color: Palette.white,
               ),
             ),
-          ),
-          const SizedBox(height: 4),
-          Expanded(
-            child: Text(
-              student.name,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: kTextTheme.bodySmall?.copyWith(
-                color: Palette.purple100,
+            const SizedBox(width: 4),
+            const CircleBorderContainer(
+              size: 30,
+              borderColor: Color(0xFFD35380),
+              fillColor: Color(0xFFFA78A6),
+              child: Icon(
+                Icons.close_rounded,
+                size: 16,
+                color: Palette.white,
               ),
             ),
-          )
+          ],
         ],
       ),
-    );
-  }
-}
-
-class ControlCard extends StatelessWidget {
-  final Course course;
-
-  const ControlCard({super.key, required this.course});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: Card(
-        elevation: 0,
-        margin: EdgeInsets.zero,
-        color: Palette.white,
-        clipBehavior: Clip.antiAlias,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: InkWell(
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => const StudentAssistanceCourseDetailPage(),
-              settings: const RouteSettings(
-                name: AppRoute.studentAssistanceCourseDetailPage,
-              ),
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 20,
-              horizontal: 16,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: Palette.grey,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      width: 1.5,
-                      color: Palette.greyDark,
-                    ),
-                  ),
-                  child: Center(
-                    child: course.isLocked!
-                        ? const Icon(
-                            Icons.lock_outline_rounded,
-                            size: 20,
-                            color: Palette.greyDark,
-                          )
-                        : Text(
-                            '${course.number}',
-                            style: kTextTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: Palette.greyDark,
-                            ),
-                          ),
+      onTap: course.isLocked
+          ? null
+          : () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const StudentAssistanceCourseDetailPage(),
+                  settings: const RouteSettings(
+                    name: AppRoute.studentAssistanceCourseDetailPage,
                   ),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        course.topic,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: kTextTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: Palette.purple100,
-                          height: 1.2,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        course.date,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: kTextTheme.bodyMedium?.copyWith(
-                          color: Palette.purple60,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    if (course.isLocked!) ...[
-                      const CircleBorderContainer(size: 30),
-                      const SizedBox(width: 4),
-                      const CircleBorderContainer(size: 30),
-                    ] else ...[
-                      const CircleBorderContainer(
-                        size: 30,
-                        borderColor: Palette.purple80,
-                        fillColor: Palette.purple60,
-                        child: Icon(
-                          Icons.check_rounded,
-                          size: 16,
-                          color: Palette.white,
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      const CircleBorderContainer(
-                        size: 30,
-                        borderColor: Color(0xFFD35380),
-                        fillColor: Color(0xFFFA78A6),
-                        child: Icon(
-                          Icons.close_rounded,
-                          size: 16,
-                          color: Palette.white,
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+              );
+            },
     );
   }
 }
