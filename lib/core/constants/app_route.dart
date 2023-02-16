@@ -31,4 +31,5 @@ class AppRoute {
   // Extras
   static const labExamPage = '/main-menu/lab-exam-page';
   static const inputValueExam = '/main-menu/input-value-exam';
+  static const editInfoExam = '/main-menu/edit-info-exam';
 }
