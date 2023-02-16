@@ -108,6 +108,7 @@ class _GithubDialogState extends State<GithubDialog> {
               padding: const EdgeInsets.fromLTRB(18, 16, 18, 24),
               child: TextField(
                 controller: controller,
+                autofocus: true,
                 keyboardType: TextInputType.url,
                 textInputAction: TextInputAction.done,
                 decoration: InputDecoration(
