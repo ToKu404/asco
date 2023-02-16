@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
+import 'package:asco/core/constants/text_const.dart';
 
 class SearchField extends StatefulWidget {
   final String text;
@@ -16,18 +19,18 @@ class SearchField extends StatefulWidget {
 }
 
 class _SearchFieldState extends State<SearchField> {
-  late final TextEditingController _controller;
+  late final TextEditingController controller;
 
   @override
   void initState() {
-    _controller = TextEditingController();
+    controller = TextEditingController();
 
     super.initState();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    controller.dispose();
 
     super.dispose();
   }
@@ -41,21 +44,30 @@ class _SearchFieldState extends State<SearchField> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: TextField(
-        controller: _controller,
+        controller: controller,
         onChanged: widget.onChanged,
         textInputAction: TextInputAction.search,
         textCapitalization: TextCapitalization.words,
+        textAlignVertical: TextAlignVertical.center,
+        style: kTextTheme.bodyLarge?.copyWith(
+          color: Palette.purple80,
+        ),
         decoration: InputDecoration(
           border: InputBorder.none,
-          floatingLabelBehavior: FloatingLabelBehavior.never,
           hintText: "Cari nama atau nim",
-          hintStyle: const TextStyle(
+          hintStyle: kTextTheme.bodyLarge?.copyWith(
             fontWeight: FontWeight.w400,
             color: Palette.purple20,
           ),
-          prefixIcon: const Icon(
-            Icons.search,
-            color: Palette.purple80,
+          prefixIcon: Padding(
+            padding: const EdgeInsetsDirectional.only(
+              start: 16,
+              end: 12,
+            ),
+            child: SvgPicture.asset(
+              AssetPath.getIcons('search_outlined.svg'),
+              color: Palette.purple80,
+            ),
           ),
           suffixIcon: widget.text.isEmpty
               ? const SizedBox()
@@ -66,14 +78,10 @@ class _SearchFieldState extends State<SearchField> {
                     size: 16,
                   ),
                   onPressed: () {
-                    _controller.clear();
-
+                    controller.clear();
                     widget.onChanged('');
                   },
                 ),
-        ),
-        style: const TextStyle(
-          color: Palette.purple80,
         ),
       ),
     );

@@ -248,17 +248,19 @@ class StudentAssistancePage extends StatelessWidget {
           ],
         ],
       ),
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => const StudentAssistanceCourseDetailPage(),
-            settings: const RouteSettings(
-              name: AppRoute.studentAssistanceCourseDetailPage,
-            ),
-          ),
-        );
-      },
+      onTap: course.isLocked
+          ? null
+          : () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const StudentAssistanceCourseDetailPage(),
+                  settings: const RouteSettings(
+                    name: AppRoute.studentAssistanceCourseDetailPage,
+                  ),
+                ),
+              );
+            },
     );
   }
 }

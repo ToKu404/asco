@@ -48,7 +48,6 @@ class _AttendanceDialogState extends State<AttendanceDialog> {
         horizontal: 36.0,
         vertical: 24.0,
       ),
-      insetAnimationDuration: const Duration(milliseconds: 300),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
@@ -64,7 +63,6 @@ class _AttendanceDialogState extends State<AttendanceDialog> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   IconButton(
                     onPressed: () => Navigator.pop(context),
@@ -72,13 +70,16 @@ class _AttendanceDialogState extends State<AttendanceDialog> {
                       Icons.close_rounded,
                       color: Palette.purple100,
                     ),
-                    tooltip: 'Back',
+                    tooltip: 'Close',
                   ),
-                  Text(
-                    'Absensi',
-                    style: kTextTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: Palette.purple100,
+                  Expanded(
+                    child: Text(
+                      'Absensi',
+                      textAlign: TextAlign.center,
+                      style: kTextTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: Palette.purple100,
+                      ),
                     ),
                   ),
                   IconButton(
@@ -194,7 +195,8 @@ class AttendanceOptions extends StatelessWidget {
             ] else ...[
               TextField(
                 controller: noteController,
-                keyboardType: TextInputType.multiline,
+                textCapitalization: TextCapitalization.sentences,
+                textInputAction: TextInputAction.done,
                 maxLines: 4,
                 decoration: InputDecoration(
                   floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -219,7 +221,7 @@ class AttendanceOptions extends StatelessWidget {
                 style: kTextTheme.bodyLarge?.copyWith(
                   color: Palette.greyDark,
                 ),
-              )
+              ),
             ],
           ],
         );

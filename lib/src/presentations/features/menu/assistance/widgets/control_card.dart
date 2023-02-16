@@ -9,6 +9,7 @@ class ControlCard extends StatelessWidget {
   final Widget? trailing;
   final bool isThreeLine;
   final Widget? thirdLine;
+  final CrossAxisAlignment verticalAlignment;
   final VoidCallback? onTap;
 
   const ControlCard({
@@ -18,6 +19,7 @@ class ControlCard extends StatelessWidget {
     this.trailing,
     this.isThreeLine = false,
     this.thirdLine,
+    this.verticalAlignment = CrossAxisAlignment.center,
     this.onTap,
   });
 
@@ -42,6 +44,7 @@ class ControlCard extends StatelessWidget {
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: verticalAlignment,
               children: <Widget>[
                 Container(
                   width: 50,
@@ -100,7 +103,7 @@ class ControlCard extends StatelessWidget {
                         ),
                       ),
                       if (isThreeLine) ...[
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 10),
                         thirdLine!,
                       ],
                     ],

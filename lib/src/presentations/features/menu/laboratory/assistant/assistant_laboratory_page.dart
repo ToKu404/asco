@@ -199,7 +199,8 @@ class AssistantLaboratoryPage extends StatelessWidget {
                     ),
                   ),
                 )
-                .toList(),
+                .toList()
+                .reversed,
           ],
         ),
       ),

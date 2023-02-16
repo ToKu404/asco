@@ -9,6 +9,7 @@ import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/data/dummy_data.dart';
 import 'package:asco/src/presentations/features/menu/assistance/assistant/assistant_assistance_course_detail_page.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/control_card.dart';
+import 'package:asco/src/presentations/features/menu/assistance/widgets/github_dialog.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/student_avatar.dart';
 
 class AssistantAssistancePage extends StatelessWidget {
@@ -91,10 +92,7 @@ class AssistantAssistancePage extends StatelessWidget {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 8,
-                            horizontal: 4,
-                          ),
+                          padding: const EdgeInsets.fromLTRB(4, 8, 0, 8),
                           child: ListTile(
                             horizontalTitleGap: 12,
                             leading: CircleAvatar(
@@ -121,14 +119,32 @@ class AssistantAssistancePage extends StatelessWidget {
                                 color: Palette.purple100,
                               ),
                             ),
-                            trailing: IconButton(
-                              onPressed: () {},
-                              icon: SvgPicture.asset(
-                                AssetPath.getIcons('github_filled.svg'),
-                                width: 24,
+                            trailing: Container(
+                              padding: const EdgeInsets.fromLTRB(4, 4, 8, 4),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(22),
                                 color: Palette.purple80,
                               ),
-                              tooltip: 'Github',
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  GestureDetector(
+                                    onTap: () {},
+                                    child: SvgPicture.asset(
+                                      AssetPath.getIcons('github_filled.svg'),
+                                      width: 22,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  GestureDetector(
+                                    onTap: () => showGithubDialog(context),
+                                    child: SvgPicture.asset(
+                                      AssetPath.getIcons('edit.svg'),
+                                      width: 18,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -215,6 +231,9 @@ class AssistantAssistancePage extends StatelessWidget {
   ControlCard buildControlCard(BuildContext context, Course course) {
     return ControlCard(
       course: course,
+      verticalAlignment: CrossAxisAlignment.start,
+      isThreeLine: true,
+      thirdLine: const AssistanceStatistics(),
       onTap: () {
         Navigator.push(
           context,
@@ -228,4 +247,115 @@ class AssistantAssistancePage extends StatelessWidget {
       },
     );
   }
+
+  Future<void> showGithubDialog(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierLabel: '',
+      barrierDismissible: false,
+      builder: (_) => const GithubDialog(),
+    );
+  }
 }
+
+class AssistanceStatistics extends StatelessWidget {
+  const AssistanceStatistics({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final data = [8, 4];
+
+    return Column(
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            if (data[0] != 0) ...[
+              Expanded(
+                flex: data[0],
+                child: Container(
+                  height: 6,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: Palette.purple60,
+                  ),
+                ),
+              ),
+            ],
+            if (data[1] != 0) ...[
+              const SizedBox(width: 4),
+              Expanded(
+                flex: data[1],
+                child: Container(
+                  height: 6,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: const Color(0xFFFA78A6),
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+        const SizedBox(height: 4),
+        Row(
+          children: <Widget>[
+            AssistanceDataStatus(
+              value: data[0],
+              assistanceStatus: AssistanceStatus.done,
+            ),
+            const SizedBox(width: 6),
+            AssistanceDataStatus(
+              value: data[1],
+              assistanceStatus: AssistanceStatus.undone,
+            ),
+          ],
+        )
+      ],
+    );
+  }
+}
+
+class AssistanceDataStatus extends StatelessWidget {
+  final int value;
+  final AssistanceStatus assistanceStatus;
+
+  const AssistanceDataStatus({
+    super.key,
+    required this.value,
+    required this.assistanceStatus,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final Map<AssistanceStatus, AssistanceData> data = {
+      AssistanceStatus.done: AssistanceData(
+        title: 'Selesai',
+        color: Palette.purple60,
+      ),
+      AssistanceStatus.undone: AssistanceData(
+        title: 'Belum',
+        color: Palette.plum60,
+      ),
+    };
+
+    return Text(
+      '$value ${data[assistanceStatus]!.title}',
+      style: kTextTheme.bodyMedium?.copyWith(
+        fontWeight: FontWeight.w500,
+        color: data[assistanceStatus]!.color,
+      ),
+    );
+  }
+}
+
+class AssistanceData {
+  final String title;
+  final Color color;
+
+  AssistanceData({
+    required this.title,
+    required this.color,
+  });
+}
+
+enum AssistanceStatus { done, undone }

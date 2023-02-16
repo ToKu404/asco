@@ -190,7 +190,8 @@ class StudentLaboratoryPage extends StatelessWidget {
                     ),
                   ),
                 )
-                .toList(),
+                .toList()
+                .reversed,
           ],
         ),
       ),
