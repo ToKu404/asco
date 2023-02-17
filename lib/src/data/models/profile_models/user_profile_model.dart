@@ -67,6 +67,23 @@ class UserProfileModel extends UserProfileEntity {
     );
   }
 
+  factory UserProfileModel.fromMap(Map<String, dynamic> documentSnapshot) {
+    return UserProfileModel(
+      classOf: documentSnapshot['class_of'],
+      fullName: documentSnapshot['full_name'],
+      gender: documentSnapshot['gender'],
+      github: documentSnapshot['github'],
+      username: documentSnapshot['username'],
+      instagram: documentSnapshot['instagram'],
+      nickName: documentSnapshot['nick_name'],
+      profilePhoto: documentSnapshot['profile_photo'],
+      uid: documentSnapshot['uid'],
+      userRole: UserRoleModel.fromMap(
+        documentSnapshot['role'],
+      ),
+    );
+  }
+
   factory UserProfileModel.fromEntity(UserProfileEntity userProfileEntity) {
     return UserProfileModel(
       classOf: userProfileEntity.classOf,
