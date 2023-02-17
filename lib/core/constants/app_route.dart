@@ -20,6 +20,10 @@ class AppRoute {
       '/assistant/main-menu/laboratory-quiz-value-input';
   static const assistantAssistanceCourseDetailPage =
       '/assistant/main-menu/assistance-course-detail';
+  static const assistantAssistancePractitionerPage =
+      '/assistant/main-menu/assistance-practitioner';
+  static const assistantAssistanceControlCardPage =
+      '/assistant/main-menu/assistance-control-card';
   static const assistantValueRecapLeaderboardPage =
       '/assistant/main-menu/assistant-value-recap';
 

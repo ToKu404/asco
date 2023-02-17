@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/data/dummy_data.dart';
@@ -32,7 +33,7 @@ class AssistantLaboratoryQuizValueInputPage extends StatelessWidget {
                 icon: const Icon(
                   Icons.chevron_left_rounded,
                   color: Palette.white,
-                  size: 36,
+                  size: 30,
                 ),
                 tooltip: 'Back',
               ),
@@ -362,4 +363,16 @@ class CustomBottomSheet extends StatelessWidget {
       ),
     );
   }
+}
+
+void showAssistantLaboratoryQuizValueInputPage(BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => const AssistantLaboratoryQuizValueInputPage(),
+      settings: const RouteSettings(
+        name: AppRoute.assistantLaboratoryQuizValueInputPage,
+      ),
+    ),
+  );
 }

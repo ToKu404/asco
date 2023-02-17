@@ -10,6 +10,7 @@ import 'package:asco/src/presentations/features/menu/laboratory/assistant/assist
 import 'package:asco/src/presentations/features/menu/laboratory/widgets/attendance_dialog.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/widgets/mentor_tile.dart';
 import 'package:asco/src/presentations/widgets/circle_border_container.dart';
+import 'package:asco/src/presentations/widgets/custom_student_card.dart';
 import 'package:asco/src/presentations/widgets/input_field/search_field.dart';
 import 'package:asco/src/presentations/widgets/purple_app_bar.dart';
 import 'package:asco/src/presentations/widgets/title_section.dart';
@@ -258,7 +259,7 @@ class _AssistantLaboratoryCourseDetailPageState
                   (_, index) {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 10),
-                      child: StudentAttendanceCard(student: students[index]),
+                      child: buildStudentCard(context, students[index]),
                     );
                   },
                 ),
@@ -284,120 +285,57 @@ class _AssistantLaboratoryCourseDetailPageState
     );
   }
 
-  void showAssistantLaboratoryQuizValueInputPage(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => const AssistantLaboratoryQuizValueInputPage(),
-        settings: const RouteSettings(
-          name: AppRoute.assistantLaboratoryQuizValueInputPage,
+  CustomStudentCard buildStudentCard(BuildContext context, Student student) {
+    return CustomStudentCard(
+      student: student,
+      hasAvatarBorder: true,
+      onTap: () => showDialog(
+        context: context,
+        barrierLabel: '',
+        barrierDismissible: false,
+        builder: (_) => AttendanceDialog(student: student),
+      ),
+      isThreeLine: true,
+      thirdLine: Text(
+        student.isAttend ? 'Waktu absensi: 23:59' : 'Terhalang banjir',
+        style: kTextTheme.bodySmall?.copyWith(
+          color: Colors.grey,
         ),
       ),
+      hasTrailing: true,
+      trailing: student.isAttend
+          ? const CircleBorderContainer(
+              size: 32,
+              borderColor: Palette.purple80,
+              fillColor: Palette.purple60,
+              child: Icon(
+                Icons.check_rounded,
+                size: 18,
+                color: Palette.white,
+              ),
+            )
+          : const CircleBorderContainer(
+              size: 32,
+              borderColor: Color(0xFF8A6913),
+              fillColor: Color(0xFFE4CC4B),
+              child: Icon(
+                Icons.remove_rounded,
+                size: 18,
+                color: Palette.white,
+              ),
+            ),
     );
   }
 }
 
-class StudentAttendanceCard extends StatelessWidget {
-  final Student student;
-
-  const StudentAttendanceCard({super.key, required this.student});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      margin: EdgeInsets.zero,
-      color: Palette.white,
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+void showAssistantLaboratoryCourseDetailPage(BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => const AssistantLaboratoryCourseDetailPage(),
+      settings: const RouteSettings(
+        name: AppRoute.assistantLaboratoryCourseDetailPage,
       ),
-      child: InkWell(
-        onTap: () => showDialog(
-          context: context,
-          barrierLabel: '',
-          barrierDismissible: false,
-          builder: (_) => AttendanceDialog(student: student),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 20,
-            horizontal: 16,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              CircleAvatar(
-                radius: 28,
-                backgroundColor: Palette.purple80,
-                child: CircleAvatar(
-                  radius: 26,
-                  foregroundImage: AssetImage(
-                    AssetPath.getImage('avatar${student.id}.jpg'),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      student.nim,
-                      style: kTextTheme.bodyMedium?.copyWith(
-                        color: Palette.purple60,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      student.name,
-                      style: kTextTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: Palette.purple80,
-                        height: 1.2,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      student.isAttend
-                          ? 'Waktu absensi: 23:59'
-                          : 'Terhalang Banjir',
-                      style: kTextTheme.bodySmall?.copyWith(
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 8),
-              if (student.isAttend) ...[
-                const CircleBorderContainer(
-                  size: 32,
-                  borderColor: Palette.purple80,
-                  fillColor: Palette.purple60,
-                  child: Icon(
-                    Icons.check_rounded,
-                    size: 18,
-                    color: Palette.white,
-                  ),
-                ),
-              ] else ...[
-                const CircleBorderContainer(
-                  size: 32,
-                  borderColor: Color(0xFF8A6913),
-                  fillColor: Color(0xFFE4CC4B),
-                  child: Icon(
-                    Icons.remove_rounded,
-                    size: 18,
-                    color: Palette.white,
-                  ),
-                ),
-              ],
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+    ),
+  );
 }

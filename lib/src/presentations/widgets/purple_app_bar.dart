@@ -33,7 +33,7 @@ class PurpleAppBar extends StatelessWidget implements PreferredSizeWidget {
         onPressed: onPressedBackButton,
         icon: const Icon(
           Icons.chevron_left_rounded,
-          size: 36,
+          size: 30,
           color: Palette.white,
         ),
         tooltip: 'Back',

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/data/dummy_data.dart';
+import 'package:asco/src/presentations/widgets/circle_border_container.dart';
 
 class ControlCard extends StatelessWidget {
   final Course course;
@@ -46,32 +47,22 @@ class ControlCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: verticalAlignment,
               children: <Widget>[
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Palette.grey,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      width: 1.5,
-                      color: Palette.greyDark,
-                    ),
-                  ),
-                  child: Center(
-                    child: course.isLocked
-                        ? const Icon(
-                            Icons.lock_outline_rounded,
-                            size: 20,
+                CircleBorderContainer(
+                  size: 50,
+                  borderWidth: 1.5,
+                  child: course.isLocked
+                      ? const Icon(
+                          Icons.lock_outline_rounded,
+                          color: Palette.greyDark,
+                          size: 20,
+                        )
+                      : Text(
+                          '${course.number}',
+                          style: kTextTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w600,
                             color: Palette.greyDark,
-                          )
-                        : Text(
-                            '${course.number}',
-                            style: kTextTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: Palette.greyDark,
-                            ),
                           ),
-                  ),
+                        ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(

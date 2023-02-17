@@ -6,8 +6,13 @@ import 'package:asco/src/data/dummy_data.dart';
 
 class StudentAvatar extends StatelessWidget {
   final Student student;
+  final VoidCallback? onTap;
 
-  const StudentAvatar({super.key, required this.student});
+  const StudentAvatar({
+    super.key,
+    required this.student,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,13 +20,19 @@ class StudentAvatar extends StatelessWidget {
       width: 64,
       child: Column(
         children: <Widget>[
-          CircleAvatar(
-            radius: 30,
-            backgroundColor: Palette.white,
+          GestureDetector(
+            onTap: onTap,
             child: CircleAvatar(
-              radius: 28,
-              foregroundImage: AssetImage(
-                AssetPath.getImage('avatar${student.id}.jpg'),
+              radius: 30,
+              backgroundColor: Palette.white,
+              child: Hero(
+                tag: student,
+                child: CircleAvatar(
+                  radius: 28,
+                  foregroundImage: AssetImage(
+                    AssetPath.getImage('avatar${student.id}.jpg'),
+                  ),
+                ),
               ),
             ),
           ),

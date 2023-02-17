@@ -1,16 +1,15 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/data/dummy_data.dart';
 import 'package:asco/src/presentations/features/menu/assistance/student/student_assistance_course_detail_page.dart';
+import 'package:asco/src/presentations/features/menu/assistance/widgets/assistance_status_badge.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/control_card.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/student_avatar.dart';
-import 'package:asco/src/presentations/widgets/circle_border_container.dart';
 
 class StudentAssistancePage extends StatelessWidget {
   const StudentAssistancePage({super.key});
@@ -216,64 +215,10 @@ class StudentAssistancePage extends StatelessWidget {
     return ControlCard(
       course: course,
       hasTrailing: true,
-      trailing: AssistanceBadgeStatus(course: course),
+      trailing: AssistanceStatusBadge(course: course),
       onTap: course.isLocked
           ? null
           : () => showStudentAssistanceCourseDetailPage(context),
-    );
-  }
-
-  void showStudentAssistanceCourseDetailPage(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => const StudentAssistanceCourseDetailPage(),
-        settings: const RouteSettings(
-          name: AppRoute.studentAssistanceCourseDetailPage,
-        ),
-      ),
-    );
-  }
-}
-
-class AssistanceBadgeStatus extends StatelessWidget {
-  final Course course;
-
-  const AssistanceBadgeStatus({super.key, required this.course});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        if (course.isLocked) ...[
-          const CircleBorderContainer(size: 30),
-          const SizedBox(width: 4),
-          const CircleBorderContainer(size: 30),
-        ] else ...[
-          const CircleBorderContainer(
-            size: 30,
-            borderColor: Palette.purple80,
-            fillColor: Palette.purple60,
-            child: Icon(
-              Icons.check_rounded,
-              size: 16,
-              color: Palette.white,
-            ),
-          ),
-          const SizedBox(width: 4),
-          const CircleBorderContainer(
-            size: 30,
-            borderColor: Color(0xFFD35380),
-            fillColor: Color(0xFFFA78A6),
-            child: Icon(
-              Icons.close_rounded,
-              size: 16,
-              color: Palette.white,
-            ),
-          ),
-        ],
-      ],
     );
   }
 }
