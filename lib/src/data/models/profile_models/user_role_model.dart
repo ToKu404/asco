@@ -1,5 +1,4 @@
 import 'package:asco/src/domain/entities/profile_entities/user_role_entity.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserRoleModel extends UserRoleEntity {
   const UserRoleModel({
