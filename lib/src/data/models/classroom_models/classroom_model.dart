@@ -1,4 +1,3 @@
-import 'package:asco/src/domain/entities/assistance_entities/assistance_entity.dart';
 import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
