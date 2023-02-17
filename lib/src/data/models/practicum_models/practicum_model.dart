@@ -1,3 +1,5 @@
+import 'package:asco/src/data/models/classroom_models/classroom_model.dart';
+import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
 import 'package:asco/src/domain/entities/practicum_entities/practicum_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -14,7 +16,9 @@ class PracticumModel extends PracticumEntity {
   Map<String, dynamic> toDocument() {
     return {
       'badge_path': badgePath,
-      'classes': classes,
+      'classes': classes?.map(
+        (e) => ClassroomModel.fromEntity(e).toDocument(),
+      ),
       'course': course,
       'course_contract_path': courseContractPath,
       'list_assistant': listAssistant,
@@ -34,9 +38,14 @@ class PracticumModel extends PracticumEntity {
   }
 
   factory PracticumModel.fromSnapshot(DocumentSnapshot documentSnapshot) {
+    // Iterable data = documentSnapshot['classess'] as List;
     return PracticumModel(
       badgePath: documentSnapshot['badge_path'],
-      classes: documentSnapshot['classes'],
+      classes: List<ClassroomEntity>.from(
+        documentSnapshot['classess'].map(
+          (classroom) => ClassroomModel.fromMap(classroom),
+        ),
+      ),
       course: documentSnapshot['course'],
       courseContractPath: documentSnapshot['course_contract_path'],
       listAssistant: documentSnapshot['list_assistant'],
