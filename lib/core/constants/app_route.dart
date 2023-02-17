@@ -21,7 +21,9 @@ class AppRoute {
   static const assistantAssistanceCourseDetailPage =
       '/assistant/main-menu/assistance-course-detail';
   static const assistantAssistancePractitionerPage =
-      '/assistant/main-menu/assistance-practitioner-detail';
+      '/assistant/main-menu/assistance-practitioner';
+  static const assistantAssistanceControlCardPage =
+      '/assistant/main-menu/assistance-control-card';
   static const assistantValueRecapLeaderboardPage =
       '/assistant/main-menu/assistant-value-recap';
 

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
@@ -186,30 +185,6 @@ class AssistantLaboratoryPage extends StatelessWidget {
                 .toList()
                 .reversed,
           ],
-        ),
-      ),
-    );
-  }
-
-  void showAssistantLaboratorySchedulePage(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => const AssistantLaboratorySchedulePage(),
-        settings: const RouteSettings(
-          name: AppRoute.assistantLaboratorySchedulePage,
-        ),
-      ),
-    );
-  }
-
-  void showAssistantLaboratoryCourseDetailPage(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => const AssistantLaboratoryCourseDetailPage(),
-        settings: const RouteSettings(
-          name: AppRoute.assistantLaboratoryCourseDetailPage,
         ),
       ),
     );

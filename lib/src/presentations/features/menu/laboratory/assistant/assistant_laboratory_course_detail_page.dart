@@ -326,16 +326,16 @@ class _AssistantLaboratoryCourseDetailPageState
             ),
     );
   }
+}
 
-  void showAssistantLaboratoryQuizValueInputPage(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => const AssistantLaboratoryQuizValueInputPage(),
-        settings: const RouteSettings(
-          name: AppRoute.assistantLaboratoryQuizValueInputPage,
-        ),
+void showAssistantLaboratoryCourseDetailPage(BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => const AssistantLaboratoryCourseDetailPage(),
+      settings: const RouteSettings(
+        name: AppRoute.assistantLaboratoryCourseDetailPage,
       ),
-    );
-  }
+    ),
+  );
 }

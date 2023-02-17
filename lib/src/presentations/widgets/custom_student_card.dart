@@ -47,10 +47,13 @@ class CustomStudentCard extends StatelessWidget {
               CircleAvatar(
                 radius: 28,
                 backgroundColor: Palette.purple80,
-                child: CircleAvatar(
-                  radius: hasAvatarBorder ? 26 : 28,
-                  foregroundImage: AssetImage(
-                    AssetPath.getImage('avatar${student.id}.jpg'),
+                child: Hero(
+                  tag: student,
+                  child: CircleAvatar(
+                    radius: hasAvatarBorder ? 26 : 28,
+                    foregroundImage: AssetImage(
+                      AssetPath.getImage('avatar${student.id}.jpg'),
+                    ),
                   ),
                 ),
               ),

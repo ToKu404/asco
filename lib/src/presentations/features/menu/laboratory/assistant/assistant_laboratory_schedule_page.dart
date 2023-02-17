@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/src/data/dummy_data.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/widgets/meeting_card.dart';
@@ -41,4 +42,16 @@ class AssistantLaboratorySchedulePage extends StatelessWidget {
       ),
     );
   }
+}
+
+void showAssistantLaboratorySchedulePage(BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => const AssistantLaboratorySchedulePage(),
+      settings: const RouteSettings(
+        name: AppRoute.assistantLaboratorySchedulePage,
+      ),
+    ),
+  );
 }

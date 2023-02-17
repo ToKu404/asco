@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
@@ -456,4 +457,16 @@ class QuizAssessmentBox extends StatelessWidget {
       ),
     );
   }
+}
+
+void showStudentLaboratoryCourseDetailPage(BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => const StudentLaboratoryCourseDetailPage(),
+      settings: const RouteSettings(
+        name: AppRoute.studentLaboratoryCourseDetailPage,
+      ),
+    ),
+  );
 }
