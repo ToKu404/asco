@@ -16,25 +16,27 @@ class AssistantLaboratorySchedulePage extends StatelessWidget {
         titleText: 'Jadwal Asisten',
         onPressedBackButton: () => Navigator.pop(context),
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.fromLTRB(16, 24, 16, 14),
-        itemCount: courses.length,
-        itemBuilder: (_, i) => MeetingCard(
-          course: courses[i],
-          isThreeLine: true,
-          thirdLine: i.isEven
-              ? BuildBadge(
-                  badgeHelper: TempBadgeHelper(
-                    badgeId: 2,
-                    title: 'Pemateri',
+      body: SafeArea(
+        child: ListView.builder(
+          padding: const EdgeInsets.fromLTRB(16, 24, 16, 14),
+          itemCount: courses.length,
+          itemBuilder: (_, i) => MeetingCard(
+            course: courses[i],
+            isThreeLine: true,
+            thirdLine: i.isEven
+                ? BuildBadge(
+                    badgeHelper: TempBadgeHelper(
+                      badgeId: 2,
+                      title: 'Pemateri',
+                    ),
+                  )
+                : BuildBadge(
+                    badgeHelper: TempBadgeHelper(
+                      badgeId: 4,
+                      title: 'Pendamping',
+                    ),
                   ),
-                )
-              : BuildBadge(
-                  badgeHelper: TempBadgeHelper(
-                    badgeId: 4,
-                    title: 'Pendamping',
-                  ),
-                ),
+          ),
         ),
       ),
     );

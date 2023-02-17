@@ -32,7 +32,7 @@ class AssistantLaboratoryQuizValueInputPage extends StatelessWidget {
                 icon: const Icon(
                   Icons.chevron_left_rounded,
                   color: Palette.white,
-                  size: 36,
+                  size: 30,
                 ),
                 tooltip: 'Back',
               ),

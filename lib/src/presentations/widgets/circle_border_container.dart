@@ -4,6 +4,7 @@ import 'package:asco/core/constants/color_const.dart';
 class CircleBorderContainer extends StatelessWidget {
   final double size;
   final Color? borderColor;
+  final double borderWidth;
   final Color? fillColor;
   final Widget? child;
   final VoidCallback? onTap;
@@ -12,6 +13,7 @@ class CircleBorderContainer extends StatelessWidget {
     super.key,
     required this.size,
     this.borderColor,
+    this.borderWidth = 1.0,
     this.fillColor,
     this.child,
     this.onTap,
@@ -26,6 +28,7 @@ class CircleBorderContainer extends StatelessWidget {
         color: fillColor ?? Palette.grey,
         shape: BoxShape.circle,
         border: Border.all(
+          width: borderWidth,
           color: borderColor ?? Palette.greyDark,
         ),
       ),

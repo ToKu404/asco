@@ -8,6 +8,7 @@ import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/data/dummy_data.dart';
 import 'package:asco/src/presentations/features/menu/assistance/assistant/assistant_assistance_course_detail_page.dart';
+import 'package:asco/src/presentations/features/menu/assistance/assistant/assistant_assistance_practitioner_page.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/control_card.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/github_dialog.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/student_avatar.dart';
@@ -163,7 +164,9 @@ class AssistantAssistancePage extends StatelessWidget {
                         ),
                       ),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          showAssistantAssistancePractitionerPage(context);
+                        },
                         child: Text(
                           'Lihat Detail',
                           style: kTextTheme.bodyLarge?.copyWith(
@@ -244,6 +247,18 @@ class AssistantAssistancePage extends StatelessWidget {
       isThreeLine: true,
       thirdLine: const AssistanceStatistics(),
       onTap: () => showAssistantAssistanceCourseDetailPage(context),
+    );
+  }
+
+  void showAssistantAssistancePractitionerPage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const AssistantAssistancePractitionerPage(),
+        settings: const RouteSettings(
+          name: AppRoute.assistantAssistancePractitionerPage,
+        ),
+      ),
     );
   }
 
