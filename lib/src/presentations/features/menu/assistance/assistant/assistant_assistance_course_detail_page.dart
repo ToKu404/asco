@@ -7,6 +7,7 @@ import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/data/dummy_data.dart';
+import 'package:asco/src/presentations/features/menu/assistance/widgets/assistance_dialog.dart';
 import 'package:asco/src/presentations/widgets/circle_border_container.dart';
 import 'package:asco/src/presentations/widgets/custom_badge.dart';
 import 'package:asco/src/presentations/widgets/custom_student_card.dart';
@@ -256,7 +257,6 @@ class AssistantAssistanceCourseDetailPage extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 10),
       child: CustomStudentCard(
         student: student,
-        onTap: () {},
         isThreeLine: true,
         thirdLine: BuildBadge(
           badgeHelper: TempBadgeHelper(
@@ -267,23 +267,41 @@ class AssistantAssistanceCourseDetailPage extends StatelessWidget {
         hasTrailing: true,
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
-          children: const <Widget>[
+          children: <Widget>[
             CircleBorderContainer(
               size: 30,
               borderColor: Palette.purple80,
               fillColor: Palette.purple60,
-              child: Icon(
+              onTap: () => showDialog(
+                context: context,
+                barrierLabel: '',
+                barrierDismissible: false,
+                builder: (_) => AssistanceDialog(
+                  student: student,
+                  number: 1,
+                ),
+              ),
+              child: const Icon(
                 Icons.check_rounded,
                 size: 16,
                 color: Palette.white,
               ),
             ),
-            SizedBox(width: 4),
+            const SizedBox(width: 4),
             CircleBorderContainer(
               size: 30,
-              borderColor: Color(0xFFD35380),
-              fillColor: Color(0xFFFA78A6),
-              child: Icon(
+              borderColor: const Color(0xFFD35380),
+              fillColor: const Color(0xFFFA78A6),
+              onTap: () => showDialog(
+                context: context,
+                barrierLabel: '',
+                barrierDismissible: false,
+                builder: (_) => AssistanceDialog(
+                  student: student,
+                  number: 2,
+                ),
+              ),
+              child: const Icon(
                 Icons.close_rounded,
                 size: 16,
                 color: Palette.white,

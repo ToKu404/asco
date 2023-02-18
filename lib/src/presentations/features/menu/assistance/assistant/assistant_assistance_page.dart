@@ -138,7 +138,12 @@ class AssistantAssistancePage extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 8),
                                   GestureDetector(
-                                    onTap: () => showGithubDialog(context),
+                                    onTap: () => showDialog(
+                                      context: context,
+                                      barrierLabel: '',
+                                      barrierDismissible: false,
+                                      builder: (_) => const GithubDialog(),
+                                    ),
                                     child: SvgPicture.asset(
                                       AssetPath.getIcons('edit.svg'),
                                       width: 18,
@@ -234,15 +239,6 @@ class AssistantAssistancePage extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Future<void> showGithubDialog(BuildContext context) async {
-    showDialog(
-      context: context,
-      barrierLabel: '',
-      barrierDismissible: false,
-      builder: (_) => const GithubDialog(),
     );
   }
 
