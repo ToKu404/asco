@@ -119,10 +119,7 @@ class _AssistantLaboratoryCourseDetailPageState
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const TitleSection(
-                      title: 'Modul',
-                      paddingBottom: 6,
-                    ),
+                    const TitleSection(title: 'Modul'),
                     Row(
                       children: <Widget>[
                         Expanded(
@@ -176,10 +173,7 @@ class _AssistantLaboratoryCourseDetailPageState
                       ],
                     ),
                     const SizedBox(height: 20),
-                    const TitleSection(
-                      title: 'Quiz',
-                      paddingBottom: 6,
-                    ),
+                    const TitleSection(title: 'Quiz'),
                     Row(
                       children: <Widget>[
                         Expanded(
@@ -229,7 +223,7 @@ class _AssistantLaboratoryCourseDetailPageState
               backgroundColor: Palette.grey,
               surfaceTintColor: Colors.transparent,
               bottom: PreferredSize(
-                preferredSize: const Size.fromHeight(kToolbarHeight + 64),
+                preferredSize: const Size.fromHeight(kToolbarHeight + 60),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(

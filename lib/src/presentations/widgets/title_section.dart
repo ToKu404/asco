@@ -20,7 +20,8 @@ class TitleSection extends StatelessWidget {
         title,
         style: kTextTheme.titleSmall?.copyWith(
           fontWeight: FontWeight.w600,
-          color: Palette.purple100,
+          color: Palette.purple80,
+          height: 1.2,
         ),
       ),
     );

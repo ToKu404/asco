@@ -22,7 +22,10 @@ class AssistantAssistancePractitionerPage extends StatelessWidget {
       ),
       body: SafeArea(
         child: ListView.separated(
-          padding: const EdgeInsets.fromLTRB(16, 24, 16, 14),
+          padding: const EdgeInsets.symmetric(
+            vertical: 24,
+            horizontal: 16,
+          ),
           itemCount: students.length,
           itemBuilder: (_, i) => CustomStudentCard(
             student: students[i],
