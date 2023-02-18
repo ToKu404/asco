@@ -98,7 +98,7 @@ class _AssistantProfilePageState extends State<AssistantProfilePage> {
           ),
           Builder(builder: (context) {
             final userNotifier = context.watch<ProfileNotifier>();
-            final profile = userNotifier.detailSelfProfile;
+            final profile = userNotifier.data;
             return Positioned(
               top: 130,
               child: Padding(

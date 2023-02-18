@@ -134,11 +134,9 @@ class _AdminUserPageState extends State<AdminUserPage> {
                 final profileNotifier = context.watch<ProfileNotifier>();
 
                 // Todo : Add Shimmer
-                if (profileNotifier.fetchAllProfileState ==
-                    RequestState.loading) {
+                if (profileNotifier.isLoadingState('find')) {
                   return const SizedBox.shrink();
-                } else if (profileNotifier.fetchAllProfileState ==
-                    RequestState.error) {
+                } else if (profileNotifier.isErrorState('find')) {
                   return const SizedBox.shrink();
                 }
 
@@ -150,10 +148,10 @@ class _AdminUserPageState extends State<AdminUserPage> {
                   ),
                   itemBuilder: (context, index) {
                     return UserCard(
-                      profileData: profileNotifier.listProfile[index],
+                      profileData: profileNotifier.listData[index],
                     );
                   },
-                  itemCount: profileNotifier.listProfile.length,
+                  itemCount: profileNotifier.listData.length,
                 );
               }),
             ),

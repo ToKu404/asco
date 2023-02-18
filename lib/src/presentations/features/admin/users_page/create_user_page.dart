@@ -1,7 +1,7 @@
 import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/core/services/user_service.dart';
+import 'package:asco/core/services/user_helper.dart';
 import 'package:asco/core/state/request_state.dart';
 import 'package:asco/src/domain/entities/auth_entities/user_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/role_map.dart';
@@ -90,8 +90,8 @@ class _CreateUserPageState extends State<CreateUserPage> {
     final userNotifier = context.watch<AuthNotifier>();
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      if (authNotifier.createUserState == RequestState.success &&
-          userNotifier.createUserState == RequestState.success) {
+      if (authNotifier.isSuccessState('create') &&
+          userNotifier.isSuccessState('create')) {
         Future.delayed(const Duration(seconds: 2), () {
           Navigator.pop(context);
         });
@@ -182,9 +182,8 @@ class _CreateUserPageState extends State<CreateUserPage> {
                 isRequired: true,
                 onEditingComplete: _nicknameController.text.trim().isEmpty
                     ? () {
-                        _nicknameController.text =
-                            UserService.nicknameGenerator(
-                                _fullnameController.text);
+                        _nicknameController.text = UserHelper.nicknameGenerator(
+                            _fullnameController.text);
                       }
                     : null,
               ),
@@ -253,7 +252,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
       authProvider.createUser(
         UserEntity(
           username: _usernameController.text,
-          password: UserService.hashPassword(password),
+          password: UserHelper.hashPassword(password),
           roleId: _listRole.indexOf(_roleNotifier.value!) + 1,
         ),
       );
@@ -261,18 +260,18 @@ class _CreateUserPageState extends State<CreateUserPage> {
       ///Create new profile
       String nickName = '';
       if (_nicknameController.text.isEmpty) {
-        nickName = UserService.nicknameGenerator(_fullnameController.text);
+        nickName = UserHelper.nicknameGenerator(_fullnameController.text);
       } else {
         nickName = _nicknameController.text;
       }
       profileProvider.createProfile(
         UserProfileEntity(
           classOf: _batchNotifier.value,
-          fullName: UserService.titleMaker(_fullnameController.text),
+          fullName: UserHelper.titleMaker(_fullnameController.text),
           gender: _genderNotifier.value,
           github: _githubController.text,
           instagram: _instagramController.text,
-          nickName: UserService.titleMaker(nickName),
+          nickName: UserHelper.titleMaker(nickName),
           profilePhoto: 'https://i.mydramalist.com/e3AQef.jpg',
           username: _usernameController.text,
           userRole: UserRoleEntity(

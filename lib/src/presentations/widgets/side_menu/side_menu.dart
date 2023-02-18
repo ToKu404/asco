@@ -2,7 +2,7 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/core/services/user_service.dart';
+import 'package:asco/core/services/user_helper.dart';
 import 'package:asco/src/domain/entities/profile_entities/role_map.dart';
 import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +40,6 @@ class SideMenu extends StatefulWidget {
 class _SideMenuState extends State<SideMenu> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Future.microtask(() {
       Provider.of<ProfileNotifier>(context, listen: false).getSelfDetail();
@@ -105,7 +104,7 @@ class _SideMenuState extends State<SideMenu> {
                   children: [
                     Builder(builder: (context) {
                       final userNotifier = context.watch<ProfileNotifier>();
-                      final profile = userNotifier.detailSelfProfile;
+                      final profile = userNotifier.data;
                       print(profile);
                       return GestureDetector(
                         onTap: () {

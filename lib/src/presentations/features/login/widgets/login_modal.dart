@@ -1,6 +1,6 @@
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/core/services/user_service.dart';
+import 'package:asco/core/services/user_helper.dart';
 import 'package:asco/core/state/request_state.dart';
 import 'package:asco/src/presentations/features/admin/admin_home_page.dart';
 import 'package:asco/src/presentations/features/home/home_page.dart';
@@ -114,8 +114,7 @@ class _SignInFormState extends State<_SignInForm> {
     if (_formKey.currentState!.validate()) {
       final provider = context.read<AuthNotifier>();
       final username = _usernameController.text.trim();
-      final password =
-          UserService.hashPassword(_passwordController.text.trim());
+      final password = UserHelper.hashPassword(_passwordController.text.trim());
       provider.login(username, password);
     }
   }
@@ -125,12 +124,12 @@ class _SignInFormState extends State<_SignInForm> {
     final provider = context.watch<AuthNotifier>();
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      if (provider.loginState == RequestState.error) {
+      if (provider.isErrorState('login')) {
         Future.delayed(const Duration(seconds: 2), () {
           if (isLoadingStart) Navigator.pop(context);
           isLoadingStart = false;
         });
-      } else if (provider.loginState == RequestState.loading) {
+      } else if (provider.isLoadingState('login')) {
         isLoadingStart = true;
         showDialog(
           context: context,
@@ -139,13 +138,13 @@ class _SignInFormState extends State<_SignInForm> {
             return const AscoLoading();
           },
         );
-      } else if (provider.loginState == RequestState.success) {
+      } else if (provider.isSuccessState('login')) {
         Future.delayed(const Duration(seconds: 2), () {
           if (isLoadingStart) Navigator.pop(context);
           isLoadingStart = false;
 
-          if (provider.userCredentialEntity != null) {
-            final credentialData = provider.userCredentialEntity!;
+          if (provider.data != null) {
+            final credentialData = provider.data!;
             if (credentialData.roleId == 0) {
               showAdminHomePage(context: context);
             } else if (credentialData.roleId == 1) {

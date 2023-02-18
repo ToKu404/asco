@@ -2,7 +2,7 @@ import 'dart:convert';
 // ignore: depend_on_referenced_packages
 import 'package:crypto/crypto.dart';
 
-class UserService {
+class UserHelper {
   /// Hashing password
   static String hashPassword(String password) {
     final bytes = utf8.encode(password);

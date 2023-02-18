@@ -1,3 +1,4 @@
+import 'package:asco/core/services/data_service.dart';
 import 'package:asco/core/state/request_state.dart';
 import 'package:asco/src/domain/entities/auth_entities/user_credential.dart';
 import 'package:asco/src/domain/entities/auth_entities/user_entity.dart';
@@ -6,9 +7,8 @@ import 'package:asco/src/domain/usecases/auth_usecases/get_user.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/login.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/logout.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/remove_user.dart';
-import 'package:flutter/material.dart';
 
-class AuthNotifier extends ChangeNotifier {
+class AuthNotifier extends CrudDataService<UserCredentialEntity> {
   final CreateUser createUserUsecase;
   final Login loginUsecase;
   final LogOut logoutUsecase;
@@ -21,116 +21,87 @@ class AuthNotifier extends ChangeNotifier {
     required this.logoutUsecase,
     required this.getUserUsecase,
     required this.removeUserUsecase,
-  });
-
-  void reset() {
-    _loginState == RequestState.init;
-    _userCredentialEntity = null;
-    _createUserState = RequestState.init;
+  }) {
+    createState(['create', 'login', 'logout', 'single']);
   }
 
-  RequestState _createUserState = RequestState.init;
-  String _createUserErrorMessage = '';
-  String get createUserErrorMessage => _createUserErrorMessage;
-  RequestState get createUserState => _createUserState;
-
-  Future<void> createUser(UserEntity userEntity) async {
-    _createUserState = RequestState.loading;
+  Future<void> createUser(UserEntity entity) async {
+    updateState(state: RequestState.loading, key: 'create');
     notifyListeners();
     try {
-      final result = await createUserUsecase.execute(userEntity: userEntity);
+      final result = await createUserUsecase.execute(userEntity: entity);
       result.fold((l) {
-        _createUserState = RequestState.error;
-        _createUserErrorMessage = l.message;
+        updateState(state: RequestState.error, key: 'create');
+        setErrorMessage(l.message);
       }, (r) {
-        _createUserState = RequestState.success;
+        updateState(state: RequestState.success, key: 'create');
       });
       notifyListeners();
     } catch (e) {
-      _createUserState = RequestState.error;
-      _createUserErrorMessage = e.toString();
-      notifyListeners();
+      updateState(state: RequestState.error, key: 'create');
+      setErrorMessage(e.toString());
     }
   }
 
-  RequestState _loginState = RequestState.init;
-  String _loginErrorMessage = '';
-  UserCredentialEntity? _userCredentialEntity;
-  String get loginErrorMessage => _loginErrorMessage;
-  RequestState get loginState => _loginState;
-  UserCredentialEntity? get userCredentialEntity => _userCredentialEntity;
   Future<void> login(String userName, String password) async {
-    _loginState = RequestState.loading;
+    updateState(state: RequestState.loading, key: 'login');
     notifyListeners();
     try {
       final result =
           await loginUsecase.execute(username: userName, password: password);
       result.fold((l) {
-        _loginState = RequestState.error;
-        _loginErrorMessage = l.message;
+        updateState(state: RequestState.error, key: 'login');
+        setErrorMessage(l.message);
       }, (r) {
-        _loginState = RequestState.success;
-        _userCredentialEntity = r;
+        updateState(state: RequestState.success, key: 'login');
+        setData(r);
       });
       notifyListeners();
     } catch (e) {
-      _loginState = RequestState.error;
-      _loginErrorMessage = e.toString();
-      notifyListeners();
+      updateState(state: RequestState.error, key: 'login');
+      setErrorMessage(e.toString());
     }
   }
-
-  String _logOutError = '';
-  String get logOutError => _logOutError;
-  RequestState _logOutState = RequestState.init;
-  RequestState get logOutState => _logOutState;
 
   Future<void> logOut() async {
     try {
       final result = await logoutUsecase.execute();
       result.fold(
         (failure) {
-          _logOutError = failure.message;
-          _logOutState = RequestState.error;
+          updateState(state: RequestState.error, key: 'logout');
+          setErrorMessage(failure.message);
         },
         (user) {
-          _logOutState = RequestState.success;
-          _userCredentialEntity = null;
-          _loginState = RequestState.init;
+          updateState(state: RequestState.error, key: 'logout');
+          setData(null);
+          updateState(state: RequestState.init, key: 'login');
         },
       );
       notifyListeners();
     } catch (e) {
-      _logOutState = RequestState.error;
-      _logOutError = e.toString();
-      notifyListeners();
+      updateState(state: RequestState.error, key: 'logout');
+      setErrorMessage(e.toString());
     }
   }
-
-  RequestState _getUserState = RequestState.init;
-  RequestState get getUserstate => _getUserState;
-  String _getUserError = '';
-  String get error => _getUserError;
 
   void getUser() async {
     try {
       final result = await getUserUsecase.execute();
       result.fold(
         (failure) {
-          _getUserError = failure.message;
-          _userCredentialEntity = null;
-          _getUserState = RequestState.error;
+          updateState(state: RequestState.error, key: 'single');
+          setData(null);
+          setErrorMessage(failure.message);
         },
         (user) {
-          _userCredentialEntity = user;
-          _getUserState = RequestState.success;
+          updateState(state: RequestState.success, key: 'single');
+          setData(user);
         },
       );
       notifyListeners();
     } catch (e) {
-      _getUserState = RequestState.error;
-      _getUserError = e.toString();
-      notifyListeners();
+      updateState(state: RequestState.error, key: 'single');
+      setErrorMessage(e.toString());
     }
   }
 }

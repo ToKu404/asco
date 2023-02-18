@@ -4,9 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 abstract class PracticumDataSource {
   Future<bool> create({required PracticumModel practicum});
   Future<PracticumModel> single({required String uid});
-  Future<List<PracticumModel>> find(
+  Future<List<PracticumModel>> find({
     String? query,
-  );
+  });
 }
 
 class PracticumDataSourceImpl implements PracticumDataSource {
@@ -33,9 +33,9 @@ class PracticumDataSourceImpl implements PracticumDataSource {
   }
 
   @override
-  Future<List<PracticumModel>> find(
+  Future<List<PracticumModel>> find({
     String? query,
-  ) async {
+  }) async {
     try {
       Future<QuerySnapshot> snapshot = collectionReference.get();
       // Todo : Finish Search
