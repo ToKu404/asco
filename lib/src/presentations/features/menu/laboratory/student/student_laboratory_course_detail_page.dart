@@ -167,7 +167,7 @@ class StudentLaboratoryCourseDetailPage extends StatelessWidget {
                         color: Palette.purple100,
                       ),
                       BoxShadow(
-                        offset: Offset(4, 2),
+                        offset: Offset(3, 3),
                         spreadRadius: 2,
                         color: Palette.purple100,
                       ),

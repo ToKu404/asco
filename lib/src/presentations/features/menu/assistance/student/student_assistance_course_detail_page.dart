@@ -41,7 +41,7 @@ class StudentAssistanceCourseDetailPage extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 24, 16, 32),
+                      padding: const EdgeInsets.fromLTRB(16, 24, 16, 40),
                       child: Text(
                         'Flutter Forward: Introducing to Flutter 3.7',
                         style: kTextTheme.headlineMedium?.copyWith(

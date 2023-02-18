@@ -252,7 +252,10 @@ class AssistantAssistancePage extends StatelessWidget {
       verticalAlignment: CrossAxisAlignment.start,
       isThreeLine: true,
       thirdLine: const AssistanceStatistics(),
-      onTap: () => showAssistantAssistanceCourseDetailPage(context),
+      onTap: () => showAssistantAssistanceCourseDetailPage(
+        context,
+        course.topic,
+      ),
     );
   }
 }
