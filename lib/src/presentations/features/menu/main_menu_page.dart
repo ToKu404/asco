@@ -57,13 +57,12 @@ class _MainMenuPageState extends State<MainMenuPage> {
   Widget build(BuildContext context) {
     final userNotifier = context.watch<AuthNotifier>();
 
-    if (userNotifier.getUserstate == RequestState.loading ||
-        userNotifier.userCredentialEntity == null) {
+    if (userNotifier.isLoadingState('single') || userNotifier.data == null) {
       return const AscoLoading(
         withScaffold: true,
       );
     }
-    final roleId = userNotifier.userCredentialEntity?.roleId;
+    final roleId = userNotifier.data?.roleId;
     final pages = roleId == 1
         ? [
             const StudentLaboratoryPage(),

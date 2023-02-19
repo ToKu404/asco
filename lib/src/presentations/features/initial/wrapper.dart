@@ -41,13 +41,13 @@ class _WrapperState extends State<Wrapper> {
   Widget build(BuildContext context) {
     // Wrapper to check if user is login or not
     final userNotifier = context.watch<AuthNotifier>();
-    if (userNotifier.getUserstate == RequestState.loading ||
-        userNotifier.getUserstate == RequestState.init) {
+    if (userNotifier.isLoadingState('single') ||
+        userNotifier.isInitState('single')) {
       return const AscoLoading(
         withScaffold: true,
       );
-    } else if (userNotifier.getUserstate == RequestState.success) {
-      final UserCredentialEntity? user = userNotifier.userCredentialEntity;
+    } else if (userNotifier.isSuccessState('single')) {
+      final UserCredentialEntity? user = userNotifier.data;
       if (user == null) {
         return const WelcomePage();
       } else {

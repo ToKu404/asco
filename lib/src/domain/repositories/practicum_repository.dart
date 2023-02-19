@@ -3,9 +3,10 @@ import 'package:asco/src/domain/entities/practicum_entities/practicum_entity.dar
 import 'package:dartz/dartz.dart';
 
 abstract class PracticumRepository {
-  Future<Either<Failure, bool>> create({required PracticumEntity userEntity});
+  Future<Either<Failure, bool>> create(
+      {required PracticumEntity practicumEntity});
   Future<Either<Failure, PracticumEntity>> single({required String uid});
-  Future<Either<Failure, List<PracticumEntity>>> find(
+  Future<Either<Failure, List<PracticumEntity>>> find({
     String? query,
-  );
+  });
 }

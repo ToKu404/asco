@@ -182,7 +182,7 @@ class IdCardFrontSide extends StatelessWidget {
             ),
             Positioned.fill(child: Builder(builder: (context) {
               final userNotifier = context.watch<ProfileNotifier>();
-              final profile = userNotifier.detailSelfProfile;
+              final profile = userNotifier.data;
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -382,7 +382,7 @@ class IdCardBackSide extends StatelessWidget {
             Positioned.fill(
               child: Builder(builder: (context) {
                 final userNotifier = context.watch<ProfileNotifier>();
-                final profile = userNotifier.detailSelfProfile;
+                final profile = userNotifier.data;
                 return Padding(
                   padding: const EdgeInsets.all(24),
                   child: Column(
