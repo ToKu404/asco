@@ -344,7 +344,7 @@ class _AssistantAssistanceCourseDetailPageState
       context: context,
       builder: (_) {
         _timer = Timer(
-          const Duration(milliseconds: 5000),
+          const Duration(milliseconds: 3500),
           () => Navigator.popUntil(
             context,
             ModalRoute.withName(
