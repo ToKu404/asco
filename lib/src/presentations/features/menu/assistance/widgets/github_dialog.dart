@@ -10,18 +10,18 @@ class GithubDialog extends StatefulWidget {
 }
 
 class _GithubDialogState extends State<GithubDialog> {
-  late final TextEditingController controller;
+  late final TextEditingController _controller;
 
   @override
   void initState() {
-    controller = TextEditingController();
+    _controller = TextEditingController();
 
     super.initState();
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    _controller.dispose();
 
     super.dispose();
   }
@@ -107,7 +107,7 @@ class _GithubDialogState extends State<GithubDialog> {
             Padding(
               padding: const EdgeInsets.fromLTRB(18, 16, 18, 24),
               child: TextField(
-                controller: controller,
+                controller: _controller,
                 autofocus: true,
                 keyboardType: TextInputType.url,
                 textInputAction: TextInputAction.done,

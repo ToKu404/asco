@@ -228,9 +228,9 @@ class AssistantAssistanceControlCardPage extends StatelessWidget {
 }
 
 void showAssistantAssistanceControlCardPage(
-  BuildContext context,
-  Student student,
-) {
+  BuildContext context, {
+  required Student student,
+}) {
   Navigator.push(
     context,
     MaterialPageRoute(

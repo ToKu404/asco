@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -8,16 +9,33 @@ import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/data/dummy_data.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/assistance_dialog.dart';
+import 'package:asco/src/presentations/features/menu/assistance/widgets/assistance_status_dialog.dart';
 import 'package:asco/src/presentations/widgets/circle_border_container.dart';
 import 'package:asco/src/presentations/widgets/custom_badge.dart';
 import 'package:asco/src/presentations/widgets/custom_student_card.dart';
 import 'package:asco/src/presentations/widgets/purple_app_bar.dart';
 import 'package:asco/src/presentations/widgets/title_section.dart';
 
-class AssistantAssistanceCourseDetailPage extends StatelessWidget {
+class AssistantAssistanceCourseDetailPage extends StatefulWidget {
   final String title;
 
   const AssistantAssistanceCourseDetailPage({super.key, required this.title});
+
+  @override
+  State<AssistantAssistanceCourseDetailPage> createState() =>
+      _AssistantAssistanceCourseDetailPageState();
+}
+
+class _AssistantAssistanceCourseDetailPageState
+    extends State<AssistantAssistanceCourseDetailPage> {
+  Timer? _timer;
+
+  @override
+  void dispose() {
+    if (_timer != null) _timer!.cancel();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +68,7 @@ class AssistantAssistanceCourseDetailPage extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 24, 16, 40),
                       child: Text(
-                        title,
+                        widget.title,
                         style: kTextTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.w700,
                           color: Palette.white,
@@ -277,10 +295,14 @@ class AssistantAssistanceCourseDetailPage extends StatelessWidget {
                 barrierLabel: '',
                 barrierDismissible: false,
                 builder: (_) => AssistanceDialog(
-                  student: student,
                   number: 1,
+                  student: student,
                 ),
-              ),
+              ).then((value) {
+                final isSubmitted = value == null ? false : value as bool;
+
+                if (isSubmitted) showStatusDialog(context, 1, student);
+              }),
               child: const Icon(
                 Icons.check_rounded,
                 size: 16,
@@ -297,10 +319,14 @@ class AssistantAssistanceCourseDetailPage extends StatelessWidget {
                 barrierLabel: '',
                 barrierDismissible: false,
                 builder: (_) => AssistanceDialog(
-                  student: student,
                   number: 2,
+                  student: student,
                 ),
-              ),
+              ).then((value) {
+                final isSubmitted = value == null ? false : value as bool;
+
+                if (isSubmitted) showStatusDialog(context, 2, student);
+              }),
               child: const Icon(
                 Icons.close_rounded,
                 size: 16,
@@ -312,12 +338,38 @@ class AssistantAssistanceCourseDetailPage extends StatelessWidget {
       ),
     );
   }
+
+  void showStatusDialog(BuildContext context, int number, Student student) {
+    showDialog(
+      context: context,
+      builder: (_) {
+        _timer = Timer(
+          const Duration(milliseconds: 5000),
+          () => Navigator.popUntil(
+            context,
+            ModalRoute.withName(
+              AppRoute.assistantAssistanceCourseDetailPage,
+            ),
+          ),
+        );
+
+        return AssistanceStatusDialog(
+          number: number,
+          student: student,
+        );
+      },
+    ).then((_) {
+      if (_timer == null) return;
+
+      if (_timer!.isActive) _timer!.cancel();
+    });
+  }
 }
 
 void showAssistantAssistanceCourseDetailPage(
-  BuildContext context,
-  String title,
-) {
+  BuildContext context, {
+  required String title,
+}) {
   Navigator.push(
     context,
     MaterialPageRoute(

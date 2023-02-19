@@ -16,26 +16,26 @@ class AttendanceDialog extends StatefulWidget {
 }
 
 class _AttendanceDialogState extends State<AttendanceDialog> {
-  final listPoints = <String>['+5', '+10', '+15', '+20', '+25', '+30'];
+  final _listPoints = <String>['+5', '+10', '+15', '+20', '+25', '+30'];
 
-  late final ValueNotifier<FaceStatus> statusNotifier;
-  late final ValueNotifier<String> pointNotifier;
-  late final TextEditingController noteController;
+  late final ValueNotifier<FaceStatus> _statusNotifier;
+  late final ValueNotifier<String> _pointNotifier;
+  late final TextEditingController _noteController;
 
   @override
   void initState() {
-    statusNotifier = ValueNotifier(listStatus.first);
-    pointNotifier = ValueNotifier(listPoints.first);
-    noteController = TextEditingController();
+    _statusNotifier = ValueNotifier(listStatus.first);
+    _pointNotifier = ValueNotifier(_listPoints.first);
+    _noteController = TextEditingController();
 
     super.initState();
   }
 
   @override
   void dispose() {
-    statusNotifier.dispose();
-    pointNotifier.dispose();
-    noteController.dispose();
+    _statusNotifier.dispose();
+    _pointNotifier.dispose();
+    _noteController.dispose();
 
     super.dispose();
   }
@@ -51,81 +51,79 @@ class _AttendanceDialogState extends State<AttendanceDialog> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.only(
           top: 8,
           bottom: 24,
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: Row(
-                  children: <Widget>[
-                    IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(
-                        Icons.close_rounded,
-                        color: Palette.purple100,
-                      ),
-                      tooltip: 'Close',
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Row(
+                children: <Widget>[
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(
+                      Icons.close_rounded,
+                      color: Palette.purple100,
                     ),
-                    Expanded(
-                      child: Text(
-                        'Absensi',
-                        textAlign: TextAlign.center,
-                        style: kTextTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: Palette.purple100,
-                        ),
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.check_rounded,
-                        color: Palette.purple60,
-                      ),
-                      tooltip: 'Submit',
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(18, 12, 18, 0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      widget.student.nim,
-                      style: kTextTheme.bodyLarge?.copyWith(
-                        color: Palette.purple60,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      widget.student.name,
+                    tooltip: 'Close',
+                  ),
+                  Expanded(
+                    child: Text(
+                      'Absensi',
+                      textAlign: TextAlign.center,
                       style: kTextTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.w700,
-                        color: Palette.purple80,
+                        color: Palette.purple100,
                       ),
                     ),
-                    const SizedBox(height: 12),
-                    AttendanceOptions(
-                      statusNotifier: statusNotifier,
-                      pointNotifier: pointNotifier,
-                      noteController: noteController,
-                      listPoints: listPoints,
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.check_rounded,
+                      color: Palette.purple60,
                     ),
-                  ],
-                ),
+                    tooltip: 'Submit',
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(18, 12, 18, 0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    widget.student.nim,
+                    style: kTextTheme.bodyLarge?.copyWith(
+                      color: Palette.purple60,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    widget.student.name,
+                    style: kTextTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: Palette.purple80,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  AttendanceOptions(
+                    statusNotifier: _statusNotifier,
+                    pointNotifier: _pointNotifier,
+                    noteController: _noteController,
+                    listPoints: _listPoints,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

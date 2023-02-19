@@ -194,7 +194,7 @@ class AssistantAssistancePage extends StatelessWidget {
                   student: students[i],
                   onTap: () => showAssistantAssistanceControlCardPage(
                     context,
-                    students[i],
+                    student: students[i],
                   ),
                 ),
                 separatorBuilder: (_, __) => const SizedBox(width: 10),
@@ -250,7 +250,7 @@ class AssistantAssistancePage extends StatelessWidget {
       thirdLine: const AssistanceStatistics(),
       onTap: () => showAssistantAssistanceCourseDetailPage(
         context,
-        course.topic,
+        title: course.topic,
       ),
     );
   }
