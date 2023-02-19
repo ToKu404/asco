@@ -1,6 +1,5 @@
 import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/color_const.dart';
-import 'package:asco/core/state/request_state.dart';
 import 'package:asco/src/presentations/features/home/home_page.dart';
 import 'package:asco/src/presentations/features/login/welcome_page.dart';
 import 'package:asco/src/presentations/features/menu/assistance/student/student_assistance_page.dart';

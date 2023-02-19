@@ -1,5 +1,4 @@
 import 'package:asco/core/constants/asset_path.dart';
-import 'package:asco/core/constants/color_const.dart';
 import 'package:flutter/material.dart';
 
 class Avatar extends StatelessWidget {

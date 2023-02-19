@@ -19,7 +19,6 @@ class StudentProfilePage extends StatefulWidget {
 class _StudentProfilePageState extends State<StudentProfilePage> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Future.microtask(() {
       Provider.of<ProfileNotifier>(context, listen: false).getSelfDetail();
