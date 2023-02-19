@@ -204,7 +204,7 @@ class _AssistanceDialogState extends State<AssistanceDialog> {
                     padding: const EdgeInsets.fromLTRB(8, 10, 8, 0),
                     child: Text(
                       'Note: kosongkan tanggal untuk membatalkan asistensi.',
-                      style: kTextTheme.bodySmall?.copyWith(
+                      style: kTextTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w500,
                         color: Palette.red,
                       ),

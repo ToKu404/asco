@@ -21,6 +21,7 @@ class AssistantLaboratoryQuizValueInputPage extends StatelessWidget {
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
+              pinned: true,
               floating: true,
               centerTitle: true,
               title: const Text('Input Nilai Quiz'),
@@ -39,7 +40,7 @@ class AssistantLaboratoryQuizValueInputPage extends StatelessWidget {
               ),
               forceElevated: innerBoxIsScrolled,
               bottom: const BottomAppBar(),
-              shadowColor: Palette.greyDark,
+              shadowColor: Palette.grey,
               backgroundColor: Palette.purple80,
             ),
           ];
