@@ -25,18 +25,18 @@ class AssistantLaboratoryCourseDetailPage extends StatefulWidget {
 
 class _AssistantLaboratoryCourseDetailPageState
     extends State<AssistantLaboratoryCourseDetailPage> {
-  late final ValueNotifier<String> queryNotifier;
+  late final ValueNotifier<String> _queryNotifier;
 
   @override
   void initState() {
-    queryNotifier = ValueNotifier('');
+    _queryNotifier = ValueNotifier('');
 
     super.initState();
   }
 
   @override
   void dispose() {
-    queryNotifier.dispose();
+    _queryNotifier.dispose();
 
     super.dispose();
   }
@@ -232,11 +232,11 @@ class _AssistantLaboratoryCourseDetailPageState
                     children: <Widget>[
                       const TitleSection(title: 'Absensi'),
                       ValueListenableBuilder(
-                        valueListenable: queryNotifier,
+                        valueListenable: _queryNotifier,
                         builder: (context, value, child) {
                           return SearchField(
                             text: value,
-                            onChanged: (query) => queryNotifier.value = query,
+                            onChanged: (query) => _queryNotifier.value = query,
                           );
                         },
                       ),

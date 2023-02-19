@@ -51,7 +51,7 @@ class AssistantAssistancePractitionerPage extends StatelessWidget {
             ),
             onTap: () => showAssistantAssistanceControlCardPage(
               context,
-              students[i],
+              student: students[i],
             ),
           ),
           separatorBuilder: (_, __) => const SizedBox(height: 10),

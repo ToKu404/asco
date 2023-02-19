@@ -138,7 +138,12 @@ class AssistantAssistancePage extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 8),
                                   GestureDetector(
-                                    onTap: () => showGithubDialog(context),
+                                    onTap: () => showDialog(
+                                      context: context,
+                                      barrierLabel: '',
+                                      barrierDismissible: false,
+                                      builder: (_) => const GithubDialog(),
+                                    ),
                                     child: SvgPicture.asset(
                                       AssetPath.getIcons('edit.svg'),
                                       width: 18,
@@ -189,7 +194,7 @@ class AssistantAssistancePage extends StatelessWidget {
                   student: students[i],
                   onTap: () => showAssistantAssistanceControlCardPage(
                     context,
-                    students[i],
+                    student: students[i],
                   ),
                 ),
                 separatorBuilder: (_, __) => const SizedBox(width: 10),
@@ -237,15 +242,6 @@ class AssistantAssistancePage extends StatelessWidget {
     );
   }
 
-  Future<void> showGithubDialog(BuildContext context) async {
-    showDialog(
-      context: context,
-      barrierLabel: '',
-      barrierDismissible: false,
-      builder: (_) => const GithubDialog(),
-    );
-  }
-
   ControlCard buildControlCard(BuildContext context, Course course) {
     return ControlCard(
       course: course,
@@ -254,7 +250,7 @@ class AssistantAssistancePage extends StatelessWidget {
       thirdLine: const AssistanceStatistics(),
       onTap: () => showAssistantAssistanceCourseDetailPage(
         context,
-        course.topic,
+        title: course.topic,
       ),
     );
   }
