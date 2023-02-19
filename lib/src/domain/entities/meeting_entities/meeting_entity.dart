@@ -1,5 +1,4 @@
 import 'package:asco/src/domain/entities/profile_entities/user_profile_entity.dart';
-import 'package:asco/src/presentations/widgets/side_menu/side_menu.dart';
 import 'package:equatable/equatable.dart';
 
 class MeetingEntity extends Equatable {

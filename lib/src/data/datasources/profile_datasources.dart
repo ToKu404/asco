@@ -86,7 +86,6 @@ class ProfileDataSourceImpl implements ProfileDataSource {
             value.docs.map((e) => UserProfileModel.fromSnapshot(e)).toList(),
       );
     } catch (e) {
-      print(e);
       throw Exception();
     }
   }
@@ -156,13 +155,11 @@ class ProfileDataSourceImpl implements ProfileDataSource {
           .get();
 
       if (snapshot.docs.isNotEmpty) {
-        print('call');
         return UserProfileModel.fromSnapshot(snapshot.docs.first);
       } else {
         throw Exception();
       }
     } catch (e) {
-      print(e.toString());
       throw Exception();
     }
   }

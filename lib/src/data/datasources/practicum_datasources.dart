@@ -12,7 +12,7 @@ abstract class PracticumDataSource {
 class PracticumDataSourceImpl implements PracticumDataSource {
   final FirebaseFirestore firestore;
   PracticumDataSourceImpl({required this.firestore}) {
-    collectionReference = firestore.collection('profiles');
+    collectionReference = firestore.collection('practicums');
   }
 
   late CollectionReference collectionReference;
