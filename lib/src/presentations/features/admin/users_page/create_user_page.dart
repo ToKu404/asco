@@ -80,6 +80,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
     _batchNotifier.dispose();
     _roleNotifier.dispose();
     _nicknameController.dispose();
+    _formKey.currentState?.dispose();
     super.dispose();
   }
 
