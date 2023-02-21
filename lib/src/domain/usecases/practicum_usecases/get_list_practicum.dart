@@ -4,14 +4,14 @@ import 'package:asco/src/domain/repositories/practicum_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class GetListPracticum {
-  final PracticumRepository practicumRepository;
+  final PracticumRepository repository;
 
-  GetListPracticum({required this.practicumRepository});
+  GetListPracticum({required this.repository});
 
   Future<Either<Failure, List<PracticumEntity>>> execute({
     String? query,
   }) {
-    return practicumRepository.find(
+    return repository.find(
       query: query,
     );
   }

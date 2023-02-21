@@ -4,11 +4,11 @@ import 'package:asco/src/domain/repositories/profile_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class GetSingleProfile {
-  final ProfileRepository profileRepository;
+  final ProfileRepository repository;
 
-  GetSingleProfile({required this.profileRepository});
+  GetSingleProfile({required this.repository});
 
   Future<Either<Failure, UserProfileEntity>> execute({required String uid}) {
-    return profileRepository.single(uid: uid);
+    return repository.single(uid: uid);
   }
 }

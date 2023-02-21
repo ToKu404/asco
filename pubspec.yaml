@@ -28,6 +28,7 @@ dependencies:
   rive: ^0.10.0
   shared_preferences: ^2.0.17
   super_banners: ^0.0.1
+  date_time_picker: ^2.1.0
 
 dev_dependencies:
   flutter_launcher_icons: "^0.11.0"

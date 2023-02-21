@@ -9,17 +9,17 @@ import 'package:asco/src/domain/usecases/auth_usecases/logout.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/remove_user.dart';
 
 class AuthNotifier extends CrudDataService<UserCredentialEntity> {
-  final CreateUser createUserUsecase;
+  final CreateUser createUsecase;
   final Login loginUsecase;
   final LogOut logoutUsecase;
-  final GetUser getUserUsecase;
+  final GetUser singleUsecase;
   final RemoveUser removeUserUsecase;
 
   AuthNotifier({
-    required this.createUserUsecase,
+    required this.createUsecase,
     required this.loginUsecase,
     required this.logoutUsecase,
-    required this.getUserUsecase,
+    required this.singleUsecase,
     required this.removeUserUsecase,
   }) {
     createState(['create', 'login', 'logout', 'single']);
@@ -29,7 +29,7 @@ class AuthNotifier extends CrudDataService<UserCredentialEntity> {
     updateState(state: RequestState.loading, key: 'create');
     notifyListeners();
     try {
-      final result = await createUserUsecase.execute(userEntity: entity);
+      final result = await createUsecase.execute(userEntity: entity);
       result.fold((l) {
         updateState(state: RequestState.error, key: 'create');
         setErrorMessage(l.message);
@@ -86,7 +86,7 @@ class AuthNotifier extends CrudDataService<UserCredentialEntity> {
 
   void getUser() async {
     try {
-      final result = await getUserUsecase.execute();
+      final result = await singleUsecase.execute();
       result.fold(
         (failure) {
           updateState(state: RequestState.error, key: 'single');

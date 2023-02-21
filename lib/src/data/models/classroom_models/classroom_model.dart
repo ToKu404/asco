@@ -2,55 +2,84 @@ import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dar
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ClassroomModel extends ClassroomEntity {
-  const ClassroomModel({
-    required super.startTime,
-    required super.endTime,
-    required super.meetingDay,
-    required super.uid,
-  });
+  const ClassroomModel(
+      {super.startHour,
+      super.endHour,
+      super.meetingDay,
+      super.uid,
+      super.practicumUid,
+      super.endMinute,
+      super.startMinute,
+      super.classCode,
+      super.courseName});
 
   Map<String, dynamic> toDocument() {
     return {
-      "start_time": startTime,
-      "end_time": endTime,
+      "start_hour": startHour,
+      "end_hour": endHour,
+      "start_minute": startMinute,
+      "end_minute": endMinute,
       "meeting_day": meetingDay,
       "uid": uid,
+      "practicum_uid": practicumUid,
+      "class_code": classCode,
+      "course_name": courseName,
     };
   }
 
   ClassroomEntity toEntity() {
     return ClassroomEntity(
-      startTime: startTime,
-      endTime: endTime,
+      startHour: startHour,
+      endHour: endHour,
       meetingDay: meetingDay,
       uid: uid,
+      startMinute: startMinute,
+      endMinute: endMinute,
+      practicumUid: practicumUid,
+      classCode: classCode,
+      courseName: courseName,
     );
   }
 
   factory ClassroomModel.fromSnapshot(DocumentSnapshot documentSnapshot) {
     return ClassroomModel(
-      endTime: documentSnapshot['end_time'],
-      startTime: documentSnapshot['start_time'],
+      endHour: documentSnapshot['end_hour'],
+      endMinute: documentSnapshot['end_minute'],
+      startHour: documentSnapshot['start_hour'],
+      startMinute: documentSnapshot['start_minute'],
       meetingDay: documentSnapshot['meeting_day'],
       uid: documentSnapshot['uid'],
+      classCode: documentSnapshot['class_code'],
+      practicumUid: documentSnapshot['practicum_uid'],
+      courseName: documentSnapshot['course_name'],
     );
   }
 
   factory ClassroomModel.fromMap(Map<String, dynamic> documentSnapshot) {
     return ClassroomModel(
-      endTime: documentSnapshot['end_time'],
-      startTime: documentSnapshot['start_time'],
+      endHour: documentSnapshot['end_hour'],
+      endMinute: documentSnapshot['end_minute'],
+      startHour: documentSnapshot['start_hour'],
+      startMinute: documentSnapshot['start_minute'],
       meetingDay: documentSnapshot['meeting_day'],
       uid: documentSnapshot['uid'],
+      practicumUid: documentSnapshot['practicum_uid'],
+      classCode: documentSnapshot['class_code'],
+      courseName: documentSnapshot['course_name'],
     );
   }
 
   factory ClassroomModel.fromEntity(ClassroomEntity entity) {
     return ClassroomModel(
-      startTime: entity.startTime,
-      endTime: entity.endTime,
+      startHour: entity.startHour,
+      endHour: entity.endHour,
+      startMinute: entity.startMinute,
+      endMinute: entity.endMinute,
       meetingDay: entity.meetingDay,
       uid: entity.uid,
+      practicumUid: entity.practicumUid,
+      classCode: entity.classCode,
+      courseName: entity.courseName,
     );
   }
 }

@@ -3,11 +3,14 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/domain/entities/practicum_entities/practicum_entity.dart';
 import 'package:asco/src/presentations/features/admin/practicum_page/create_practicum_page.dart';
 import 'package:asco/src/presentations/features/admin/practicum_page/practicum_detail_page.dart';
+import 'package:asco/src/presentations/providers/practicum_notifier.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 void showAdminPracticumPage({required BuildContext context}) {
   Navigator.push(
@@ -30,6 +33,14 @@ class AdminPracticumPage extends StatefulWidget {
 
 class _AdminPracticumPageState extends State<AdminPracticumPage> {
   TextEditingController searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(
+      () => Provider.of<PracticumNotifier>(context, listen: false)..fetch(),
+    );
+  }
 
   @override
   void dispose() {
@@ -117,18 +128,31 @@ class _AdminPracticumPageState extends State<AdminPracticumPage> {
               ),
             ),
             Expanded(
-                child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: const [
-                  PracticumCard(),
-                  SizedBox(
-                    height: 8,
+              child: Builder(builder: (context) {
+                final dataProvider = context.watch<PracticumNotifier>();
+
+                // Todo : Add Shimmer
+                if (dataProvider.isLoadingState('find')) {
+                  return const SizedBox.shrink();
+                } else if (dataProvider.isErrorState('find')) {
+                  return const SizedBox.shrink();
+                }
+
+                return ListView.builder(
+                  padding: const EdgeInsets.only(
+                    left: 16,
+                    right: 16,
+                    bottom: 16 + 65,
                   ),
-                  PracticumCard(),
-                ],
-              ),
-            )),
+                  itemBuilder: (context, index) {
+                    return PracticumCard(
+                      practicum: dataProvider.listData[index],
+                    );
+                  },
+                  itemCount: dataProvider.listData.length,
+                );
+              }),
+            ),
           ],
         ),
       ),
@@ -137,16 +161,22 @@ class _AdminPracticumPageState extends State<AdminPracticumPage> {
 }
 
 class PracticumCard extends StatelessWidget {
+  final PracticumEntity practicum;
   const PracticumCard({
     super.key,
+    required this.practicum,
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWellContainer(
+      margin: const EdgeInsets.only(bottom: 12),
       color: Colors.white,
       onTap: () {
-        showAdminPracticumDetailPage(context: context);
+        showAdminPracticumDetailPage(
+          context: context,
+          practicumEntity: practicum,
+        );
       },
       radius: 12,
       child: Container(
@@ -169,14 +199,14 @@ class PracticumCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Pemrograman Mobile',
+                    practicum.course ?? '',
                     style: kTextTheme.bodyLarge?.copyWith(
                       color: Palette.purple80,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   Text(
-                    '5 Kelas',
+                    '0 Kelas',
                     style: kTextTheme.bodyMedium?.copyWith(
                       color: Palette.purple60,
                     ),

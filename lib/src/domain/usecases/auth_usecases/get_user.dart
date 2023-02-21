@@ -4,10 +4,10 @@ import 'package:asco/src/domain/repositories/auth_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class GetUser {
-  final AuthRepository authRepository;
-  GetUser({required this.authRepository});
+  final AuthRepository repository;
+  GetUser({required this.repository});
 
   Future<Either<Failure, UserCredentialEntity?>> execute() {
-    return authRepository.getUserCredential();
+    return repository.getUserCredential();
   }
 }

@@ -9,20 +9,20 @@ import 'package:asco/src/domain/usecases/profile_usecases/self_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/update_profile.dart';
 
 class ProfileNotifier extends CrudDataService<UserProfileEntity> {
-  final CreateProfile createProfileUsecase;
-  final GetListProfile getListProfileUsecase;
-  final GetSingleProfile getSingleProfileUsecase;
-  final RemoveProfile removeProfileUsecase;
-  final UpdateProfile updateProfileUsecase;
-  final SelfProfile selfProfileUsecase;
+  final CreateProfile createUsecase;
+  final GetListProfile getListDataUsecase;
+  final GetSingleProfile getSingleUsecase;
+  final RemoveProfile removeDataUsecase;
+  final UpdateProfile updateDataUsecase;
+  final SelfProfile selfDataUsecase;
 
   ProfileNotifier({
-    required this.createProfileUsecase,
-    required this.getListProfileUsecase,
-    required this.getSingleProfileUsecase,
-    required this.removeProfileUsecase,
-    required this.updateProfileUsecase,
-    required this.selfProfileUsecase,
+    required this.createUsecase,
+    required this.getListDataUsecase,
+    required this.getSingleUsecase,
+    required this.removeDataUsecase,
+    required this.updateDataUsecase,
+    required this.selfDataUsecase,
   }) {
     createState(['create', 'find', 'me']);
   }
@@ -31,7 +31,7 @@ class ProfileNotifier extends CrudDataService<UserProfileEntity> {
     updateState(state: RequestState.loading, key: 'create');
     notifyListeners();
     try {
-      final result = await createProfileUsecase.execute(userEntity: entity);
+      final result = await createUsecase.execute(userEntity: entity);
       result.fold((l) {
         updateState(state: RequestState.error, key: 'create');
         setErrorMessage(l.message);
@@ -49,7 +49,7 @@ class ProfileNotifier extends CrudDataService<UserProfileEntity> {
   Future<void> fetchAll() async {
     updateState(state: RequestState.loading, key: 'find');
     try {
-      final result = await getListProfileUsecase.execute();
+      final result = await getListDataUsecase.execute();
       result.fold((l) {
         updateState(state: RequestState.error, key: 'find');
         setErrorMessage(l.message);
@@ -70,7 +70,7 @@ class ProfileNotifier extends CrudDataService<UserProfileEntity> {
     updateState(state: RequestState.loading, key: 'me');
     notifyListeners();
     try {
-      final result = await selfProfileUsecase.execute();
+      final result = await selfDataUsecase.execute();
       result.fold((l) {
         updateState(state: RequestState.error, key: 'me');
         setErrorMessage(l.message);

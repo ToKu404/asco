@@ -4,12 +4,12 @@ import 'package:asco/src/domain/repositories/practicum_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class CreatePracticum {
-  final PracticumRepository practicumRepository;
+  final PracticumRepository repository;
 
-  CreatePracticum({required this.practicumRepository});
+  CreatePracticum({required this.repository});
 
   Future<Either<Failure, bool>> execute(
       {required PracticumEntity practicumEntity}) {
-    return practicumRepository.create(practicumEntity: practicumEntity);
+    return repository.create(practicumEntity: practicumEntity);
   }
 }

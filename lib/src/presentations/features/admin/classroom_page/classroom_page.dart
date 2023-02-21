@@ -3,10 +3,16 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/core/services/user_helper.dart';
+import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
 import 'package:asco/src/presentations/features/admin/classroom_page/meeting_page.dart';
+import 'package:asco/src/presentations/providers/classroom_notifier.dart';
+import 'package:asco/src/presentations/providers/practicum_notifier.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
+import 'package:asco/src/presentations/widgets/input_field/input_time_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 void showAdminClassroomPage({required BuildContext context}) {
   Navigator.push(
@@ -34,6 +40,14 @@ class _AdminClassroomPageState extends State<AdminClassroomPage> {
   void dispose() {
     super.dispose();
     searchController.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(
+      () => Provider.of<ClassroomNotifier>(context, listen: false)..fetch(),
+    );
   }
 
   @override
@@ -105,18 +119,31 @@ class _AdminClassroomPageState extends State<AdminClassroomPage> {
               ),
             ),
             Expanded(
-                child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: const [
-                  PracticumClassCard(),
-                  SizedBox(
-                    height: 8,
+              child: Builder(builder: (context) {
+                final dataProvider = context.watch<ClassroomNotifier>();
+
+                // Todo : Add Shimmer
+                if (dataProvider.isLoadingState('find')) {
+                  return const SizedBox.shrink();
+                } else if (dataProvider.isErrorState('find')) {
+                  return const SizedBox.shrink();
+                }
+
+                return ListView.builder(
+                  padding: const EdgeInsets.only(
+                    left: 16,
+                    right: 16,
+                    bottom: 16 + 65,
                   ),
-                  PracticumClassCard(),
-                ],
-              ),
-            )),
+                  itemBuilder: (context, index) {
+                    return PracticumClassCard(
+                      classroom: dataProvider.listData[index],
+                    );
+                  },
+                  itemCount: dataProvider.listData.length,
+                );
+              }),
+            ),
           ],
         ),
       ),
@@ -125,8 +152,10 @@ class _AdminClassroomPageState extends State<AdminClassroomPage> {
 }
 
 class PracticumClassCard extends StatelessWidget {
+  final ClassroomEntity classroom;
   const PracticumClassCard({
     super.key,
+    required this.classroom,
   });
 
   @override
@@ -144,14 +173,14 @@ class PracticumClassCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Basis Data',
+              '${classroom.courseName}',
               style: kTextTheme.bodyMedium?.copyWith(
                 color: Palette.purple80,
                 height: 1.2,
               ),
             ),
             Text(
-              'Kelas A',
+              'Kelas ${classroom.classCode}',
               style: kTextTheme.bodyLarge?.copyWith(
                 color: Palette.purple80,
                 fontWeight: FontWeight.w600,
@@ -162,7 +191,12 @@ class PracticumClassCard extends StatelessWidget {
               height: 8,
             ),
             Text(
-              'Setiap Kamis 20.00 - 23.00',
+              'Setiap ${classroom.meetingDay} ${UserHelper.timeFormater(TimeHelper(
+                startHour: classroom.startHour,
+                endHour: classroom.endHour,
+                startMinute: classroom.startMinute,
+                endMinute: classroom.endMinute,
+              ))}',
               style: kTextTheme.bodyMedium?.copyWith(
                 color: Palette.purple60,
                 height: 1.1,

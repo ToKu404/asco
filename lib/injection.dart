@@ -1,10 +1,13 @@
 import 'package:asco/src/data/datasources/auth_datasources.dart';
+import 'package:asco/src/data/datasources/classroom_datasources.dart';
 import 'package:asco/src/data/datasources/practicum_datasources.dart';
 import 'package:asco/src/data/datasources/profile_datasources.dart';
 import 'package:asco/src/data/repositories/auth_repository_impl.dart';
+import 'package:asco/src/data/repositories/classroom_repository_impl.dart';
 import 'package:asco/src/data/repositories/practicum_repository_impl.dart';
 import 'package:asco/src/data/repositories/profile_repository_impl.dart';
 import 'package:asco/src/domain/repositories/auth_repository.dart';
+import 'package:asco/src/domain/repositories/classroom_repository.dart';
 import 'package:asco/src/domain/repositories/practicum_repository.dart';
 import 'package:asco/src/domain/repositories/profile_repository.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/create_user.dart';
@@ -12,6 +15,9 @@ import 'package:asco/src/domain/usecases/auth_usecases/get_user.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/login.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/logout.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/remove_user.dart';
+import 'package:asco/src/domain/usecases/classroom_usecases/create_practicum.dart';
+import 'package:asco/src/domain/usecases/classroom_usecases/get_list_practicum.dart';
+import 'package:asco/src/domain/usecases/classroom_usecases/get_single_practicum.dart';
 import 'package:asco/src/domain/usecases/practicum_usecases/create_practicum.dart';
 import 'package:asco/src/domain/usecases/practicum_usecases/get_list_practicum.dart';
 import 'package:asco/src/domain/usecases/practicum_usecases/get_single_practicum.dart';
@@ -22,6 +28,7 @@ import 'package:asco/src/domain/usecases/profile_usecases/remove_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/self_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/update_profile.dart';
 import 'package:asco/src/presentations/providers/auth_notifier.dart';
+import 'package:asco/src/presentations/providers/classroom_notifier.dart';
 import 'package:asco/src/presentations/providers/practicum_notifier.dart';
 import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -35,9 +42,9 @@ void init() {
   //! state_management
   locator.registerFactory(
     () => AuthNotifier(
-      createUserUsecase: locator(),
+      createUsecase: locator(),
       loginUsecase: locator(),
-      getUserUsecase: locator(),
+      singleUsecase: locator(),
       logoutUsecase: locator(),
       removeUserUsecase: locator(),
     ),
@@ -45,37 +52,50 @@ void init() {
 
   locator.registerFactory(
     () => ProfileNotifier(
-      createProfileUsecase: locator(),
-      getListProfileUsecase: locator(),
-      getSingleProfileUsecase: locator(),
-      removeProfileUsecase: locator(),
-      updateProfileUsecase: locator(),
-      selfProfileUsecase: locator(),
+      createUsecase: locator(),
+      getListDataUsecase: locator(),
+      getSingleUsecase: locator(),
+      removeDataUsecase: locator(),
+      updateDataUsecase: locator(),
+      selfDataUsecase: locator(),
     ),
   );
 
   locator.registerFactory(
     () => PracticumNotifier(
-      createPracticumUsecase: locator(),
-      getListPracticumUsecase: locator(),
-      getSinglePracticumUsecase: locator(),
+      createUsecase: locator(),
+      getListUsecase: locator(),
+      getSingleUsecase: locator(),
+    ),
+  );
+
+  locator.registerFactory(
+    () => ClassroomNotifier(
+      createUsecase: locator(),
+      getListDataUsecase: locator(),
+      getSingleDataUsecase: locator(),
     ),
   );
 
   //! repositories
   locator.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(
-      authDataSources: locator(),
+      datasource: locator(),
     ),
   );
   locator.registerLazySingleton<ProfileRepository>(
     () => ProfileRepositoryImpl(
-      profileDataSources: locator(),
+      datasource: locator(),
     ),
   );
   locator.registerLazySingleton<PracticumRepository>(
     () => PracticumRepositoryImpl(
-      practicumDataSource: locator(),
+      datasource: locator(),
+    ),
+  );
+  locator.registerLazySingleton<ClassroomRepository>(
+    () => ClassroomRepositoryImpl(
+      dataSource: locator(),
     ),
   );
 
@@ -83,74 +103,90 @@ void init() {
   //? Auth Usecase
   locator.registerLazySingleton(
     () => CreateUser(
-      authRepository: locator(),
+      repository: locator(),
     ),
   );
   locator.registerLazySingleton(
     () => Login(
-      authRepository: locator(),
+      repository: locator(),
     ),
   );
   locator.registerLazySingleton(
     () => LogOut(
-      authRepository: locator(),
+      repository: locator(),
     ),
   );
   locator.registerLazySingleton(
     () => GetUser(
-      authRepository: locator(),
+      repository: locator(),
     ),
   );
   locator.registerLazySingleton(
     () => RemoveUser(
-      authRepository: locator(),
+      repository: locator(),
     ),
   );
   //? Profile Usecase
   locator.registerLazySingleton(
     () => CreateProfile(
-      profileRepository: locator(),
+      repository: locator(),
     ),
   );
   locator.registerLazySingleton(
     () => GetListProfile(
-      profileRepository: locator(),
+      repository: locator(),
     ),
   );
   locator.registerLazySingleton(
     () => GetSingleProfile(
-      profileRepository: locator(),
+      repository: locator(),
     ),
   );
   locator.registerLazySingleton(
     () => SelfProfile(
-      profileRepository: locator(),
+      repository: locator(),
     ),
   );
   locator.registerLazySingleton(
     () => RemoveProfile(
-      profileRepository: locator(),
+      repository: locator(),
     ),
   );
   locator.registerLazySingleton(
     () => UpdateProfile(
-      profileRepository: locator(),
+      repository: locator(),
     ),
   );
   //* Practicum Usecase
   locator.registerLazySingleton(
     () => CreatePracticum(
-      practicumRepository: locator(),
+      repository: locator(),
     ),
   );
   locator.registerLazySingleton(
     () => GetListPracticum(
-      practicumRepository: locator(),
+      repository: locator(),
     ),
   );
   locator.registerLazySingleton(
     () => GetSinglePracticum(
-      practicumRepository: locator(),
+      repository: locator(),
+    ),
+  );
+  //* ClassroomUsecase
+  locator.registerLazySingleton(
+    () => CreateClassroom(
+      repository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => GetListClassroom(
+      repository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => GetSingleClassroom(
+      repository: locator(),
     ),
   );
 
@@ -158,17 +194,22 @@ void init() {
   locator.registerLazySingleton<AuthDataSources>(
     () => AuthDataSourcesImpl(
       firestore: locator(),
-      authPreferenceHelper: locator(),
+      pref: locator(),
     ),
   );
   locator.registerLazySingleton<ProfileDataSource>(
     () => ProfileDataSourceImpl(
       firestore: locator(),
-      authPreferenceHelper: locator(),
+      pref: locator(),
     ),
   );
   locator.registerLazySingleton<PracticumDataSource>(
     () => PracticumDataSourceImpl(
+      firestore: locator(),
+    ),
+  );
+  locator.registerLazySingleton<ClassroomDataSource>(
+    () => ClassroomDataSourceImpl(
       firestore: locator(),
     ),
   );
