@@ -1,4 +1,4 @@
-import 'package:asco/src/data/datasources/helpers/update_helper.dart';
+import 'package:asco/src/data/datasources/helpers/ds_helper.dart';
 import 'package:asco/src/data/models/profile_models/user_profile_model.dart';
 import 'package:asco/src/data/services/preferences_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -18,10 +18,9 @@ abstract class ProfileDataSource {
 
 class ProfileDataSourceImpl implements ProfileDataSource {
   final FirebaseFirestore firestore;
-  final AuthPreferenceHelper authPreferenceHelper;
+  final AuthPreferenceHelper pref;
 
-  ProfileDataSourceImpl(
-      {required this.firestore, required this.authPreferenceHelper}) {
+  ProfileDataSourceImpl({required this.firestore, required this.pref}) {
     collectionReference = firestore.collection('profiles');
   }
 
@@ -148,7 +147,7 @@ class ProfileDataSourceImpl implements ProfileDataSource {
   @override
   Future<UserProfileModel> me() async {
     try {
-      final credential = await authPreferenceHelper.getUser();
+      final credential = await pref.getUser();
 
       QuerySnapshot snapshot = await collectionReference
           .where("username", isEqualTo: credential!.username)

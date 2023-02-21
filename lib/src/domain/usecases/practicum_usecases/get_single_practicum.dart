@@ -4,11 +4,11 @@ import 'package:asco/src/domain/repositories/practicum_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class GetSinglePracticum {
-  final PracticumRepository practicumRepository;
+  final PracticumRepository repository;
 
-  GetSinglePracticum({required this.practicumRepository});
+  GetSinglePracticum({required this.repository});
 
   Future<Either<Failure, PracticumEntity>> execute({required String uid}) {
-    return practicumRepository.single(uid: uid);
+    return repository.single(uid: uid);
   }
 }

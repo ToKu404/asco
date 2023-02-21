@@ -6,15 +6,15 @@ import 'package:asco/src/domain/repositories/practicum_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class PracticumRepositoryImpl implements PracticumRepository {
-  final PracticumDataSource practicumDataSource;
+  final PracticumDataSource datasource;
 
-  PracticumRepositoryImpl({required this.practicumDataSource});
+  PracticumRepositoryImpl({required this.datasource});
 
   @override
   Future<Either<Failure, bool>> create(
       {required PracticumEntity practicumEntity}) async {
     try {
-      final result = await practicumDataSource.create(
+      final result = await datasource.create(
           practicum: PracticumModel.fromEntity(practicumEntity));
       return Right(result);
     } catch (e) {
@@ -27,7 +27,7 @@ class PracticumRepositoryImpl implements PracticumRepository {
     String? query,
   }) async {
     try {
-      final result = await practicumDataSource.find(
+      final result = await datasource.find(
         query: query,
       );
 
@@ -40,7 +40,7 @@ class PracticumRepositoryImpl implements PracticumRepository {
   @override
   Future<Either<Failure, PracticumEntity>> single({required String uid}) async {
     try {
-      final result = await practicumDataSource.single(uid: uid);
+      final result = await datasource.single(uid: uid);
       return Right(result);
     } catch (e) {
       return const Left(FirestoreFailure(''));

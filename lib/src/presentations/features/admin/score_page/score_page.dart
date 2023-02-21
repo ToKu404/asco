@@ -4,7 +4,6 @@ import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/presentations/features/admin/practicum_page/create_practicum_page.dart';
-import 'package:asco/src/presentations/features/admin/practicum_page/practicum_detail_page.dart';
 import 'package:asco/src/presentations/features/menu/leaderboard/assistant/assistant_value_recap.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
@@ -302,61 +301,6 @@ class Avatar extends StatelessWidget {
         radius: 28,
         foregroundImage: AssetImage(
           AssetPath.getImage(imageAsset),
-        ),
-      ),
-    );
-  }
-}
-
-class PracticumCard extends StatelessWidget {
-  const PracticumCard({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWellContainer(
-      color: Colors.white,
-      onTap: () {
-        showAdminPracticumDetailPage(context: context);
-      },
-      radius: 12,
-      child: Container(
-        width: AppSize.getAppWidth(context),
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          children: [
-            SizedBox(
-              width: 50,
-              height: 50,
-              child: SvgPicture.asset(
-                AssetPath.getVector('badge_android.svg'),
-              ),
-            ),
-            const SizedBox(
-              width: 12,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Pemrograman Mobile',
-                    style: kTextTheme.bodyLarge?.copyWith(
-                      color: Palette.purple80,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Text(
-                    '5 Kelas',
-                    style: kTextTheme.bodyMedium?.copyWith(
-                      color: Palette.purple60,
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],
         ),
       ),
     );

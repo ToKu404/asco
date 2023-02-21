@@ -4,11 +4,11 @@ import 'package:asco/src/domain/repositories/auth_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class CreateUser {
-  final AuthRepository authRepository;
+  final AuthRepository repository;
 
-  CreateUser({required this.authRepository});
+  CreateUser({required this.repository});
 
   Future<Either<Failure, bool>> execute({required UserEntity userEntity}) {
-    return authRepository.createUser(userEntity: userEntity);
+    return repository.createUser(userEntity: userEntity);
   }
 }

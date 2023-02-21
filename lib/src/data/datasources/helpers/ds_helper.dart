@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class UpdateHelper {
   final Map<String, dynamic> _map = {};
   UpdateHelper();
@@ -9,4 +11,10 @@ class UpdateHelper {
   }
 
   Map<String, dynamic> get map => _map;
+}
+
+class ReadHelper {
+  static bool isKeyExist(DocumentSnapshot snapshot, String key) {
+    return snapshot.data().toString().contains(key) && snapshot[key] != null;
+  }
 }

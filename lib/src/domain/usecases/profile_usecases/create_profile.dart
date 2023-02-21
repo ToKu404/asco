@@ -4,12 +4,12 @@ import 'package:asco/src/domain/repositories/profile_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class CreateProfile {
-  final ProfileRepository profileRepository;
+  final ProfileRepository repository;
 
-  CreateProfile({required this.profileRepository});
+  CreateProfile({required this.repository});
 
   Future<Either<Failure, bool>> execute(
       {required UserProfileEntity userEntity}) {
-    return profileRepository.create(userProfileEntity: userEntity);
+    return repository.create(userProfileEntity: userEntity);
   }
 }

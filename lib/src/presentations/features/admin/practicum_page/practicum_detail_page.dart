@@ -3,19 +3,30 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/core/services/user_helper.dart';
+import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
+import 'package:asco/src/domain/entities/practicum_entities/practicum_entity.dart';
 import 'package:asco/src/presentations/features/admin/practicum_page/class_detail_page.dart';
 import 'package:asco/src/presentations/features/admin/practicum_page/create_class_page.dart';
 import 'package:asco/src/presentations/features/admin/practicum_page/create_practicum_page.dart';
 import 'package:asco/src/presentations/features/admin/practicum_page/practicum_assistant_page.dart';
+import 'package:asco/src/presentations/providers/classroom_notifier.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
+import 'package:asco/src/presentations/widgets/input_field/input_time_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
-void showAdminPracticumDetailPage({required BuildContext context}) {
+void showAdminPracticumDetailPage(
+    {required BuildContext context, required PracticumEntity practicumEntity}) {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => const PracticumDetailPage(),
+      builder: (context) => PracticumDetailPage(
+        practicumName: practicumEntity.course ?? '',
+        practicumBadge: practicumEntity.badgePath ?? '',
+        practicumId: practicumEntity.uid!,
+      ),
       settings: const RouteSettings(
         name: AppRoute.adminUsersPage,
       ),
@@ -24,7 +35,15 @@ void showAdminPracticumDetailPage({required BuildContext context}) {
 }
 
 class PracticumDetailPage extends StatelessWidget {
-  const PracticumDetailPage({super.key});
+  final String practicumName;
+  final String practicumId;
+  final String practicumBadge;
+  const PracticumDetailPage({
+    super.key,
+    required this.practicumBadge,
+    required this.practicumId,
+    required this.practicumName,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -84,12 +103,13 @@ class PracticumDetailPage extends StatelessWidget {
                               height: 1.2),
                         ),
                         Text(
-                          'Basis Data',
-                          style: kTextTheme.headlineMedium?.copyWith(
+                          practicumName,
+                          style: kTextTheme.headlineSmall?.copyWith(
                             color: Palette.blackPurple,
                             fontWeight: FontWeight.w700,
                             height: 1,
                           ),
+                          maxLines: 2,
                         ),
                       ],
                     ),
@@ -99,58 +119,10 @@ class PracticumDetailPage extends StatelessWidget {
               const SizedBox(
                 height: 24,
               ),
-              Row(
-                children: [
-                  Text(
-                    '2',
-                    style: kTextTheme.titleSmall?.copyWith(
-                      color: Palette.purple70,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 4,
-                  ),
-                  Text(
-                    'Kelas',
-                    style: kTextTheme.titleSmall?.copyWith(
-                      color: Palette.black,
-                    ),
-                  ),
-                  const Spacer(),
-                  SizedBox(
-                    width: 30,
-                    height: 30,
-                    child: IconButton(
-                      style: IconButton.styleFrom(
-                        backgroundColor: Palette.purple70,
-                        padding: EdgeInsets.zero,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            8,
-                          ),
-                        ),
-                      ),
-                      onPressed: () {
-                        showAdminCreateClassPage(context: context);
-                      },
-                      icon: const Icon(
-                        Icons.add_rounded,
-                        color: Palette.white,
-                      ),
-                    ),
-                  ),
-                ],
+              _PracticumSection(
+                uid: practicumId,
+                practicumName: practicumName,
               ),
-              const Divider(),
-              const SizedBox(
-                height: 8,
-              ),
-              const PracticumClassCard(),
-              const SizedBox(
-                height: 8,
-              ),
-              const PracticumClassCard(),
               const SizedBox(
                 height: 20,
               ),
@@ -226,6 +198,109 @@ class PracticumDetailPage extends StatelessWidget {
   }
 }
 
+class _PracticumSection extends StatefulWidget {
+  final String uid;
+  final String practicumName;
+  const _PracticumSection({
+    required this.uid,
+    required this.practicumName,
+  });
+
+  @override
+  State<_PracticumSection> createState() => _PracticumSectionState();
+}
+
+class _PracticumSectionState extends State<_PracticumSection> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.microtask(
+      () => Provider.of<ClassroomNotifier>(context, listen: false)
+        ..fetch(
+          practicumUid: widget.uid,
+        ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final dataProvider = context.watch<ClassroomNotifier>();
+
+    // Todo : Add Shimmer
+    if (dataProvider.isLoadingState('find')) {
+      return const SizedBox.shrink();
+    } else if (dataProvider.isErrorState('find')) {
+      return const SizedBox.shrink();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              '${dataProvider.listData.length}',
+              style: kTextTheme.titleSmall?.copyWith(
+                color: Palette.purple70,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(
+              width: 4,
+            ),
+            Text(
+              'Kelas',
+              style: kTextTheme.titleSmall?.copyWith(
+                color: Palette.black,
+              ),
+            ),
+            const Spacer(),
+            SizedBox(
+              width: 30,
+              height: 30,
+              child: IconButton(
+                style: IconButton.styleFrom(
+                  backgroundColor: Palette.purple70,
+                  padding: EdgeInsets.zero,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                      8,
+                    ),
+                  ),
+                ),
+                onPressed: () {
+                  showAdminCreateClassPage(
+                    context: context,
+                    practicumUid: widget.uid,
+                    courseName: widget.practicumName,
+                  );
+                },
+                icon: const Icon(
+                  Icons.add_rounded,
+                  color: Palette.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const Divider(),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            return PracticumClassCard(
+              classroomEntity: dataProvider.listData[index],
+              practicumName: widget.practicumName,
+            );
+          },
+          itemCount: dataProvider.listData.length,
+        )
+      ],
+    );
+  }
+}
+
 class UserCard extends StatelessWidget {
   const UserCard({
     super.key,
@@ -276,8 +351,12 @@ class UserCard extends StatelessWidget {
 }
 
 class PracticumClassCard extends StatelessWidget {
+  final ClassroomEntity classroomEntity;
+  final String practicumName;
   const PracticumClassCard({
     super.key,
+    required this.practicumName,
+    required this.classroomEntity,
   });
 
   @override
@@ -298,14 +377,14 @@ class PracticumClassCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Basis Data',
+                    practicumName,
                     style: kTextTheme.bodyMedium?.copyWith(
                       color: Palette.purple80,
                       height: 1.2,
                     ),
                   ),
                   Text(
-                    'Kelas A',
+                    classroomEntity.classCode ?? '',
                     style: kTextTheme.bodyLarge?.copyWith(
                       color: Palette.purple80,
                       fontWeight: FontWeight.w600,
@@ -316,7 +395,12 @@ class PracticumClassCard extends StatelessWidget {
                     height: 8,
                   ),
                   Text(
-                    'Setiap Kamis 20.00 - 23.00',
+                    'Setiap ${classroomEntity.meetingDay} ${UserHelper.timeFormater(TimeHelper(
+                      startHour: classroomEntity.startHour,
+                      endHour: classroomEntity.endHour,
+                      startMinute: classroomEntity.startMinute,
+                      endMinute: classroomEntity.endMinute,
+                    ))}',
                     style: kTextTheme.bodyMedium?.copyWith(
                       color: Palette.purple60,
                       height: 1.1,
@@ -344,7 +428,7 @@ class PracticumClassCard extends StatelessWidget {
                       padding: EdgeInsets.zero,
                     ),
                     onPressed: () {
-                      showAdminCreateClassPage(context: context, isEdit: true);
+                      // showAdminCreateClassPage(context: context, isEdit: true);
                     },
                     icon: const Icon(
                       Icons.edit,

@@ -3,10 +3,10 @@ import 'package:asco/src/domain/repositories/auth_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class RemoveUser {
-  final AuthRepository authRepository;
-  RemoveUser({required this.authRepository});
+  final AuthRepository repository;
+  RemoveUser({required this.repository});
 
   Future<Either<Failure, bool>> execute({required String username}) {
-    return authRepository.deleteUser(username: username);
+    return repository.deleteUser(username: username);
   }
 }

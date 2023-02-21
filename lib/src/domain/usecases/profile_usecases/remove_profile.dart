@@ -3,11 +3,11 @@ import 'package:asco/src/domain/repositories/profile_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class RemoveProfile {
-  final ProfileRepository profileRepository;
+  final ProfileRepository repository;
 
-  RemoveProfile({required this.profileRepository});
+  RemoveProfile({required this.repository});
 
   Future<Either<Failure, bool>> execute({required String uid}) {
-    return profileRepository.remove(uid: uid);
+    return repository.remove(uid: uid);
   }
 }

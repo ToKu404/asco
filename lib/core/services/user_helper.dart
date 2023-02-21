@@ -1,5 +1,6 @@
 import 'dart:convert';
 // ignore: depend_on_referenced_packages
+import 'package:asco/src/presentations/widgets/input_field/input_time_field.dart';
 import 'package:crypto/crypto.dart';
 
 class UserHelper {
@@ -28,5 +29,21 @@ class UserHelper {
     } else {
       return listName[1];
     }
+  }
+
+  ///time
+  static String timeFormater(TimeHelper th) {
+    final startTime = '${th.startHour}:${th.startMinute}';
+    final endTime = '${th.endHour}:${th.endMinute}';
+
+    final startTimeList = startTime.split(':');
+    final startTime1 = startTimeList.first.padLeft(2, "0");
+    final startTime2 = startTimeList.last.padLeft(2, "0");
+
+    final endTimeList = endTime.split(':');
+    final endTime1 = endTimeList.first.padLeft(2, "0");
+    final endTime2 = endTimeList.last.padLeft(2, "0");
+
+    return '${startTime1}:${startTime2}-${endTime1}:${endTime2}';
   }
 }

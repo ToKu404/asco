@@ -7,15 +7,15 @@ import 'package:asco/src/domain/repositories/auth_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
-  final AuthDataSources authDataSources;
+  final AuthDataSources datasource;
 
-  AuthRepositoryImpl({required this.authDataSources});
+  AuthRepositoryImpl({required this.datasource});
 
   @override
   Future<Either<Failure, bool>> createUser(
       {required UserEntity userEntity}) async {
     try {
-      final result = await authDataSources.createUser(
+      final result = await datasource.createUser(
           userModel: UserModel.fromEntity(userEntity));
       return Right(result);
     } catch (e) {
@@ -28,7 +28,7 @@ class AuthRepositoryImpl implements AuthRepository {
       {required String username, required String password}) async {
     try {
       final result =
-          await authDataSources.logIn(password: password, username: username);
+          await datasource.logIn(password: password, username: username);
       return Right(result);
     } catch (e) {
       return const Left(FirestoreFailure(''));
@@ -38,7 +38,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, UserCredentialEntity?>> getUserCredential() async {
     try {
-      final result = await authDataSources.getUserCredential();
+      final result = await datasource.getUserCredential();
       return Right(result);
     } catch (e) {
       return Left(PreferencesFailure(e.toString()));
@@ -48,7 +48,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, bool>> logOut() async {
     try {
-      final result = await authDataSources.logOut();
+      final result = await datasource.logOut();
       return Right(result);
     } catch (e) {
       return Left(PreferencesFailure(e.toString()));
@@ -58,7 +58,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, bool>> deleteUser({required String username}) async {
     try {
-      final result = await authDataSources.deleteUser(username: username);
+      final result = await datasource.deleteUser(username: username);
       return Right(result);
     } catch (e) {
       return Left(PreferencesFailure(e.toString()));

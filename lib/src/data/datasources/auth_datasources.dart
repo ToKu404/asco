@@ -14,10 +14,9 @@ abstract class AuthDataSources {
 
 class AuthDataSourcesImpl implements AuthDataSources {
   final FirebaseFirestore firestore;
-  final AuthPreferenceHelper authPreferenceHelper;
+  final AuthPreferenceHelper pref;
 
-  AuthDataSourcesImpl(
-      {required this.firestore, required this.authPreferenceHelper}) {
+  AuthDataSourcesImpl({required this.firestore, required this.pref}) {
     userCollectionRef = firestore.collection('users');
   }
 
@@ -59,7 +58,7 @@ class AuthDataSourcesImpl implements AuthDataSources {
         if (passwordFromDb == password) {
           final userCredential = UserCredentialModel(
               username: username, roleId: snapshot.docs[0].get('roleId'));
-          authPreferenceHelper.setUserData(userCredential);
+          pref.setUserData(userCredential);
           return userCredential;
         } else {
           throw Exception();
@@ -76,7 +75,7 @@ class AuthDataSourcesImpl implements AuthDataSources {
   @override
   Future<UserCredentialModel?> getUserCredential() async {
     try {
-      final credential = await authPreferenceHelper.getUser();
+      final credential = await pref.getUser();
       if (credential != null) {
         QuerySnapshot snapshot = await userCollectionRef
             .where("username", isEqualTo: credential.username)
@@ -98,7 +97,7 @@ class AuthDataSourcesImpl implements AuthDataSources {
   @override
   Future<bool> logOut() {
     try {
-      return authPreferenceHelper.removeUserData();
+      return pref.removeUserData();
     } catch (e) {
       throw Exception();
     }

@@ -20,9 +20,16 @@ class PracticumDataSourceImpl implements PracticumDataSource {
   @override
   Future<bool> create({required PracticumModel practicum}) async {
     try {
+      final uid = collectionReference.doc().id;
       await collectionReference
           .add(
-            practicum.toDocument(),
+            PracticumModel(
+              badgePath: practicum.badgePath,
+              course: practicum.course,
+              courseContractPath: practicum.courseContractPath,
+              listAssistant: practicum.listAssistant,
+              uid: uid,
+            ).toDocument(),
           )
           .then((value) => true)
           .catchError((error) => false);

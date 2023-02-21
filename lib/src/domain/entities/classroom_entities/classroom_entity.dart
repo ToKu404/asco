@@ -3,21 +3,35 @@ import 'package:equatable/equatable.dart';
 class ClassroomEntity extends Equatable {
   final String? uid;
   final String? meetingDay;
-  final int? startTime;
-  final int? endTime;
+  final int? startHour;
+  final int? startMinute;
+  final int? endHour;
+  final int? endMinute;
+  final String? classCode;
+  final String? practicumUid;
+  final String? courseName;
 
   const ClassroomEntity({
-    this.startTime,
-    this.endTime,
+    this.startHour,
+    this.endHour,
     this.meetingDay,
     this.uid,
+    this.classCode,
+    this.endMinute,
+    this.startMinute,
+    this.practicumUid,
+    this.courseName,
   });
 
   @override
   List<Object?> get props => [
-        startTime,
-        endTime,
+        startHour,
+        endHour,
         meetingDay,
         uid,
+        practicumUid,
+        endMinute,
+        startMinute,
+        courseName,
       ];
 }

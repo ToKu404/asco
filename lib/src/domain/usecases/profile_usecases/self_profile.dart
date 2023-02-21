@@ -4,11 +4,11 @@ import 'package:asco/src/domain/repositories/profile_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class SelfProfile {
-  final ProfileRepository profileRepository;
+  final ProfileRepository repository;
 
-  SelfProfile({required this.profileRepository});
+  SelfProfile({required this.repository});
 
   Future<Either<Failure, UserProfileEntity>> execute() {
-    return profileRepository.me();
+    return repository.me();
   }
 }

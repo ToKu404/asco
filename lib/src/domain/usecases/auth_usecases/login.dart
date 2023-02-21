@@ -4,14 +4,14 @@ import 'package:asco/src/domain/repositories/auth_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class Login {
-  final AuthRepository authRepository;
+  final AuthRepository repository;
 
-  Login({required this.authRepository});
+  Login({required this.repository});
 
   Future<Either<Failure, UserCredentialEntity>> execute({
     required String username,
     required String password,
   }) {
-    return authRepository.logIn(username: username, password: password);
+    return repository.logIn(username: username, password: password);
   }
 }
