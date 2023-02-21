@@ -4,31 +4,34 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class AttendanceResultModel extends AttendanceResultEntity {
   const AttendanceResultModel({
     required super.attendances,
-    required super.meetingUid,
+    required super.meeting,
     required super.uid,
+    required super.classroomUid,
   });
 
   Map<String, dynamic> toDocument() {
     return {
       "attendances": attendances,
-      "meeting_uid": meetingUid,
+      "meeting": meeting,
       "uid": uid,
+      "classroom_uid": classroomUid,
     };
   }
 
   AttendanceResultEntity toEntity() {
     return AttendanceResultEntity(
-      attendances: attendances,
-      meetingUid: meetingUid,
-      uid: uid,
-    );
+        attendances: attendances,
+        meeting: meeting,
+        uid: uid,
+        classroomUid: classroomUid);
   }
 
   factory AttendanceResultModel.fromSnapshot(
       DocumentSnapshot documentSnapshot) {
     return AttendanceResultModel(
       attendances: documentSnapshot['attendances'],
-      meetingUid: documentSnapshot['meeting_uid'],
+      meeting: documentSnapshot['meeting'],
+      classroomUid: documentSnapshot['classroom_uid'],
       uid: documentSnapshot['uid'],
     );
   }
@@ -36,8 +39,9 @@ class AttendanceResultModel extends AttendanceResultEntity {
   factory AttendanceResultModel.fromEntity(AttendanceResultEntity entity) {
     return AttendanceResultModel(
       attendances: entity.attendances,
-      meetingUid: entity.meetingUid,
+      meeting: entity.meeting,
       uid: entity.uid,
+      classroomUid: entity.classroomUid,
     );
   }
 }

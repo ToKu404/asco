@@ -1,6 +1,6 @@
 import 'dart:convert';
-// ignore: depend_on_referenced_packages
 import 'package:asco/src/presentations/widgets/input_field/input_time_field.dart';
+// ignore: depend_on_referenced_packages
 import 'package:crypto/crypto.dart';
 
 class UserHelper {
@@ -44,6 +44,6 @@ class UserHelper {
     final endTime1 = endTimeList.first.padLeft(2, "0");
     final endTime2 = endTimeList.last.padLeft(2, "0");
 
-    return '${startTime1}:${startTime2}-${endTime1}:${endTime2}';
+    return '$startTime1:$startTime2-$endTime1:$endTime2';
   }
 }
