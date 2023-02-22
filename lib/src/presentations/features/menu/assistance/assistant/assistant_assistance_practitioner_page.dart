@@ -20,42 +20,40 @@ class AssistantAssistancePractitionerPage extends StatelessWidget {
         titleText: 'Praktikan',
         onPressedBackButton: () => Navigator.pop(context),
       ),
-      body: SafeArea(
-        child: ListView.separated(
-          padding: const EdgeInsets.symmetric(
-            vertical: 24,
-            horizontal: 16,
-          ),
-          itemCount: students.length,
-          itemBuilder: (_, i) => CustomStudentCard(
-            student: students[i],
-            isThreeLine: true,
-            thirdLine: BuildBadge(
-              badgeHelper: TempBadgeHelper(
-                badgeId: 3,
-                title: 'Kelas A',
-              ),
-            ),
-            hasTrailing: true,
-            trailing: IconButton(
-              onPressed: () {},
-              icon: SvgPicture.asset(
-                AssetPath.getIcons('github_filled.svg'),
-                color: Palette.purple80,
-                width: 24,
-              ),
-              style: IconButton.styleFrom(
-                backgroundColor: Palette.grey10,
-              ),
-              tooltip: 'Github',
-            ),
-            onTap: () => showAssistantAssistanceControlCardPage(
-              context,
-              student: students[i],
-            ),
-          ),
-          separatorBuilder: (_, __) => const SizedBox(height: 10),
+      body: ListView.separated(
+        padding: const EdgeInsets.symmetric(
+          vertical: 24,
+          horizontal: 16,
         ),
+        itemCount: students.length,
+        itemBuilder: (_, i) => CustomStudentCard(
+          student: students[i],
+          isThreeLine: true,
+          thirdLine: BuildBadge(
+            badgeHelper: TempBadgeHelper(
+              badgeId: 3,
+              title: 'Kelas A',
+            ),
+          ),
+          hasTrailing: true,
+          trailing: IconButton(
+            onPressed: () {},
+            icon: SvgPicture.asset(
+              AssetPath.getIcons('github_filled.svg'),
+              color: Palette.purple80,
+              width: 24,
+            ),
+            style: IconButton.styleFrom(
+              backgroundColor: Palette.grey10,
+            ),
+            tooltip: 'Github',
+          ),
+          onTap: () => showAssistantAssistanceControlCardPage(
+            context,
+            student: students[i],
+          ),
+        ),
+        separatorBuilder: (_, __) => const SizedBox(height: 10),
       ),
     );
   }
