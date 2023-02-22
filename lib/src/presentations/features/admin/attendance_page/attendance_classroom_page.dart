@@ -44,7 +44,7 @@ class AdminAttendanceClassroomPage extends StatelessWidget {
         child: AdminAllClassroomSection(
           onCardTap: (c) {
             return () {
-              showAdminAttendancePage(context: context, classroomUid: c.uid!);
+              showAdminAttendancePage(context: context, classroomId: c.uid!);
             };
           },
         ),

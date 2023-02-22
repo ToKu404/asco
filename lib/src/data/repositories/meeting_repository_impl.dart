@@ -11,11 +11,14 @@ class MeetingRepositoryImpl implements MeetingRepository {
   MeetingRepositoryImpl({required this.dataSource});
 
   @override
-  Future<Either<Failure, bool>> create(
-      {required DetailMeetingEntity meeting}) async {
+  Future<Either<Failure, bool>> create({
+    required DetailMeetingEntity meeting,
+    required List<String> listStudentId,
+  }) async {
     try {
       final result = await dataSource.create(
         meeting: DetailMeetingModel.fromEntity(meeting),
+        listStudentId: listStudentId,
       );
       return Right(result);
     } catch (e) {

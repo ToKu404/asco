@@ -21,11 +21,13 @@ class MeetingNotifier extends CrudDataService<DetailMeetingEntity> {
   //* Create
   Future<void> create({
     required DetailMeetingEntity entity,
+    required List<String> listStudentId,
   }) async {
     updateState(state: RequestState.loading, key: 'create');
     try {
       final result = await createUsecase.execute(
         entity: entity,
+        listStudentId: listStudentId,
       );
       result.fold((l) {
         updateState(state: RequestState.error, key: 'create');

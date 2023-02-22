@@ -3,17 +3,18 @@ import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/presentations/features/admin/attendance_page/widgets/attendance_card.dart';
-import 'package:asco/src/presentations/features/menu/assistance/student/student_assistance_course_detail_page.dart';
-import 'package:asco/src/presentations/providers/attendance_notifier.dart';
+import 'package:asco/src/presentations/providers/meeting_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void showAdminAttendancePage(
-    {required BuildContext context, required String classroomUid}) {
+    {required BuildContext context, required String classroomId}) {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => const AdminAttendancePage(),
+      builder: (context) => AdminAttendancePage(
+        classroomId: classroomId,
+      ),
       settings: const RouteSettings(
         name: AppRoute.adminUsersPage,
       ),
@@ -22,7 +23,8 @@ void showAdminAttendancePage(
 }
 
 class AdminAttendancePage extends StatefulWidget {
-  const AdminAttendancePage({super.key});
+  final String classroomId;
+  const AdminAttendancePage({super.key, required this.classroomId});
 
   @override
   State<AdminAttendancePage> createState() => _AdminAttendancePageState();
@@ -35,6 +37,17 @@ class _AdminAttendancePageState extends State<AdminAttendancePage> {
   void dispose() {
     super.dispose();
     searchController.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(
+      () => Provider.of<MeetingNotifier>(context, listen: false)
+        ..fetch(
+          classroomUid: widget.classroomId,
+        ),
+    );
   }
 
   @override
@@ -92,33 +105,28 @@ class _AdminAttendancePageState extends State<AdminAttendancePage> {
               const SizedBox(
                 height: 8,
               ),
-              Expanded(
-                child: Builder(builder: (context) {
-                  final dataProvider = context.watch<AttendanceNotifier>();
+              Builder(builder: (context) {
+                final dataProvider = context.watch<MeetingNotifier>();
 
-                  // Todo : Add Shimmer
-                  if (dataProvider.isLoadingState('find')) {
-                    return const SizedBox.shrink();
-                  } else if (dataProvider.isErrorState('find')) {
-                    return const SizedBox.shrink();
-                  }
+                // Todo : Add Shimmer
+                if (dataProvider.isLoadingState('find')) {
+                  return const SizedBox.shrink();
+                } else if (dataProvider.isErrorState('find')) {
+                  return const SizedBox.shrink();
+                }
 
-                  return ListView.builder(
-                    padding: const EdgeInsets.only(
-                      left: 16,
-                      right: 16,
-                      bottom: 16 + 65,
-                    ),
-                    itemBuilder: (context, index) {
-                      return AdminAttendanceCard(
-                        entity: dataProvider.listData[index],
-                        number: index + 1,
-                      );
-                    },
-                    itemCount: dataProvider.listData.length,
-                  );
-                }),
-              ),
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return AdminAttendanceCard(
+                      entity: dataProvider.listData[index],
+                      number: index + 1,
+                    );
+                  },
+                  itemCount: dataProvider.listData.length,
+                );
+              }),
             ],
           ),
         ),

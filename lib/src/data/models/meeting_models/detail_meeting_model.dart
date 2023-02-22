@@ -1,3 +1,6 @@
+import 'package:asco/src/data/datasources/helpers/ds_helper.dart';
+import 'package:asco/src/data/models/attendance_models/attendance_model.dart';
+import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 import 'package:asco/src/domain/entities/meeting_entities/detail_meeting_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -10,6 +13,7 @@ class DetailMeetingModel extends DetailMeetingEntity {
     required super.modulPath,
     required super.topic,
     required super.uid,
+    required super.attendances,
   });
 
   Map<String, dynamic> toDocument() {
@@ -21,6 +25,10 @@ class DetailMeetingModel extends DetailMeetingEntity {
       'modul_path': modulPath,
       'topic': topic,
       'uid': uid,
+      if (attendances != null)
+        "attendances": attendances!
+            .map((e) => AttendanceModel.fromEntity(e).toDocument())
+            .toList(),
     };
   }
 
@@ -33,6 +41,7 @@ class DetailMeetingModel extends DetailMeetingEntity {
       modulPath: modulPath,
       topic: topic,
       uid: uid,
+      attendances: attendances,
     );
   }
 
@@ -45,6 +54,13 @@ class DetailMeetingModel extends DetailMeetingEntity {
       modulPath: documentSnapshot['modul_path'],
       topic: documentSnapshot['topic'],
       uid: documentSnapshot['uid'],
+      attendances: ReadHelper.isKeyExist(documentSnapshot, 'attendances')
+          ? List<AttendanceEntity>.from(
+              documentSnapshot.get('attendances').map(
+                    (e) => AttendanceModel.fromMap(e).toEntity(),
+                  ),
+            )
+          : [],
     );
   }
 
@@ -57,8 +73,7 @@ class DetailMeetingModel extends DetailMeetingEntity {
       modulPath: entity.modulPath,
       topic: entity.topic,
       uid: entity.uid,
+      attendances: entity.attendances,
     );
   }
-
-  
 }
