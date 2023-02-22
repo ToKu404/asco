@@ -23,21 +23,43 @@ class MeetingDataSourceImpl implements MeetingDataSources {
   Future<bool> create({required DetailMeetingModel meeting}) async {
     try {
       final uid = collectionReference.doc().id;
-      await collectionReference
-          .add(
-            DetailMeetingModel(
-              assistant1: meeting.assistant1,
-              meetingDate: meeting.meetingDate,
-              assistant2: meeting.assistant2,
-              classUid: meeting.classUid,
-              modulPath: meeting.modulPath,
-              topic: meeting.topic,
-              uid: uid,
-            ),
-          )
-          .then((value) => true)
-          .catchError((error) => false);
+
+      collectionReference.doc(uid).get().then((value) {
+        final data = DetailMeetingModel(
+          assistant1: meeting.assistant1,
+          meetingDate: meeting.meetingDate,
+          assistant2: meeting.assistant2,
+          classUid: meeting.classUid,
+          modulPath: meeting.modulPath,
+          topic: meeting.topic,
+          uid: uid,
+        );
+
+        if (!value.exists) {
+          collectionReference.doc(uid).set(
+                data.toDocument(),
+              );
+        }
+        return true;
+      }).catchError(
+        (error, stackTrace) => throw Exception(),
+      );
       return false;
+      // await collectionReference
+      //     .add(
+      //       DetailMeetingModel(
+      //         assistant1: meeting.assistant1,
+      //         meetingDate: meeting.meetingDate,
+      //         assistant2: meeting.assistant2,
+      //         classUid: meeting.classUid,
+      //         modulPath: meeting.modulPath,
+      //         topic: meeting.topic,
+      //         uid: uid,
+      //       ),
+      //     )
+      //     .then((value) => true)
+      //     .catchError((error) => false);
+      // return false;
     } catch (e) {
       throw Exception();
     }

@@ -37,23 +37,49 @@ class ProfileDataSourceImpl implements ProfileDataSource {
         return false;
       } else {
         final id = collectionReference.doc().id;
-        return collectionReference
-            .add(DetailProfileModel(
-              uid: id,
-              classOf: userProfileModel.classOf,
-              fullName: userProfileModel.fullName,
-              gender: userProfileModel.gender,
-              github: userProfileModel.github,
-              instagram: userProfileModel.instagram,
-              nickName: userProfileModel.nickName,
-              profilePhoto: userProfileModel.profilePhoto,
-              username: userProfileModel.username,
-              userRole: userProfileModel.userRole,
-            ).toDocument())
-            .then((value) => true)
-            .catchError((error) => false);
+
+        collectionReference.doc(id).get().then((value) {
+          final data = DetailProfileModel(
+            uid: id,
+            classOf: userProfileModel.classOf,
+            fullName: userProfileModel.fullName,
+            gender: userProfileModel.gender,
+            github: userProfileModel.github,
+            instagram: userProfileModel.instagram,
+            nickName: userProfileModel.nickName,
+            profilePhoto: userProfileModel.profilePhoto,
+            username: userProfileModel.username,
+            userRole: userProfileModel.userRole,
+          );
+          if (!value.exists) {
+            collectionReference.doc(id).set(
+                  data.toDocument(),
+                );
+          }
+          return true;
+        }).catchError(
+          (error, stackTrace) => throw Exception(),
+        );
+        return false;
+        // final id = collectionReference.doc().id;
+        // return collectionReference
+        //     .add(DetailProfileModel(
+        //       uid: id,
+        //       classOf: userProfileModel.classOf,
+        //       fullName: userProfileModel.fullName,
+        //       gender: userProfileModel.gender,
+        //       github: userProfileModel.github,
+        //       instagram: userProfileModel.instagram,
+        //       nickName: userProfileModel.nickName,
+        //       profilePhoto: userProfileModel.profilePhoto,
+        //       username: userProfileModel.username,
+        //       userRole: userProfileModel.userRole,
+        //     ).toDocument())
+        //     .then((value) => true)
+        //     .catchError((error) => false);
       }
     } catch (e) {
+      print(e.toString());
       throw Exception();
     }
   }
