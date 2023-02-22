@@ -1,7 +1,6 @@
 import 'package:asco/core/services/data_service.dart';
 import 'package:asco/core/state/request_state.dart';
 import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
-import 'package:asco/src/domain/entities/practicum_entities/practicum_entity.dart';
 import 'package:asco/src/domain/usecases/classroom_usecases/create_practicum.dart';
 import 'package:asco/src/domain/usecases/classroom_usecases/get_list_practicum.dart';
 import 'package:asco/src/domain/usecases/classroom_usecases/get_single_practicum.dart';

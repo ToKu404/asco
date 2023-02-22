@@ -1,4 +1,4 @@
-import 'package:asco/src/domain/entities/profile_entities/user_profile_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
 import 'package:equatable/equatable.dart';
 
 class PracticumEntity extends Equatable {
@@ -6,7 +6,7 @@ class PracticumEntity extends Equatable {
   final String? badgePath;
   final String? course;
   final String? courseContractPath;
-  final List<UserProfileEntity>? listAssistant;
+  final List<DetailProfileEntity>? listAssistant;
 
   const PracticumEntity({
     this.badgePath,

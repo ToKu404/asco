@@ -1,8 +1,8 @@
-import 'package:asco/src/domain/entities/profile_entities/user_profile_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
 import 'package:equatable/equatable.dart';
 
 class ScoreEntity extends Equatable {
-  final UserProfileEntity? student;
+  final DetailProfileEntity? student;
   final double? score;
   final String? note;
   final String? predicate;

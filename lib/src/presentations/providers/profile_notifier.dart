@@ -1,6 +1,6 @@
 import 'package:asco/core/services/data_service.dart';
 import 'package:asco/core/state/request_state.dart';
-import 'package:asco/src/domain/entities/profile_entities/user_profile_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/create_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/get_list_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/get_single_profile.dart';
@@ -8,7 +8,7 @@ import 'package:asco/src/domain/usecases/profile_usecases/remove_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/self_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/update_profile.dart';
 
-class ProfileNotifier extends CrudDataService<UserProfileEntity> {
+class ProfileNotifier extends CrudDataService<DetailProfileEntity> {
   final CreateProfile createUsecase;
   final GetListProfile getListDataUsecase;
   final GetSingleProfile getSingleUsecase;
@@ -27,7 +27,7 @@ class ProfileNotifier extends CrudDataService<UserProfileEntity> {
     createState(['create', 'find', 'me']);
   }
 
-  Future<void> createProfile(UserProfileEntity entity) async {
+  Future<void> createProfile(DetailProfileEntity entity) async {
     updateState(state: RequestState.loading, key: 'create');
     notifyListeners();
     try {
