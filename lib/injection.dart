@@ -21,6 +21,7 @@ import 'package:asco/src/domain/usecases/classroom_usecases/get_single_practicum
 import 'package:asco/src/domain/usecases/practicum_usecases/create_practicum.dart';
 import 'package:asco/src/domain/usecases/practicum_usecases/get_list_practicum.dart';
 import 'package:asco/src/domain/usecases/practicum_usecases/get_single_practicum.dart';
+import 'package:asco/src/domain/usecases/practicum_usecases/update_practicum_assistant.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/create_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/get_list_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/get_single_profile.dart';
@@ -66,6 +67,7 @@ void init() {
       createUsecase: locator(),
       getListUsecase: locator(),
       getSingleUsecase: locator(),
+      updateAssistantUsecase: locator(),
     ),
   );
 
@@ -170,6 +172,11 @@ void init() {
   );
   locator.registerLazySingleton(
     () => GetSinglePracticum(
+      repository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => UpdatePracticumAssistant(
       repository: locator(),
     ),
   );

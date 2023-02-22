@@ -1,9 +1,15 @@
 import 'package:asco/src/data/models/practicum_models/practicum_model.dart';
+import 'package:asco/src/data/models/profile_models/profile_model.dart';
+import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 abstract class PracticumDataSource {
   Future<bool> create({required PracticumModel practicum});
   Future<PracticumModel> single({required String uid});
+  Future<bool> updateAssistant({
+    required List<ProfileEntity> assistants,
+    required String practicumUid,
+  });
   Future<List<PracticumModel>> find({
     String? query,
   });
@@ -97,6 +103,29 @@ class PracticumDataSourceImpl implements PracticumDataSource {
         }
       });
       throw Exception();
+    } catch (e) {
+      throw Exception();
+    }
+  }
+
+  @override
+  Future<bool> updateAssistant(
+      {required List<ProfileEntity> assistants,
+      required String practicumUid}) async {
+    try {
+      collectionReference
+          .doc(practicumUid)
+          .update({
+            "list_assistant": assistants
+                .map(
+                  (e) => ProfileModel.fromEntity(e).toDocument(),
+                )
+                .toList()
+          })
+          .then((value) => true)
+          .catchError((e) => false);
+
+      return false;
     } catch (e) {
       throw Exception();
     }

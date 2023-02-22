@@ -1,21 +1,25 @@
 import 'package:asco/core/services/data_service.dart';
 import 'package:asco/core/state/request_state.dart';
 import 'package:asco/src/domain/entities/practicum_entities/practicum_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:asco/src/domain/usecases/practicum_usecases/create_practicum.dart';
 import 'package:asco/src/domain/usecases/practicum_usecases/get_list_practicum.dart';
 import 'package:asco/src/domain/usecases/practicum_usecases/get_single_practicum.dart';
+import 'package:asco/src/domain/usecases/practicum_usecases/update_practicum_assistant.dart';
 
 class PracticumNotifier extends CrudDataService<PracticumEntity> {
   final CreatePracticum createUsecase;
   final GetListPracticum getListUsecase;
   final GetSinglePracticum getSingleUsecase;
+  final UpdatePracticumAssistant updateAssistantUsecase;
 
   PracticumNotifier({
     required this.createUsecase,
     required this.getListUsecase,
     required this.getSingleUsecase,
+    required this.updateAssistantUsecase,
   }) {
-    createState(['create', 'find', 'single']);
+    createState(['create', 'find', 'single', 'update_assistant']);
   }
 
   Future<void> create(PracticumEntity entity) async {
@@ -31,6 +35,30 @@ class PracticumNotifier extends CrudDataService<PracticumEntity> {
       notifyListeners();
     } catch (e) {
       updateState(state: RequestState.error, key: 'create');
+      setErrorMessage(e.toString());
+    }
+  }
+
+  //* Update Assistant
+  Future<void> updateAssistant({
+    required List<ProfileEntity> assistants,
+    required String practicumUid,
+  }) async {
+    updateState(state: RequestState.loading, key: 'update_assistant');
+    try {
+      final result = await updateAssistantUsecase.execute(
+        assistants: assistants,
+        practicumUid: practicumUid,
+      );
+      result.fold((l) {
+        updateState(state: RequestState.error, key: 'update_assistant');
+        setErrorMessage(l.message);
+      }, (r) {
+        updateState(state: RequestState.success, key: 'update_assistant');
+      });
+      notifyListeners();
+    } catch (e) {
+      updateState(state: RequestState.error, key: 'update_assistant');
       setErrorMessage(e.toString());
     }
   }
