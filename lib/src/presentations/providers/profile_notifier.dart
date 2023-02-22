@@ -3,6 +3,7 @@ import 'package:asco/core/state/request_state.dart';
 import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/create_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/get_list_profile.dart';
+import 'package:asco/src/domain/usecases/profile_usecases/get_multiple_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/get_single_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/remove_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/self_profile.dart';
@@ -15,6 +16,7 @@ class ProfileNotifier extends CrudDataService<DetailProfileEntity> {
   final RemoveProfile removeDataUsecase;
   final UpdateProfile updateDataUsecase;
   final SelfProfile selfDataUsecase;
+  final GetMultipleProfile getMultipleUsecase;
 
   ProfileNotifier({
     required this.createUsecase,
@@ -23,8 +25,9 @@ class ProfileNotifier extends CrudDataService<DetailProfileEntity> {
     required this.removeDataUsecase,
     required this.updateDataUsecase,
     required this.selfDataUsecase,
+    required this.getMultipleUsecase,
   }) {
-    createState(['create', 'find', 'me']);
+    createState(['create', 'find', 'me', 'multiple']);
   }
 
   Future<void> createProfile(DetailProfileEntity entity) async {
@@ -60,6 +63,25 @@ class ProfileNotifier extends CrudDataService<DetailProfileEntity> {
       notifyListeners();
     } catch (e) {
       updateState(state: RequestState.error, key: 'find');
+      setErrorMessage(e.toString());
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchMultiple({required List<String> multipleId}) async {
+    updateState(state: RequestState.loading, key: 'multiple');
+    try {
+      final result = await getMultipleUsecase.execute(multipleId: multipleId);
+      result.fold((l) {
+        updateState(state: RequestState.error, key: 'multiple');
+        setErrorMessage(l.message);
+      }, (r) {
+        updateState(state: RequestState.success, key: 'multiple');
+        setListData(r);
+      });
+      notifyListeners();
+    } catch (e) {
+      updateState(state: RequestState.error, key: 'multiple');
       setErrorMessage(e.toString());
       notifyListeners();
     }

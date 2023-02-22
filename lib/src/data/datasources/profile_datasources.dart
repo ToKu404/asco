@@ -7,7 +7,9 @@ abstract class ProfileDataSource {
   Future<bool> create({required DetailProfileModel userProfileModel});
   Future<DetailProfileModel> single({required String uid});
   Future<DetailProfileModel> me();
-
+  Future<List<DetailProfileModel>> multiple({
+    required List<String> multipleId,
+  });
   Future<bool> update({required DetailProfileModel userProfileModel});
   Future<bool> remove({required String uid});
   Future<List<DetailProfileModel>> find({
@@ -61,22 +63,6 @@ class ProfileDataSourceImpl implements ProfileDataSource {
           (error, stackTrace) => throw Exception(),
         );
         return false;
-        // final id = collectionReference.doc().id;
-        // return collectionReference
-        //     .add(DetailProfileModel(
-        //       uid: id,
-        //       classOf: userProfileModel.classOf,
-        //       fullName: userProfileModel.fullName,
-        //       gender: userProfileModel.gender,
-        //       github: userProfileModel.github,
-        //       instagram: userProfileModel.instagram,
-        //       nickName: userProfileModel.nickName,
-        //       profilePhoto: userProfileModel.profilePhoto,
-        //       username: userProfileModel.username,
-        //       userRole: userProfileModel.userRole,
-        //     ).toDocument())
-        //     .then((value) => true)
-        //     .catchError((error) => false);
       }
     } catch (e) {
       print(e.toString());
@@ -106,6 +92,29 @@ class ProfileDataSourceImpl implements ProfileDataSource {
       }
 
       //? all
+      return await snapshot.then(
+        (value) =>
+            value.docs.map((e) => DetailProfileModel.fromSnapshot(e)).toList(),
+      );
+    } catch (e) {
+      throw Exception();
+    }
+  }
+
+  @override
+  Future<List<DetailProfileModel>> multiple({
+    required List<String> multipleId,
+  }) async {
+    try {
+      Future<QuerySnapshot> snapshot = collectionReference.get();
+
+      snapshot = collectionReference
+          .where(
+            'uid',
+            whereIn: multipleId,
+          )
+          .get();
+
       return await snapshot.then(
         (value) =>
             value.docs.map((e) => DetailProfileModel.fromSnapshot(e)).toList(),

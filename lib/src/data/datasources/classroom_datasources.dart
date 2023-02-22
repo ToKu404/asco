@@ -101,7 +101,7 @@ class ClassroomDataSourceImpl implements ClassroomDataSource {
   @override
   Future<ClassroomModel> single({required String uid}) async {
     try {
-      await collectionReference
+      return await collectionReference
           .doc(uid)
           .get()
           .then((DocumentSnapshot documentSnapshot) {
@@ -111,8 +111,8 @@ class ClassroomDataSourceImpl implements ClassroomDataSource {
           throw Exception();
         }
       });
-      throw Exception();
     } catch (e) {
+      print(e.toString());
       throw Exception();
     }
   }

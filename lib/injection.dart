@@ -30,6 +30,7 @@ import 'package:asco/src/domain/usecases/practicum_usecases/get_single_practicum
 import 'package:asco/src/domain/usecases/practicum_usecases/update_practicum_assistant.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/create_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/get_list_profile.dart';
+import 'package:asco/src/domain/usecases/profile_usecases/get_multiple_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/get_single_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/remove_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/self_profile.dart';
@@ -66,6 +67,7 @@ void init() {
       removeDataUsecase: locator(),
       updateDataUsecase: locator(),
       selfDataUsecase: locator(),
+      getMultipleUsecase: locator(),
     ),
   );
 
@@ -156,6 +158,11 @@ void init() {
   );
   locator.registerLazySingleton(
     () => GetListProfile(
+      repository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => GetMultipleProfile(
       repository: locator(),
     ),
   );

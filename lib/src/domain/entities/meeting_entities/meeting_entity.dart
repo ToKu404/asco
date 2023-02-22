@@ -17,7 +17,7 @@ class MeetingEntity extends Equatable {
     return MeetingEntity(
       meetingDate: detail.meetingDate,
       topic: detail.topic,
-      uid: detail.uid,
+      uid: detail.uid
     );
   }
 

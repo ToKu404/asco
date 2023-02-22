@@ -82,4 +82,18 @@ class ProfileRepositoryImpl implements ProfileRepository {
       return const Left(FirestoreFailure(''));
     }
   }
+
+  @override
+  Future<Either<Failure, List<DetailProfileEntity>>> multiple(
+      {required List<String> multipleId}) async {
+    try {
+      final result = await datasource.multiple(
+        multipleId: multipleId,
+      );
+
+      return Right(result);
+    } catch (e) {
+      return const Left(FirestoreFailure(''));
+    }
+  }
 }

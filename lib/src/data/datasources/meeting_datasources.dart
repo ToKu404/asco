@@ -26,9 +26,9 @@ class MeetingDataSourceImpl implements MeetingDataSources {
 
       collectionReference.doc(uid).get().then((value) {
         final data = DetailMeetingModel(
-          assistant1: meeting.assistant1,
+          assistant1Uid: meeting.assistant1Uid,
           meetingDate: meeting.meetingDate,
-          assistant2: meeting.assistant2,
+          assistant2Uid: meeting.assistant2Uid,
           classUid: meeting.classUid,
           modulPath: meeting.modulPath,
           topic: meeting.topic,
