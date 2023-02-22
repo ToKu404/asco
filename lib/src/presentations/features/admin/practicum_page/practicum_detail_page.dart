@@ -407,6 +407,7 @@ class PracticumClassCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWellContainer(
       color: Colors.white,
+      margin: const EdgeInsets.only(bottom: 12),
       onTap: () {
         showAdminClassDetailPage(context: context);
       },
