@@ -1,14 +1,15 @@
-import 'package:asco/src/domain/entities/profile_entities/user_profile_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:equatable/equatable.dart';
 
-class AssistanceEntity extends Equatable {
+class AssistanceGroupEntity extends Equatable {
   final String? uid;
   final String? practicumUid;
   final String? name;
-  final UserProfileEntity? assistant;
-  final List<UserProfileEntity>? students;
+  final ProfileEntity? assistant;
+  final List<ProfileEntity>? students;
 
-  const AssistanceEntity({
+  const AssistanceGroupEntity({
     this.assistant,
     this.name,
     this.practicumUid,

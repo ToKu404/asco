@@ -1,16 +1,16 @@
 import 'package:asco/src/data/datasources/helpers/ds_helper.dart';
-import 'package:asco/src/data/models/profile_models/user_profile_model.dart';
+import 'package:asco/src/data/models/profile_models/detail_profile_model.dart';
 import 'package:asco/src/data/services/preferences_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 abstract class ProfileDataSource {
-  Future<bool> create({required UserProfileModel userProfileModel});
-  Future<UserProfileModel> single({required String uid});
-  Future<UserProfileModel> me();
+  Future<bool> create({required DetailProfileModel userProfileModel});
+  Future<DetailProfileModel> single({required String uid});
+  Future<DetailProfileModel> me();
 
-  Future<bool> update({required UserProfileModel userProfileModel});
+  Future<bool> update({required DetailProfileModel userProfileModel});
   Future<bool> remove({required String uid});
-  Future<List<UserProfileModel>> find({
+  Future<List<DetailProfileModel>> find({
     String? query,
     int? byRole,
   });
@@ -27,7 +27,7 @@ class ProfileDataSourceImpl implements ProfileDataSource {
   late CollectionReference collectionReference;
 
   @override
-  Future<bool> create({required UserProfileModel userProfileModel}) async {
+  Future<bool> create({required DetailProfileModel userProfileModel}) async {
     try {
       QuerySnapshot snapshot = await collectionReference
           .where("username", isEqualTo: userProfileModel.username)
@@ -37,29 +37,55 @@ class ProfileDataSourceImpl implements ProfileDataSource {
         return false;
       } else {
         final id = collectionReference.doc().id;
-        return collectionReference
-            .add(UserProfileModel(
-              uid: id,
-              classOf: userProfileModel.classOf,
-              fullName: userProfileModel.fullName,
-              gender: userProfileModel.gender,
-              github: userProfileModel.github,
-              instagram: userProfileModel.instagram,
-              nickName: userProfileModel.nickName,
-              profilePhoto: userProfileModel.profilePhoto,
-              username: userProfileModel.username,
-              userRole: userProfileModel.userRole,
-            ).toDocument())
-            .then((value) => true)
-            .catchError((error) => false);
+
+        collectionReference.doc(id).get().then((value) {
+          final data = DetailProfileModel(
+            uid: id,
+            classOf: userProfileModel.classOf,
+            fullName: userProfileModel.fullName,
+            gender: userProfileModel.gender,
+            github: userProfileModel.github,
+            instagram: userProfileModel.instagram,
+            nickName: userProfileModel.nickName,
+            profilePhoto: userProfileModel.profilePhoto,
+            username: userProfileModel.username,
+            userRole: userProfileModel.userRole,
+          );
+          if (!value.exists) {
+            collectionReference.doc(id).set(
+                  data.toDocument(),
+                );
+          }
+          return true;
+        }).catchError(
+          (error, stackTrace) => throw Exception(),
+        );
+        return false;
+        // final id = collectionReference.doc().id;
+        // return collectionReference
+        //     .add(DetailProfileModel(
+        //       uid: id,
+        //       classOf: userProfileModel.classOf,
+        //       fullName: userProfileModel.fullName,
+        //       gender: userProfileModel.gender,
+        //       github: userProfileModel.github,
+        //       instagram: userProfileModel.instagram,
+        //       nickName: userProfileModel.nickName,
+        //       profilePhoto: userProfileModel.profilePhoto,
+        //       username: userProfileModel.username,
+        //       userRole: userProfileModel.userRole,
+        //     ).toDocument())
+        //     .then((value) => true)
+        //     .catchError((error) => false);
       }
     } catch (e) {
+      print(e.toString());
       throw Exception();
     }
   }
 
   @override
-  Future<List<UserProfileModel>> find({
+  Future<List<DetailProfileModel>> find({
     String? query,
     int? byRole,
   }) async {
@@ -82,7 +108,7 @@ class ProfileDataSourceImpl implements ProfileDataSource {
       //? all
       return await snapshot.then(
         (value) =>
-            value.docs.map((e) => UserProfileModel.fromSnapshot(e)).toList(),
+            value.docs.map((e) => DetailProfileModel.fromSnapshot(e)).toList(),
       );
     } catch (e) {
       throw Exception();
@@ -103,14 +129,14 @@ class ProfileDataSourceImpl implements ProfileDataSource {
   }
 
   @override
-  Future<UserProfileModel> single({required String uid}) async {
+  Future<DetailProfileModel> single({required String uid}) async {
     try {
       await collectionReference
           .doc(uid)
           .get()
           .then((DocumentSnapshot documentSnapshot) {
         if (documentSnapshot.exists) {
-          return UserProfileModel.fromSnapshot(documentSnapshot);
+          return DetailProfileModel.fromSnapshot(documentSnapshot);
         } else {
           throw Exception();
         }
@@ -122,7 +148,7 @@ class ProfileDataSourceImpl implements ProfileDataSource {
   }
 
   @override
-  Future<bool> update({required UserProfileModel userProfileModel}) async {
+  Future<bool> update({required DetailProfileModel userProfileModel}) async {
     try {
       UpdateHelper updateHelper = UpdateHelper();
       updateHelper.onUpdate('class_of', userProfileModel.classOf);
@@ -145,7 +171,7 @@ class ProfileDataSourceImpl implements ProfileDataSource {
   }
 
   @override
-  Future<UserProfileModel> me() async {
+  Future<DetailProfileModel> me() async {
     try {
       final credential = await pref.getUser();
 
@@ -154,7 +180,7 @@ class ProfileDataSourceImpl implements ProfileDataSource {
           .get();
 
       if (snapshot.docs.isNotEmpty) {
-        return UserProfileModel.fromSnapshot(snapshot.docs.first);
+        return DetailProfileModel.fromSnapshot(snapshot.docs.first);
       } else {
         throw Exception();
       }

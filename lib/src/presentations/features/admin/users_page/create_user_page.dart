@@ -4,7 +4,7 @@ import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/core/services/user_helper.dart';
 import 'package:asco/src/domain/entities/auth_entities/user_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/role_map.dart';
-import 'package:asco/src/domain/entities/profile_entities/user_profile_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/user_role_entity.dart';
 import 'package:asco/src/presentations/providers/auth_notifier.dart';
 import 'package:asco/src/presentations/providers/profile_notifier.dart';
@@ -182,8 +182,9 @@ class _CreateUserPageState extends State<CreateUserPage> {
                 isRequired: true,
                 onEditingComplete: _nicknameController.text.trim().isEmpty
                     ? () {
-                        _nicknameController.text = UserHelper.nicknameGenerator(
-                            _fullnameController.text);
+                        _nicknameController.text =
+                            ReusableHelper.nicknameGenerator(
+                                _fullnameController.text);
                       }
                     : null,
               ),
@@ -252,7 +253,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
       authProvider.createUser(
         UserEntity(
           username: _usernameController.text,
-          password: UserHelper.hashPassword(password),
+          password: ReusableHelper.hashPassword(password),
           roleId: _listRole.indexOf(_roleNotifier.value!) + 1,
         ),
       );
@@ -260,18 +261,18 @@ class _CreateUserPageState extends State<CreateUserPage> {
       ///Create new profile
       String nickName = '';
       if (_nicknameController.text.isEmpty) {
-        nickName = UserHelper.nicknameGenerator(_fullnameController.text);
+        nickName = ReusableHelper.nicknameGenerator(_fullnameController.text);
       } else {
         nickName = _nicknameController.text;
       }
       profileProvider.createProfile(
-        UserProfileEntity(
+        DetailProfileEntity(
           classOf: _batchNotifier.value,
-          fullName: UserHelper.titleMaker(_fullnameController.text),
+          fullName: ReusableHelper.titleMaker(_fullnameController.text),
           gender: _genderNotifier.value,
           github: _githubController.text,
           instagram: _instagramController.text,
-          nickName: UserHelper.titleMaker(nickName),
+          nickName: ReusableHelper.titleMaker(nickName),
           profilePhoto: 'https://i.mydramalist.com/e3AQef.jpg',
           username: _usernameController.text,
           userRole: UserRoleEntity(

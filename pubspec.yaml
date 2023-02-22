@@ -29,6 +29,8 @@ dependencies:
   shared_preferences: ^2.0.17
   super_banners: ^0.0.1
   date_time_picker: ^2.1.0
+  intl: ^0.17.0
+  firebase_messaging: ^14.2.5
 
 dev_dependencies:
   flutter_launcher_icons: "^0.11.0"
@@ -56,6 +58,9 @@ flutter:
         - asset: fonts/Poppins-Thin.ttf
         - asset: fonts/Poppins-Light.ttf
         - asset: fonts/Poppins-ExtraLight.ttf
+    - family: OpenSans
+      fonts:
+        - asset: fonts/OpenSans-ExtraBold.ttf
 
 flutter_icons:
   android: "launcher_icon"

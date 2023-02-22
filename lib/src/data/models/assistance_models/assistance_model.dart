@@ -1,8 +1,8 @@
 import 'package:asco/src/domain/entities/assistance_entities/assistance_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class AssistanceModel extends AssistanceEntity {
-  const AssistanceModel({
+class AssistanceGroupModel extends AssistanceGroupEntity {
+  const AssistanceGroupModel({
     required super.assistant,
     required super.name,
     required super.practicumUid,
@@ -20,8 +20,8 @@ class AssistanceModel extends AssistanceEntity {
     };
   }
 
-  AssistanceEntity toEntity() {
-    return AssistanceEntity(
+  AssistanceGroupEntity toEntity() {
+    return AssistanceGroupEntity(
         assistant: assistant,
         name: name,
         practicumUid: practicumUid,
@@ -29,8 +29,8 @@ class AssistanceModel extends AssistanceEntity {
         uid: uid);
   }
 
-  factory AssistanceModel.fromSnapshot(DocumentSnapshot documentSnapshot) {
-    return AssistanceModel(
+  factory AssistanceGroupModel.fromSnapshot(DocumentSnapshot documentSnapshot) {
+    return AssistanceGroupModel(
       assistant: documentSnapshot['assistant'],
       name: documentSnapshot['name'],
       practicumUid: documentSnapshot['practicum_uid'],
@@ -39,8 +39,9 @@ class AssistanceModel extends AssistanceEntity {
     );
   }
 
-  factory AssistanceModel.fromEntity(AssistanceEntity assistanceEntity) {
-    return AssistanceModel(
+  factory AssistanceGroupModel.fromEntity(
+      AssistanceGroupEntity assistanceEntity) {
+    return AssistanceGroupModel(
       assistant: assistanceEntity.assistant,
       name: assistanceEntity.name,
       practicumUid: assistanceEntity.practicumUid,

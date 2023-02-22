@@ -24,18 +24,18 @@ class AppBarTitle extends StatelessWidget {
         ),
         RichText(
           text: TextSpan(
-            text: 'as',
+            text: 'AS',
             style: kTextTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.w900,
-              color: Palette.purple100,
-            ),
+                fontWeight: FontWeight.w900,
+                color: Palette.purple100,
+                fontFamily: 'OpenSans'),
             children: [
               TextSpan(
-                text: 'co',
+                text: 'CO',
                 style: kTextTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w900,
-                  color: Palette.purple60,
-                ),
+                    fontWeight: FontWeight.w900,
+                    color: Palette.purple60,
+                    fontFamily: 'OpenSans'),
               )
             ],
           ),

@@ -1,9 +1,9 @@
 import 'package:asco/src/data/models/profile_models/user_role_model.dart';
-import 'package:asco/src/domain/entities/profile_entities/user_profile_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class UserProfileModel extends UserProfileEntity {
-  const UserProfileModel({
+class DetailProfileModel extends DetailProfileEntity {
+  const DetailProfileModel({
     super.classOf,
     super.fullName,
     super.gender,
@@ -35,8 +35,8 @@ class UserProfileModel extends UserProfileEntity {
     };
   }
 
-  UserProfileEntity toEntity() {
-    return UserProfileEntity(
+  DetailProfileEntity toEntity() {
+    return DetailProfileEntity(
       classOf: classOf,
       fullName: fullName,
       gender: gender,
@@ -50,8 +50,8 @@ class UserProfileModel extends UserProfileEntity {
     );
   }
 
-  factory UserProfileModel.fromSnapshot(DocumentSnapshot documentSnapshot) {
-    return UserProfileModel(
+  factory DetailProfileModel.fromSnapshot(DocumentSnapshot documentSnapshot) {
+    return DetailProfileModel(
       classOf: documentSnapshot['class_of'],
       fullName: documentSnapshot['full_name'],
       gender: documentSnapshot['gender'],
@@ -67,8 +67,8 @@ class UserProfileModel extends UserProfileEntity {
     );
   }
 
-  factory UserProfileModel.fromMap(Map<String, dynamic> documentSnapshot) {
-    return UserProfileModel(
+  factory DetailProfileModel.fromMap(Map<String, dynamic> documentSnapshot) {
+    return DetailProfileModel(
       classOf: documentSnapshot['class_of'],
       fullName: documentSnapshot['full_name'],
       gender: documentSnapshot['gender'],
@@ -84,8 +84,8 @@ class UserProfileModel extends UserProfileEntity {
     );
   }
 
-  factory UserProfileModel.fromEntity(UserProfileEntity userProfileEntity) {
-    return UserProfileModel(
+  factory DetailProfileModel.fromEntity(DetailProfileEntity userProfileEntity) {
+    return DetailProfileModel(
       classOf: userProfileEntity.classOf,
       fullName: userProfileEntity.fullName,
       gender: userProfileEntity.gender,

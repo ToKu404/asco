@@ -7,7 +7,6 @@ import 'package:asco/core/services/user_helper.dart';
 import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
 import 'package:asco/src/presentations/features/admin/classroom_page/meeting_page.dart';
 import 'package:asco/src/presentations/providers/classroom_notifier.dart';
-import 'package:asco/src/presentations/providers/practicum_notifier.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:asco/src/presentations/widgets/input_field/input_time_field.dart';
 import 'package:flutter/material.dart';
@@ -162,8 +161,10 @@ class PracticumClassCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWellContainer(
       color: Colors.white,
+      margin: const EdgeInsets.only(bottom: 12),
       onTap: () {
-        showAdminClassroomMeetingPage(context: context);
+        showAdminClassroomMeetingPage(
+            context: context, classroomId: classroom.uid!);
       },
       radius: 12,
       child: Container(
@@ -191,7 +192,7 @@ class PracticumClassCard extends StatelessWidget {
               height: 8,
             ),
             Text(
-              'Setiap ${classroom.meetingDay} ${UserHelper.timeFormater(TimeHelper(
+              'Setiap ${classroom.meetingDay} ${ReusableHelper.timeFormater(TimeHelper(
                 startHour: classroom.startHour,
                 endHour: classroom.endHour,
                 startMinute: classroom.startMinute,

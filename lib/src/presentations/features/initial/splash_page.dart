@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:asco/core/constants/app_name.dart';
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/src/presentations/features/initial/wrapper.dart';
@@ -68,11 +69,10 @@ class _SplashPageState extends State<SplashPage> {
                     height: 4,
                   ),
                   const Text(
-                    'asco',
+                    AppInfo.appName,
                     style: TextStyle(
                       fontSize: 44,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w700,
+                      fontFamily: 'OpenSans',
                       color: Palette.white,
                     ),
                   )
