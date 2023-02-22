@@ -2,7 +2,6 @@ import 'package:asco/src/data/models/attendance_models/attendance_model.dart';
 import 'package:asco/src/data/models/attendance_models/attendance_result_model.dart';
 import 'package:asco/src/data/models/meeting_models/meeting_model.dart';
 import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
-import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 abstract class AttendancesDataSources {
@@ -11,7 +10,7 @@ abstract class AttendancesDataSources {
     required String classroomUid,
     required List<DetailProfileEntity> students,
   });
-  Future<bool> add({
+  Future<bool> update({
     required String uid,
     required AttendanceModel attendance,
     required AttendanceModel oldAttendance,
@@ -32,7 +31,7 @@ class AttendancesDataSourceImpl implements AttendancesDataSources {
   late CollectionReference collectionReference;
 
   @override
-  Future<bool> add(
+  Future<bool> update(
       {required String uid,
       required AttendanceModel attendance,
       required AttendanceModel oldAttendance}) async {
@@ -68,18 +67,11 @@ class AttendancesDataSourceImpl implements AttendancesDataSources {
               .map(
                 (e) => AttendanceModel(
                   //! uuid attendance == student uid
-                  uuid: e.uid,
                   attendanceStatus: 3,
                   attendanceTime: null,
                   note: null,
                   pointPlus: null,
-                  student: ProfileEntity(
-                    fullName: e.fullName,
-                    profilePhoto: e.profilePhoto,
-                    uid: e.uid,
-                    userRole: e.userRole,
-                    username: e.username,
-                  ),
+                  studentUid: e.uid,
                 ),
               )
               .toList(),

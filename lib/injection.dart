@@ -1,18 +1,25 @@
+import 'package:asco/src/data/datasources/attendances_datasources.dart';
 import 'package:asco/src/data/datasources/auth_datasources.dart';
 import 'package:asco/src/data/datasources/classroom_datasources.dart';
 import 'package:asco/src/data/datasources/meeting_datasources.dart';
 import 'package:asco/src/data/datasources/practicum_datasources.dart';
 import 'package:asco/src/data/datasources/profile_datasources.dart';
+import 'package:asco/src/data/repositories/attendances_repository_impl.dart';
 import 'package:asco/src/data/repositories/auth_repository_impl.dart';
 import 'package:asco/src/data/repositories/classroom_repository_impl.dart';
 import 'package:asco/src/data/repositories/meeting_repository_impl.dart';
 import 'package:asco/src/data/repositories/practicum_repository_impl.dart';
 import 'package:asco/src/data/repositories/profile_repository_impl.dart';
+import 'package:asco/src/domain/repositories/attendances_repository.dart';
 import 'package:asco/src/domain/repositories/auth_repository.dart';
 import 'package:asco/src/domain/repositories/classroom_repository.dart';
 import 'package:asco/src/domain/repositories/meeting_repository.dart';
 import 'package:asco/src/domain/repositories/practicum_repository.dart';
 import 'package:asco/src/domain/repositories/profile_repository.dart';
+import 'package:asco/src/domain/usecases/attendance_usecases/add_attendance.dart';
+import 'package:asco/src/domain/usecases/attendance_usecases/create_attendance.dart';
+import 'package:asco/src/domain/usecases/attendance_usecases/get_list_attendance.dart';
+import 'package:asco/src/domain/usecases/attendance_usecases/get_single_attendance.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/create_user.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/get_user.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/login.dart';
@@ -35,6 +42,7 @@ import 'package:asco/src/domain/usecases/profile_usecases/get_single_profile.dar
 import 'package:asco/src/domain/usecases/profile_usecases/remove_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/self_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/update_profile.dart';
+import 'package:asco/src/presentations/providers/attendance_notifier.dart';
 import 'package:asco/src/presentations/providers/auth_notifier.dart';
 import 'package:asco/src/presentations/providers/classroom_notifier.dart';
 import 'package:asco/src/presentations/providers/meeting_notifier.dart';
@@ -96,6 +104,15 @@ void init() {
     ),
   );
 
+  locator.registerFactory(
+    () => AttendanceNotifier(
+      createUsecase: locator(),
+      getListDataUsecase: locator(),
+      getSingleDataUsecase: locator(),
+      updateUsecase: locator(),
+    ),
+  );
+
   //! repositories
   locator.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(
@@ -119,6 +136,11 @@ void init() {
   );
   locator.registerLazySingleton<MeetingRepository>(
     () => MeetingRepositoryImpl(
+      dataSource: locator(),
+    ),
+  );
+  locator.registerLazySingleton<AttendancesRepository>(
+    () => AttendancesRepositoryImpl(
       dataSource: locator(),
     ),
   );
@@ -240,6 +262,27 @@ void init() {
     ),
   );
 
+  //* Meeting Usecase
+  locator.registerLazySingleton(
+    () => CreateAttendance(
+      repository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => GetListAttendance(
+      repository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => GetSingleAttendance(
+      repository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => UpdateAttendance(
+      repository: locator(),
+    ),
+  );
   //! datasources
   locator.registerLazySingleton<AuthDataSources>(
     () => AuthDataSourcesImpl(
@@ -265,6 +308,11 @@ void init() {
   );
   locator.registerLazySingleton<MeetingDataSources>(
     () => MeetingDataSourceImpl(
+      firestore: locator(),
+    ),
+  );
+  locator.registerLazySingleton<AttendancesDataSources>(
+    () => AttendancesDataSourceImpl(
       firestore: locator(),
     ),
   );

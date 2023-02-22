@@ -1,6 +1,7 @@
 import 'package:asco/core/constants/app_name.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/src/presentations/features/initial/splash_page.dart';
+import 'package:asco/src/presentations/providers/attendance_notifier.dart';
 import 'package:asco/src/presentations/providers/auth_notifier.dart';
 import 'package:asco/src/presentations/providers/classroom_notifier.dart';
 import 'package:asco/src/presentations/providers/meeting_notifier.dart';
@@ -45,6 +46,9 @@ class AscoApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => di.locator<MeetingNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<AttendanceNotifier>(),
         ),
       ],
       child: MaterialApp(

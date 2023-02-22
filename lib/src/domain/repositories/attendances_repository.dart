@@ -11,7 +11,7 @@ abstract class AttendancesRepository {
     required String classroomUid,
     required List<DetailProfileEntity> students,
   });
-  Future<Either<Failure, bool>> add({
+  Future<Either<Failure, bool>> update({
     required String uid,
     required AttendanceEntity attendance,
     required AttendanceEntity oldAttendance,
