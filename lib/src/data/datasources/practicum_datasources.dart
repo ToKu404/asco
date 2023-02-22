@@ -2,6 +2,7 @@ import 'package:asco/src/data/models/practicum_models/practicum_model.dart';
 import 'package:asco/src/data/models/profile_models/profile_model.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 abstract class PracticumDataSource {
   Future<bool> create({required PracticumModel practicum});
@@ -85,6 +86,7 @@ class PracticumDataSourceImpl implements PracticumDataSource {
             value.docs.map((e) => PracticumModel.fromSnapshot(e)).toList(),
       );
     } catch (e) {
+      debugPrint(e.toString());
       throw Exception();
     }
   }
@@ -126,6 +128,8 @@ class PracticumDataSourceImpl implements PracticumDataSource {
 
       return false;
     } catch (e) {
+      debugPrint(e.toString());
+
       throw Exception();
     }
   }

@@ -5,8 +5,11 @@ import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:asco/src/presentations/features/admin/practicum_page/providers/asset_select_provider.dart';
+import 'package:asco/src/presentations/providers/practicum_notifier.dart';
+import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
@@ -50,11 +53,35 @@ class _AdminPracticumAssistantPageState
   }
 
   @override
+  void initState() {
+    super.initState();
+    Future.microtask(
+      () => Provider.of<ProfileNotifier>(context, listen: false)
+        ..fetchAll(
+          roleId: 2,
+        ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<AssetSelectedProvider>(
-        create: (context) => AssetSelectedProvider(),
+    final notifier = context.watch<PracticumNotifier>();
+
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      if (notifier.isSuccessState('update_assistant')) {
+        notifier.reset();
+        Future.delayed(const Duration(seconds: 2), () {
+          Navigator.pop(context);
+        });
+      }
+    });
+
+    return ChangeNotifierProvider<AssistantSelectedProvider>(
+        create: (context) => AssistantSelectedProvider(
+              init: widget.assistants,
+            ),
         builder: (context, _) {
-          final assetSelect = context.watch<AssetSelectedProvider>();
+          final assistantSelect = context.watch<AssistantSelectedProvider>();
 
           return Scaffold(
             backgroundColor: Palette.grey,
@@ -71,7 +98,11 @@ class _AdminPracticumAssistantPageState
               ),
               actions: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    notifier.updateAssistant(
+                        assistants: assistantSelect.assistant,
+                        practicumUid: widget.uid);
+                  },
                   icon: const Icon(
                     Icons.check_rounded,
                     color: Palette.white,
@@ -79,9 +110,9 @@ class _AdminPracticumAssistantPageState
                 )
               ],
               title: Text(
-                assetSelect.asset.isEmpty
+                assistantSelect.assistant.isEmpty
                     ? 'Pilih Asisten'
-                    : '${assetSelect.asset.length} {Asisten Dipilih}',
+                    : '${assistantSelect.assistant.length} Asisten Dipilih',
                 style: kTextTheme.titleSmall?.copyWith(color: Palette.white),
               ),
               centerTitle: true,
@@ -137,6 +168,15 @@ class _AdminPracticumAssistantPageState
                   ),
                   Expanded(
                     child: Builder(builder: (context) {
+                      final dataProvider = context.watch<ProfileNotifier>();
+
+                      // Todo : Add Shimmer
+                      if (dataProvider.isLoadingState('find')) {
+                        return const SizedBox.shrink();
+                      } else if (dataProvider.isErrorState('find')) {
+                        return const SizedBox.shrink();
+                      }
+
                       return ListView.builder(
                         padding: const EdgeInsets.only(
                           left: 16,
@@ -144,21 +184,25 @@ class _AdminPracticumAssistantPageState
                           bottom: 16 + 65,
                         ),
                         itemBuilder: (context, index) {
+                          final data = dataProvider.listData[index];
+                          final profile = ProfileEntity(
+                            fullName: data.fullName,
+                            profilePhoto: data.profilePhoto,
+                            uid: data.uid,
+                            userRole: data.userRole,
+                            username: data.username,
+                          );
                           return SelectUserCard(
-                            asistant: widget.assistants[index],
-                            isSelect: assetSelect
-                                .isItemSelected(widget.assistants[index]),
+                            asistant: profile,
+                            isSelect: assistantSelect.isItemSelected(profile),
                             onTap: () {
-                              assetSelect
-                                      .isItemSelected(widget.assistants[index])
-                                  ? assetSelect
-                                      .removeAsset(widget.assistants[index])
-                                  : assetSelect
-                                      .addAsset(widget.assistants[index]);
+                              assistantSelect.isItemSelected(profile)
+                                  ? assistantSelect.removeAsset(profile)
+                                  : assistantSelect.addAsset(profile);
                             },
                           );
                         },
-                        itemCount: widget.assistants.length,
+                        itemCount: dataProvider.listData.length,
                       );
                     }),
                   ),
@@ -188,6 +232,7 @@ class SelectUserCard extends StatelessWidget {
         color: Palette.white,
         borderRadius: BorderRadius.circular(12),
       ),
+      margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -204,13 +249,13 @@ class SelectUserCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'H071191049',
+                  '@${asistant.username ?? ""}',
                   style: kTextTheme.bodyMedium?.copyWith(
                     color: Palette.purple60,
                   ),
                 ),
                 Text(
-                  'Ikhsan',
+                  asistant.fullName ?? '',
                   style: kTextTheme.bodyLarge?.copyWith(
                     color: Palette.purple80,
                     fontWeight: FontWeight.w600,

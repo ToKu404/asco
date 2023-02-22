@@ -1,6 +1,7 @@
 import 'package:asco/src/data/datasources/helpers/ds_helper.dart';
 import 'package:asco/src/data/models/profile_models/profile_model.dart';
 import 'package:asco/src/domain/entities/practicum_entities/practicum_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PracticumModel extends PracticumEntity {
@@ -40,12 +41,11 @@ class PracticumModel extends PracticumEntity {
       course: documentSnapshot['course'],
       courseContractPath: documentSnapshot.get('course_contract_path'),
       listAssistant: ReadHelper.isKeyExist(documentSnapshot, 'list_assistant')
-          ? documentSnapshot
-              .get('list_assistant')
-              .map(
-                (e) => ProfileModel.fromSnapshot(e).toEntity(),
-              )
-              .toList()
+          ? List<ProfileEntity>.from(
+              documentSnapshot.get('list_assistant').map(
+                    (e) => ProfileModel.fromMap(e).toEntity(),
+                  ),
+            )
           : [],
       uid: documentSnapshot['uid'],
     );
