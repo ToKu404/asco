@@ -1,4 +1,6 @@
 import 'package:asco/src/data/models/classroom_models/classroom_model.dart';
+import 'package:asco/src/data/models/profile_models/profile_model.dart';
+import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 abstract class ClassroomDataSource {
@@ -9,6 +11,10 @@ abstract class ClassroomDataSource {
   Future<ClassroomModel> single({required String uid});
   Future<List<ClassroomModel>> find({
     String? practicumUid,
+  });
+  Future<bool> updateStudents({
+    required String classroomUid,
+    required List<ProfileEntity> students,
   });
 }
 
@@ -37,6 +43,7 @@ class ClassroomDataSourceImpl implements ClassroomDataSource {
           uid: uid,
           classCode: classroom.classCode,
           courseName: classroom.courseName,
+          students: classroom.students,
         );
         if (!value.exists) {
           collectionReference.doc(uid).set(
@@ -48,24 +55,6 @@ class ClassroomDataSourceImpl implements ClassroomDataSource {
         (error, stackTrace) => throw Exception(),
       );
       return false;
-
-      // await collectionReference
-      //     .add(
-      //       ClassroomModel(
-      //         startHour: classroom.startHour,
-      //         endHour: classroom.endHour,
-      //         startMinute: classroom.startMinute,
-      //         endMinute: classroom.endMinute,
-      //         meetingDay: classroom.meetingDay,
-      //         practicumUid: practicumUid,
-      //         uid: uid,
-      //         classCode: classroom.classCode,
-      //         courseName: classroom.courseName,
-      //       ).toDocument(),
-      //     )
-      //     .then((value) => true)
-      //     .catchError((error) => false);
-      // return false;
     } catch (e) {
       throw Exception();
     }
@@ -101,7 +90,7 @@ class ClassroomDataSourceImpl implements ClassroomDataSource {
   @override
   Future<ClassroomModel> single({required String uid}) async {
     try {
-      await collectionReference
+      return await collectionReference
           .doc(uid)
           .get()
           .then((DocumentSnapshot documentSnapshot) {
@@ -111,8 +100,33 @@ class ClassroomDataSourceImpl implements ClassroomDataSource {
           throw Exception();
         }
       });
-      throw Exception();
     } catch (e) {
+      print(e.toString());
+      throw Exception();
+    }
+  }
+
+  @override
+  Future<bool> updateStudents({
+    required String classroomUid,
+    required List<ProfileEntity> students,
+  }) async {
+    try {
+      collectionReference
+          .doc(classroomUid)
+          .update({
+            "students": students
+                .map(
+                  (e) => ProfileModel.fromEntity(e).toDocument(),
+                )
+                .toList()
+          })
+          .then((value) => true)
+          .catchError((e) => false);
+
+      return false;
+    } catch (e) {
+      print(e.toString());
       throw Exception();
     }
   }

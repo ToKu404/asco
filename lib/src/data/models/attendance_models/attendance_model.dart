@@ -1,4 +1,3 @@
-import 'package:asco/src/data/models/profile_models/profile_model.dart';
 import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 
 class AttendanceModel extends AttendanceEntity {
@@ -7,8 +6,7 @@ class AttendanceModel extends AttendanceEntity {
     required super.attendanceTime,
     required super.note,
     required super.pointPlus,
-    required super.student,
-    required super.uuid,
+    required super.studentUid,
   });
 
   Map<String, dynamic> toDocument() {
@@ -17,8 +15,7 @@ class AttendanceModel extends AttendanceEntity {
       'attendance_time': attendanceTime,
       'note': note,
       'point_plus': pointPlus,
-      'student': ProfileModel.fromEntity(student!).toDocument(),
-      'uuid': uuid,
+      'student_uid': studentUid,
     };
   }
 
@@ -28,7 +25,7 @@ class AttendanceModel extends AttendanceEntity {
       attendanceTime: attendanceTime,
       note: note,
       pointPlus: pointPlus,
-      student: student,
+      studentUid: studentUid,
       uuid: uuid,
     );
   }
@@ -39,8 +36,7 @@ class AttendanceModel extends AttendanceEntity {
       attendanceTime: documentSnapshot['attendance_time'],
       note: documentSnapshot['note'],
       pointPlus: documentSnapshot['point_plus'],
-      uuid: documentSnapshot['uuid'],
-      student: ProfileModel.fromMap(documentSnapshot['student']).toEntity(),
+      studentUid: documentSnapshot['student_uid'],
     );
   }
 
@@ -50,8 +46,7 @@ class AttendanceModel extends AttendanceEntity {
       attendanceTime: entity.attendanceTime,
       note: entity.note,
       pointPlus: entity.pointPlus,
-      student: entity.student,
-      uuid: entity.uuid,
+      studentUid: entity.studentUid,
     );
   }
 }

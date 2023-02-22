@@ -409,7 +409,10 @@ class PracticumClassCard extends StatelessWidget {
       color: Colors.white,
       margin: const EdgeInsets.only(bottom: 12),
       onTap: () {
-        showAdminClassDetailPage(context: context);
+        showAdminClassDetailPage(
+          context: context,
+          classroomUid: classroomEntity.uid!,
+        );
       },
       radius: 12,
       child: Container(

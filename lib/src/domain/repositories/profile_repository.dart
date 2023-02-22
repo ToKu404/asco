@@ -14,4 +14,7 @@ abstract class ProfileRepository {
     String? query,
     int? byRole,
   });
+  Future<Either<Failure, List<DetailProfileEntity>>> multiple({
+    required List<String> multipleId,
+  });
 }

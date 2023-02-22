@@ -16,13 +16,13 @@ class AttendancesRepositoryImpl implements AttendancesRepository {
   AttendancesRepositoryImpl({required this.dataSource});
 
   @override
-  Future<Either<Failure, bool>> add({
+  Future<Either<Failure, bool>> update({
     required String uid,
     required AttendanceEntity attendance,
     required AttendanceEntity oldAttendance,
   }) async {
     try {
-      final result = await dataSource.add(
+      final result = await dataSource.update(
         attendance: AttendanceModel.fromEntity(attendance),
         oldAttendance: AttendanceModel.fromEntity(oldAttendance),
         uid: uid,

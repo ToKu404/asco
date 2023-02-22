@@ -1,26 +1,34 @@
+import 'package:asco/src/data/datasources/attendances_datasources.dart';
 import 'package:asco/src/data/datasources/auth_datasources.dart';
 import 'package:asco/src/data/datasources/classroom_datasources.dart';
 import 'package:asco/src/data/datasources/meeting_datasources.dart';
 import 'package:asco/src/data/datasources/practicum_datasources.dart';
 import 'package:asco/src/data/datasources/profile_datasources.dart';
+import 'package:asco/src/data/repositories/attendances_repository_impl.dart';
 import 'package:asco/src/data/repositories/auth_repository_impl.dart';
 import 'package:asco/src/data/repositories/classroom_repository_impl.dart';
 import 'package:asco/src/data/repositories/meeting_repository_impl.dart';
 import 'package:asco/src/data/repositories/practicum_repository_impl.dart';
 import 'package:asco/src/data/repositories/profile_repository_impl.dart';
+import 'package:asco/src/domain/repositories/attendances_repository.dart';
 import 'package:asco/src/domain/repositories/auth_repository.dart';
 import 'package:asco/src/domain/repositories/classroom_repository.dart';
 import 'package:asco/src/domain/repositories/meeting_repository.dart';
 import 'package:asco/src/domain/repositories/practicum_repository.dart';
 import 'package:asco/src/domain/repositories/profile_repository.dart';
+import 'package:asco/src/domain/usecases/attendance_usecases/add_attendance.dart';
+import 'package:asco/src/domain/usecases/attendance_usecases/create_attendance.dart';
+import 'package:asco/src/domain/usecases/attendance_usecases/get_list_attendance.dart';
+import 'package:asco/src/domain/usecases/attendance_usecases/get_single_attendance.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/create_user.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/get_user.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/login.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/logout.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/remove_user.dart';
-import 'package:asco/src/domain/usecases/classroom_usecases/create_practicum.dart';
-import 'package:asco/src/domain/usecases/classroom_usecases/get_list_practicum.dart';
-import 'package:asco/src/domain/usecases/classroom_usecases/get_single_practicum.dart';
+import 'package:asco/src/domain/usecases/classroom_usecases/update_student_classroom.dart';
+import 'package:asco/src/domain/usecases/classroom_usecases/create_classroom.dart';
+import 'package:asco/src/domain/usecases/classroom_usecases/get_list_classroom.dart';
+import 'package:asco/src/domain/usecases/classroom_usecases/get_single_classroom.dart';
 import 'package:asco/src/domain/usecases/meeting_usecases/create_meeting.dart';
 import 'package:asco/src/domain/usecases/meeting_usecases/get_list_meeting.dart';
 import 'package:asco/src/domain/usecases/meeting_usecases/get_single_meeting.dart';
@@ -30,10 +38,12 @@ import 'package:asco/src/domain/usecases/practicum_usecases/get_single_practicum
 import 'package:asco/src/domain/usecases/practicum_usecases/update_practicum_assistant.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/create_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/get_list_profile.dart';
+import 'package:asco/src/domain/usecases/profile_usecases/get_multiple_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/get_single_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/remove_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/self_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/update_profile.dart';
+import 'package:asco/src/presentations/providers/attendance_notifier.dart';
 import 'package:asco/src/presentations/providers/auth_notifier.dart';
 import 'package:asco/src/presentations/providers/classroom_notifier.dart';
 import 'package:asco/src/presentations/providers/meeting_notifier.dart';
@@ -66,6 +76,7 @@ void init() {
       removeDataUsecase: locator(),
       updateDataUsecase: locator(),
       selfDataUsecase: locator(),
+      getMultipleUsecase: locator(),
     ),
   );
 
@@ -83,6 +94,7 @@ void init() {
       createUsecase: locator(),
       getListDataUsecase: locator(),
       getSingleDataUsecase: locator(),
+      updateStudentUsecase: locator(),
     ),
   );
 
@@ -91,6 +103,15 @@ void init() {
       createUsecase: locator(),
       getListDataUsecase: locator(),
       getSingleDataUsecase: locator(),
+    ),
+  );
+
+  locator.registerFactory(
+    () => AttendanceNotifier(
+      createUsecase: locator(),
+      getListDataUsecase: locator(),
+      getSingleDataUsecase: locator(),
+      updateUsecase: locator(),
     ),
   );
 
@@ -117,6 +138,11 @@ void init() {
   );
   locator.registerLazySingleton<MeetingRepository>(
     () => MeetingRepositoryImpl(
+      dataSource: locator(),
+    ),
+  );
+  locator.registerLazySingleton<AttendancesRepository>(
+    () => AttendancesRepositoryImpl(
       dataSource: locator(),
     ),
   );
@@ -156,6 +182,11 @@ void init() {
   );
   locator.registerLazySingleton(
     () => GetListProfile(
+      repository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => GetMultipleProfile(
       repository: locator(),
     ),
   );
@@ -216,6 +247,11 @@ void init() {
       repository: locator(),
     ),
   );
+  locator.registerLazySingleton(
+    () => UpdateStudentClassroom(
+      repository: locator(),
+    ),
+  );
   //* Meeting Usecase
   locator.registerLazySingleton(
     () => CreateMeeting(
@@ -233,6 +269,27 @@ void init() {
     ),
   );
 
+  //* Meeting Usecase
+  locator.registerLazySingleton(
+    () => CreateAttendance(
+      repository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => GetListAttendance(
+      repository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => GetSingleAttendance(
+      repository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => UpdateAttendance(
+      repository: locator(),
+    ),
+  );
   //! datasources
   locator.registerLazySingleton<AuthDataSources>(
     () => AuthDataSourcesImpl(
@@ -258,6 +315,13 @@ void init() {
   );
   locator.registerLazySingleton<MeetingDataSources>(
     () => MeetingDataSourceImpl(
+      firestore: locator(),
+      attendancesDataSource: locator(),
+      profileDataSource: locator(),
+    ),
+  );
+  locator.registerLazySingleton<AttendancesDataSources>(
+    () => AttendancesDataSourceImpl(
       firestore: locator(),
     ),
   );

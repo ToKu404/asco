@@ -1,10 +1,10 @@
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:flutter/foundation.dart';
 
-class AssistantSelectedProvider with ChangeNotifier {
+class UserSelectedProvider with ChangeNotifier {
   late List<ProfileEntity> _assets;
 
-  AssistantSelectedProvider({List<ProfileEntity>? init}) {
+  UserSelectedProvider({List<ProfileEntity>? init}) {
     if (init == null) {
       _assets = [];
     } else {
@@ -21,7 +21,7 @@ class AssistantSelectedProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  List<ProfileEntity> get assistant => _assets;
+  List<ProfileEntity> get user => _assets;
 
   bool isItemSelected(ProfileEntity asset) {
     return _assets.contains(asset) ? true : false;

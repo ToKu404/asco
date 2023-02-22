@@ -1,7 +1,9 @@
 import 'package:asco/src/data/datasources/classroom_datasources.dart';
 import 'package:asco/src/data/models/classroom_models/classroom_model.dart';
+import 'package:asco/src/data/models/profile_models/profile_model.dart';
 import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
 import 'package:asco/core/utils/failure.dart';
+import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:asco/src/domain/repositories/classroom_repository.dart';
 import 'package:dartz/dartz.dart';
 
@@ -43,6 +45,20 @@ class ClassroomRepositoryImpl implements ClassroomRepository {
   Future<Either<Failure, ClassroomEntity>> single({required String uid}) async {
     try {
       final result = await dataSource.single(uid: uid);
+      return Right(result);
+    } catch (e) {
+      return const Left(FirestoreFailure(''));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> updateStudent({
+    required String classroomUid,
+    required List<ProfileEntity> students,
+  }) async {
+    try {
+      final result = await dataSource.updateStudents(
+          classroomUid: classroomUid, students: students);
       return Right(result);
     } catch (e) {
       return const Left(FirestoreFailure(''));

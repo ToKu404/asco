@@ -115,13 +115,11 @@ class _CreateMeetingPageState extends State<CreateMeetingPage> {
                 //* Create new practicum
                 provider.create(
                   entity: DetailMeetingEntity(
-                    assistant1: assistant1Index != -1
-                        ? ProfileEntity.fromDetail(
-                            listAssistant[assistant1Index])
+                    assistant1Uid: assistant1Index != -1
+                        ? listAssistant[assistant1Index].uid
                         : null,
-                    assistant2: assistant2Index != -1
-                        ? ProfileEntity.fromDetail(
-                            listAssistant[assistant2Index])
+                    assistant2Uid: assistant2Index != -1
+                        ? listAssistant[assistant2Index].uid
                         : null,
                     classUid: widget.classroomUid,
                     meetingDate: meetingDate,
