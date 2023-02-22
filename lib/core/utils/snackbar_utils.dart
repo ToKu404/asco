@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:asco/src/presentations/widgets/snackbar/asco_snackbar.dart';
-import 'package:asco/src/presentations/widgets/snackbar/content_type.dart';
+import 'package:asco/src/presentations/widgets/snack_bar/asco_snack_bar.dart';
+import 'package:asco/src/presentations/widgets/snack_bar/content_type.dart';
 
-class SnackbarUtils {
+class SnackBarUtils {
   /// Create custom asco snackbar.
   ///
   /// - [title] The title of snackbar. Basically it only contains 1 to 3 words.
@@ -17,16 +17,18 @@ class SnackbarUtils {
     required String title,
     required String message,
     ContentType? type,
+    Color? color,
   }) {
     return SnackBar(
       elevation: 0,
       behavior: SnackBarBehavior.floating,
       backgroundColor: Colors.transparent,
       duration: const Duration(seconds: 3),
-      content: AscoSnackbar(
+      content: AscoSnackBar(
         title: title,
         message: message,
         contentType: type ?? ContentType.success,
+        color: color,
       ),
     );
   }

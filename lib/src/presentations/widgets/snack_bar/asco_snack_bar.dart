@@ -4,20 +4,20 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/src/presentations/widgets/snackbar/content_type.dart';
+import 'package:asco/src/presentations/widgets/snack_bar/content_type.dart';
 
-class AscoSnackbar extends StatelessWidget {
+class AscoSnackBar extends StatelessWidget {
   final String title;
   final String message;
-  final Color? color;
   final ContentType contentType;
+  final Color? color;
 
-  const AscoSnackbar({
+  const AscoSnackBar({
     Key? key,
-    this.color,
     required this.title,
     required this.message,
     required this.contentType,
+    this.color,
   }) : super(key: key);
 
   @override
@@ -25,7 +25,7 @@ class AscoSnackbar extends StatelessWidget {
     double width = AppSize.getAppWidth(context);
     double height = AppSize.getAppHeight(context);
 
-    /// For reflecting different color shades in the Snackbar
+    /// For reflecting different color shades in the SnackBar
     final hsl = HSLColor.fromColor(color ?? contentType.color!);
     final hslDark = hsl.withLightness((hsl.lightness - 0.1).clamp(0.0, 1.0));
 
@@ -116,7 +116,7 @@ class AscoSnackbar extends StatelessWidget {
                 Positioned(
                   top: height * 0.015,
                   child: SvgPicture.asset(
-                    assetSVG(contentType),
+                    assetSvg(contentType),
                     height: height * 0.022,
                   ),
                 )
@@ -129,7 +129,7 @@ class AscoSnackbar extends StatelessWidget {
   }
 
   /// Reflecting proper icon based on the contentType
-  String assetSVG(ContentType type) {
+  String assetSvg(ContentType type) {
     if (type == ContentType.success) {
       // success will show `check icon`
       return AssetPath.getIcons('success_outlined.svg');
