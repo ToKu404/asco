@@ -18,6 +18,9 @@ import 'package:asco/src/domain/usecases/auth_usecases/remove_user.dart';
 import 'package:asco/src/domain/usecases/classroom_usecases/create_practicum.dart';
 import 'package:asco/src/domain/usecases/classroom_usecases/get_list_practicum.dart';
 import 'package:asco/src/domain/usecases/classroom_usecases/get_single_practicum.dart';
+import 'package:asco/src/domain/usecases/meeting_usecases/create_meeting.dart';
+import 'package:asco/src/domain/usecases/meeting_usecases/get_list_meeting.dart';
+import 'package:asco/src/domain/usecases/meeting_usecases/get_single_meeting.dart';
 import 'package:asco/src/domain/usecases/practicum_usecases/create_practicum.dart';
 import 'package:asco/src/domain/usecases/practicum_usecases/get_list_practicum.dart';
 import 'package:asco/src/domain/usecases/practicum_usecases/get_single_practicum.dart';
@@ -30,6 +33,7 @@ import 'package:asco/src/domain/usecases/profile_usecases/self_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/update_profile.dart';
 import 'package:asco/src/presentations/providers/auth_notifier.dart';
 import 'package:asco/src/presentations/providers/classroom_notifier.dart';
+import 'package:asco/src/presentations/providers/meeting_notifier.dart';
 import 'package:asco/src/presentations/providers/practicum_notifier.dart';
 import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -73,6 +77,14 @@ void init() {
 
   locator.registerFactory(
     () => ClassroomNotifier(
+      createUsecase: locator(),
+      getListDataUsecase: locator(),
+      getSingleDataUsecase: locator(),
+    ),
+  );
+
+   locator.registerFactory(
+    () => MeetingNotifier(
       createUsecase: locator(),
       getListDataUsecase: locator(),
       getSingleDataUsecase: locator(),
@@ -193,6 +205,22 @@ void init() {
   );
   locator.registerLazySingleton(
     () => GetSingleClassroom(
+      repository: locator(),
+    ),
+  );
+  //* Meeting Usecase
+  locator.registerLazySingleton(
+    () => CreateMeeting(
+      repository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => GetListMeeting(
+      repository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => GetSingleMeeting(
       repository: locator(),
     ),
   );
