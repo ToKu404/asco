@@ -9,7 +9,7 @@ class ControlCardModel extends ControlCardEntity {
     required super.assistance1,
     required super.assistance2,
     required super.meeting,
-    required super.student,
+    required super.studentId,
     required super.uid,
   });
 
@@ -23,8 +23,7 @@ class ControlCardModel extends ControlCardEntity {
             AssistanceAttendanceModel.fromEntity(assistance2!).toDocument(),
       if (meeting != null)
         'meeting': MeetingModel.fromEntity(meeting!).toDocument(),
-      if (student != null)
-        'student': ProfileModel.fromEntity(student!).toDocument(),
+      'student_id': studentId,
       'uid': uid,
     };
   }
@@ -34,7 +33,7 @@ class ControlCardModel extends ControlCardEntity {
       assistance1: assistance1,
       assistance2: assistance2,
       meeting: meeting,
-      student: student,
+      studentId: studentId,
       uid: uid,
     );
   }
@@ -44,7 +43,7 @@ class ControlCardModel extends ControlCardEntity {
       assistance1: documentSnapshot['assistance1'],
       assistance2: documentSnapshot['assistance2'],
       meeting: documentSnapshot['meeting'],
-      student: documentSnapshot['student'],
+      studentId: documentSnapshot['student_id'],
       uid: documentSnapshot['uid'],
     );
   }
@@ -54,7 +53,7 @@ class ControlCardModel extends ControlCardEntity {
       assistance1: entity.assistance1,
       assistance2: entity.assistance2,
       meeting: entity.meeting,
-      student: entity.student,
+      studentId: entity.studentId,
       uid: entity.uid,
     );
   }

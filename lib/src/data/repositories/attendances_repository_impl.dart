@@ -11,7 +11,7 @@ import 'package:dartz/dartz.dart';
 import '../../domain/entities/profile_entities/detail_profile_entity.dart';
 
 class AttendancesRepositoryImpl implements AttendancesRepository {
-  final AttendancesDataSourceImpl dataSource;
+  final AttendancesDataSources dataSource;
 
   AttendancesRepositoryImpl({required this.dataSource});
 
