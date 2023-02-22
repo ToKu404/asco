@@ -39,6 +39,7 @@ class Palette {
   static const Color plum40 = Color(0xFFDD85AF);
   static const Color plum20 = Color(0xFFF2AECF);
 
+  static const Color azure60 = Color(0xFF6573EF);
   static const Color azure40 = Color(0xFF85A8DD);
   static const Color azure20 = Color(0xFFAED1F2);
 

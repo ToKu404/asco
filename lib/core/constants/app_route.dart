@@ -9,6 +9,8 @@ class AppRoute {
       '/student/main-menu/laboratory-course-detail';
   static const studentAssistanceCourseDetailPage =
       '/student/main-menu/assistance-course-detail';
+  static const studentAssistancePractitionerPage =
+      '/student/main-menu/assistance-practitioner';
   static const valueRecapLeaderboardPage = '/student/main-menu/value-recap';
 
   // Assistant routes

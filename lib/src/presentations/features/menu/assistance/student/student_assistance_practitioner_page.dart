@@ -4,20 +4,19 @@ import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/src/data/dummy_data.dart';
-import 'package:asco/src/presentations/features/menu/assistance/assistant/assistant_assistance_control_card_page.dart';
 import 'package:asco/src/presentations/widgets/custom_badge.dart';
 import 'package:asco/src/presentations/widgets/custom_student_card.dart';
 import 'package:asco/src/presentations/widgets/purple_app_bar.dart';
 
-class AssistantAssistancePractitionerPage extends StatelessWidget {
-  const AssistantAssistancePractitionerPage({super.key});
+class StudentAssistancePractitionerPage extends StatelessWidget {
+  const StudentAssistancePractitionerPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Palette.grey,
       appBar: PurpleAppBar(
-        titleText: 'Praktikan',
+        titleText: 'Grup Asistensi 3',
         onPressedBackButton: () => Navigator.pop(context),
       ),
       body: ListView.separated(
@@ -48,10 +47,6 @@ class AssistantAssistancePractitionerPage extends StatelessWidget {
             ),
             tooltip: 'Github',
           ),
-          onTap: () => showAssistantAssistanceControlCardPage(
-            context,
-            student: students[i],
-          ),
         ),
         separatorBuilder: (_, __) => const SizedBox(height: 10),
       ),
@@ -59,13 +54,13 @@ class AssistantAssistancePractitionerPage extends StatelessWidget {
   }
 }
 
-void showAssistantAssistancePractitionerPage(BuildContext context) {
+void showStudentAssistancePractitionerPage(BuildContext context) {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (_) => const AssistantAssistancePractitionerPage(),
+      builder: (_) => const StudentAssistancePractitionerPage(),
       settings: const RouteSettings(
-        name: AppRoute.assistantAssistancePractitionerPage,
+        name: AppRoute.studentAssistancePractitionerPage,
       ),
     ),
   );
