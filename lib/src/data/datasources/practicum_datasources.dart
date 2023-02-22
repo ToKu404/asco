@@ -92,7 +92,7 @@ class PracticumDataSourceImpl implements PracticumDataSource {
   @override
   Future<PracticumModel> single({required String uid}) async {
     try {
-      await collectionReference
+      return await collectionReference
           .doc(uid)
           .get()
           .then((DocumentSnapshot documentSnapshot) {
@@ -102,7 +102,6 @@ class PracticumDataSourceImpl implements PracticumDataSource {
           throw Exception();
         }
       });
-      throw Exception();
     } catch (e) {
       throw Exception();
     }

@@ -3,14 +3,24 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
+import 'package:asco/src/presentations/features/admin/practicum_page/providers/asset_select_provider.dart';
+import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
-void showAdminPracticumAssistantPage({required BuildContext context}) {
+void showAdminPracticumAssistantPage(
+    {required BuildContext context,
+    required String uid,
+    required List<ProfileEntity> assistants}) {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => const AdminPracticumAssistantPage(),
+      builder: (context) => AdminPracticumAssistantPage(
+        uid: uid,
+        assistants: assistants,
+      ),
       settings: const RouteSettings(
         name: AppRoute.adminUsersPage,
       ),
@@ -19,7 +29,10 @@ void showAdminPracticumAssistantPage({required BuildContext context}) {
 }
 
 class AdminPracticumAssistantPage extends StatefulWidget {
-  const AdminPracticumAssistantPage({super.key});
+  final String uid;
+  final List<ProfileEntity> assistants;
+  const AdminPracticumAssistantPage(
+      {super.key, required this.uid, required this.assistants});
 
   @override
   State<AdminPracticumAssistantPage> createState() =>
@@ -38,109 +51,144 @@ class _AdminPracticumAssistantPageState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Palette.grey,
-      appBar: AppBar(
-        backgroundColor: Palette.purple80,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: Palette.white,
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.check_rounded,
-              color: Palette.white,
-            ),
-          )
-        ],
-        title: Text(
-          'Daftar Asisten',
-          style: kTextTheme.titleSmall?.copyWith(color: Palette.white),
-        ),
-        centerTitle: true,
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              child: TextField(
-                controller: searchController,
-                onChanged: (value) {},
-                keyboardType: TextInputType.text,
-                style: kTextTheme.bodyLarge?.copyWith(
-                  color: Palette.blackPurple,
+    return ChangeNotifierProvider<AssetSelectedProvider>(
+        create: (context) => AssetSelectedProvider(),
+        builder: (context, _) {
+          final assetSelect = context.watch<AssetSelectedProvider>();
+
+          return Scaffold(
+            backgroundColor: Palette.grey,
+            appBar: AppBar(
+              backgroundColor: Palette.purple80,
+              leading: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: const Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  color: Palette.white,
                 ),
-                cursorColor: Palette.blackPurple,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.zero,
-                  isDense: true,
-                  hintText: 'Cari nama atau username',
-                  hintStyle:
-                      kTextTheme.bodyLarge?.copyWith(color: Palette.disable),
-                  filled: true,
-                  prefixIcon: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: 18,
-                        width: 18,
-                        child: SvgPicture.asset(
-                          AssetPath.getIcons('search_outlined.svg'),
-                          height: 18,
-                          width: 18,
+              ),
+              actions: [
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.check_rounded,
+                    color: Palette.white,
+                  ),
+                )
+              ],
+              title: Text(
+                assetSelect.asset.isEmpty
+                    ? 'Pilih Asisten'
+                    : '${assetSelect.asset.length} {Asisten Dipilih}',
+                style: kTextTheme.titleSmall?.copyWith(color: Palette.white),
+              ),
+              centerTitle: true,
+            ),
+            body: SafeArea(
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    child: TextField(
+                      controller: searchController,
+                      onChanged: (value) {},
+                      keyboardType: TextInputType.text,
+                      style: kTextTheme.bodyLarge?.copyWith(
+                        color: Palette.blackPurple,
+                      ),
+                      cursorColor: Palette.blackPurple,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.zero,
+                        isDense: true,
+                        hintText: 'Cari nama atau username',
+                        hintStyle: kTextTheme.bodyLarge
+                            ?.copyWith(color: Palette.disable),
+                        filled: true,
+                        prefixIcon: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: 18,
+                              width: 18,
+                              child: SvgPicture.asset(
+                                AssetPath.getIcons('search_outlined.svg'),
+                                height: 18,
+                                width: 18,
+                              ),
+                            ),
+                          ],
+                        ),
+                        prefixIconColor: Palette.blackPurple,
+                        fillColor: Palette.white,
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(color: Palette.blackPurple),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(color: Palette.blackPurple),
+                          borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                  prefixIconColor: Palette.blackPurple,
-                  fillColor: Palette.white,
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Palette.blackPurple),
-                    borderRadius: BorderRadius.circular(12),
+                  Expanded(
+                    child: Builder(builder: (context) {
+                      return ListView.builder(
+                        padding: const EdgeInsets.only(
+                          left: 16,
+                          right: 16,
+                          bottom: 16 + 65,
+                        ),
+                        itemBuilder: (context, index) {
+                          return SelectUserCard(
+                            asistant: widget.assistants[index],
+                            isSelect: assetSelect
+                                .isItemSelected(widget.assistants[index]),
+                            onTap: () {
+                              assetSelect
+                                      .isItemSelected(widget.assistants[index])
+                                  ? assetSelect
+                                      .removeAsset(widget.assistants[index])
+                                  : assetSelect
+                                      .addAsset(widget.assistants[index]);
+                            },
+                          );
+                        },
+                        itemCount: widget.assistants.length,
+                      );
+                    }),
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Palette.blackPurple),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-                child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: const [
-                  SelectUserCard(),
                 ],
               ),
-            )),
-          ],
-        ),
-      ),
-    );
+            ),
+          );
+        });
   }
 }
 
 class SelectUserCard extends StatelessWidget {
+  final ProfileEntity asistant;
+  final VoidCallback onTap;
+  final bool isSelect;
   const SelectUserCard({
     super.key,
+    required this.onTap,
+    required this.asistant,
+    required this.isSelect,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: AppSize.getAppWidth(context),
-      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(12)),
+        color: Palette.white,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      padding: const EdgeInsets.all(12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -181,18 +229,20 @@ class SelectUserCard extends StatelessWidget {
                 width: 1,
                 color: Palette.greyDark,
               ),
-              color: Palette.purple60,
+              color: isSelect ? Palette.purple60 : Palette.white,
             ),
             child: Material(
               color: Colors.transparent,
               child: ClipOval(
                 child: InkWell(
-                  onTap: () {},
-                  child: const Icon(
-                    Icons.check_rounded,
-                    color: Palette.white,
-                    size: 15,
-                  ),
+                  onTap: onTap,
+                  child: isSelect
+                      ? const Icon(
+                          Icons.check_rounded,
+                          color: Palette.white,
+                          size: 15,
+                        )
+                      : const SizedBox.shrink(),
                 ),
               ),
             ),
