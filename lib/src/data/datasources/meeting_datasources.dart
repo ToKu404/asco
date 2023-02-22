@@ -1,4 +1,7 @@
+import 'package:asco/src/data/datasources/attendances_datasources.dart';
+import 'package:asco/src/data/datasources/profile_datasources.dart';
 import 'package:asco/src/data/models/meeting_models/detail_meeting_model.dart';
+import 'package:asco/src/data/models/meeting_models/meeting_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 abstract class MeetingDataSources {
@@ -13,7 +16,13 @@ abstract class MeetingDataSources {
 
 class MeetingDataSourceImpl implements MeetingDataSources {
   final FirebaseFirestore firestore;
-  MeetingDataSourceImpl({required this.firestore}) {
+  final AttendancesDataSources attendancesDataSource;
+  final ProfileDataSource profileDataSource;
+  MeetingDataSourceImpl({
+    required this.firestore,
+    required this.attendancesDataSource,
+    required this.profileDataSource,
+  }) {
     collectionReference = firestore.collection('meetings');
   }
 
@@ -22,9 +31,9 @@ class MeetingDataSourceImpl implements MeetingDataSources {
   @override
   Future<bool> create({required DetailMeetingModel meeting}) async {
     try {
-      final uid = collectionReference.doc().id;
-
-      collectionReference.doc(uid).get().then((value) {
+      await firestore.runTransaction((transaction) async {
+        final uid = collectionReference.doc().id;
+        //create meeting
         final data = DetailMeetingModel(
           assistant1Uid: meeting.assistant1Uid,
           meetingDate: meeting.meetingDate,
@@ -34,32 +43,29 @@ class MeetingDataSourceImpl implements MeetingDataSources {
           topic: meeting.topic,
           uid: uid,
         );
+        collectionReference.doc(uid).get().then((value) {
+          if (!value.exists) {
+            collectionReference.doc(uid).set(
+                  data.toDocument(),
+                );
+          }
+          return true;
+        }).catchError(
+          (error, stackTrace) => throw Exception(),
+        );
+        //create attendances
+        final students = await profileDataSource.find(byRole: 2);
 
-        if (!value.exists) {
-          collectionReference.doc(uid).set(
-                data.toDocument(),
-              );
-        }
-        return true;
-      }).catchError(
-        (error, stackTrace) => throw Exception(),
-      );
+        attendancesDataSource.create(
+            meeting: MeetingModel.fromDetail(data),
+            classroomUid: meeting.classUid!,
+            students: students);
+      },
+          timeout: const Duration(
+            seconds: 100,
+          ));
+
       return false;
-      // await collectionReference
-      //     .add(
-      //       DetailMeetingModel(
-      //         assistant1: meeting.assistant1,
-      //         meetingDate: meeting.meetingDate,
-      //         assistant2: meeting.assistant2,
-      //         classUid: meeting.classUid,
-      //         modulPath: meeting.modulPath,
-      //         topic: meeting.topic,
-      //         uid: uid,
-      //       ),
-      //     )
-      //     .then((value) => true)
-      //     .catchError((error) => false);
-      // return false;
     } catch (e) {
       throw Exception();
     }

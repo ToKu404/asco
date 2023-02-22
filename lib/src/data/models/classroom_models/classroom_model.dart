@@ -1,17 +1,22 @@
+import 'package:asco/src/data/datasources/helpers/ds_helper.dart';
+import 'package:asco/src/data/models/profile_models/profile_model.dart';
 import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ClassroomModel extends ClassroomEntity {
-  const ClassroomModel(
-      {super.startHour,
-      super.endHour,
-      super.meetingDay,
-      super.uid,
-      super.practicumUid,
-      super.endMinute,
-      super.startMinute,
-      super.classCode,
-      super.courseName});
+  const ClassroomModel({
+    super.startHour,
+    super.endHour,
+    super.meetingDay,
+    super.uid,
+    super.practicumUid,
+    super.endMinute,
+    super.startMinute,
+    super.classCode,
+    super.courseName,
+    super.students,
+  });
 
   Map<String, dynamic> toDocument() {
     return {
@@ -24,6 +29,7 @@ class ClassroomModel extends ClassroomEntity {
       "practicum_uid": practicumUid,
       "class_code": classCode,
       "course_name": courseName,
+      "students": students ?? [],
     };
   }
 
@@ -38,6 +44,7 @@ class ClassroomModel extends ClassroomEntity {
       practicumUid: practicumUid,
       classCode: classCode,
       courseName: courseName,
+      students: students,
     );
   }
 
@@ -52,6 +59,13 @@ class ClassroomModel extends ClassroomEntity {
       classCode: documentSnapshot['class_code'],
       practicumUid: documentSnapshot['practicum_uid'],
       courseName: documentSnapshot['course_name'],
+      students: ReadHelper.isKeyExist(documentSnapshot, 'students')
+          ? List<ProfileEntity>.from(
+              documentSnapshot.get('students').map(
+                    (e) => ProfileModel.fromMap(e).toEntity(),
+                  ),
+            )
+          : [],
     );
   }
 
@@ -66,6 +80,11 @@ class ClassroomModel extends ClassroomEntity {
       practicumUid: documentSnapshot['practicum_uid'],
       classCode: documentSnapshot['class_code'],
       courseName: documentSnapshot['course_name'],
+      students: List<ProfileEntity>.from(
+        documentSnapshot['students'].map(
+          (e) => ProfileModel.fromMap(e).toEntity(),
+        ),
+      ),
     );
   }
 
@@ -80,6 +99,7 @@ class ClassroomModel extends ClassroomEntity {
       practicumUid: entity.practicumUid,
       classCode: entity.classCode,
       courseName: entity.courseName,
+      students: entity.students,
     );
   }
 }

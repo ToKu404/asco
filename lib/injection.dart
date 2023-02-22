@@ -25,9 +25,10 @@ import 'package:asco/src/domain/usecases/auth_usecases/get_user.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/login.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/logout.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/remove_user.dart';
-import 'package:asco/src/domain/usecases/classroom_usecases/create_practicum.dart';
-import 'package:asco/src/domain/usecases/classroom_usecases/get_list_practicum.dart';
-import 'package:asco/src/domain/usecases/classroom_usecases/get_single_practicum.dart';
+import 'package:asco/src/domain/usecases/classroom_usecases/update_student_classroom.dart';
+import 'package:asco/src/domain/usecases/classroom_usecases/create_classroom.dart';
+import 'package:asco/src/domain/usecases/classroom_usecases/get_list_classroom.dart';
+import 'package:asco/src/domain/usecases/classroom_usecases/get_single_classroom.dart';
 import 'package:asco/src/domain/usecases/meeting_usecases/create_meeting.dart';
 import 'package:asco/src/domain/usecases/meeting_usecases/get_list_meeting.dart';
 import 'package:asco/src/domain/usecases/meeting_usecases/get_single_meeting.dart';
@@ -93,6 +94,7 @@ void init() {
       createUsecase: locator(),
       getListDataUsecase: locator(),
       getSingleDataUsecase: locator(),
+      updateStudentUsecase: locator(),
     ),
   );
 
@@ -245,6 +247,11 @@ void init() {
       repository: locator(),
     ),
   );
+  locator.registerLazySingleton(
+    () => UpdateStudentClassroom(
+      repository: locator(),
+    ),
+  );
   //* Meeting Usecase
   locator.registerLazySingleton(
     () => CreateMeeting(
@@ -309,6 +316,8 @@ void init() {
   locator.registerLazySingleton<MeetingDataSources>(
     () => MeetingDataSourceImpl(
       firestore: locator(),
+      attendancesDataSource: locator(),
+      profileDataSource: locator(),
     ),
   );
   locator.registerLazySingleton<AttendancesDataSources>(

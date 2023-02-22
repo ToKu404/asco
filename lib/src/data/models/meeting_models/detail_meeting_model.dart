@@ -59,4 +59,6 @@ class DetailMeetingModel extends DetailMeetingEntity {
       uid: entity.uid,
     );
   }
+
+  
 }

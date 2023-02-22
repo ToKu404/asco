@@ -89,35 +89,6 @@ class AttendancesDataSourceImpl implements AttendancesDataSources {
         (error, stackTrace) => throw Exception(),
       );
       return false;
-      // await collectionReference
-      //     .add(
-      //       AttendanceResultModel(
-      //         attendances: students
-      //             .map(
-      //               (e) => AttendanceModel(
-      //                 uuid: e.uid,
-      //                 attendanceStatus: 3,
-      //                 attendanceTime: null,
-      //                 note: null,
-      //                 pointPlus: null,
-      //                 student: ProfileEntity(
-      //                   fullName: e.fullName,
-      //                   profilePhoto: e.profilePhoto,
-      //                   uid: e.uid,
-      //                   userRole: e.userRole,
-      //                   username: e.username,
-      //                 ),
-      //               ),
-      //             )
-      //             .toList(),
-      //         meeting: meeting,
-      //         uid: uid,
-      //         classroomUid: classroomUid,
-      //       ),
-      //     )
-      //     .then((value) => true)
-      //     .catchError((error) => false);
-      // return false;
     } catch (e) {
       throw Exception();
     }
@@ -129,9 +100,12 @@ class AttendancesDataSourceImpl implements AttendancesDataSources {
     try {
       Future<QuerySnapshot> snapshot = collectionReference.get();
 
-      snapshot = collectionReference
-          .where('classroom_uid', isEqualTo: classroomUid)
-          .get();
+      if (classroomUid.isNotEmpty) {
+        snapshot = collectionReference
+            .where('classroom_uid', isEqualTo: classroomUid)
+            .orderBy('meeting_date')
+            .get();
+      }
 
       //? all
       return await snapshot.then(

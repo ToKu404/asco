@@ -1,11 +1,17 @@
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/core/services/user_helper.dart';
+import 'package:asco/src/domain/entities/attendance_entities/attendance_result_entity.dart';
 import 'package:asco/src/presentations/features/admin/attendance_page/attendance_users_page.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
 
 class AdminAttendanceCard extends StatefulWidget {
+  final AttendanceResultEntity entity;
+  final int number;
   const AdminAttendanceCard({
+    required this.entity,
+    required this.number,
     super.key,
   });
 
@@ -36,21 +42,23 @@ class _AdminAttendanceCardState extends State<AdminAttendanceCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Pertemuan 1',
+                      'Pertemuan ${widget.number}',
                       style: kTextTheme.bodyMedium?.copyWith(
                         color: Palette.purple80,
                         height: 1,
                       ),
                     ),
                     Text(
-                      'Tipe Data dan Attribute',
+                      widget.entity.meeting!.topic!,
                       style: kTextTheme.bodyLarge?.copyWith(
                         color: Palette.blackPurple,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      '25 Nov 2023',
+                      ReusableHelper.datetimeToString(
+                        widget.entity.meeting!.meetingDate!,
+                      ),
                       style: kTextTheme.bodyMedium?.copyWith(
                         color: Palette.greyDark,
                         height: 1.2,
