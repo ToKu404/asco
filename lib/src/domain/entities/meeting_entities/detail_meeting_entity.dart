@@ -1,3 +1,4 @@
+import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 import 'package:equatable/equatable.dart';
 
 class DetailMeetingEntity extends Equatable {
@@ -8,6 +9,7 @@ class DetailMeetingEntity extends Equatable {
   final String? modulPath;
   final String? assistant1Uid;
   final String? assistant2Uid;
+  final List<AttendanceEntity>? attendances;
 
   const DetailMeetingEntity({
     this.assistant1Uid,
@@ -17,6 +19,7 @@ class DetailMeetingEntity extends Equatable {
     this.modulPath,
     this.topic,
     this.uid,
+    this.attendances,
   });
 
   @override
@@ -27,5 +30,6 @@ class DetailMeetingEntity extends Equatable {
         classUid,
         modulPath,
         topic,
+        attendances,
       ];
 }

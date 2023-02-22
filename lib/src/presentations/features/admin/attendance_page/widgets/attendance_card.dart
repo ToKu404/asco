@@ -1,13 +1,14 @@
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/core/services/user_helper.dart';
-import 'package:asco/src/domain/entities/attendance_entities/attendance_result_entity.dart';
+import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
+import 'package:asco/src/domain/entities/meeting_entities/detail_meeting_entity.dart';
 import 'package:asco/src/presentations/features/admin/attendance_page/attendance_users_page.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
 
 class AdminAttendanceCard extends StatefulWidget {
-  final AttendanceResultEntity entity;
+  final DetailMeetingEntity entity;
   final int number;
   const AdminAttendanceCard({
     required this.entity,
@@ -29,7 +30,11 @@ class _AdminAttendanceCardState extends State<AdminAttendanceCard> {
       radius: 12,
       color: Palette.white,
       onTap: () {
-        showAdminAttendanceUsersPage(context: context);
+        showAdminAttendanceUsersPage(
+          context: context,
+          attendances: widget.entity.attendances ?? [],
+          number: widget.number,
+        );
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -49,7 +54,7 @@ class _AdminAttendanceCardState extends State<AdminAttendanceCard> {
                       ),
                     ),
                     Text(
-                      widget.entity.meeting!.topic!,
+                      widget.entity.topic!,
                       style: kTextTheme.bodyLarge?.copyWith(
                         color: Palette.blackPurple,
                         fontWeight: FontWeight.bold,
@@ -57,7 +62,7 @@ class _AdminAttendanceCardState extends State<AdminAttendanceCard> {
                     ),
                     Text(
                       ReusableHelper.datetimeToString(
-                        widget.entity.meeting!.meetingDate!,
+                        widget.entity.meetingDate!,
                       ),
                       style: kTextTheme.bodyMedium?.copyWith(
                         color: Palette.greyDark,
@@ -72,7 +77,9 @@ class _AdminAttendanceCardState extends State<AdminAttendanceCard> {
           const SizedBox(
             height: 16,
           ),
-          const _BuildMeetStat(),
+          _BuildMeetStat(
+            widget.entity.attendances ?? [],
+          ),
         ],
       ),
     );
@@ -80,111 +87,89 @@ class _AdminAttendanceCardState extends State<AdminAttendanceCard> {
 }
 
 class _BuildMeetStat extends StatelessWidget {
-  const _BuildMeetStat();
+  final List<AttendanceEntity> attendaces;
+  const _BuildMeetStat(this.attendaces);
 
   @override
   Widget build(BuildContext context) {
-    final statData = [12, 2, 1, 1];
+    final statData = ReusableHelper.calculateAttendanceStat(attendaces);
     return Column(
       children: [
-        Row(
-          children: [
-            if (statData[0] != 0)
-              Flexible(
-                flex: statData[0],
-                child: Container(
-                  height: 4,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Palette.purple60,
-                  ),
-                ),
+        Row(children: [
+          Flexible(
+            flex: statData[AttendanceStatus.hadir] ?? 0,
+            child: Container(
+              height: 4,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: Palette.purple60,
               ),
-            if (statData[1] != 0) ...[
-              const SizedBox(
-                width: 4,
+            ),
+          ),
+          if (statData[AttendanceStatus.hadir] != 0)
+            const SizedBox(
+              width: 4,
+            ),
+          Flexible(
+            flex: statData[AttendanceStatus.sakit] ?? 0,
+            child: Container(
+              height: 4,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: Palette.orange20,
               ),
-              Flexible(
-                flex: statData[1],
-                child: Container(
-                  height: 4,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Palette.orange20,
-                  ),
-                ),
+            ),
+          ),
+          if (statData[AttendanceStatus.sakit] != 0)
+            const SizedBox(
+              width: 4,
+            ),
+          Flexible(
+            flex: statData[AttendanceStatus.izin] ?? 0,
+            child: Container(
+              height: 4,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: Palette.azure40,
               ),
-            ],
-            if (statData[2] != 0) ...[
-              const SizedBox(
-                width: 4,
-              ),
-              Flexible(
-                flex: statData[2],
-                child: Container(
-                  height: 4,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Palette.azure20,
-                  ),
-                ),
-              ),
-            ],
-            if (statData[3] != 0) ...[
-              const SizedBox(
-                width: 4,
-              ),
-              Flexible(
-                flex: statData[3],
-                child: Container(
-                  height: 4,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Palette.plum40,
-                  ),
-                ),
-              ),
-            ]
-          ],
-        ),
+            ),
+          ),
+          if (statData[AttendanceStatus.izin] != 0)
+            const SizedBox(
+              width: 4,
+            ),
+          Flexible(
+            flex: statData[AttendanceStatus.tidakHadir] ?? 0,
+            child: Container(
+              height: 4,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Palette.plum60),
+            ),
+          ),
+        ]),
         const SizedBox(
           height: 8,
         ),
         Row(
-          children: const [
-            _DetailCoursePercent(
-              absentStatus: AbsentStatus.hadir,
-              value: 12,
-            ),
-            SizedBox(
-              width: 8,
-            ),
-            _DetailCoursePercent(
-              absentStatus: AbsentStatus.sakit,
-              value: 1,
-            ),
-            SizedBox(
-              width: 8,
-            ),
-            _DetailCoursePercent(
-              absentStatus: AbsentStatus.izin,
-              value: 1,
-            ),
-            SizedBox(
-              width: 8,
-            ),
-            _DetailCoursePercent(
-              absentStatus: AbsentStatus.tidakHadir,
-              value: 2,
-            ),
-          ],
+          children: statData.entries
+              .map(
+                (e) => Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: _DetailCoursePercent(
+                    absentStatus: e.key,
+                    value: e.value,
+                  ),
+                ),
+              )
+              .toList(),
         )
       ],
     );
   }
 }
 
-enum AbsentStatus { hadir, izin, tidakHadir, sakit }
+enum AttendanceStatus { hadir, izin, tidakHadir, sakit }
 
 class AbsentData {
   final String title;
@@ -199,7 +184,7 @@ class AbsentData {
 }
 
 class _DetailCoursePercent extends StatelessWidget {
-  final AbsentStatus absentStatus;
+  final AttendanceStatus absentStatus;
   final int value;
   const _DetailCoursePercent({
     required this.absentStatus,
@@ -208,14 +193,16 @@ class _DetailCoursePercent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Map<AbsentStatus, AbsentData> data = {
-      AbsentStatus.hadir: AbsentData(
+    final Map<AttendanceStatus, AbsentData> data = {
+      AttendanceStatus.hadir: AbsentData(
         title: 'Hadir',
         color: Palette.purple60,
       ),
-      AbsentStatus.sakit: AbsentData(title: 'Sakit', color: Palette.orange20),
-      AbsentStatus.izin: AbsentData(title: 'Izin', color: Palette.azure40),
-      AbsentStatus.tidakHadir: AbsentData(title: 'Alfa', color: Palette.plum60),
+      AttendanceStatus.sakit:
+          AbsentData(title: 'Sakit', color: Palette.orange20),
+      AttendanceStatus.izin: AbsentData(title: 'Izin', color: Palette.azure40),
+      AttendanceStatus.tidakHadir:
+          AbsentData(title: 'Alfa', color: Palette.plum60),
     };
 
     return Row(

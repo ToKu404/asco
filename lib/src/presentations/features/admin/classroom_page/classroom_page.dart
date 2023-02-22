@@ -45,7 +45,10 @@ class AdminClassroomPage extends StatelessWidget {
           onCardTap: (c) {
             return () {
               showAdminClassroomMeetingPage(
-                  context: context, classroomId: c.uid!);
+                context: context,
+                classroomId: c.uid!,
+                students: c.students ?? [],
+              );
             };
           },
         ),

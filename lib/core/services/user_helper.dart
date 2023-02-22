@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
+import 'package:asco/src/presentations/features/admin/attendance_page/widgets/attendance_card.dart';
 import 'package:asco/src/presentations/widgets/input_field/input_time_field.dart';
 // ignore: depend_on_referenced_packages
 import 'package:crypto/crypto.dart';
@@ -62,5 +64,23 @@ class ReusableHelper {
     return isShowTime
         ? DateFormat('HH:MM, dd MMMM yyyy', "id_ID").parse(date)
         : DateFormat("EEEE, dd MMMM yyyy", "id_ID").parse(date);
+  }
+
+  static Map<AttendanceStatus, int> calculateAttendanceStat(
+      List<AttendanceEntity> attendaces) {
+    final listStatus = [
+      AttendanceStatus.hadir,
+      AttendanceStatus.sakit,
+      AttendanceStatus.izin,
+      AttendanceStatus.tidakHadir
+    ];
+
+    final Map<AttendanceStatus, int> attendanceStat = {};
+    for (int i = 0; i < listStatus.length; i++) {
+      attendanceStat[listStatus[i]] =
+          attendaces.where((e) => e.attendanceStatus == i).length;
+    }
+
+    return attendanceStat;
   }
 }

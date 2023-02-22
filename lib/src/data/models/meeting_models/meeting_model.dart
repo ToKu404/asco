@@ -7,6 +7,7 @@ class MeetingModel extends MeetingEntity {
     required super.meetingDate,
     required super.topic,
     required super.uid,
+    
   });
 
   Map<String, dynamic> toDocument() {

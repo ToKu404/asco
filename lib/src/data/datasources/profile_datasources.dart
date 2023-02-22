@@ -120,6 +120,7 @@ class ProfileDataSourceImpl implements ProfileDataSource {
             value.docs.map((e) => DetailProfileModel.fromSnapshot(e)).toList(),
       );
     } catch (e) {
+      print(e.toString());
       throw Exception();
     }
   }

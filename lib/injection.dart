@@ -106,14 +106,14 @@ void init() {
     ),
   );
 
-  locator.registerFactory(
-    () => AttendanceNotifier(
-      createUsecase: locator(),
-      getListDataUsecase: locator(),
-      getSingleDataUsecase: locator(),
-      updateUsecase: locator(),
-    ),
-  );
+  // locator.registerFactory(
+  //   () => AttendanceNotifier(
+  //     createUsecase: locator(),
+  //     getListDataUsecase: locator(),
+  //     getSingleDataUsecase: locator(),
+  //     updateUsecase: locator(),
+  //   ),
+  // );
 
   //! repositories
   locator.registerLazySingleton<AuthRepository>(
@@ -141,11 +141,11 @@ void init() {
       dataSource: locator(),
     ),
   );
-  locator.registerLazySingleton<AttendancesRepository>(
-    () => AttendancesRepositoryImpl(
-      dataSource: locator(),
-    ),
-  );
+  // locator.registerLazySingleton<AttendancesRepository>(
+  //   () => AttendancesRepositoryImpl(
+  //     dataSource: locator(),
+  //   ),
+  // );
 
   //! usecases
   //? Auth Usecase
@@ -269,27 +269,27 @@ void init() {
     ),
   );
 
-  //* Meeting Usecase
-  locator.registerLazySingleton(
-    () => CreateAttendance(
-      repository: locator(),
-    ),
-  );
-  locator.registerLazySingleton(
-    () => GetListAttendance(
-      repository: locator(),
-    ),
-  );
-  locator.registerLazySingleton(
-    () => GetSingleAttendance(
-      repository: locator(),
-    ),
-  );
-  locator.registerLazySingleton(
-    () => UpdateAttendance(
-      repository: locator(),
-    ),
-  );
+  // //* Meeting Usecase
+  // locator.registerLazySingleton(
+  //   () => CreateAttendance(
+  //     repository: locator(),
+  //   ),
+  // );
+  // locator.registerLazySingleton(
+  //   () => GetListAttendance(
+  //     repository: locator(),
+  //   ),
+  // );
+  // locator.registerLazySingleton(
+  //   () => GetSingleAttendance(
+  //     repository: locator(),
+  //   ),
+  // );
+  // locator.registerLazySingleton(
+  //   () => UpdateAttendance(
+  //     repository: locator(),
+  //   ),
+  // );
   //! datasources
   locator.registerLazySingleton<AuthDataSources>(
     () => AuthDataSourcesImpl(
@@ -316,15 +316,14 @@ void init() {
   locator.registerLazySingleton<MeetingDataSources>(
     () => MeetingDataSourceImpl(
       firestore: locator(),
-      attendancesDataSource: locator(),
       profileDataSource: locator(),
     ),
   );
-  locator.registerLazySingleton<AttendancesDataSources>(
-    () => AttendancesDataSourceImpl(
-      firestore: locator(),
-    ),
-  );
+  // locator.registerLazySingleton<AttendancesDataSources>(
+  //   () => AttendancesDataSourceImpl(
+  //     firestore: locator(),
+  //   ),
+  // );
 
   //! external
   final firestore = FirebaseFirestore.instance;
