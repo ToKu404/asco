@@ -59,17 +59,6 @@ class _AdminScorePageState extends State<AdminScorePage> {
         ),
         centerTitle: true,
       ),
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: Palette.blackPurple,
-          shape: const CircleBorder(
-              side: BorderSide(width: 1, color: Palette.purple60)),
-          child: const Icon(
-            Icons.add_rounded,
-            color: Palette.white,
-          ),
-          onPressed: () {
-            showAdminCreatePracticumPage(context: context);
-          }),
       body: SafeArea(
         child: Column(
           children: [
