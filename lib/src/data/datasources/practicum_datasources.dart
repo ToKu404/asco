@@ -21,19 +21,39 @@ class PracticumDataSourceImpl implements PracticumDataSource {
   Future<bool> create({required PracticumModel practicum}) async {
     try {
       final uid = collectionReference.doc().id;
-      await collectionReference
-          .add(
-            PracticumModel(
-              badgePath: practicum.badgePath,
-              course: practicum.course,
-              courseContractPath: practicum.courseContractPath,
-              listAssistant: practicum.listAssistant,
-              uid: uid,
-            ).toDocument(),
-          )
-          .then((value) => true)
-          .catchError((error) => false);
+
+      collectionReference.doc(uid).get().then((value) {
+        final data = PracticumModel(
+          badgePath: practicum.badgePath,
+          course: practicum.course,
+          courseContractPath: practicum.courseContractPath,
+          listAssistant: practicum.listAssistant,
+          uid: uid,
+        );
+        if (!value.exists) {
+          collectionReference.doc(uid).set(
+                data.toDocument(),
+              );
+        }
+        return true;
+      }).catchError(
+        (error, stackTrace) => throw Exception(),
+      );
       return false;
+
+      // await collectionReference
+      //     .add(
+      //       PracticumModel(
+      //         badgePath: practicum.badgePath,
+      //         course: practicum.course,
+      //         courseContractPath: practicum.courseContractPath,
+      //         listAssistant: practicum.listAssistant,
+      //         uid: uid,
+      //       ).toDocument(),
+      //     )
+      //     .then((value) => true)
+      //     .catchError((error) => false);
+      // return false;
     } catch (e) {
       throw Exception();
     }

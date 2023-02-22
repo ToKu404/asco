@@ -62,36 +62,70 @@ class AttendancesDataSourceImpl implements AttendancesDataSources {
   }) async {
     try {
       final uid = collectionReference.doc().id;
-      await collectionReference
-          .add(
-            AttendanceResultModel(
-              attendances: students
-                  .map(
-                    (e) => AttendanceModel(
-                      //! uuid attendance == student uid
-                      uuid: e.uid,
-                      attendanceStatus: 3,
-                      attendanceTime: null,
-                      note: null,
-                      pointPlus: null,
-                      student: ProfileEntity(
-                        fullName: e.fullName,
-                        profilePhoto: e.profilePhoto,
-                        uid: e.uid,
-                        userRole: e.userRole,
-                        username: e.username,
-                      ),
-                    ),
-                  )
-                  .toList(),
-              meeting: meeting,
-              uid: uid,
-              classroomUid: classroomUid,
-            ),
-          )
-          .then((value) => true)
-          .catchError((error) => false);
+      collectionReference.doc(uid).get().then((value) {
+        final data = AttendanceResultModel(
+          attendances: students
+              .map(
+                (e) => AttendanceModel(
+                  //! uuid attendance == student uid
+                  uuid: e.uid,
+                  attendanceStatus: 3,
+                  attendanceTime: null,
+                  note: null,
+                  pointPlus: null,
+                  student: ProfileEntity(
+                    fullName: e.fullName,
+                    profilePhoto: e.profilePhoto,
+                    uid: e.uid,
+                    userRole: e.userRole,
+                    username: e.username,
+                  ),
+                ),
+              )
+              .toList(),
+          meeting: meeting,
+          uid: uid,
+          classroomUid: classroomUid,
+        );
+        if (!value.exists) {
+          collectionReference.doc(uid).set(
+                data.toDocument(),
+              );
+        }
+        return true;
+      }).catchError(
+        (error, stackTrace) => throw Exception(),
+      );
       return false;
+      // await collectionReference
+      //     .add(
+      //       AttendanceResultModel(
+      //         attendances: students
+      //             .map(
+      //               (e) => AttendanceModel(
+      //                 uuid: e.uid,
+      //                 attendanceStatus: 3,
+      //                 attendanceTime: null,
+      //                 note: null,
+      //                 pointPlus: null,
+      //                 student: ProfileEntity(
+      //                   fullName: e.fullName,
+      //                   profilePhoto: e.profilePhoto,
+      //                   uid: e.uid,
+      //                   userRole: e.userRole,
+      //                   username: e.username,
+      //                 ),
+      //               ),
+      //             )
+      //             .toList(),
+      //         meeting: meeting,
+      //         uid: uid,
+      //         classroomUid: classroomUid,
+      //       ),
+      //     )
+      //     .then((value) => true)
+      //     .catchError((error) => false);
+      // return false;
     } catch (e) {
       throw Exception();
     }

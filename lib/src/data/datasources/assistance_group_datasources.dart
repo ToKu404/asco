@@ -24,19 +24,39 @@ class AttendancesDataSourceImpl implements AssistanceGroupDataSources {
   Future<bool> create({required AssistanceGroupModel entity}) async {
     try {
       final uid = collectionReference.doc().id;
-      await collectionReference
-          .add(
-            AssistanceGroupModel(
-                    assistant: entity.assistant,
-                    name: entity.name,
-                    practicumUid: entity.practicumUid,
-                    students: entity.students,
-                    uid: uid)
-                .toDocument(),
-          )
-          .then((value) => true)
-          .catchError((error) => false);
+
+      collectionReference.doc(uid).get().then((value) {
+        final data = AssistanceGroupModel(
+          assistant: entity.assistant,
+          name: entity.name,
+          practicumUid: entity.practicumUid,
+          students: entity.students,
+          uid: uid,
+        );
+        if (!value.exists) {
+          collectionReference.doc(uid).set(
+                data.toDocument(),
+              );
+        }
+        return true;
+      }).catchError(
+        (error, stackTrace) => throw Exception(),
+      );
       return false;
+
+      // await collectionReference
+      //     .add(
+      //       AssistanceGroupModel(
+      //               assistant: entity.assistant,
+      //               name: entity.name,
+      //               practicumUid: entity.practicumUid,
+      //               students: entity.students,
+      //               uid: uid)
+      //           .toDocument(),
+      //     )
+      //     .then((value) => true)
+      //     .catchError((error) => false);
+      // return false;
     } catch (e) {
       throw Exception();
     }

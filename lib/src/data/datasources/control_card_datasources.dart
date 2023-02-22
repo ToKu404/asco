@@ -23,19 +23,39 @@ class ControlCardDataSourcesImpl implements ControlCardDataSources {
   Future<bool> create({required ControlCardModel cc}) async {
     try {
       final uid = collectionReference.doc().id;
-      await collectionReference
-          .add(
-            ControlCardModel(
-              assistance1: cc.assistance1,
-              assistance2: cc.assistance2,
-              meeting: cc.meeting,
-              studentId: cc.studentId,
-              uid: uid,
-            ).toDocument(),
-          )
-          .then((value) => true)
-          .catchError((error) => false);
+
+      collectionReference.doc(uid).get().then((value) {
+        final data = ControlCardModel(
+          assistance1: cc.assistance1,
+          assistance2: cc.assistance2,
+          meeting: cc.meeting,
+          studentId: cc.studentId,
+          uid: uid,
+        );
+        if (!value.exists) {
+          collectionReference.doc(uid).set(
+                data.toDocument(),
+              );
+        }
+        return true;
+      }).catchError(
+        (error, stackTrace) => throw Exception(),
+      );
       return false;
+
+      // await collectionReference
+      //     .add(
+      //       ControlCardModel(
+      //         assistance1: cc.assistance1,
+      //         assistance2: cc.assistance2,
+      //         meeting: cc.meeting,
+      //         studentId: cc.studentId,
+      //         uid: uid,
+      //       ).toDocument(),
+      //     )
+      //     .then((value) => true)
+      //     .catchError((error) => false);
+      // return false;
     } catch (e) {
       throw Exception();
     }

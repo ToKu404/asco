@@ -25,23 +25,47 @@ class ClassroomDataSourceImpl implements ClassroomDataSource {
       {required ClassroomModel classroom, required String practicumUid}) async {
     try {
       final uid = collectionReference.doc().id;
-      await collectionReference
-          .add(
-            ClassroomModel(
-              startHour: classroom.startHour,
-              endHour: classroom.endHour,
-              startMinute: classroom.startMinute,
-              endMinute: classroom.endMinute,
-              meetingDay: classroom.meetingDay,
-              practicumUid: practicumUid,
-              uid: uid,
-              classCode: classroom.classCode,
-              courseName: classroom.courseName,
-            ).toDocument(),
-          )
-          .then((value) => true)
-          .catchError((error) => false);
+
+      collectionReference.doc(uid).get().then((value) {
+        final data = ClassroomModel(
+          startHour: classroom.startHour,
+          endHour: classroom.endHour,
+          startMinute: classroom.startMinute,
+          endMinute: classroom.endMinute,
+          meetingDay: classroom.meetingDay,
+          practicumUid: practicumUid,
+          uid: uid,
+          classCode: classroom.classCode,
+          courseName: classroom.courseName,
+        );
+        if (!value.exists) {
+          collectionReference.doc(uid).set(
+                data.toDocument(),
+              );
+        }
+        return true;
+      }).catchError(
+        (error, stackTrace) => throw Exception(),
+      );
       return false;
+
+      // await collectionReference
+      //     .add(
+      //       ClassroomModel(
+      //         startHour: classroom.startHour,
+      //         endHour: classroom.endHour,
+      //         startMinute: classroom.startMinute,
+      //         endMinute: classroom.endMinute,
+      //         meetingDay: classroom.meetingDay,
+      //         practicumUid: practicumUid,
+      //         uid: uid,
+      //         classCode: classroom.classCode,
+      //         courseName: classroom.courseName,
+      //       ).toDocument(),
+      //     )
+      //     .then((value) => true)
+      //     .catchError((error) => false);
+      // return false;
     } catch (e) {
       throw Exception();
     }
