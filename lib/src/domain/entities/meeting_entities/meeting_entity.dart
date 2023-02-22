@@ -1,3 +1,4 @@
+import 'package:asco/src/domain/entities/meeting_entities/detail_meeting_entity.dart';
 import 'package:equatable/equatable.dart';
 
 class MeetingEntity extends Equatable {
@@ -11,6 +12,14 @@ class MeetingEntity extends Equatable {
     this.topic,
     this.uid,
   });
+
+  factory MeetingEntity.fromDetail(DetailMeetingEntity detail) {
+    return MeetingEntity(
+      meetingDate: detail.meetingDate,
+      topic: detail.topic,
+      uid: detail.uid,
+    );
+  }
 
   @override
   List<Object?> get props => [

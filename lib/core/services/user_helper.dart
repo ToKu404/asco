@@ -2,8 +2,9 @@ import 'dart:convert';
 import 'package:asco/src/presentations/widgets/input_field/input_time_field.dart';
 // ignore: depend_on_referenced_packages
 import 'package:crypto/crypto.dart';
+import 'package:intl/intl.dart';
 
-class UserHelper {
+class ReusableHelper {
   /// Hashing password
   static String hashPassword(String password) {
     final bytes = utf8.encode(password);
@@ -45,5 +46,21 @@ class UserHelper {
     final endTime2 = endTimeList.last.padLeft(2, "0");
 
     return '$startTime1:$startTime2-$endTime1:$endTime2';
+  }
+
+  //datetime to string
+  static String datetimeToString(DateTime date,
+      {bool isShowTime = false, String? format}) {
+    return isShowTime
+        ? DateFormat(format ?? 'HH:MM, dd MMMM yyyy', "id_ID").format(date)
+        : DateFormat(format ?? 'EEEE, dd MMMM yyyy', "id_ID").format(date);
+  }
+
+  // string ke datetime
+  /// Convert String to DateTime
+  static DateTime stringToDateTime(String date, {bool isShowTime = false}) {
+    return isShowTime
+        ? DateFormat('HH:MM, dd MMMM yyyy', "id_ID").parse(date)
+        : DateFormat("EEEE, dd MMMM yyyy", "id_ID").parse(date);
   }
 }

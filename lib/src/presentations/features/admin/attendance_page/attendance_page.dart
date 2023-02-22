@@ -5,7 +5,8 @@ import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/presentations/features/admin/attendance_page/widgets/attendance_card.dart';
 import 'package:flutter/material.dart';
 
-void showAdminAttendancePage({required BuildContext context}) {
+void showAdminAttendancePage(
+    {required BuildContext context, required String classroomUid}) {
   Navigator.push(
     context,
     MaterialPageRoute(

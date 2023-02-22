@@ -74,6 +74,7 @@ class MeetingDataSourceImpl implements MeetingDataSources {
         if (classroomUid.isNotEmpty) {
           snapshot = collectionReference
               .where('classroom_uid', isEqualTo: classroomUid)
+              .orderBy('meeting_date')
               .get();
         }
       }

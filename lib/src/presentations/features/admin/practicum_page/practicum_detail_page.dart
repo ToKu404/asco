@@ -407,6 +407,7 @@ class PracticumClassCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWellContainer(
       color: Colors.white,
+      margin: const EdgeInsets.only(bottom: 12),
       onTap: () {
         showAdminClassDetailPage(context: context);
       },
@@ -439,7 +440,7 @@ class PracticumClassCard extends StatelessWidget {
                     height: 8,
                   ),
                   Text(
-                    'Setiap ${classroomEntity.meetingDay} ${UserHelper.timeFormater(TimeHelper(
+                    'Setiap ${classroomEntity.meetingDay} ${ReusableHelper.timeFormater(TimeHelper(
                       startHour: classroomEntity.startHour,
                       endHour: classroomEntity.endHour,
                       startMinute: classroomEntity.startMinute,

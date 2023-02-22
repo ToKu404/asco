@@ -113,7 +113,8 @@ class _SignInFormState extends State<_SignInForm> {
     if (_formKey.currentState!.validate()) {
       final provider = context.read<AuthNotifier>();
       final username = _usernameController.text.trim();
-      final password = UserHelper.hashPassword(_passwordController.text.trim());
+      final password =
+          ReusableHelper.hashPassword(_passwordController.text.trim());
       provider.login(username, password);
     }
   }

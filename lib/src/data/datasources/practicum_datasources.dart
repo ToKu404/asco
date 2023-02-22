@@ -44,7 +44,10 @@ class PracticumDataSourceImpl implements PracticumDataSource {
         }
         return true;
       }).catchError(
-        (error, stackTrace) => throw Exception(),
+        (error, stackTrace) {
+          print(error.toString());
+          throw Exception();
+        },
       );
       return false;
 
@@ -62,6 +65,7 @@ class PracticumDataSourceImpl implements PracticumDataSource {
       //     .catchError((error) => false);
       // return false;
     } catch (e) {
+      print(e.toString());
       throw Exception();
     }
   }

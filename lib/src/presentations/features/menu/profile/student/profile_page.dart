@@ -1,3 +1,4 @@
+import 'package:asco/core/constants/app_name.dart';
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
@@ -405,10 +406,10 @@ class IdCardBackSide extends StatelessWidget {
                                 ),
                                 children: [
                                   TextSpan(
-                                    text: 'asco',
+                                    text: AppInfo.appName,
                                     style: kTextTheme.titleSmall?.copyWith(
                                       color: Palette.violet30,
-                                      fontWeight: FontWeight.w700,
+                                      fontFamily: 'OpenSans',
                                       height: 1.05,
                                     ),
                                   ),
