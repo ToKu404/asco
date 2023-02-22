@@ -46,10 +46,10 @@ class ProfileNotifier extends CrudDataService<DetailProfileEntity> {
     }
   }
 
-  Future<void> fetchAll() async {
+  Future<void> fetchAll({int? roleId}) async {
     updateState(state: RequestState.loading, key: 'find');
     try {
-      final result = await getListDataUsecase.execute();
+      final result = await getListDataUsecase.execute(byRole: roleId);
       result.fold((l) {
         updateState(state: RequestState.error, key: 'find');
         setErrorMessage(l.message);

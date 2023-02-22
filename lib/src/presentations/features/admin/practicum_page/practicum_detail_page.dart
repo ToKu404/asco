@@ -6,11 +6,13 @@ import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/core/services/user_helper.dart';
 import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
 import 'package:asco/src/domain/entities/practicum_entities/practicum_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:asco/src/presentations/features/admin/practicum_page/class_detail_page.dart';
 import 'package:asco/src/presentations/features/admin/practicum_page/create_class_page.dart';
 import 'package:asco/src/presentations/features/admin/practicum_page/create_practicum_page.dart';
 import 'package:asco/src/presentations/features/admin/practicum_page/practicum_assistant_page.dart';
 import 'package:asco/src/presentations/providers/classroom_notifier.dart';
+import 'package:asco/src/presentations/providers/practicum_notifier.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:asco/src/presentations/widgets/input_field/input_time_field.dart';
 import 'package:flutter/material.dart';
@@ -119,77 +121,16 @@ class PracticumDetailPage extends StatelessWidget {
               const SizedBox(
                 height: 24,
               ),
-              _PracticumSection(
+              _ClassroomSection(
                 uid: practicumId,
                 practicumName: practicumName,
               ),
               const SizedBox(
                 height: 20,
               ),
-              Row(
-                children: [
-                  Text(
-                    '5',
-                    style: kTextTheme.titleSmall?.copyWith(
-                      color: Palette.purple70,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 4,
-                  ),
-                  Text(
-                    'Asisten',
-                    style: kTextTheme.titleSmall?.copyWith(
-                      color: Palette.black,
-                    ),
-                  ),
-                  const Spacer(),
-                  SizedBox(
-                    width: 30,
-                    height: 30,
-                    child: IconButton(
-                      style: IconButton.styleFrom(
-                        backgroundColor: Palette.purple70,
-                        padding: EdgeInsets.zero,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            8,
-                          ),
-                        ),
-                      ),
-                      onPressed: () {
-                        showAdminPracticumAssistantPage(context: context);
-                      },
-                      icon: const Icon(
-                        Icons.add_rounded,
-                        color: Palette.white,
-                      ),
-                    ),
-                  ),
-                ],
+              _AssistantsSection(
+                uid: practicumId,
               ),
-              const Divider(),
-              const SizedBox(
-                height: 8,
-              ),
-              const UserCard(),
-              const SizedBox(
-                height: 8,
-              ),
-              const UserCard(),
-              const SizedBox(
-                height: 8,
-              ),
-              const UserCard(),
-              const SizedBox(
-                height: 8,
-              ),
-              const UserCard(),
-              const SizedBox(
-                height: 8,
-              ),
-              const UserCard(),
             ],
           ),
         ),
@@ -198,19 +139,119 @@ class PracticumDetailPage extends StatelessWidget {
   }
 }
 
-class _PracticumSection extends StatefulWidget {
+class _AssistantsSection extends StatefulWidget {
+  final String uid;
+
+  const _AssistantsSection({required this.uid});
+
+  @override
+  State<_AssistantsSection> createState() => __AssistantsSectionState();
+}
+
+class __AssistantsSectionState extends State<_AssistantsSection> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(
+      () => Provider.of<PracticumNotifier>(context, listen: false)
+        ..getDetail(uid: widget.uid),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final dataProvider = context.watch<PracticumNotifier>();
+
+    if (dataProvider.isLoadingState('single') || dataProvider.data == null) {
+      return const SizedBox.shrink();
+    } else if (dataProvider.isErrorState('single')) {
+      return const SizedBox.shrink();
+    }
+
+    final List<ProfileEntity> listAssistant =
+        dataProvider.data!.listAssistant == null
+            ? []
+            : dataProvider.data!.listAssistant!;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              '${listAssistant.length}',
+              style: kTextTheme.titleSmall?.copyWith(
+                color: Palette.purple70,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(
+              width: 4,
+            ),
+            Text(
+              'Asisten',
+              style: kTextTheme.titleSmall?.copyWith(
+                color: Palette.black,
+              ),
+            ),
+            const Spacer(),
+            SizedBox(
+              width: 30,
+              height: 30,
+              child: IconButton(
+                style: IconButton.styleFrom(
+                  backgroundColor: Palette.purple70,
+                  padding: EdgeInsets.zero,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                      8,
+                    ),
+                  ),
+                ),
+                onPressed: () {
+                  showAdminPracticumAssistantPage(
+                    context: context,
+                    assistants: listAssistant,
+                    uid: widget.uid,
+                  );
+                },
+                icon: const Icon(
+                  Icons.add_rounded,
+                  color: Palette.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const Divider(),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            return UserCard(
+              user: listAssistant[index],
+            );
+          },
+          itemCount: listAssistant.length,
+        )
+      ],
+    );
+  }
+}
+
+class _ClassroomSection extends StatefulWidget {
   final String uid;
   final String practicumName;
-  const _PracticumSection({
+  const _ClassroomSection({
     required this.uid,
     required this.practicumName,
   });
 
   @override
-  State<_PracticumSection> createState() => _PracticumSectionState();
+  State<_ClassroomSection> createState() => _ClassroomSectionState();
 }
 
-class _PracticumSectionState extends State<_PracticumSection> {
+class _ClassroomSectionState extends State<_ClassroomSection> {
   @override
   void initState() {
     // TODO: implement initState
@@ -302,13 +343,16 @@ class _PracticumSectionState extends State<_PracticumSection> {
 }
 
 class UserCard extends StatelessWidget {
+  final ProfileEntity user;
   const UserCard({
     super.key,
+    required this.user,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.only(bottom: 12),
       width: AppSize.getAppWidth(context),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -328,13 +372,13 @@ class UserCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'H071191049',
+                  user.username ?? '',
                   style: kTextTheme.bodyMedium?.copyWith(
                     color: Palette.purple60,
                   ),
                 ),
                 Text(
-                  'Ikhsan',
+                  user.fullName ?? '',
                   style: kTextTheme.bodyLarge?.copyWith(
                     color: Palette.purple80,
                     fontWeight: FontWeight.w600,
