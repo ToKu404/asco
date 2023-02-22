@@ -1,16 +1,16 @@
 import 'package:asco/core/utils/failure.dart';
-import 'package:asco/src/domain/entities/profile_entities/user_profile_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class ProfileRepository {
   Future<Either<Failure, bool>> create(
-      {required UserProfileEntity userProfileEntity});
-  Future<Either<Failure, UserProfileEntity>> single({required String uid});
-  Future<Either<Failure, UserProfileEntity>> me();
+      {required DetailProfileEntity userProfileEntity});
+  Future<Either<Failure, DetailProfileEntity>> single({required String uid});
+  Future<Either<Failure, DetailProfileEntity>> me();
   Future<Either<Failure, bool>> update(
-      {required UserProfileEntity userProfileEntity});
+      {required DetailProfileEntity userProfileEntity});
   Future<Either<Failure, bool>> remove({required String uid});
-  Future<Either<Failure, List<UserProfileEntity>>> find({
+  Future<Either<Failure, List<DetailProfileEntity>>> find({
     String? query,
     int? byRole,
   });

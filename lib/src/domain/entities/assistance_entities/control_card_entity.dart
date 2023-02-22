@@ -1,10 +1,10 @@
 import 'package:asco/src/domain/entities/assistance_entities/assistance_attendance_entity.dart';
-import 'package:asco/src/domain/entities/profile_entities/user_profile_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
 import 'package:equatable/equatable.dart';
 
 class ControlCardEntity extends Equatable {
   final String? uid;
-  final UserProfileEntity? student;
+  final DetailProfileEntity? student;
   final String? meetingUid;
   final AssistanceAttendanceEntity? assistance1;
   final AssistanceAttendanceEntity? assistance2;

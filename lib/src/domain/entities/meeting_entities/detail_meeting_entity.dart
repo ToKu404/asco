@@ -1,4 +1,4 @@
-import 'package:asco/src/domain/entities/profile_entities/user_profile_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
 import 'package:equatable/equatable.dart';
 
 class DetailMeetingEntity extends Equatable {
@@ -7,8 +7,8 @@ class DetailMeetingEntity extends Equatable {
   final String? topic;
   final DateTime? meetingDate;
   final String? modulPath;
-  final UserProfileEntity? assistant1;
-  final UserProfileEntity? assistant2;
+  final DetailProfileEntity? assistant1;
+  final DetailProfileEntity? assistant2;
 
   const DetailMeetingEntity({
     this.assistant1,

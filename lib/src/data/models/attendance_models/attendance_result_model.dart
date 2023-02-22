@@ -1,3 +1,4 @@
+import 'package:asco/src/data/models/meeting_models/meeting_model.dart';
 import 'package:asco/src/domain/entities/attendance_entities/attendance_result_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -12,7 +13,7 @@ class AttendanceResultModel extends AttendanceResultEntity {
   Map<String, dynamic> toDocument() {
     return {
       "attendances": attendances,
-      "meeting": meeting,
+      "meeting": MeetingModel.fromEntity(meeting!).toDocument(),
       "uid": uid,
       "classroom_uid": classroomUid,
     };
@@ -30,7 +31,8 @@ class AttendanceResultModel extends AttendanceResultEntity {
       DocumentSnapshot documentSnapshot) {
     return AttendanceResultModel(
       attendances: documentSnapshot['attendances'],
-      meeting: documentSnapshot['meeting'],
+      meeting:
+          MeetingModel.fromSnapshot(documentSnapshot['meeting']).toEntity(),
       classroomUid: documentSnapshot['classroom_uid'],
       uid: documentSnapshot['uid'],
     );

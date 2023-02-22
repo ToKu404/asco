@@ -1,7 +1,7 @@
 import 'package:asco/core/utils/failure.dart';
 import 'package:asco/src/data/datasources/profile_datasources.dart';
-import 'package:asco/src/data/models/profile_models/user_profile_model.dart';
-import 'package:asco/src/domain/entities/profile_entities/user_profile_entity.dart';
+import 'package:asco/src/data/models/profile_models/detail_profile_model.dart';
+import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
 import 'package:asco/src/domain/repositories/profile_repository.dart';
 import 'package:dartz/dartz.dart';
 
@@ -12,10 +12,10 @@ class ProfileRepositoryImpl implements ProfileRepository {
 
   @override
   Future<Either<Failure, bool>> create(
-      {required UserProfileEntity userProfileEntity}) async {
+      {required DetailProfileEntity userProfileEntity}) async {
     try {
       final result = await datasource.create(
-          userProfileModel: UserProfileModel.fromEntity(userProfileEntity));
+          userProfileModel: DetailProfileModel.fromEntity(userProfileEntity));
       return Right(result);
     } catch (e) {
       return const Left(FirestoreFailure(''));
@@ -23,7 +23,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
   }
 
   @override
-  Future<Either<Failure, List<UserProfileEntity>>> find({
+  Future<Either<Failure, List<DetailProfileEntity>>> find({
     String? query,
     int? byRole,
   }) async {
@@ -50,7 +50,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
   }
 
   @override
-  Future<Either<Failure, UserProfileEntity>> single(
+  Future<Either<Failure, DetailProfileEntity>> single(
       {required String uid}) async {
     try {
       final result = await datasource.single(uid: uid);
@@ -62,10 +62,10 @@ class ProfileRepositoryImpl implements ProfileRepository {
 
   @override
   Future<Either<Failure, bool>> update(
-      {required UserProfileEntity userProfileEntity}) async {
+      {required DetailProfileEntity userProfileEntity}) async {
     try {
       final result = await datasource.update(
-        userProfileModel: UserProfileModel.fromEntity(userProfileEntity),
+        userProfileModel: DetailProfileModel.fromEntity(userProfileEntity),
       );
       return Right(result);
     } catch (e) {
@@ -74,7 +74,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
   }
 
   @override
-  Future<Either<Failure, UserProfileEntity>> me() async {
+  Future<Either<Failure, DetailProfileEntity>> me() async {
     try {
       final result = await datasource.me();
       return Right(result);
