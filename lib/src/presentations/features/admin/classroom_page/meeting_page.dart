@@ -2,18 +2,26 @@ import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/src/data/dummy_data.dart';
+import 'package:asco/core/services/user_helper.dart';
+import 'package:asco/src/domain/entities/meeting_entities/detail_meeting_entity.dart';
 import 'package:asco/src/presentations/features/admin/classroom_page/create_meeting_page.dart';
 import 'package:asco/src/presentations/features/admin/classroom_page/meeting_detail_page.dart';
-import 'package:asco/src/presentations/features/menu/laboratory/widgets/meeting_card.dart';
+import 'package:asco/src/presentations/providers/meeting_notifier.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
-void showAdminClassroomMeetingPage({required BuildContext context}) {
+void showAdminClassroomMeetingPage({
+  required BuildContext context,
+  required String classroomId,
+}) {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => const AdminClassroomMeetingPage(),
+      builder: (context) => AdminClassroomMeetingPage(
+        classroomId: classroomId,
+      ),
       settings: const RouteSettings(
         name: AppRoute.adminUsersPage,
       ),
@@ -22,7 +30,8 @@ void showAdminClassroomMeetingPage({required BuildContext context}) {
 }
 
 class AdminClassroomMeetingPage extends StatefulWidget {
-  const AdminClassroomMeetingPage({super.key});
+  final String classroomId;
+  const AdminClassroomMeetingPage({super.key, required this.classroomId});
 
   @override
   State<AdminClassroomMeetingPage> createState() =>
@@ -36,6 +45,17 @@ class _AdminClassroomMeetingPageState extends State<AdminClassroomMeetingPage> {
   void dispose() {
     super.dispose();
     searchController.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(
+      () => Provider.of<MeetingNotifier>(context, listen: false)
+        ..fetch(
+          classroomUid: widget.classroomId,
+        ),
+    );
   }
 
   @override
@@ -68,7 +88,8 @@ class _AdminClassroomMeetingPageState extends State<AdminClassroomMeetingPage> {
             color: Palette.white,
           ),
           onPressed: () {
-            showAdminCreateMeetingPage(context: context);
+            showAdminCreateMeetingPage(
+                context: context, classroomUid: widget.classroomId);
           }),
       body: SafeArea(
         child: Column(
@@ -118,37 +139,123 @@ class _AdminClassroomMeetingPageState extends State<AdminClassroomMeetingPage> {
               ),
             ),
             Expanded(
-                child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: [
-                  MeetingCard(
-                    course: const Course(
-                      2,
-                      'Tipe Data dan Atribut',
-                      '27 Februari 2023',
+              child: Builder(
+                builder: (context) {
+                  final dataProvider = context.watch<MeetingNotifier>();
+
+                  // Todo : Add Shimmer
+                  if (dataProvider.isLoadingState('find')) {
+                    return const SizedBox.shrink();
+                  } else if (dataProvider.isErrorState('find')) {
+                    return const SizedBox.shrink();
+                  }
+
+                  return ListView.builder(
+                    padding: const EdgeInsets.only(
+                      left: 16,
+                      right: 16,
+                      bottom: 16 + 65,
                     ),
-                    onTap: () {
-                      showAdminMeetingDetailPage(context: context);
+                    itemBuilder: (context, index) {
+                      return MeetingCard(
+                        meeting: dataProvider.listData[index],
+                        onTap: () {
+                          showAdminMeetingDetailPage(
+                            context: context,
+                            meetingEntity: dataProvider.listData[index],
+                          );
+                        },
+                        meetingNumber: index + 1,
+                      );
                     },
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  MeetingCard(
-                    course: const Course(
-                      1,
-                      'Tipe Data dan Atribut',
-                      '27 Februari 2023',
-                    ),
-                    onTap: () {
-                      showAdminMeetingDetailPage(context: context);
-                    },
-                  ),
-                ],
+                    itemCount: dataProvider.listData.length,
+                  );
+                },
               ),
-            )),
+            ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class MeetingCard extends StatelessWidget {
+  final DetailMeetingEntity meeting;
+  final int meetingNumber;
+
+  final VoidCallback? onTap;
+
+  const MeetingCard({
+    super.key,
+    required this.meeting,
+    required this.meetingNumber,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Card(
+        elevation: 0,
+        margin: EdgeInsets.zero,
+        color: Palette.white,
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(99),
+        ),
+        child: InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(8, 8, 20, 8),
+            child: Row(
+              children: <Widget>[
+                CircleAvatar(
+                  radius: 36,
+                  backgroundColor: Palette.purple80,
+                  child: Text(
+                    '#$meetingNumber',
+                    style: kTextTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: Palette.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        meeting.topic ?? '',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: kTextTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: Palette.purple100,
+                          height: 1.2,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        meeting.meetingDate != null
+                            ? ReusableHelper.datetimeToString(
+                                meeting.meetingDate!)
+                            : '-',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: kTextTheme.bodyMedium?.copyWith(
+                          color: Palette.purple60,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

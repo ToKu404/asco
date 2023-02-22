@@ -163,7 +163,8 @@ class PracticumClassCard extends StatelessWidget {
       color: Colors.white,
       margin: const EdgeInsets.only(bottom: 12),
       onTap: () {
-        showAdminClassroomMeetingPage(context: context);
+        showAdminClassroomMeetingPage(
+            context: context, classroomId: classroom.uid!);
       },
       radius: 12,
       child: Container(
@@ -191,7 +192,7 @@ class PracticumClassCard extends StatelessWidget {
               height: 8,
             ),
             Text(
-              'Setiap ${classroom.meetingDay} ${UserHelper.timeFormater(TimeHelper(
+              'Setiap ${classroom.meetingDay} ${ReusableHelper.timeFormater(TimeHelper(
                 startHour: classroom.startHour,
                 endHour: classroom.endHour,
                 startMinute: classroom.startMinute,

@@ -1,13 +1,16 @@
 import 'package:asco/src/data/datasources/auth_datasources.dart';
 import 'package:asco/src/data/datasources/classroom_datasources.dart';
+import 'package:asco/src/data/datasources/meeting_datasources.dart';
 import 'package:asco/src/data/datasources/practicum_datasources.dart';
 import 'package:asco/src/data/datasources/profile_datasources.dart';
 import 'package:asco/src/data/repositories/auth_repository_impl.dart';
 import 'package:asco/src/data/repositories/classroom_repository_impl.dart';
+import 'package:asco/src/data/repositories/meeting_repository_impl.dart';
 import 'package:asco/src/data/repositories/practicum_repository_impl.dart';
 import 'package:asco/src/data/repositories/profile_repository_impl.dart';
 import 'package:asco/src/domain/repositories/auth_repository.dart';
 import 'package:asco/src/domain/repositories/classroom_repository.dart';
+import 'package:asco/src/domain/repositories/meeting_repository.dart';
 import 'package:asco/src/domain/repositories/practicum_repository.dart';
 import 'package:asco/src/domain/repositories/profile_repository.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/create_user.dart';
@@ -83,7 +86,7 @@ void init() {
     ),
   );
 
-   locator.registerFactory(
+  locator.registerFactory(
     () => MeetingNotifier(
       createUsecase: locator(),
       getListDataUsecase: locator(),
@@ -109,6 +112,11 @@ void init() {
   );
   locator.registerLazySingleton<ClassroomRepository>(
     () => ClassroomRepositoryImpl(
+      dataSource: locator(),
+    ),
+  );
+  locator.registerLazySingleton<MeetingRepository>(
+    () => MeetingRepositoryImpl(
       dataSource: locator(),
     ),
   );
@@ -245,6 +253,11 @@ void init() {
   );
   locator.registerLazySingleton<ClassroomDataSource>(
     () => ClassroomDataSourceImpl(
+      firestore: locator(),
+    ),
+  );
+  locator.registerLazySingleton<MeetingDataSources>(
+    () => MeetingDataSourceImpl(
       firestore: locator(),
     ),
   );

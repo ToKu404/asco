@@ -1,3 +1,4 @@
+import 'package:asco/src/data/models/profile_models/profile_model.dart';
 import 'package:asco/src/domain/entities/meeting_entities/detail_meeting_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -14,9 +15,11 @@ class DetailMeetingModel extends DetailMeetingEntity {
 
   Map<String, dynamic> toDocument() {
     return {
-      'assistant1': assistant1,
+      if (assistant1 != null)
+        'assistant1': ProfileModel.fromEntity(assistant1!).toDocument(),
       'meeting_date': meetingDate,
-      'assistant2': assistant2,
+      if (assistant1 != null)
+        'assistant2': ProfileModel.fromEntity(assistant2!).toDocument(),
       'classroom_uid': classUid,
       'modul_path': modulPath,
       'topic': topic,
@@ -38,9 +41,11 @@ class DetailMeetingModel extends DetailMeetingEntity {
 
   factory DetailMeetingModel.fromSnapshot(DocumentSnapshot documentSnapshot) {
     return DetailMeetingModel(
-      assistant1: documentSnapshot['assistant1'],
+      assistant1:
+          ProfileModel.fromMap(documentSnapshot['assistant1']).toEntity(),
       meetingDate: documentSnapshot['meeting_date'],
-      assistant2: documentSnapshot['assistant2'],
+      assistant2:
+          ProfileModel.fromMap(documentSnapshot['assistant1']).toEntity(),
       classUid: documentSnapshot['classroom_uid'],
       modulPath: documentSnapshot['modul_path'],
       topic: documentSnapshot['topic'],

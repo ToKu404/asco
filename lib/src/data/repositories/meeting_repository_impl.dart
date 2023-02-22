@@ -6,7 +6,7 @@ import 'package:asco/src/domain/repositories/meeting_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class MeetingRepositoryImpl implements MeetingRepository {
-  final MeetingDataSourceImpl dataSource;
+  final MeetingDataSources dataSource;
 
   MeetingRepositoryImpl({required this.dataSource});
 

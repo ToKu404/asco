@@ -185,13 +185,7 @@ class _AdminPracticumAssistantPageState
                         ),
                         itemBuilder: (context, index) {
                           final data = dataProvider.listData[index];
-                          final profile = ProfileEntity(
-                            fullName: data.fullName,
-                            profilePhoto: data.profilePhoto,
-                            uid: data.uid,
-                            userRole: data.userRole,
-                            username: data.username,
-                          );
+                          final profile = ProfileEntity.fromDetail(data);
                           return SelectUserCard(
                             asistant: profile,
                             isSelect: assistantSelect.isItemSelected(profile),

@@ -1,4 +1,3 @@
-import 'package:asco/src/domain/entities/meeting_entities/detail_meeting_entity.dart';
 import 'package:asco/src/domain/entities/meeting_entities/meeting_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 

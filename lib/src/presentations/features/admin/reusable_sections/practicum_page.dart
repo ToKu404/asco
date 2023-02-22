@@ -3,21 +3,20 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/core/services/user_helper.dart';
-import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
-import 'package:asco/src/presentations/features/admin/attendance_page/attendance_page.dart';
-import 'package:asco/src/presentations/providers/classroom_notifier.dart';
+import 'package:asco/src/domain/entities/practicum_entities/practicum_entity.dart';
+import 'package:asco/src/presentations/features/admin/practicum_page/create_practicum_page.dart';
+import 'package:asco/src/presentations/features/admin/practicum_page/practicum_detail_page.dart';
+import 'package:asco/src/presentations/providers/practicum_notifier.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
-import 'package:asco/src/presentations/widgets/input_field/input_time_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-void showAdminAttendanceClassroomPage({required BuildContext context}) {
+void showAdminPracticumPage({required BuildContext context}) {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => const AdminAttendanceClassroomPage(),
+      builder: (context) => const AdminPracticumPage(),
       settings: const RouteSettings(
         name: AppRoute.adminUsersPage,
       ),
@@ -25,30 +24,28 @@ void showAdminAttendanceClassroomPage({required BuildContext context}) {
   );
 }
 
-class AdminAttendanceClassroomPage extends StatefulWidget {
-  const AdminAttendanceClassroomPage({super.key});
+class AdminPracticumPage extends StatefulWidget {
+  const AdminPracticumPage({super.key});
 
   @override
-  State<AdminAttendanceClassroomPage> createState() =>
-      _AdminAttendanceClassroomPageState();
+  State<AdminPracticumPage> createState() => _AdminPracticumPageState();
 }
 
-class _AdminAttendanceClassroomPageState
-    extends State<AdminAttendanceClassroomPage> {
+class _AdminPracticumPageState extends State<AdminPracticumPage> {
   TextEditingController searchController = TextEditingController();
-
-  @override
-  void dispose() {
-    super.dispose();
-    searchController.dispose();
-  }
 
   @override
   void initState() {
     super.initState();
     Future.microtask(
-      () => Provider.of<ClassroomNotifier>(context, listen: false)..fetch(),
+      () => Provider.of<PracticumNotifier>(context, listen: false)..fetch(),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    searchController.dispose();
   }
 
   @override
@@ -67,11 +64,22 @@ class _AdminAttendanceClassroomPageState
           ),
         ),
         title: Text(
-          'Data Absensi Kelas',
+          'Data Praktikum',
           style: kTextTheme.titleSmall?.copyWith(color: Palette.white),
         ),
         centerTitle: true,
       ),
+      floatingActionButton: FloatingActionButton(
+          backgroundColor: Palette.blackPurple,
+          shape: const CircleBorder(
+              side: BorderSide(width: 1, color: Palette.purple60)),
+          child: const Icon(
+            Icons.add_rounded,
+            color: Palette.white,
+          ),
+          onPressed: () {
+            showAdminCreatePracticumPage(context: context);
+          }),
       body: SafeArea(
         child: Column(
           children: [
@@ -88,7 +96,7 @@ class _AdminAttendanceClassroomPageState
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.zero,
                   isDense: true,
-                  hintText: 'Cari nama matakuliah',
+                  hintText: 'Cari nama praktikum',
                   hintStyle:
                       kTextTheme.bodyLarge?.copyWith(color: Palette.disable),
                   filled: true,
@@ -121,7 +129,7 @@ class _AdminAttendanceClassroomPageState
             ),
             Expanded(
               child: Builder(builder: (context) {
-                final dataProvider = context.watch<ClassroomNotifier>();
+                final dataProvider = context.watch<PracticumNotifier>();
 
                 // Todo : Add Shimmer
                 if (dataProvider.isLoadingState('find')) {
@@ -137,8 +145,8 @@ class _AdminAttendanceClassroomPageState
                     bottom: 16 + 65,
                   ),
                   itemBuilder: (context, index) {
-                    return PracticumClassCard(
-                      classroom: dataProvider.listData[index],
+                    return PracticumCard(
+                      practicum: dataProvider.listData[index],
                     );
                   },
                   itemCount: dataProvider.listData.length,
@@ -152,58 +160,60 @@ class _AdminAttendanceClassroomPageState
   }
 }
 
-class PracticumClassCard extends StatelessWidget {
-  final ClassroomEntity classroom;
-  const PracticumClassCard({
+class PracticumCard extends StatelessWidget {
+  final PracticumEntity practicum;
+  const PracticumCard({
     super.key,
-    required this.classroom,
+    required this.practicum,
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWellContainer(
-      color: Colors.white,
       margin: const EdgeInsets.only(bottom: 12),
+      color: Colors.white,
       onTap: () {
-        showAdminAttendancePage(context: context, classroomUid: classroom.uid!);
+        showAdminPracticumDetailPage(
+          context: context,
+          practicumEntity: practicum,
+        );
       },
       radius: 12,
       child: Container(
         width: AppSize.getAppWidth(context),
         padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
-            Text(
-              '${classroom.courseName}',
-              style: kTextTheme.bodyMedium?.copyWith(
-                color: Palette.purple80,
-                height: 1.2,
-              ),
-            ),
-            Text(
-              'Kelas ${classroom.classCode}',
-              style: kTextTheme.bodyLarge?.copyWith(
-                color: Palette.purple80,
-                fontWeight: FontWeight.w600,
-                height: 1.1,
+            SizedBox(
+              width: 50,
+              height: 50,
+              child: SvgPicture.asset(
+                AssetPath.getVector('badge_android.svg'),
               ),
             ),
             const SizedBox(
-              height: 8,
+              width: 12,
             ),
-            Text(
-              'Setiap ${classroom.meetingDay} ${ReusableHelper.timeFormater(TimeHelper(
-                startHour: classroom.startHour,
-                endHour: classroom.endHour,
-                startMinute: classroom.startMinute,
-                endMinute: classroom.endMinute,
-              ))}',
-              style: kTextTheme.bodyMedium?.copyWith(
-                color: Palette.purple60,
-                height: 1.1,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    practicum.course ?? '',
+                    style: kTextTheme.bodyLarge?.copyWith(
+                      color: Palette.purple80,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    '0 Kelas',
+                    style: kTextTheme.bodyMedium?.copyWith(
+                      color: Palette.purple60,
+                    ),
+                  ),
+                ],
               ),
-            ),
+            )
           ],
         ),
       ),

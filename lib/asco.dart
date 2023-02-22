@@ -1,3 +1,4 @@
+import 'package:asco/core/constants/app_name.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/src/presentations/features/initial/splash_page.dart';
 import 'package:asco/src/presentations/providers/auth_notifier.dart';
@@ -48,7 +49,7 @@ class AscoApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Asco',
+        title: AppInfo.appName,
         theme: ThemeData(
           useMaterial3: true,
           fontFamily: 'Poppins',
