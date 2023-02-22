@@ -134,8 +134,7 @@ class _CreateMeetingPageState extends State<CreateMeetingPage> {
                       modulPath: '',
                       topic: _topicController.text,
                     ),
-                    listStudentId:
-                        widget.students.map((e) => e.username!).toList());
+                    listStudentId: widget.students.map((e) => e.uid!).toList());
               }
             },
             icon: const Icon(

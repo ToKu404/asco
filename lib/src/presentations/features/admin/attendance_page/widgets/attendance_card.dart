@@ -30,7 +30,11 @@ class _AdminAttendanceCardState extends State<AdminAttendanceCard> {
       radius: 12,
       color: Palette.white,
       onTap: () {
-        showAdminAttendanceUsersPage(context: context);
+        showAdminAttendanceUsersPage(
+          context: context,
+          attendances: widget.entity.attendances ?? [],
+          number: widget.number,
+        );
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
