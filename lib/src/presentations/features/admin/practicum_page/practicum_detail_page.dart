@@ -254,7 +254,6 @@ class _ClassroomSection extends StatefulWidget {
 class _ClassroomSectionState extends State<_ClassroomSection> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Future.microtask(
       () => Provider.of<ClassroomNotifier>(context, listen: false)

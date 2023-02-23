@@ -43,7 +43,6 @@ class ClassDetailPage extends StatefulWidget {
 class _ClassDetailPageState extends State<ClassDetailPage> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Future.microtask(
       () => Provider.of<ClassroomNotifier>(context, listen: false)

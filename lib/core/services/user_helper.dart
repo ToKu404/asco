@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:asco/src/domain/entities/assistance_entities/assistance_entity.dart';
 import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 import 'package:asco/src/presentations/features/admin/attendance_page/widgets/attendance_card.dart';
 import 'package:asco/src/presentations/widgets/input_field/input_time_field.dart';
@@ -82,5 +83,20 @@ class ReusableHelper {
     }
 
     return attendanceStat;
+  }
+
+  static String createPredictId(List<AssistanceGroupEntity> listData) {
+    int i = 1;
+    while (true) {
+      int foundStatus =
+          listData.indexWhere((element) => element.name! == i.toString());
+      if (foundStatus != -1) {
+        i++;
+      } else {
+        break;
+      }
+    }
+
+    return i.toString();
   }
 }

@@ -1,6 +1,5 @@
 import 'package:asco/src/data/datasources/classroom_datasources.dart';
 import 'package:asco/src/data/models/classroom_models/classroom_model.dart';
-import 'package:asco/src/data/models/profile_models/profile_model.dart';
 import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
 import 'package:asco/core/utils/failure.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
@@ -8,16 +7,16 @@ import 'package:asco/src/domain/repositories/classroom_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class ClassroomRepositoryImpl implements ClassroomRepository {
-  final ClassroomDataSource dataSource;
+  final ClassroomDataSource datasource;
 
-  ClassroomRepositoryImpl({required this.dataSource});
+  ClassroomRepositoryImpl({required this.datasource});
 
   @override
   Future<Either<Failure, bool>> create(
       {required ClassroomEntity classroom,
       required String practicumUid}) async {
     try {
-      final result = await dataSource.create(
+      final result = await datasource.create(
         classroom: ClassroomModel.fromEntity(classroom),
         practicumUid: practicumUid,
       );
@@ -31,7 +30,7 @@ class ClassroomRepositoryImpl implements ClassroomRepository {
   Future<Either<Failure, List<ClassroomEntity>>> find(
       {String? practicumUid}) async {
     try {
-      final result = await dataSource.find(
+      final result = await datasource.find(
         practicumUid: practicumUid,
       );
 
@@ -44,7 +43,7 @@ class ClassroomRepositoryImpl implements ClassroomRepository {
   @override
   Future<Either<Failure, ClassroomEntity>> single({required String uid}) async {
     try {
-      final result = await dataSource.single(uid: uid);
+      final result = await datasource.single(uid: uid);
       return Right(result);
     } catch (e) {
       return const Left(FirestoreFailure(''));
@@ -57,7 +56,7 @@ class ClassroomRepositoryImpl implements ClassroomRepository {
     required List<ProfileEntity> students,
   }) async {
     try {
-      final result = await dataSource.updateStudents(
+      final result = await datasource.updateStudents(
           classroomUid: classroomUid, students: students);
       return Right(result);
     } catch (e) {

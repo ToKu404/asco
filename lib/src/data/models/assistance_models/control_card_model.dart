@@ -1,6 +1,5 @@
 import 'package:asco/src/data/models/assistance_models/assistance_attendance_model.dart';
 import 'package:asco/src/data/models/meeting_models/meeting_model.dart';
-import 'package:asco/src/data/models/profile_models/profile_model.dart';
 import 'package:asco/src/domain/entities/assistance_entities/control_card_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 

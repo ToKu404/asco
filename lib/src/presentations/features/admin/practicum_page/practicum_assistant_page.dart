@@ -3,7 +3,7 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
-import 'package:asco/src/presentations/features/admin/practicum_page/providers/asset_select_provider.dart';
+import 'package:asco/src/presentations/features/admin/providers/asset_select_provider.dart';
 import 'package:asco/src/presentations/providers/practicum_notifier.dart';
 import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:flutter/material.dart';
