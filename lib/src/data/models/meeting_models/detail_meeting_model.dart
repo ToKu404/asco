@@ -1,4 +1,5 @@
 import 'package:asco/src/data/datasources/helpers/ds_helper.dart';
+import 'package:asco/src/data/models/assistance_models/control_card_model.dart';
 import 'package:asco/src/data/models/attendance_models/attendance_model.dart';
 import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 import 'package:asco/src/domain/entities/meeting_entities/detail_meeting_entity.dart';
@@ -14,6 +15,7 @@ class DetailMeetingModel extends DetailMeetingEntity {
     required super.topic,
     required super.uid,
     required super.attendances,
+    required super.controlCard,
   });
 
   Map<String, dynamic> toDocument() {
@@ -25,10 +27,17 @@ class DetailMeetingModel extends DetailMeetingEntity {
       'modul_path': modulPath,
       'topic': topic,
       'uid': uid,
-      if (attendances != null)
-        "attendances": attendances!
-            .map((e) => AttendanceModel.fromEntity(e).toDocument())
-            .toList(),
+      "attendances": (attendances != null)
+          ? attendances!
+              .map((e) => AttendanceModel.fromEntity(e).toDocument())
+              .toList()
+          : [],
+      "control_cards": (controlCard != null)
+          ? {
+              for (var k in controlCard!.keys)
+                k: ControlCardModel.fromEntity(controlCard![k]!).toDocument()
+            }
+          : null,
     };
   }
 
@@ -61,6 +70,7 @@ class DetailMeetingModel extends DetailMeetingEntity {
                   ),
             )
           : [],
+      controlCard: null,
     );
   }
 
@@ -74,6 +84,7 @@ class DetailMeetingModel extends DetailMeetingEntity {
       topic: entity.topic,
       uid: entity.uid,
       attendances: entity.attendances,
+      controlCard: entity.controlCard,
     );
   }
 }
