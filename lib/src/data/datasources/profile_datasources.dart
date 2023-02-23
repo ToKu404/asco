@@ -1,6 +1,8 @@
 import 'package:asco/src/data/datasources/helpers/ds_helper.dart';
 import 'package:asco/src/data/models/profile_models/detail_profile_model.dart';
+import 'package:asco/src/data/models/profile_models/user_practicum_model.dart';
 import 'package:asco/src/data/services/preferences_services.dart';
+import 'package:asco/src/domain/entities/profile_entities/user_practicum_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 abstract class ProfileDataSource {
@@ -16,6 +18,8 @@ abstract class ProfileDataSource {
     String? query,
     int? byRole,
   });
+  Future<bool> multiplePracticumUpdate(
+      {required Map<String, List<UserPracticumEntity>> data});
 }
 
 class ProfileDataSourceImpl implements ProfileDataSource {
@@ -52,6 +56,7 @@ class ProfileDataSourceImpl implements ProfileDataSource {
             profilePhoto: userProfileModel.profilePhoto,
             username: userProfileModel.username,
             userRole: userProfileModel.userRole,
+            userPracticums: const [],
           );
           if (!value.exists) {
             collectionReference.doc(id).set(
@@ -161,6 +166,7 @@ class ProfileDataSourceImpl implements ProfileDataSource {
   Future<bool> update({required DetailProfileModel userProfileModel}) async {
     try {
       UpdateHelper updateHelper = UpdateHelper();
+
       updateHelper.onUpdate('class_of', userProfileModel.classOf);
       updateHelper.onUpdate('full_name', userProfileModel.fullName);
       updateHelper.onUpdate('gender', userProfileModel.gender);
@@ -195,6 +201,26 @@ class ProfileDataSourceImpl implements ProfileDataSource {
         throw Exception();
       }
     } catch (e) {
+      throw Exception();
+    }
+  }
+
+  @override
+  Future<bool> multiplePracticumUpdate(
+      {required Map<String, List<UserPracticumEntity>> data}) async {
+    try {
+      for (var element in data.entries) {
+        await collectionReference.doc(element.key).update(
+          {
+            'user_practicums': element.value
+                .map((e) => UserPracticumModel.fromEntity(e).toDocument())
+                .toList()
+          },
+        );
+      }
+      return true;
+    } catch (e) {
+      print(e.toString());
       throw Exception();
     }
   }

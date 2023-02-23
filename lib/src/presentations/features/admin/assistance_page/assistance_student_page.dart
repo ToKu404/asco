@@ -2,6 +2,7 @@ import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/core/services/user_helper.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:asco/src/presentations/features/admin/providers/asset_select_provider.dart';
 import 'package:asco/src/presentations/providers/assistances_notifier.dart';
@@ -14,6 +15,7 @@ import 'package:provider/provider.dart';
 void showAdminAssistanceStudentPage(
     {required BuildContext context,
     required String assistanceGroupUid,
+    required String practicumUid,
     required List<ProfileEntity> students}) {
   Navigator.push(
     context,
@@ -21,6 +23,7 @@ void showAdminAssistanceStudentPage(
       builder: (context) => AdminAssistanceStudentPage(
         assistanceGroupUid: assistanceGroupUid,
         students: students,
+        practicumUid: practicumUid,
       ),
       settings: const RouteSettings(
         name: AppRoute.adminUsersPage,
@@ -32,8 +35,13 @@ void showAdminAssistanceStudentPage(
 class AdminAssistanceStudentPage extends StatefulWidget {
   final String assistanceGroupUid;
   final List<ProfileEntity> students;
+  final String practicumUid;
+
   const AdminAssistanceStudentPage(
-      {super.key, required this.assistanceGroupUid, required this.students});
+      {super.key,
+      required this.assistanceGroupUid,
+      required this.students,
+      required this.practicumUid});
 
   @override
   State<AdminAssistanceStudentPage> createState() =>
@@ -64,9 +72,11 @@ class _AdminAssistanceStudentPageState
   @override
   Widget build(BuildContext context) {
     final notifier = context.watch<AssistancesNotifier>();
+    final profileNotifier = context.watch<ProfileNotifier>();
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      if (notifier.isSuccessState('update_student')) {
+      if (notifier.isSuccessState('update_student') &&
+          profileNotifier.isSuccessState('update_practicums')) {
         notifier.reset();
         Future.delayed(const Duration(seconds: 2), () {
           Navigator.pop(context);
@@ -95,18 +105,26 @@ class _AdminAssistanceStudentPageState
                 ),
               ),
               actions: [
-                IconButton(
-                  onPressed: () {
-                    notifier.updateStudent(
-                      assistanceGroupUid: widget.assistanceGroupUid,
-                      students: userSelect.user,
-                    );
-                  },
-                  icon: const Icon(
-                    Icons.check_rounded,
-                    color: Palette.white,
-                  ),
-                )
+                if (profileNotifier.isSuccessState('find'))
+                  IconButton(
+                    onPressed: () async {
+                      await notifier.updateStudent(
+                        assistanceGroupUid: widget.assistanceGroupUid,
+                        students: userSelect.user,
+                      );
+                      await profileNotifier.multiplePracticumUpdate(
+                          data: ReusableHelper.getPracticumData(
+                        allData: profileNotifier.listData,
+                        selectData: userSelect.user,
+                        groupUid: widget.assistanceGroupUid,
+                        practicumUid: widget.practicumUid,
+                      ));
+                    },
+                    icon: const Icon(
+                      Icons.check_rounded,
+                      color: Palette.white,
+                    ),
+                  )
               ],
               title: Text(
                 userSelect.user.isEmpty
@@ -167,12 +185,10 @@ class _AdminAssistanceStudentPageState
                   ),
                   Expanded(
                     child: Builder(builder: (context) {
-                      final dataProvider = context.watch<ProfileNotifier>();
-
                       // Todo : Add Shimmer
-                      if (dataProvider.isLoadingState('find')) {
+                      if (profileNotifier.isLoadingState('find')) {
                         return const SizedBox.shrink();
-                      } else if (dataProvider.isErrorState('find')) {
+                      } else if (profileNotifier.isErrorState('find')) {
                         return const SizedBox.shrink();
                       }
 
@@ -183,7 +199,7 @@ class _AdminAssistanceStudentPageState
                           bottom: 16 + 65,
                         ),
                         itemBuilder: (context, index) {
-                          final data = dataProvider.listData[index];
+                          final data = profileNotifier.listData[index];
                           final profile = ProfileEntity.fromDetail(data);
                           return SelectUserCard(
                             student: profile,
@@ -195,7 +211,7 @@ class _AdminAssistanceStudentPageState
                             },
                           );
                         },
-                        itemCount: dataProvider.listData.length,
+                        itemCount: profileNotifier.listData.length,
                       );
                     }),
                   ),

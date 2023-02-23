@@ -2,6 +2,7 @@ import 'package:asco/core/utils/failure.dart';
 import 'package:asco/src/data/datasources/profile_datasources.dart';
 import 'package:asco/src/data/models/profile_models/detail_profile_model.dart';
 import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/user_practicum_entity.dart';
 import 'package:asco/src/domain/repositories/profile_repository.dart';
 import 'package:dartz/dartz.dart';
 
@@ -91,6 +92,17 @@ class ProfileRepositoryImpl implements ProfileRepository {
         multipleId: multipleId,
       );
 
+      return Right(result);
+    } catch (e) {
+      return const Left(FirestoreFailure(''));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> multiplePracticumUpdate(
+      {required Map<String, List<UserPracticumEntity>> data}) async {
+    try {
+      final result = await datasource.multiplePracticumUpdate(data: data);
       return Right(result);
     } catch (e) {
       return const Left(FirestoreFailure(''));

@@ -174,6 +174,7 @@ class _ClassDetailPageState extends State<ClassDetailPage> {
                 _StudentsSection(
                   classroomUid: widget.classroomUid,
                   students: dataProvider.data!.students!,
+                  practicumUid: dataProvider.data!.practicumUid!,
                 ),
               ],
             ),
@@ -187,10 +188,12 @@ class _ClassDetailPageState extends State<ClassDetailPage> {
 class _StudentsSection extends StatefulWidget {
   final String classroomUid;
   final List<ProfileEntity> students;
+  final String practicumUid;
 
   const _StudentsSection({
     required this.classroomUid,
     required this.students,
+    required this.practicumUid,
   });
 
   @override
@@ -240,6 +243,7 @@ class _StudentsSectionState extends State<_StudentsSection> {
                     context: context,
                     students: widget.students,
                     classroomUid: widget.classroomUid,
+                    practicumUid: widget.practicumUid,
                   );
                 },
                 icon: const Icon(

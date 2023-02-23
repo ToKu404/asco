@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'package:asco/src/domain/entities/assistance_entities/assistance_entity.dart';
 import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/user_practicum_entity.dart';
 import 'package:asco/src/presentations/features/admin/attendance_page/widgets/attendance_card.dart';
 import 'package:asco/src/presentations/widgets/input_field/input_time_field.dart';
 // ignore: depend_on_referenced_packages
@@ -98,5 +101,43 @@ class ReusableHelper {
     }
 
     return i.toString();
+  }
+
+  static Map<String, List<UserPracticumEntity>> getPracticumData({
+    required List<DetailProfileEntity> allData,
+    required List<ProfileEntity> selectData,
+    String? practicumUid,
+    String? classroomUid,
+    String? groupUid,
+  }) {
+    Map<String, List<UserPracticumEntity>> data = {};
+
+    for (var element in selectData) {
+      final idsx = allData.indexWhere((d) => element.uid == d.uid);
+      final listPracticum = allData[idsx].userPracticums;
+
+      final idx = listPracticum!
+          .indexWhere((element) => element.practicumUid == practicumUid);
+      final temp = UserPracticumEntity(
+          practicumUid: practicumUid,
+          classUid: classroomUid,
+          assistanceGroupUid: groupUid);
+      if (idx == -1) {
+        listPracticum.add(temp);
+      } else {
+        if (listPracticum.contains(temp)) {
+          continue;
+        } else {
+          UserPracticumEntity(
+              practicumUid: listPracticum[idx].practicumUid,
+              assistanceGroupUid:
+                  groupUid ?? listPracticum[idx].assistanceGroupUid,
+              classUid: classroomUid ?? listPracticum[idx].classUid);
+        }
+      }
+
+      data[element.uid!] = listPracticum;
+    }
+    return data;
   }
 }

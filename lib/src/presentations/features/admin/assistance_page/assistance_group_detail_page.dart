@@ -5,7 +5,7 @@ import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/domain/entities/assistance_entities/assistance_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
-import 'package:asco/src/presentations/features/admin/assistance_page/class_student_page.dart';
+import 'package:asco/src/presentations/features/admin/assistance_page/assistance_student_page.dart';
 import 'package:flutter/material.dart';
 
 void showAdminAssistanceGroupDetailPage(
@@ -118,8 +118,10 @@ class _AssistanceGroupDetailPageState extends State<AssistanceGroupDetailPage> {
                 height: 16,
               ),
               _StudentsSection(
-                  groupUid: widget.groupEntity.uid!,
-                  students: widget.groupEntity.students ?? [])
+                groupUid: widget.groupEntity.uid!,
+                students: widget.groupEntity.students ?? [],
+                practicumUid: widget.groupEntity.practicumUid!,
+              )
             ],
           ),
         ),
@@ -130,11 +132,13 @@ class _AssistanceGroupDetailPageState extends State<AssistanceGroupDetailPage> {
 
 class _StudentsSection extends StatefulWidget {
   final String groupUid;
+  final String practicumUid;
   final List<ProfileEntity> students;
 
   const _StudentsSection({
     required this.groupUid,
     required this.students,
+    required this.practicumUid,
   });
 
   @override
@@ -181,10 +185,10 @@ class _StudentsSectionState extends State<_StudentsSection> {
                 ),
                 onPressed: () {
                   showAdminAssistanceStudentPage(
-                    context: context,
-                    students: widget.students,
-                    assistanceGroupUid: widget.groupUid,
-                  );
+                      context: context,
+                      students: widget.students,
+                      assistanceGroupUid: widget.groupUid,
+                      practicumUid: widget.practicumUid);
                 },
                 icon: const Icon(
                   Icons.add_rounded,

@@ -2,7 +2,9 @@ import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/core/services/user_helper.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/user_practicum_entity.dart';
 import 'package:asco/src/presentations/features/admin/providers/asset_select_provider.dart';
 import 'package:asco/src/presentations/providers/classroom_notifier.dart';
 import 'package:asco/src/presentations/providers/profile_notifier.dart';
@@ -14,6 +16,7 @@ import 'package:provider/provider.dart';
 void showAdminClassStudentPage(
     {required BuildContext context,
     required String classroomUid,
+    required String practicumUid,
     required List<ProfileEntity> students}) {
   Navigator.push(
     context,
@@ -21,6 +24,7 @@ void showAdminClassStudentPage(
       builder: (context) => AdminClassStudentPage(
         classroomUid: classroomUid,
         students: students,
+        practicumUid: practicumUid,
       ),
       settings: const RouteSettings(
         name: AppRoute.adminUsersPage,
@@ -32,8 +36,14 @@ void showAdminClassStudentPage(
 class AdminClassStudentPage extends StatefulWidget {
   final String classroomUid;
   final List<ProfileEntity> students;
-  const AdminClassStudentPage(
-      {super.key, required this.classroomUid, required this.students});
+  final String practicumUid;
+
+  const AdminClassStudentPage({
+    super.key,
+    required this.classroomUid,
+    required this.students,
+    required this.practicumUid,
+  });
 
   @override
   State<AdminClassStudentPage> createState() => _AdminClassStudentPageState();
@@ -62,15 +72,18 @@ class _AdminClassStudentPageState extends State<AdminClassStudentPage> {
   @override
   Widget build(BuildContext context) {
     final notifier = context.watch<ClassroomNotifier>();
+    final profileNotifier = context.watch<ProfileNotifier>();
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      if (notifier.isSuccessState('update_student')) {
+      if (notifier.isSuccessState('update_student') &&
+          profileNotifier.isSuccessState('update_practicums')) {
         notifier.reset();
         Future.delayed(const Duration(seconds: 2), () {
           Navigator.pop(context);
         });
       }
     });
+
     return ChangeNotifierProvider<UserSelectedProvider>(
         create: (context) => UserSelectedProvider(
               init: widget.students,
@@ -92,18 +105,29 @@ class _AdminClassStudentPageState extends State<AdminClassStudentPage> {
                 ),
               ),
               actions: [
-                IconButton(
-                  onPressed: () {
-                    notifier.updateStudent(
-                      classroomUid: widget.classroomUid,
-                      students: userSelect.user,
-                    );
-                  },
-                  icon: const Icon(
-                    Icons.check_rounded,
-                    color: Palette.white,
-                  ),
-                )
+                if (profileNotifier.isSuccessState('find'))
+                  IconButton(
+                    onPressed: () async {
+                      await notifier.updateStudent(
+                        classroomUid: widget.classroomUid,
+                        students: userSelect.user,
+                      );
+
+                      ///!
+
+                      await profileNotifier.multiplePracticumUpdate(
+                          data: ReusableHelper.getPracticumData(
+                        allData: profileNotifier.listData,
+                        selectData: userSelect.user,
+                        classroomUid: widget.classroomUid,
+                        practicumUid: widget.practicumUid,
+                      ));
+                    },
+                    icon: const Icon(
+                      Icons.check_rounded,
+                      color: Palette.white,
+                    ),
+                  )
               ],
               title: Text(
                 userSelect.user.isEmpty
@@ -164,15 +188,12 @@ class _AdminClassStudentPageState extends State<AdminClassStudentPage> {
                   ),
                   Expanded(
                     child: Builder(builder: (context) {
-                      final dataProvider = context.watch<ProfileNotifier>();
-
                       // Todo : Add Shimmer
-                      if (dataProvider.isLoadingState('find')) {
+                      if (profileNotifier.isLoadingState('find')) {
                         return const SizedBox.shrink();
-                      } else if (dataProvider.isErrorState('find')) {
+                      } else if (profileNotifier.isErrorState('find')) {
                         return const SizedBox.shrink();
                       }
-
                       return ListView.builder(
                         padding: const EdgeInsets.only(
                           left: 16,
@@ -180,7 +201,7 @@ class _AdminClassStudentPageState extends State<AdminClassStudentPage> {
                           bottom: 16 + 65,
                         ),
                         itemBuilder: (context, index) {
-                          final data = dataProvider.listData[index];
+                          final data = profileNotifier.listData[index];
                           final profile = ProfileEntity.fromDetail(data);
                           return SelectUserCard(
                             student: profile,
@@ -192,7 +213,7 @@ class _AdminClassStudentPageState extends State<AdminClassStudentPage> {
                             },
                           );
                         },
-                        itemCount: dataProvider.listData.length,
+                        itemCount: profileNotifier.listData.length,
                       );
                     }),
                   ),

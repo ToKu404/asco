@@ -1,3 +1,4 @@
+import 'package:asco/src/domain/entities/profile_entities/user_practicum_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/user_role_entity.dart';
 import 'package:equatable/equatable.dart';
 
@@ -12,6 +13,8 @@ class DetailProfileEntity extends Equatable {
   final String? uid;
   final String? profilePhoto;
   final UserRoleEntity? userRole;
+  // final Map<String, UserPracticumEntity>? userPracticums;
+  final List<UserPracticumEntity>? userPracticums;
 
   const DetailProfileEntity({
     this.classOf,
@@ -24,6 +27,7 @@ class DetailProfileEntity extends Equatable {
     this.uid,
     this.profilePhoto,
     this.userRole,
+    this.userPracticums,
   });
 
   @override
@@ -38,5 +42,6 @@ class DetailProfileEntity extends Equatable {
         profilePhoto,
         uid,
         userRole,
+        userPracticums
       ];
 }
