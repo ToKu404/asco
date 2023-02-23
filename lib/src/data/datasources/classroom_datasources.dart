@@ -1,5 +1,6 @@
+import 'package:asco/src/data/datasources/helpers/ds_helper.dart';
+import 'package:asco/src/data/datasources/helpers/reference_helper.dart';
 import 'package:asco/src/data/models/classroom_models/classroom_model.dart';
-import 'package:asco/src/data/models/profile_models/profile_model.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -43,7 +44,6 @@ class ClassroomDataSourceImpl implements ClassroomDataSource {
           uid: uid,
           classCode: classroom.classCode,
           courseName: classroom.courseName,
-          students: classroom.students,
         );
         if (!value.exists) {
           collectionReference.doc(uid).set(
@@ -72,16 +72,24 @@ class ClassroomDataSourceImpl implements ClassroomDataSource {
               .get();
         }
       }
-
       //? all
-      return await snapshot.then(
-        (value) => value.docs
-            .map(
-              (e) => ClassroomModel.fromSnapshot(e),
-            )
-            .toList(),
-      );
+      return await snapshot.then((value) async {
+        final List<ClassroomModel> listData = [];
+        for (var element in value.docs) {
+          listData.add(
+            ClassroomModel.fromSnapshot(
+              element,
+              ReadHelper.isKeyExist(element, 'students')
+                  ? await ReferenceHelper.referenceProfiles(element['students'])
+                  : [],
+            ),
+          );
+        }
+        return listData;
+      });
     } catch (e) {
+      print('here');
+
       throw Exception();
     }
   }
@@ -92,9 +100,15 @@ class ClassroomDataSourceImpl implements ClassroomDataSource {
       return await collectionReference
           .doc(uid)
           .get()
-          .then((DocumentSnapshot documentSnapshot) {
+          .then((DocumentSnapshot documentSnapshot) async {
         if (documentSnapshot.exists) {
-          return ClassroomModel.fromSnapshot(documentSnapshot);
+          return ClassroomModel.fromSnapshot(
+            documentSnapshot,
+            ReadHelper.isKeyExist(documentSnapshot, 'students')
+                ? await ReferenceHelper.referenceProfiles(
+                    documentSnapshot['students'])
+                : [],
+          );
         } else {
           throw Exception();
         }
@@ -115,7 +129,7 @@ class ClassroomDataSourceImpl implements ClassroomDataSource {
           .update({
             "students": students
                 .map(
-                  (e) => ProfileModel.fromEntity(e).toDocument(),
+                  (e) => firestore.collection('profiles').doc(e.uid),
                 )
                 .toList()
           })

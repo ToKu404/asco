@@ -2,6 +2,7 @@ import 'package:asco/src/data/datasources/helpers/ds_helper.dart';
 import 'package:asco/src/data/models/profile_models/detail_profile_model.dart';
 import 'package:asco/src/data/models/profile_models/user_practicum_model.dart';
 import 'package:asco/src/data/services/preferences_services.dart';
+import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/user_practicum_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -18,6 +19,10 @@ abstract class ProfileDataSource {
       {String? query, int? byRole, String? practicumUid});
   Future<bool> multiplePracticumUpdate(
       {required Map<String, Map<String, UserPracticumEntity>> data});
+  //
+  // Future<List<DetailProfileModel>> getProfileByClassroom({
+  //   required ClassroomEntity classroomEntity,
+  // });
 }
 
 class ProfileDataSourceImpl implements ProfileDataSource {
@@ -208,7 +213,6 @@ class ProfileDataSourceImpl implements ProfileDataSource {
           for (String k2 in data[k]!.keys)
             k2: UserPracticumModel.fromEntity(data[k]![k2]!).toDocument()
         };
-        print(map);
         await collectionReference.doc(k).update(
           {
             'user_practicums': map,
@@ -217,9 +221,8 @@ class ProfileDataSourceImpl implements ProfileDataSource {
       }
       return true;
     } catch (e) {
-      print('object');
-      print(e.toString());
       throw Exception();
     }
   }
+
 }

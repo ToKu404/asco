@@ -37,6 +37,7 @@ class ProfileNotifier extends CrudDataService<DetailProfileEntity> {
       'me',
       'multiple',
       'update_practicums',
+      'by_classroom'
     ]);
   }
 
