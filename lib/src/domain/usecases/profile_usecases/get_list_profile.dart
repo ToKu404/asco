@@ -11,10 +11,12 @@ class GetListProfile {
   Future<Either<Failure, List<DetailProfileEntity>>> execute({
     String? query,
     int? byRole,
+    String? practicumUid
   }) {
     return repository.find(
       query: query,
       byRole: byRole,
+      practicumUid: practicumUid,
     );
   }
 }

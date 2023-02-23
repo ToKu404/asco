@@ -1,5 +1,6 @@
+import 'package:asco/src/data/datasources/helpers/ds_helper.dart';
+import 'package:asco/src/data/datasources/helpers/reference_helper.dart';
 import 'package:asco/src/data/models/assistance_models/assistance_model.dart';
-import 'package:asco/src/data/models/profile_models/profile_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../domain/entities/profile_entities/profile_entity.dart';
@@ -33,37 +34,22 @@ class AttendancesDataSourceImpl implements AssistancesGroupDataSources {
       final uid = collectionReference.doc().id;
 
       collectionReference.doc(uid).get().then((value) {
-        final data = AssistanceGroupModel(
-          assistant: entity.assistant,
-          name: entity.name,
-          practicumUid: entity.practicumUid,
-          students: entity.students,
-          uid: uid,
-        );
         if (!value.exists) {
           collectionReference.doc(uid).set(
-                data.toDocument(),
-              );
+            {
+              "name": entity.name,
+              "practicum_uid": entity.practicumUid,
+              "uid": uid,
+              "assistant":
+                  firestore.collection('profiles').doc(entity.assistant!.uid)
+            },
+          );
         }
         return true;
       }).catchError(
         (error, stackTrace) => throw Exception(),
       );
       return false;
-
-      // await collectionReference
-      //     .add(
-      //       AssistanceGroupModel(
-      //               assistant: entity.assistant,
-      //               name: entity.name,
-      //               practicumUid: entity.practicumUid,
-      //               students: entity.students,
-      //               uid: uid)
-      //           .toDocument(),
-      //     )
-      //     .then((value) => true)
-      //     .catchError((error) => false);
-      // return false;
     } catch (e) {
       throw Exception();
     }
@@ -80,15 +66,26 @@ class AttendancesDataSourceImpl implements AssistancesGroupDataSources {
           .get();
 
       //? all
-      return await snapshot.then(
-        (value) => value.docs
-            .map(
-              (e) => AssistanceGroupModel.fromSnapshot(e),
-            )
-            .toList(),
-      );
+
+      return await snapshot.then((value) async {
+        final List<AssistanceGroupModel> listData = [];
+        for (var element in value.docs) {
+          listData.add(
+            AssistanceGroupModel.fromSnapshot(
+                element,
+                ReadHelper.isKeyExist(element, 'students')
+                    ? await ReferenceHelper.referenceProfiles(
+                        element['students'])
+                    : [],
+                element['assistant'] != null
+                    ? await ReferenceHelper.referenceSingleProfile(
+                        element['assistant'])
+                    : null),
+          );
+        }
+        return listData;
+      });
     } catch (e) {
-      print(e.toString());
       throw Exception();
     }
   }
@@ -97,13 +94,21 @@ class AttendancesDataSourceImpl implements AssistancesGroupDataSources {
   Future<AssistanceGroupModel> single(
       {required String uuid, String? assistant}) async {
     try {
-      // TODO: BY ASISTENT
       await collectionReference
           .doc(uuid)
           .get()
-          .then((DocumentSnapshot documentSnapshot) {
+          .then((DocumentSnapshot documentSnapshot) async {
         if (documentSnapshot.exists) {
-          return AssistanceGroupModel.fromSnapshot(documentSnapshot);
+          return AssistanceGroupModel.fromSnapshot(
+              documentSnapshot,
+              ReadHelper.isKeyExist(documentSnapshot, 'students')
+                  ? await ReferenceHelper.referenceProfiles(
+                      documentSnapshot['students'])
+                  : [],
+              documentSnapshot['assistant'] != null
+                  ? await ReferenceHelper.referenceSingleProfile(
+                      documentSnapshot['assistant'])
+                  : null);
         } else {
           throw Exception();
         }
@@ -125,7 +130,7 @@ class AttendancesDataSourceImpl implements AssistancesGroupDataSources {
           .update({
             "students": students
                 .map(
-                  (e) => ProfileModel.fromEntity(e).toDocument(),
+                  (e) => firestore.collection('profiles').doc(e.uid),
                 )
                 .toList()
           })
@@ -134,7 +139,6 @@ class AttendancesDataSourceImpl implements AssistancesGroupDataSources {
 
       return false;
     } catch (e) {
-      print(e.toString());
       throw Exception();
     }
   }

@@ -1,4 +1,3 @@
-import 'package:asco/src/data/datasources/helpers/ds_helper.dart';
 import 'package:asco/src/data/models/profile_models/profile_model.dart';
 import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
@@ -29,11 +28,6 @@ class ClassroomModel extends ClassroomEntity {
       "practicum_uid": practicumUid,
       "class_code": classCode,
       "course_name": courseName,
-      "students": students != null
-          ? students!
-              .map((e) => ProfileModel.fromEntity(e).toDocument())
-              .toList()
-          : [],
     };
   }
 
@@ -52,7 +46,8 @@ class ClassroomModel extends ClassroomEntity {
     );
   }
 
-  factory ClassroomModel.fromSnapshot(DocumentSnapshot documentSnapshot) {
+  factory ClassroomModel.fromSnapshot(
+      DocumentSnapshot documentSnapshot, List<ProfileEntity> users) {
     return ClassroomModel(
       endHour: documentSnapshot['end_hour'],
       endMinute: documentSnapshot['end_minute'],
@@ -63,13 +58,7 @@ class ClassroomModel extends ClassroomEntity {
       classCode: documentSnapshot['class_code'],
       practicumUid: documentSnapshot['practicum_uid'],
       courseName: documentSnapshot['course_name'],
-      students: ReadHelper.isKeyExist(documentSnapshot, 'students')
-          ? List<ProfileEntity>.from(
-              documentSnapshot.get('students').map(
-                    (e) => ProfileModel.fromMap(e).toEntity(),
-                  ),
-            )
-          : [],
+      students: users,
     );
   }
 

@@ -1,17 +1,25 @@
 import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
-import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/presentations/providers/assistances_notifier.dart';
+import 'package:asco/src/presentations/providers/classroom_notifier.dart';
+import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
-void showAdminControlCardPage({required BuildContext context}) {
+void showAdminControlCardPage({
+  required BuildContext context,
+  required String practicumUid,
+}) {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => const AdminControlCardPage(),
+      builder: (context) => AdminControlCardPage(
+        practicumUid: practicumUid,
+      ),
       settings: const RouteSettings(
         name: AppRoute.adminUsersPage,
       ),
@@ -20,7 +28,12 @@ void showAdminControlCardPage({required BuildContext context}) {
 }
 
 class AdminControlCardPage extends StatefulWidget {
-  const AdminControlCardPage({super.key});
+  final String practicumUid;
+
+  const AdminControlCardPage({
+    super.key,
+    required this.practicumUid,
+  });
 
   @override
   State<AdminControlCardPage> createState() => _AdminControlCardPageState();
@@ -33,6 +46,15 @@ class _AdminControlCardPageState extends State<AdminControlCardPage> {
   void dispose() {
     super.dispose();
     searchController.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      Provider.of<ProfileNotifier>(context, listen: false)
+          .fetchAll(practicumUid: widget.practicumUid);
+    });
   }
 
   @override
@@ -113,18 +135,38 @@ class _AdminControlCardPageState extends State<AdminControlCardPage> {
               height: 12,
             ),
             Expanded(
-                child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: const [
-                  StudentCard(),
-                  SizedBox(
-                    height: 8,
+              child: Builder(builder: (context) {
+                final profileNotifier = context.watch<ProfileNotifier>();
+
+                // Todo : Add Shimmer
+                if (profileNotifier.isLoadingState('find')) {
+                  return const SizedBox.shrink();
+                } else if (profileNotifier.isErrorState('find')) {
+                  return const SizedBox.shrink();
+                }
+
+                return ListView.builder(
+                  padding: const EdgeInsets.only(
+                    left: 16,
+                    right: 16,
+                    bottom: 16 + 65,
                   ),
-                  StudentCard(),
-                ],
-              ),
-            )),
+                  itemBuilder: (context, index) {
+                    final student = profileNotifier.listData[index];
+                    return StudentCard(
+                      classUid: student
+                          .userPracticums?[widget.practicumUid]!.classUid,
+                      practicumUid: widget.practicumUid,
+                      groupUid: student.userPracticums?[widget.practicumUid]!
+                          .assistanceGroupUid,
+                      fullname: student.fullName,
+                      username: student.username,
+                    );
+                  },
+                  itemCount: profileNotifier.listData.length,
+                );
+              }),
+            ),
           ],
         ),
       ),
@@ -132,83 +174,120 @@ class _AdminControlCardPageState extends State<AdminControlCardPage> {
   }
 }
 
-class StudentCard extends StatelessWidget {
+class StudentCard extends StatefulWidget {
+  final String practicumUid;
+  final String? classUid;
+  final String? groupUid;
+  final String? username;
+  final String? fullname;
   const StudentCard({
     super.key,
+    this.classUid,
+    this.groupUid,
+    required this.fullname,
+    required this.username,
+    required this.practicumUid,
   });
 
   @override
+  State<StudentCard> createState() => _StudentCardState();
+}
+
+class _StudentCardState extends State<StudentCard> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      if (widget.classUid != null) {
+        Provider.of<ClassroomNotifier>(context, listen: false)
+            .getDetail(uid: widget.classUid!);
+      }
+      if (widget.groupUid != null) {
+        Provider.of<AssistancesNotifier>(context, listen: false)
+            .getDetail(uuid: widget.groupUid!);
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      child: Stack(
-        children: [
-          InkWellContainer(
-            color: Palette.white,
-            onTap: () {},
-            padding: const EdgeInsets.all(8),
-            radius: 12,
-            child: ListTile(
-              leading: const Avatar(imageAsset: 'avatar1.jpg'),
-              title: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Flexible(
-                    child: Text(
-                      'H071191049',
-                      style: kTextTheme.bodyMedium?.copyWith(
-                        color: Palette.purple60,
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    child: Text(
-                      'Erwin',
-                      style: kTextTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Palette.purple60,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
-                        child: Text(
-                          'Kelas B',
-                          style: kTextTheme.bodySmall?.copyWith(
-                            color: Palette.white,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 4,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Palette.purple60,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
-                        child: Text(
-                          'Group #4',
-                          style: kTextTheme.bodySmall?.copyWith(
-                            color: Palette.white,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+    final classProvider = context.watch<ClassroomNotifier>();
+    final groupProvider = context.watch<AssistancesNotifier>();
+
+    // // Todo : Add Shimmer
+    // if (classProvider.isLoadingState('single') ||
+    //     groupProvider.isLoadingState('single')) {
+    //   return const SizedBox.shrink();
+    // } else if (classProvider.isErrorState('find') ||
+    //     groupProvider.isErrorState('single')) {
+    //   return const SizedBox.shrink();
+    // }
+
+    return InkWellContainer(
+      color: Palette.white,
+      onTap: () {},
+      padding: const EdgeInsets.all(8),
+      margin: const EdgeInsets.only(bottom: 12),
+      radius: 12,
+      child: ListTile(
+        leading: const Avatar(imageAsset: 'avatar1.jpg'),
+        title: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Flexible(
+              child: Text(
+                widget.username ?? '',
+                style: kTextTheme.bodyMedium?.copyWith(
+                  color: Palette.purple60,
+                ),
               ),
             ),
-          ),
-        ],
+            Flexible(
+              child: Text(
+                widget.fullname ?? '',
+                style: kTextTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            Row(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: Palette.purple60,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  child: Text(
+                    'Kelas ${classProvider.data != null ? classProvider.data?.classCode : "..."}',
+                    style: kTextTheme.bodySmall?.copyWith(
+                      color: Palette.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  width: 4,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Palette.purple60,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  child: Text(
+                    'Group ${groupProvider.data != null ? groupProvider.data?.name : "..."}',
+                    style: kTextTheme.bodySmall?.copyWith(
+                      color: Palette.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -234,59 +313,6 @@ class Avatar extends StatelessWidget {
         radius: 28,
         foregroundImage: AssetImage(
           AssetPath.getImage(imageAsset),
-        ),
-      ),
-    );
-  }
-}
-
-class PracticumCard extends StatelessWidget {
-  const PracticumCard({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWellContainer(
-      color: Colors.white,
-      onTap: () {},
-      radius: 12,
-      child: Container(
-        width: AppSize.getAppWidth(context),
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          children: [
-            SizedBox(
-              width: 50,
-              height: 50,
-              child: SvgPicture.asset(
-                AssetPath.getVector('badge_android.svg'),
-              ),
-            ),
-            const SizedBox(
-              width: 12,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Pemrograman Mobile',
-                    style: kTextTheme.bodyLarge?.copyWith(
-                      color: Palette.purple80,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Text(
-                    '5 Kelas',
-                    style: kTextTheme.bodyMedium?.copyWith(
-                      color: Palette.purple60,
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],
         ),
       ),
     );

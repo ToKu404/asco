@@ -90,14 +90,10 @@ class MeetingDataSourceImpl implements MeetingDataSources {
 
       //? all
       return await snapshot.then(
-        (value) => value.docs
-            .map(
-              (e) => DetailMeetingModel.fromSnapshot(e),
-            )
-            .toList(),
+        (value) =>
+            value.docs.map((e) => DetailMeetingModel.fromSnapshot(e)).toList(),
       );
     } catch (e) {
-      print(e.toString());
       throw Exception();
     }
   }

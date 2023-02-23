@@ -2,7 +2,6 @@ import 'package:asco/src/data/datasources/helpers/ds_helper.dart';
 import 'package:asco/src/data/models/profile_models/user_practicum_model.dart';
 import 'package:asco/src/data/models/profile_models/user_role_model.dart';
 import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
-import 'package:asco/src/domain/entities/profile_entities/user_practicum_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DetailProfileModel extends DetailProfileEntity {
@@ -30,18 +29,18 @@ class DetailProfileModel extends DetailProfileEntity {
       'instagram': instagram,
       'nick_name': nickName,
       'profile_photo': profilePhoto,
-      'user_practicums': (userPracticums != null)
-          ? userPracticums!
-              .map((e) => UserPracticumModel.fromEntity(e))
-              .toList()
-          : [],
-      // "user_practicums": (userPracticums != null)
-      //     ? {
-      //         for (var k in userPracticums!.keys)
-      //           k: UserPracticumModel.fromEntity(userPracticums![k]!)
-      //               .toDocument()
-      //       }
-      //     : null,
+      // 'user_practicums': (userPracticums != null)
+      //     ? userPracticums!
+      //         .map((e) => UserPracticumModel.fromEntity(e))
+      //         .toList()
+      //     : [],
+      "user_practicums": (userPracticums != null)
+          ? {
+              for (var k in userPracticums!.keys)
+                k: UserPracticumModel.fromEntity(userPracticums![k]!)
+                    .toDocument()
+            }
+          : null,
       'uid': uid,
       if (userRole != null)
         'role': {
@@ -68,9 +67,9 @@ class DetailProfileModel extends DetailProfileEntity {
   }
 
   factory DetailProfileModel.fromSnapshot(DocumentSnapshot documentSnapshot) {
-    // final map = ReadHelper.isKeyExist(documentSnapshot, 'user_practicums')
-    //     ? documentSnapshot.data() as Map<String, dynamic>
-    //     : null;
+    final map = ReadHelper.isKeyExist(documentSnapshot, 'user_practicums')
+        ? documentSnapshot['user_practicums'] as Map<String, dynamic>
+        : null;
     return DetailProfileModel(
       classOf: documentSnapshot['class_of'],
       fullName: documentSnapshot['full_name'],
@@ -84,19 +83,12 @@ class DetailProfileModel extends DetailProfileEntity {
       userRole: UserRoleModel.fromMap(
         documentSnapshot.get('role'),
       ),
-      userPracticums: ReadHelper.isKeyExist(documentSnapshot, 'user_practicums')
-          ? List<UserPracticumEntity>.from(
-              documentSnapshot.get('user_practicums').map(
-                    (e) => UserPracticumModel.fromMap(e).toEntity(),
-                  ),
-            )
-          : [],
-      // userPracticums: map != null
-      //     ? {
-      //         for (String k in map.keys)
-      //           k: UserPracticumModel.fromMap(map[k]).toEntity(),
-      //       }
-      //     : null,
+      userPracticums: map != null
+          ? {
+              for (String k in map.keys)
+                k: UserPracticumModel.fromMap(map[k]).toEntity(),
+            }
+          : null,
     );
   }
 

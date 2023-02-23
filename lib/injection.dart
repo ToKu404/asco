@@ -273,6 +273,7 @@ void init() {
       repository: locator(),
     ),
   );
+
   //* Meeting Usecase
   locator.registerLazySingleton(
     () => CreateMeeting(

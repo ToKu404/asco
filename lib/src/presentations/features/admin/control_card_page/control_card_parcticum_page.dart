@@ -44,7 +44,7 @@ class AdminControlCardPracticumPage extends StatelessWidget {
       body: SafeArea(child: AdminAllPracticumSection(
         onCardTap: (pr) {
           return () {
-            showAdminControlCardPage(context: context);
+            showAdminControlCardPage(context: context, practicumUid: pr.uid!);
           };
         },
       )),

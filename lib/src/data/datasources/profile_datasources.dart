@@ -2,6 +2,7 @@ import 'package:asco/src/data/datasources/helpers/ds_helper.dart';
 import 'package:asco/src/data/models/profile_models/detail_profile_model.dart';
 import 'package:asco/src/data/models/profile_models/user_practicum_model.dart';
 import 'package:asco/src/data/services/preferences_services.dart';
+import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/user_practicum_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -14,12 +15,14 @@ abstract class ProfileDataSource {
   });
   Future<bool> update({required DetailProfileModel userProfileModel});
   Future<bool> remove({required String uid});
-  Future<List<DetailProfileModel>> find({
-    String? query,
-    int? byRole,
-  });
+  Future<List<DetailProfileModel>> find(
+      {String? query, int? byRole, String? practicumUid});
   Future<bool> multiplePracticumUpdate(
-      {required Map<String, List<UserPracticumEntity>> data});
+      {required Map<String, Map<String, UserPracticumEntity>> data});
+  //
+  // Future<List<DetailProfileModel>> getProfileByClassroom({
+  //   required ClassroomEntity classroomEntity,
+  // });
 }
 
 class ProfileDataSourceImpl implements ProfileDataSource {
@@ -56,7 +59,7 @@ class ProfileDataSourceImpl implements ProfileDataSource {
             profilePhoto: userProfileModel.profilePhoto,
             username: userProfileModel.username,
             userRole: userProfileModel.userRole,
-            userPracticums: const [],
+            userPracticums: const {},
           );
           if (!value.exists) {
             collectionReference.doc(id).set(
@@ -70,26 +73,21 @@ class ProfileDataSourceImpl implements ProfileDataSource {
         return false;
       }
     } catch (e) {
-      print(e.toString());
       throw Exception();
     }
   }
 
   @override
-  Future<List<DetailProfileModel>> find({
-    String? query,
-    int? byRole,
-  }) async {
+  Future<List<DetailProfileModel>> find(
+      {String? query, int? byRole, String? practicumUid}) async {
     try {
       Future<QuerySnapshot> snapshot = collectionReference.get();
       // Todo : Finish Search
-      if (query != null) {
-        if (query.isNotEmpty) {
-          snapshot =
-              collectionReference.where('username', isEqualTo: query).get();
-        }
+      if (practicumUid != null) {
+        snapshot = collectionReference
+            .where('user_practicums.$practicumUid', isNull: false)
+            .get();
       }
-
       //? by Role
       if (byRole != null) {
         snapshot =
@@ -102,6 +100,7 @@ class ProfileDataSourceImpl implements ProfileDataSource {
             value.docs.map((e) => DetailProfileModel.fromSnapshot(e)).toList(),
       );
     } catch (e) {
+      print(e.toString());
       throw Exception();
     }
   }
@@ -207,21 +206,23 @@ class ProfileDataSourceImpl implements ProfileDataSource {
 
   @override
   Future<bool> multiplePracticumUpdate(
-      {required Map<String, List<UserPracticumEntity>> data}) async {
+      {required Map<String, Map<String, UserPracticumEntity>> data}) async {
     try {
-      for (var element in data.entries) {
-        await collectionReference.doc(element.key).update(
+      for (String k in data.keys) {
+        final map = {
+          for (String k2 in data[k]!.keys)
+            k2: UserPracticumModel.fromEntity(data[k]![k2]!).toDocument()
+        };
+        await collectionReference.doc(k).update(
           {
-            'user_practicums': element.value
-                .map((e) => UserPracticumModel.fromEntity(e).toDocument())
-                .toList()
+            'user_practicums': map,
           },
         );
       }
       return true;
     } catch (e) {
-      print(e.toString());
       throw Exception();
     }
   }
+
 }

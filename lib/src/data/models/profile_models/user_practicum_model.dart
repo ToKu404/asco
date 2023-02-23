@@ -5,14 +5,12 @@ class UserPracticumModel extends UserPracticumEntity {
   const UserPracticumModel({
     super.assistanceGroupUid,
     super.classUid,
-    super.practicumUid,
   });
 
   Map<String, dynamic> toDocument() {
     return {
       'assistance_group_uid': assistanceGroupUid,
       'class_uid': classUid,
-      'practicum_uid': practicumUid,
     };
   }
 
@@ -20,7 +18,6 @@ class UserPracticumModel extends UserPracticumEntity {
     return UserPracticumEntity(
       assistanceGroupUid: assistanceGroupUid,
       classUid: classUid,
-      practicumUid: practicumUid,
     );
   }
 
@@ -28,7 +25,6 @@ class UserPracticumModel extends UserPracticumEntity {
     return UserPracticumModel(
       assistanceGroupUid: documentSnapshot['assistance_group_uid'],
       classUid: documentSnapshot['class_uid'],
-      practicumUid: documentSnapshot['practicum_uid'],
     );
   }
 
@@ -36,7 +32,6 @@ class UserPracticumModel extends UserPracticumEntity {
     return UserPracticumModel(
       assistanceGroupUid: documentSnapshot['assistance_group_uid'],
       classUid: documentSnapshot['class_uid'],
-      practicumUid: documentSnapshot['practicum_uid'],
     );
   }
 
@@ -44,7 +39,6 @@ class UserPracticumModel extends UserPracticumEntity {
     return UserPracticumModel(
       assistanceGroupUid: userProfileEntity.assistanceGroupUid,
       classUid: userProfileEntity.classUid,
-      practicumUid: userProfileEntity.practicumUid,
     );
   }
 }
