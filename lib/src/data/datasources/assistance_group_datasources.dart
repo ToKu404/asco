@@ -1,7 +1,10 @@
 import 'package:asco/src/data/models/assistance_models/assistance_model.dart';
+import 'package:asco/src/data/models/profile_models/profile_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-abstract class AssistanceGroupDataSources {
+import '../../domain/entities/profile_entities/profile_entity.dart';
+
+abstract class AssistancesGroupDataSources {
   Future<bool> create({
     required AssistanceGroupModel entity,
   });
@@ -10,9 +13,13 @@ abstract class AssistanceGroupDataSources {
   Future<List<AssistanceGroupModel>> find({
     required String practicumUid,
   });
+  Future<bool> updateStudents({
+    required String assistantGroupUid,
+    required List<ProfileEntity> students,
+  });
 }
 
-class AttendancesDataSourceImpl implements AssistanceGroupDataSources {
+class AttendancesDataSourceImpl implements AssistancesGroupDataSources {
   final FirebaseFirestore firestore;
   AttendancesDataSourceImpl({required this.firestore}) {
     collectionReference = firestore.collection('assistance_groups');
@@ -103,6 +110,31 @@ class AttendancesDataSourceImpl implements AssistanceGroupDataSources {
       });
       throw Exception();
     } catch (e) {
+      throw Exception();
+    }
+  }
+
+  @override
+  Future<bool> updateStudents({
+    required String assistantGroupUid,
+    required List<ProfileEntity> students,
+  }) async {
+    try {
+      collectionReference
+          .doc(assistantGroupUid)
+          .update({
+            "students": students
+                .map(
+                  (e) => ProfileModel.fromEntity(e).toDocument(),
+                )
+                .toList()
+          })
+          .then((value) => true)
+          .catchError((e) => false);
+
+      return false;
+    } catch (e) {
+      print(e.toString());
       throw Exception();
     }
   }

@@ -18,9 +18,9 @@ class PracticumModel extends PracticumEntity {
       'badge_path': badgePath,
       'course': course,
       'course_contract_path': courseContractPath,
-      if (listAssistant != null)
-        'list_assistant':
-            listAssistant!.map((e) => ProfileModel.fromEntity(e)).toList(),
+      'list_assistant': (listAssistant != null)
+          ? listAssistant!.map((e) => ProfileModel.fromEntity(e)).toList()
+          : [],
       'uid': uid,
     };
   }

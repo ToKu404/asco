@@ -1,5 +1,6 @@
 import 'package:asco/core/utils/failure.dart';
 import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/user_practicum_entity.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class ProfileRepository {
@@ -17,4 +18,6 @@ abstract class ProfileRepository {
   Future<Either<Failure, List<DetailProfileEntity>>> multiple({
     required List<String> multipleId,
   });
+  Future<Either<Failure, bool>> multiplePracticumUpdate(
+      {required Map<String, List<UserPracticumEntity>> data});
 }

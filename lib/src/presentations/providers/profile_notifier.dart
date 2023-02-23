@@ -1,10 +1,12 @@
 import 'package:asco/core/services/data_service.dart';
 import 'package:asco/core/state/request_state.dart';
 import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/user_practicum_entity.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/create_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/get_list_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/get_multiple_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/get_single_profile.dart';
+import 'package:asco/src/domain/usecases/profile_usecases/multiple_practicum_update.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/remove_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/self_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/update_profile.dart';
@@ -17,6 +19,7 @@ class ProfileNotifier extends CrudDataService<DetailProfileEntity> {
   final UpdateProfile updateDataUsecase;
   final SelfProfile selfDataUsecase;
   final GetMultipleProfile getMultipleUsecase;
+  final MultiplePracticumUpdate multiplePracticumUpdateUsecase;
 
   ProfileNotifier({
     required this.createUsecase,
@@ -26,8 +29,15 @@ class ProfileNotifier extends CrudDataService<DetailProfileEntity> {
     required this.updateDataUsecase,
     required this.selfDataUsecase,
     required this.getMultipleUsecase,
+    required this.multiplePracticumUpdateUsecase,
   }) {
-    createState(['create', 'find', 'me', 'multiple']);
+    createState([
+      'create',
+      'find',
+      'me',
+      'multiple',
+      'update_practicums',
+    ]);
   }
 
   Future<void> createProfile(DetailProfileEntity entity) async {
@@ -103,6 +113,26 @@ class ProfileNotifier extends CrudDataService<DetailProfileEntity> {
       notifyListeners();
     } catch (e) {
       updateState(state: RequestState.error, key: 'me');
+      setErrorMessage(e.toString());
+      notifyListeners();
+    }
+  }
+
+  Future<void> multiplePracticumUpdate(
+      {required Map<String, List<UserPracticumEntity>> data}) async {
+    updateState(state: RequestState.loading, key: 'update_practicums');
+    notifyListeners();
+    try {
+      final result = await multiplePracticumUpdateUsecase.execute(data: data);
+      result.fold((l) {
+        updateState(state: RequestState.error, key: 'update_practicums');
+        setErrorMessage(l.message);
+      }, (r) {
+        updateState(state: RequestState.success, key: 'update_practicums');
+      });
+      notifyListeners();
+    } catch (e) {
+      updateState(state: RequestState.error, key: 'update_practicums');
       setErrorMessage(e.toString());
       notifyListeners();
     }

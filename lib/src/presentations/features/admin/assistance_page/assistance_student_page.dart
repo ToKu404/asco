@@ -4,25 +4,24 @@ import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/core/services/user_helper.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
-import 'package:asco/src/domain/entities/profile_entities/user_practicum_entity.dart';
 import 'package:asco/src/presentations/features/admin/providers/asset_select_provider.dart';
-import 'package:asco/src/presentations/providers/classroom_notifier.dart';
+import 'package:asco/src/presentations/providers/assistances_notifier.dart';
 import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-void showAdminClassStudentPage(
+void showAdminAssistanceStudentPage(
     {required BuildContext context,
-    required String classroomUid,
+    required String assistanceGroupUid,
     required String practicumUid,
     required List<ProfileEntity> students}) {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => AdminClassStudentPage(
-        classroomUid: classroomUid,
+      builder: (context) => AdminAssistanceStudentPage(
+        assistanceGroupUid: assistanceGroupUid,
         students: students,
         practicumUid: practicumUid,
       ),
@@ -33,23 +32,24 @@ void showAdminClassStudentPage(
   );
 }
 
-class AdminClassStudentPage extends StatefulWidget {
-  final String classroomUid;
+class AdminAssistanceStudentPage extends StatefulWidget {
+  final String assistanceGroupUid;
   final List<ProfileEntity> students;
   final String practicumUid;
 
-  const AdminClassStudentPage({
-    super.key,
-    required this.classroomUid,
-    required this.students,
-    required this.practicumUid,
-  });
+  const AdminAssistanceStudentPage(
+      {super.key,
+      required this.assistanceGroupUid,
+      required this.students,
+      required this.practicumUid});
 
   @override
-  State<AdminClassStudentPage> createState() => _AdminClassStudentPageState();
+  State<AdminAssistanceStudentPage> createState() =>
+      _AdminAssistanceStudentPageState();
 }
 
-class _AdminClassStudentPageState extends State<AdminClassStudentPage> {
+class _AdminAssistanceStudentPageState
+    extends State<AdminAssistanceStudentPage> {
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -71,7 +71,7 @@ class _AdminClassStudentPageState extends State<AdminClassStudentPage> {
 
   @override
   Widget build(BuildContext context) {
-    final notifier = context.watch<ClassroomNotifier>();
+    final notifier = context.watch<AssistancesNotifier>();
     final profileNotifier = context.watch<ProfileNotifier>();
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -109,17 +109,14 @@ class _AdminClassStudentPageState extends State<AdminClassStudentPage> {
                   IconButton(
                     onPressed: () async {
                       await notifier.updateStudent(
-                        classroomUid: widget.classroomUid,
+                        assistanceGroupUid: widget.assistanceGroupUid,
                         students: userSelect.user,
                       );
-
-                      ///!
-
                       await profileNotifier.multiplePracticumUpdate(
                           data: ReusableHelper.getPracticumData(
                         allData: profileNotifier.listData,
                         selectData: userSelect.user,
-                        classroomUid: widget.classroomUid,
+                        groupUid: widget.assistanceGroupUid,
                         practicumUid: widget.practicumUid,
                       ));
                     },
@@ -194,6 +191,7 @@ class _AdminClassStudentPageState extends State<AdminClassStudentPage> {
                       } else if (profileNotifier.isErrorState('find')) {
                         return const SizedBox.shrink();
                       }
+
                       return ListView.builder(
                         padding: const EdgeInsets.only(
                           left: 16,

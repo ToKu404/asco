@@ -3,15 +3,20 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/src/presentations/features/admin/assistance_page/class_student_page.dart';
-import 'package:asco/src/presentations/features/admin/assistance_page/create_assistance_page.dart';
+import 'package:asco/src/domain/entities/assistance_entities/assistance_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
+import 'package:asco/src/presentations/features/admin/assistance_page/assistance_student_page.dart';
 import 'package:flutter/material.dart';
 
-void showAdminAssistanceGroupDetailPage({required BuildContext context}) {
+void showAdminAssistanceGroupDetailPage(
+    {required BuildContext context,
+    required AssistanceGroupEntity groupEntity}) {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => const AssistanceGroupDetailPage(),
+      builder: (context) => AssistanceGroupDetailPage(
+        groupEntity: groupEntity,
+      ),
       settings: const RouteSettings(
         name: AppRoute.adminUsersPage,
       ),
@@ -19,9 +24,16 @@ void showAdminAssistanceGroupDetailPage({required BuildContext context}) {
   );
 }
 
-class AssistanceGroupDetailPage extends StatelessWidget {
-  const AssistanceGroupDetailPage({super.key});
+class AssistanceGroupDetailPage extends StatefulWidget {
+  final AssistanceGroupEntity groupEntity;
+  const AssistanceGroupDetailPage({super.key, required this.groupEntity});
 
+  @override
+  State<AssistanceGroupDetailPage> createState() =>
+      _AssistanceGroupDetailPageState();
+}
+
+class _AssistanceGroupDetailPageState extends State<AssistanceGroupDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +52,7 @@ class AssistanceGroupDetailPage extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              showAdminCreateAssistancePage(context: context, isEdit: true);
+              // showAdminCreateAssistancePage(context: context, isEdit: true);
             },
             icon: const Icon(
               Icons.edit_rounded,
@@ -74,7 +86,7 @@ class AssistanceGroupDetailPage extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '4',
+                      widget.groupEntity.name ?? '',
                       style: kTextTheme.headlineMedium?.copyWith(
                         color: Palette.blackPurple,
                         fontWeight: FontWeight.w600,
@@ -91,7 +103,9 @@ class AssistanceGroupDetailPage extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Eurico Devon',
+                      widget.groupEntity.assistant != null
+                          ? widget.groupEntity.assistant!.fullName ?? ''
+                          : '',
                       style: kTextTheme.titleMedium?.copyWith(
                         color: Palette.blackPurple,
                         fontWeight: FontWeight.w600,
@@ -103,66 +117,11 @@ class AssistanceGroupDetailPage extends StatelessWidget {
               const SizedBox(
                 height: 16,
               ),
-              Row(
-                children: [
-                  Text(
-                    '5',
-                    style: kTextTheme.titleSmall?.copyWith(
-                      color: Palette.purple70,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 4,
-                  ),
-                  Text(
-                    'Mahasiswa',
-                    style: kTextTheme.titleSmall?.copyWith(
-                      color: Palette.black,
-                    ),
-                  ),
-                  const Spacer(),
-                  SizedBox(
-                    width: 30,
-                    height: 30,
-                    child: IconButton(
-                      style: IconButton.styleFrom(
-                        backgroundColor: Palette.purple70,
-                        padding: EdgeInsets.zero,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            8,
-                          ),
-                        ),
-                      ),
-                      onPressed: () {
-                        showAdminAssistanceStudentPage(context: context);
-                      },
-                      icon: const Icon(
-                        Icons.add_rounded,
-                        color: Palette.white,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const Divider(),
-              const UserCard(),
-              const SizedBox(
-                height: 8,
-              ),
-              const UserCard(),
-              const SizedBox(
-                height: 8,
-              ),
-              const UserCard(),
-              const SizedBox(
-                height: 8,
-              ),
-              const UserCard(),
-              const SizedBox(
-                height: 8,
-              ),
+              _StudentsSection(
+                groupUid: widget.groupEntity.uid!,
+                students: widget.groupEntity.students ?? [],
+                practicumUid: widget.groupEntity.practicumUid!,
+              )
             ],
           ),
         ),
@@ -171,14 +130,101 @@ class AssistanceGroupDetailPage extends StatelessWidget {
   }
 }
 
+class _StudentsSection extends StatefulWidget {
+  final String groupUid;
+  final String practicumUid;
+  final List<ProfileEntity> students;
+
+  const _StudentsSection({
+    required this.groupUid,
+    required this.students,
+    required this.practicumUid,
+  });
+
+  @override
+  State<_StudentsSection> createState() => _StudentsSectionState();
+}
+
+class _StudentsSectionState extends State<_StudentsSection> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              '${widget.students.length}',
+              style: kTextTheme.titleSmall?.copyWith(
+                color: Palette.purple70,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(
+              width: 4,
+            ),
+            Text(
+              'Mahasiswa',
+              style: kTextTheme.titleSmall?.copyWith(
+                color: Palette.black,
+              ),
+            ),
+            const Spacer(),
+            SizedBox(
+              width: 30,
+              height: 30,
+              child: IconButton(
+                style: IconButton.styleFrom(
+                  backgroundColor: Palette.purple70,
+                  padding: EdgeInsets.zero,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                      8,
+                    ),
+                  ),
+                ),
+                onPressed: () {
+                  showAdminAssistanceStudentPage(
+                      context: context,
+                      students: widget.students,
+                      assistanceGroupUid: widget.groupUid,
+                      practicumUid: widget.practicumUid);
+                },
+                icon: const Icon(
+                  Icons.add_rounded,
+                  color: Palette.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const Divider(),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            return UserCard(
+              user: widget.students[index],
+            );
+          },
+          itemCount: widget.students.length,
+        )
+      ],
+    );
+  }
+}
+
 class UserCard extends StatelessWidget {
+  final ProfileEntity user;
   const UserCard({
     super.key,
+    required this.user,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.only(bottom: 12),
       width: AppSize.getAppWidth(context),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -198,13 +244,13 @@ class UserCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'H071191049',
+                  user.username ?? '',
                   style: kTextTheme.bodyMedium?.copyWith(
                     color: Palette.purple60,
                   ),
                 ),
                 Text(
-                  'Ikhsan',
+                  user.fullName ?? '',
                   style: kTextTheme.bodyLarge?.copyWith(
                     color: Palette.purple80,
                     fontWeight: FontWeight.w600,

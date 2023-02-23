@@ -29,7 +29,11 @@ class ClassroomModel extends ClassroomEntity {
       "practicum_uid": practicumUid,
       "class_code": classCode,
       "course_name": courseName,
-      "students": students ?? [],
+      "students": students != null
+          ? students!
+              .map((e) => ProfileModel.fromEntity(e).toDocument())
+              .toList()
+          : [],
     };
   }
 

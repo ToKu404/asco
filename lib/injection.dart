@@ -1,25 +1,25 @@
-import 'package:asco/src/data/datasources/attendances_datasources.dart';
+import 'package:asco/src/data/datasources/assistance_group_datasources.dart';
 import 'package:asco/src/data/datasources/auth_datasources.dart';
 import 'package:asco/src/data/datasources/classroom_datasources.dart';
 import 'package:asco/src/data/datasources/meeting_datasources.dart';
 import 'package:asco/src/data/datasources/practicum_datasources.dart';
 import 'package:asco/src/data/datasources/profile_datasources.dart';
-import 'package:asco/src/data/repositories/attendances_repository_impl.dart';
+import 'package:asco/src/data/repositories/assistance_group_repository_impl.dart';
 import 'package:asco/src/data/repositories/auth_repository_impl.dart';
 import 'package:asco/src/data/repositories/classroom_repository_impl.dart';
 import 'package:asco/src/data/repositories/meeting_repository_impl.dart';
 import 'package:asco/src/data/repositories/practicum_repository_impl.dart';
 import 'package:asco/src/data/repositories/profile_repository_impl.dart';
-import 'package:asco/src/domain/repositories/attendances_repository.dart';
+import 'package:asco/src/domain/repositories/assitances_repository.dart';
 import 'package:asco/src/domain/repositories/auth_repository.dart';
 import 'package:asco/src/domain/repositories/classroom_repository.dart';
 import 'package:asco/src/domain/repositories/meeting_repository.dart';
 import 'package:asco/src/domain/repositories/practicum_repository.dart';
 import 'package:asco/src/domain/repositories/profile_repository.dart';
-import 'package:asco/src/domain/usecases/attendance_usecases/add_attendance.dart';
-import 'package:asco/src/domain/usecases/attendance_usecases/create_attendance.dart';
-import 'package:asco/src/domain/usecases/attendance_usecases/get_list_attendance.dart';
-import 'package:asco/src/domain/usecases/attendance_usecases/get_single_attendance.dart';
+import 'package:asco/src/domain/usecases/assistance_usecases/create_assistance_group.dart';
+import 'package:asco/src/domain/usecases/assistance_usecases/get_list_assistance_group.dart';
+import 'package:asco/src/domain/usecases/assistance_usecases/get_single_assistance_group.dart';
+import 'package:asco/src/domain/usecases/assistance_usecases/update_student_assistance_group.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/create_user.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/get_user.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/login.dart';
@@ -40,10 +40,11 @@ import 'package:asco/src/domain/usecases/profile_usecases/create_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/get_list_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/get_multiple_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/get_single_profile.dart';
+import 'package:asco/src/domain/usecases/profile_usecases/multiple_practicum_update.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/remove_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/self_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/update_profile.dart';
-import 'package:asco/src/presentations/providers/attendance_notifier.dart';
+import 'package:asco/src/presentations/providers/assistances_notifier.dart';
 import 'package:asco/src/presentations/providers/auth_notifier.dart';
 import 'package:asco/src/presentations/providers/classroom_notifier.dart';
 import 'package:asco/src/presentations/providers/meeting_notifier.dart';
@@ -77,6 +78,7 @@ void init() {
       updateDataUsecase: locator(),
       selfDataUsecase: locator(),
       getMultipleUsecase: locator(),
+      multiplePracticumUpdateUsecase: locator(),
     ),
   );
 
@@ -103,6 +105,15 @@ void init() {
       createUsecase: locator(),
       getListDataUsecase: locator(),
       getSingleDataUsecase: locator(),
+    ),
+  );
+
+  locator.registerFactory(
+    () => AssistancesNotifier(
+      createUsecase: locator(),
+      getListDataUsecase: locator(),
+      getSingleDataUsecase: locator(),
+      updateStudentUsecase: locator(),
     ),
   );
 
@@ -133,12 +144,12 @@ void init() {
   );
   locator.registerLazySingleton<ClassroomRepository>(
     () => ClassroomRepositoryImpl(
-      dataSource: locator(),
+      datasource: locator(),
     ),
   );
   locator.registerLazySingleton<MeetingRepository>(
     () => MeetingRepositoryImpl(
-      dataSource: locator(),
+      datasource: locator(),
     ),
   );
   // locator.registerLazySingleton<AttendancesRepository>(
@@ -146,6 +157,11 @@ void init() {
   //     dataSource: locator(),
   //   ),
   // );
+  locator.registerLazySingleton<AssistancesGroupRepository>(
+    () => AssistancesGroupRepositoryImpl(
+      datasource: locator(),
+    ),
+  );
 
   //! usecases
   //? Auth Usecase
@@ -207,6 +223,11 @@ void init() {
   );
   locator.registerLazySingleton(
     () => UpdateProfile(
+      repository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => MultiplePracticumUpdate(
       repository: locator(),
     ),
   );
@@ -290,6 +311,28 @@ void init() {
   //     repository: locator(),
   //   ),
   // );
+  //* Meeting Usecase
+  locator.registerLazySingleton(
+    () => CreateAssistanceGroup(
+      repository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => GetListAssistanceGroup(
+      repository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => GetSingleAssistanceGroup(
+      repository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => UpdateStudentAssistanceGroup(
+      repository: locator(),
+    ),
+  );
+
   //! datasources
   locator.registerLazySingleton<AuthDataSources>(
     () => AuthDataSourcesImpl(
@@ -324,6 +367,11 @@ void init() {
   //     firestore: locator(),
   //   ),
   // );
+  locator.registerLazySingleton<AssistancesGroupDataSources>(
+    () => AttendancesDataSourceImpl(
+      firestore: locator(),
+    ),
+  );
 
   //! external
   final firestore = FirebaseFirestore.instance;
