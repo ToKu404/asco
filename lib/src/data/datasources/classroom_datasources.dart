@@ -82,7 +82,6 @@ class ClassroomDataSourceImpl implements ClassroomDataSource {
             .toList(),
       );
     } catch (e) {
-      print(e.toString());
       throw Exception();
     }
   }
@@ -101,7 +100,6 @@ class ClassroomDataSourceImpl implements ClassroomDataSource {
         }
       });
     } catch (e) {
-      print(e.toString());
       throw Exception();
     }
   }
@@ -126,7 +124,6 @@ class ClassroomDataSourceImpl implements ClassroomDataSource {
 
       return false;
     } catch (e) {
-      print(e.toString());
       throw Exception();
     }
   }

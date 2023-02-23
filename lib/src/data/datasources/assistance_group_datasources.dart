@@ -88,7 +88,6 @@ class AttendancesDataSourceImpl implements AssistancesGroupDataSources {
             .toList(),
       );
     } catch (e) {
-      print(e.toString());
       throw Exception();
     }
   }
@@ -134,7 +133,6 @@ class AttendancesDataSourceImpl implements AssistancesGroupDataSources {
 
       return false;
     } catch (e) {
-      print(e.toString());
       throw Exception();
     }
   }

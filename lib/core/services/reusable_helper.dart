@@ -103,41 +103,41 @@ class ReusableHelper {
     return i.toString();
   }
 
-  static Map<String, List<UserPracticumEntity>> getPracticumData({
+  static Map<String, Map<String, UserPracticumEntity>> getPracticumData({
     required List<DetailProfileEntity> allData,
     required List<ProfileEntity> selectData,
     String? practicumUid,
     String? classroomUid,
     String? groupUid,
   }) {
-    Map<String, List<UserPracticumEntity>> data = {};
+    try {
+      Map<String, Map<String, UserPracticumEntity>> data = {};
 
-    for (var element in selectData) {
-      final idsx = allData.indexWhere((d) => element.uid == d.uid);
-      final listPracticum = allData[idsx].userPracticums;
+      for (var element in selectData) {
+        final idsx = allData.indexWhere((d) => element.uid == d.uid);
+        final mapPracticum = allData[idsx].userPracticums;
 
-      final idx = listPracticum!
-          .indexWhere((element) => element.practicumUid == practicumUid);
-      final temp = UserPracticumEntity(
-          practicumUid: practicumUid,
-          classUid: classroomUid,
-          assistanceGroupUid: groupUid);
-      if (idx == -1) {
-        listPracticum.add(temp);
-      } else {
-        if (listPracticum.contains(temp)) {
-          continue;
+        final temp = UserPracticumEntity(
+            classUid: classroomUid, assistanceGroupUid: groupUid);
+
+        if (!mapPracticum!.containsKey(practicumUid)) {
+          mapPracticum[practicumUid!] = temp;
         } else {
-          UserPracticumEntity(
-              practicumUid: listPracticum[idx].practicumUid,
-              assistanceGroupUid:
-                  groupUid ?? listPracticum[idx].assistanceGroupUid,
-              classUid: classroomUid ?? listPracticum[idx].classUid);
+          if (mapPracticum.containsValue(temp)) {
+            continue;
+          } else {
+            mapPracticum[practicumUid!] = UserPracticumEntity(
+                assistanceGroupUid:
+                    groupUid ?? mapPracticum[practicumUid]!.assistanceGroupUid,
+                classUid: classroomUid ?? mapPracticum[practicumUid]!.classUid);
+          }
         }
-      }
 
-      data[element.uid!] = listPracticum;
+        data[element.uid!] = mapPracticum;
+      }
+      return data;
+    } catch (e) {
+      throw Exception();
     }
-    return data;
   }
 }

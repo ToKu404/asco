@@ -14,12 +14,10 @@ abstract class ProfileDataSource {
   });
   Future<bool> update({required DetailProfileModel userProfileModel});
   Future<bool> remove({required String uid});
-  Future<List<DetailProfileModel>> find({
-    String? query,
-    int? byRole,
-  });
+  Future<List<DetailProfileModel>> find(
+      {String? query, int? byRole, String? practicumUid});
   Future<bool> multiplePracticumUpdate(
-      {required Map<String, List<UserPracticumEntity>> data});
+      {required Map<String, Map<String, UserPracticumEntity>> data});
 }
 
 class ProfileDataSourceImpl implements ProfileDataSource {
@@ -56,7 +54,7 @@ class ProfileDataSourceImpl implements ProfileDataSource {
             profilePhoto: userProfileModel.profilePhoto,
             username: userProfileModel.username,
             userRole: userProfileModel.userRole,
-            userPracticums: const [],
+            userPracticums: const {},
           );
           if (!value.exists) {
             collectionReference.doc(id).set(
@@ -70,26 +68,21 @@ class ProfileDataSourceImpl implements ProfileDataSource {
         return false;
       }
     } catch (e) {
-      print(e.toString());
       throw Exception();
     }
   }
 
   @override
-  Future<List<DetailProfileModel>> find({
-    String? query,
-    int? byRole,
-  }) async {
+  Future<List<DetailProfileModel>> find(
+      {String? query, int? byRole, String? practicumUid}) async {
     try {
       Future<QuerySnapshot> snapshot = collectionReference.get();
       // Todo : Finish Search
-      if (query != null) {
-        if (query.isNotEmpty) {
-          snapshot =
-              collectionReference.where('username', isEqualTo: query).get();
-        }
+      if (practicumUid != null) {
+        snapshot = collectionReference
+            .where('user_practicums.$practicumUid', isNull: false)
+            .get();
       }
-
       //? by Role
       if (byRole != null) {
         snapshot =
@@ -102,6 +95,7 @@ class ProfileDataSourceImpl implements ProfileDataSource {
             value.docs.map((e) => DetailProfileModel.fromSnapshot(e)).toList(),
       );
     } catch (e) {
+      print(e.toString());
       throw Exception();
     }
   }
@@ -207,19 +201,23 @@ class ProfileDataSourceImpl implements ProfileDataSource {
 
   @override
   Future<bool> multiplePracticumUpdate(
-      {required Map<String, List<UserPracticumEntity>> data}) async {
+      {required Map<String, Map<String, UserPracticumEntity>> data}) async {
     try {
-      for (var element in data.entries) {
-        await collectionReference.doc(element.key).update(
+      for (String k in data.keys) {
+        final map = {
+          for (String k2 in data[k]!.keys)
+            k2: UserPracticumModel.fromEntity(data[k]![k2]!).toDocument()
+        };
+        print(map);
+        await collectionReference.doc(k).update(
           {
-            'user_practicums': element.value
-                .map((e) => UserPracticumModel.fromEntity(e).toDocument())
-                .toList()
+            'user_practicums': map,
           },
         );
       }
       return true;
     } catch (e) {
+      print('object');
       print(e.toString());
       throw Exception();
     }

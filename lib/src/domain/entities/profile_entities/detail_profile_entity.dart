@@ -13,8 +13,8 @@ class DetailProfileEntity extends Equatable {
   final String? uid;
   final String? profilePhoto;
   final UserRoleEntity? userRole;
-  // final Map<String, UserPracticumEntity>? userPracticums;
-  final List<UserPracticumEntity>? userPracticums;
+  final Map<String, UserPracticumEntity>? userPracticums;
+  // final List<UserPracticumEntity>? userPracticums;
 
   const DetailProfileEntity({
     this.classOf,

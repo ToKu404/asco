@@ -59,10 +59,11 @@ class ProfileNotifier extends CrudDataService<DetailProfileEntity> {
     }
   }
 
-  Future<void> fetchAll({int? roleId}) async {
+  Future<void> fetchAll({int? roleId, String? practicumUid}) async {
     updateState(state: RequestState.loading, key: 'find');
     try {
-      final result = await getListDataUsecase.execute(byRole: roleId);
+      final result = await getListDataUsecase.execute(
+          byRole: roleId, practicumUid: practicumUid);
       result.fold((l) {
         updateState(state: RequestState.error, key: 'find');
         setErrorMessage(l.message);
@@ -119,7 +120,7 @@ class ProfileNotifier extends CrudDataService<DetailProfileEntity> {
   }
 
   Future<void> multiplePracticumUpdate(
-      {required Map<String, List<UserPracticumEntity>> data}) async {
+      {required Map<String, Map<String, UserPracticumEntity>> data}) async {
     updateState(state: RequestState.loading, key: 'update_practicums');
     notifyListeners();
     try {

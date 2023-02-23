@@ -97,7 +97,6 @@ class MeetingDataSourceImpl implements MeetingDataSources {
             .toList(),
       );
     } catch (e) {
-      print(e.toString());
       throw Exception();
     }
   }

@@ -62,7 +62,6 @@ class ControlCardDataSourcesImpl implements ControlCardDataSources {
             .toList(),
       );
     } catch (e) {
-      print(e.toString());
       throw Exception();
     }
   }

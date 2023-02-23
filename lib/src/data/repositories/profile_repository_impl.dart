@@ -24,10 +24,8 @@ class ProfileRepositoryImpl implements ProfileRepository {
   }
 
   @override
-  Future<Either<Failure, List<DetailProfileEntity>>> find({
-    String? query,
-    int? byRole,
-  }) async {
+  Future<Either<Failure, List<DetailProfileEntity>>> find(
+      {String? query, int? byRole, String? practicumUid}) async {
     try {
       final result = await datasource.find(
         query: query,
@@ -100,7 +98,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
 
   @override
   Future<Either<Failure, bool>> multiplePracticumUpdate(
-      {required Map<String, List<UserPracticumEntity>> data}) async {
+      {required Map<String, Map<String, UserPracticumEntity>> data}) async {
     try {
       final result = await datasource.multiplePracticumUpdate(data: data);
       return Right(result);
