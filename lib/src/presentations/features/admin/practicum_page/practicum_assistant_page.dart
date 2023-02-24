@@ -1,13 +1,11 @@
 import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
-import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
-import 'package:asco/src/presentations/features/admin/practicum_page/providers/asset_select_provider.dart';
+import 'package:asco/src/presentations/features/admin/providers/asset_select_provider.dart';
 import 'package:asco/src/presentations/providers/practicum_notifier.dart';
 import 'package:asco/src/presentations/providers/profile_notifier.dart';
-import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
@@ -76,12 +74,12 @@ class _AdminPracticumAssistantPageState
       }
     });
 
-    return ChangeNotifierProvider<AssistantSelectedProvider>(
-        create: (context) => AssistantSelectedProvider(
+    return ChangeNotifierProvider<UserSelectedProvider>(
+        create: (context) => UserSelectedProvider(
               init: widget.assistants,
             ),
         builder: (context, _) {
-          final assistantSelect = context.watch<AssistantSelectedProvider>();
+          final assistantSelect = context.watch<UserSelectedProvider>();
 
           return Scaffold(
             backgroundColor: Palette.grey,
@@ -100,7 +98,7 @@ class _AdminPracticumAssistantPageState
                 IconButton(
                   onPressed: () async {
                     notifier.updateAssistant(
-                        assistants: assistantSelect.assistant,
+                        assistants: assistantSelect.user,
                         practicumUid: widget.uid);
                   },
                   icon: const Icon(
@@ -110,9 +108,9 @@ class _AdminPracticumAssistantPageState
                 )
               ],
               title: Text(
-                assistantSelect.assistant.isEmpty
+                assistantSelect.user.isEmpty
                     ? 'Pilih Asisten'
-                    : '${assistantSelect.assistant.length} Asisten Dipilih',
+                    : '${assistantSelect.user.length} Asisten Dipilih',
                 style: kTextTheme.titleSmall?.copyWith(color: Palette.white),
               ),
               centerTitle: true,

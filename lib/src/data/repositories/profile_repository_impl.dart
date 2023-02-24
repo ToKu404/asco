@@ -2,6 +2,8 @@ import 'package:asco/core/utils/failure.dart';
 import 'package:asco/src/data/datasources/profile_datasources.dart';
 import 'package:asco/src/data/models/profile_models/detail_profile_model.dart';
 import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/user_practicum_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/user_practicum_helper.dart';
 import 'package:asco/src/domain/repositories/profile_repository.dart';
 import 'package:dartz/dartz.dart';
 
@@ -23,10 +25,8 @@ class ProfileRepositoryImpl implements ProfileRepository {
   }
 
   @override
-  Future<Either<Failure, List<DetailProfileEntity>>> find({
-    String? query,
-    int? byRole,
-  }) async {
+  Future<Either<Failure, List<DetailProfileEntity>>> find(
+      {String? query, int? byRole, String? practicumUid}) async {
     try {
       final result = await datasource.find(
         query: query,
@@ -77,6 +77,31 @@ class ProfileRepositoryImpl implements ProfileRepository {
   Future<Either<Failure, DetailProfileEntity>> me() async {
     try {
       final result = await datasource.me();
+      return Right(result);
+    } catch (e) {
+      return const Left(FirestoreFailure(''));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<DetailProfileEntity>>> multiple(
+      {required List<String> multipleId}) async {
+    try {
+      final result = await datasource.multiple(
+        multipleId: multipleId,
+      );
+
+      return Right(result);
+    } catch (e) {
+      return const Left(FirestoreFailure(''));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> multiplePracticumUpdate(
+      {required Map<String, Map<String, UserPracticumHelper>> data}) async {
+    try {
+      final result = await datasource.multiplePracticumUpdate(data: data);
       return Right(result);
     } catch (e) {
       return const Left(FirestoreFailure(''));

@@ -2,8 +2,9 @@ import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/core/services/user_helper.dart';
+import 'package:asco/core/services/reusable_helper.dart';
 import 'package:asco/src/domain/entities/meeting_entities/detail_meeting_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:asco/src/presentations/features/admin/classroom_page/create_meeting_page.dart';
 import 'package:asco/src/presentations/features/admin/classroom_page/meeting_detail_page.dart';
 import 'package:asco/src/presentations/providers/meeting_notifier.dart';
@@ -15,12 +16,14 @@ import 'package:provider/provider.dart';
 void showAdminClassroomMeetingPage({
   required BuildContext context,
   required String classroomId,
+  required List<ProfileEntity> students,
 }) {
   Navigator.push(
     context,
     MaterialPageRoute(
       builder: (context) => AdminClassroomMeetingPage(
         classroomId: classroomId,
+        students: students,
       ),
       settings: const RouteSettings(
         name: AppRoute.adminUsersPage,
@@ -31,7 +34,12 @@ void showAdminClassroomMeetingPage({
 
 class AdminClassroomMeetingPage extends StatefulWidget {
   final String classroomId;
-  const AdminClassroomMeetingPage({super.key, required this.classroomId});
+  final List<ProfileEntity> students;
+  const AdminClassroomMeetingPage({
+    super.key,
+    required this.classroomId,
+    required this.students,
+  });
 
   @override
   State<AdminClassroomMeetingPage> createState() =>
@@ -89,7 +97,10 @@ class _AdminClassroomMeetingPageState extends State<AdminClassroomMeetingPage> {
           ),
           onPressed: () {
             showAdminCreateMeetingPage(
-                context: context, classroomUid: widget.classroomId);
+              context: context,
+              classroomUid: widget.classroomId,
+              students: widget.students,
+            );
           }),
       body: SafeArea(
         child: Column(
@@ -163,6 +174,7 @@ class _AdminClassroomMeetingPageState extends State<AdminClassroomMeetingPage> {
                           showAdminMeetingDetailPage(
                             context: context,
                             meetingEntity: dataProvider.listData[index],
+                            
                           );
                         },
                         meetingNumber: index + 1,

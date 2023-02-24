@@ -28,9 +28,7 @@ class ControlCardDataSourcesImpl implements ControlCardDataSources {
         final data = ControlCardModel(
           assistance1: cc.assistance1,
           assistance2: cc.assistance2,
-          meeting: cc.meeting,
-          studentId: cc.studentId,
-          uid: uid,
+
         );
         if (!value.exists) {
           collectionReference.doc(uid).set(
@@ -42,20 +40,6 @@ class ControlCardDataSourcesImpl implements ControlCardDataSources {
         (error, stackTrace) => throw Exception(),
       );
       return false;
-
-      // await collectionReference
-      //     .add(
-      //       ControlCardModel(
-      //         assistance1: cc.assistance1,
-      //         assistance2: cc.assistance2,
-      //         meeting: cc.meeting,
-      //         studentId: cc.studentId,
-      //         uid: uid,
-      //       ).toDocument(),
-      //     )
-      //     .then((value) => true)
-      //     .catchError((error) => false);
-      // return false;
     } catch (e) {
       throw Exception();
     }
@@ -78,7 +62,6 @@ class ControlCardDataSourcesImpl implements ControlCardDataSources {
             .toList(),
       );
     } catch (e) {
-      print(e.toString());
       throw Exception();
     }
   }

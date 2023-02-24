@@ -1,16 +1,27 @@
 import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
-import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/core/services/reusable_helper.dart';
+import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
+import 'package:asco/src/presentations/providers/profile_notifier.dart';
+import 'package:asco/src/presentations/widgets/circle_border_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
-void showAdminAttendanceUsersPage({required BuildContext context}) {
+void showAdminAttendanceUsersPage(
+    {required BuildContext context,
+    required int number,
+    required List<AttendanceEntity> attendances}) {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => const AdminAttendanceUserPage(),
+      builder: (context) => AdminAttendanceUserPage(
+        attendances: attendances,
+        number: number,
+      ),
       settings: const RouteSettings(
         name: AppRoute.adminUsersPage,
       ),
@@ -19,7 +30,13 @@ void showAdminAttendanceUsersPage({required BuildContext context}) {
 }
 
 class AdminAttendanceUserPage extends StatefulWidget {
-  const AdminAttendanceUserPage({super.key});
+  final List<AttendanceEntity> attendances;
+  final int number;
+  const AdminAttendanceUserPage({
+    super.key,
+    required this.attendances,
+    required this.number,
+  });
 
   @override
   State<AdminAttendanceUserPage> createState() =>
@@ -33,6 +50,16 @@ class _AdminAttendanceUserPageState extends State<AdminAttendanceUserPage> {
   void dispose() {
     super.dispose();
     searchController.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(
+      () => Provider.of<ProfileNotifier>(context, listen: false)
+        ..fetchMultiple(
+            multipleId: widget.attendances.map((e) => e.studentUid!).toList()),
+    );
   }
 
   @override
@@ -51,7 +78,7 @@ class _AdminAttendanceUserPageState extends State<AdminAttendanceUserPage> {
           ),
         ),
         title: Text(
-          'Pertemuan 1',
+          'Pertemuan ${widget.number}',
           style: kTextTheme.titleSmall?.copyWith(color: Palette.white),
         ),
         centerTitle: true,
@@ -104,14 +131,41 @@ class _AdminAttendanceUserPageState extends State<AdminAttendanceUserPage> {
               ),
             ),
             Expanded(
-                child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: const [
-                  UserCard(),
-                ],
+              child: Builder(
+                builder: (context) {
+                  final dataProvider = context.watch<ProfileNotifier>();
+
+                  // Todo : Add Shimmer
+                  if (dataProvider.isLoadingState('multiple')) {
+                    return const SizedBox.shrink();
+                  } else if (dataProvider.isErrorState('multiple')) {
+                    return const SizedBox.shrink();
+                  }
+
+                  return ListView.builder(
+                    padding: const EdgeInsets.only(
+                      left: 16,
+                      right: 16,
+                      bottom: 16,
+                    ),
+                    itemBuilder: (context, index) {
+                      try {
+                        return CustomStudentCard(
+                          attendance: widget.attendances.firstWhere((element) =>
+                              element.studentUid ==
+                              dataProvider.listData[index].uid),
+                          student: ProfileEntity.fromDetail(
+                              dataProvider.listData[index]),
+                        );
+                      } catch (e) {
+                        return const SizedBox.shrink();
+                      }
+                    },
+                    itemCount: dataProvider.listData.length,
+                  );
+                },
               ),
-            )),
+            ),
           ],
         ),
       ),
@@ -119,82 +173,92 @@ class _AdminAttendanceUserPageState extends State<AdminAttendanceUserPage> {
   }
 }
 
-class UserCard extends StatelessWidget {
-  const UserCard({
+class CustomStudentCard extends StatelessWidget {
+  final ProfileEntity student;
+  final AttendanceEntity attendance;
+
+  const CustomStudentCard({
     super.key,
+    required this.student,
+    required this.attendance,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: AppSize.getAppWidth(context),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
+    return Card(
+      elevation: 0,
+      margin: const EdgeInsets.only(bottom: 12),
+      color: Palette.white,
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        color: Palette.white,
       ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 30,
-            backgroundImage: AssetImage(AssetPath.getImage('avatar1.jpg')),
-          ),
-          const SizedBox(
-            width: 12,
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'H071191049',
-                  style: kTextTheme.bodyMedium?.copyWith(
-                    color: Palette.purple60,
-                    height: 1.1,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: 20,
+          horizontal: 16,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            CircleAvatar(
+              radius: 28,
+              backgroundColor: Palette.purple80,
+              child: Hero(
+                tag: student,
+                child: CircleAvatar(
+                  radius: 28,
+                  foregroundImage: AssetImage(
+                    AssetPath.getImage('avatar1.jpg'),
                   ),
                 ),
-                Text(
-                  'Ikhsan',
-                  style: kTextTheme.bodyLarge?.copyWith(
-                    color: Palette.purple80,
-                    fontWeight: FontWeight.w600,
-                    height: 1.1,
-                  ),
-                ),
-                const SizedBox(
-                  height: 6,
-                ),
-                Text(
-                  '"Waktu Absensi 10.20"',
-                  style: kTextTheme.bodySmall?.copyWith(
-                    color: Palette.greyDark,
-                    height: 1.1,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            width: 24,
-            height: 24,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                width: 1,
-                color: Palette.greyDark,
               ),
-              color: Palette.purple60,
             ),
-            child: const Icon(
-              Icons.check_rounded,
-              color: Palette.white,
-              size: 15,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    student.username ?? '',
+                    style: kTextTheme.bodyMedium?.copyWith(
+                      color: Palette.purple60,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    student.fullName ?? '',
+                    style: kTextTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: Palette.purple80,
+                      height: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    attendance.attendanceStatus == 0
+                        ? 'Waktu absensi: ${ReusableHelper.datetimeToString(attendance.attendanceTime!)}'
+                        : attendance.note ?? '',
+                    style: kTextTheme.bodySmall?.copyWith(
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(
-            width: 4,
-          ),
-        ],
+            const CircleBorderContainer(
+              size: 30,
+              borderColor: Palette.purple80,
+              fillColor: Palette.purple60,
+              child: Icon(
+                Icons.check_rounded,
+                size: 16,
+                color: Palette.white,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

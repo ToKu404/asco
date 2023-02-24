@@ -10,7 +10,11 @@ class CreateMeeting {
 
   Future<Either<Failure, bool>> execute({
     required DetailMeetingEntity entity,
+    required List<String> listStudentId,
   }) {
-    return repository.create(meeting: entity);
+    return repository.create(
+      meeting: entity,
+      listStudentId: listStudentId,
+    );
   }
 }

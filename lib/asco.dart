@@ -1,11 +1,13 @@
 import 'package:asco/core/constants/app_name.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/src/presentations/features/initial/splash_page.dart';
+import 'package:asco/src/presentations/providers/assistances_notifier.dart';
 import 'package:asco/src/presentations/providers/auth_notifier.dart';
 import 'package:asco/src/presentations/providers/classroom_notifier.dart';
 import 'package:asco/src/presentations/providers/meeting_notifier.dart';
 import 'package:asco/src/presentations/providers/practicum_notifier.dart';
 import 'package:asco/src/presentations/providers/profile_notifier.dart';
+import 'package:asco/src/presentations/providers/user_practicum_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:asco/injection.dart' as di;
@@ -46,6 +48,15 @@ class AscoApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => di.locator<MeetingNotifier>(),
         ),
+        // ChangeNotifierProvider(
+        //   create: (_) => di.locator<AttendanceNotifier>(),
+        // ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<AssistancesNotifier>(),
+        ),
+        // ChangeNotifierProvider(
+        //   create: (_) => di.locator<UserPracticumNotifier>(),
+        // ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

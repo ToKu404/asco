@@ -1,4 +1,7 @@
+import 'package:asco/src/data/datasources/helpers/ds_helper.dart';
+import 'package:asco/src/data/datasources/helpers/reference_helper.dart';
 import 'package:asco/src/data/models/classroom_models/classroom_model.dart';
+import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 abstract class ClassroomDataSource {
@@ -9,6 +12,10 @@ abstract class ClassroomDataSource {
   Future<ClassroomModel> single({required String uid});
   Future<List<ClassroomModel>> find({
     String? practicumUid,
+  });
+  Future<bool> updateStudents({
+    required String classroomUid,
+    required List<ProfileEntity> students,
   });
 }
 
@@ -48,24 +55,6 @@ class ClassroomDataSourceImpl implements ClassroomDataSource {
         (error, stackTrace) => throw Exception(),
       );
       return false;
-
-      // await collectionReference
-      //     .add(
-      //       ClassroomModel(
-      //         startHour: classroom.startHour,
-      //         endHour: classroom.endHour,
-      //         startMinute: classroom.startMinute,
-      //         endMinute: classroom.endMinute,
-      //         meetingDay: classroom.meetingDay,
-      //         practicumUid: practicumUid,
-      //         uid: uid,
-      //         classCode: classroom.classCode,
-      //         courseName: classroom.courseName,
-      //       ).toDocument(),
-      //     )
-      //     .then((value) => true)
-      //     .catchError((error) => false);
-      // return false;
     } catch (e) {
       throw Exception();
     }
@@ -83,17 +72,24 @@ class ClassroomDataSourceImpl implements ClassroomDataSource {
               .get();
         }
       }
-
       //? all
-      return await snapshot.then(
-        (value) => value.docs
-            .map(
-              (e) => ClassroomModel.fromSnapshot(e),
-            )
-            .toList(),
-      );
+      return await snapshot.then((value) async {
+        final List<ClassroomModel> listData = [];
+        for (var element in value.docs) {
+          listData.add(
+            ClassroomModel.fromSnapshot(
+              element,
+              ReadHelper.isKeyExist(element, 'students')
+                  ? await ReferenceHelper.referenceProfiles(element['students'])
+                  : [],
+            ),
+          );
+        }
+        return listData;
+      });
     } catch (e) {
-      print(e.toString());
+      print('here');
+
       throw Exception();
     }
   }
@@ -101,17 +97,46 @@ class ClassroomDataSourceImpl implements ClassroomDataSource {
   @override
   Future<ClassroomModel> single({required String uid}) async {
     try {
-      await collectionReference
+      return await collectionReference
           .doc(uid)
           .get()
-          .then((DocumentSnapshot documentSnapshot) {
+          .then((DocumentSnapshot documentSnapshot) async {
         if (documentSnapshot.exists) {
-          return ClassroomModel.fromSnapshot(documentSnapshot);
+          return ClassroomModel.fromSnapshot(
+            documentSnapshot,
+            ReadHelper.isKeyExist(documentSnapshot, 'students')
+                ? await ReferenceHelper.referenceProfiles(
+                    documentSnapshot['students'])
+                : [],
+          );
         } else {
           throw Exception();
         }
       });
+    } catch (e) {
       throw Exception();
+    }
+  }
+
+  @override
+  Future<bool> updateStudents({
+    required String classroomUid,
+    required List<ProfileEntity> students,
+  }) async {
+    try {
+      collectionReference
+          .doc(classroomUid)
+          .update({
+            "students": students
+                .map(
+                  (e) => firestore.collection('profiles').doc(e.uid),
+                )
+                .toList()
+          })
+          .then((value) => true)
+          .catchError((e) => false);
+
+      return false;
     } catch (e) {
       throw Exception();
     }

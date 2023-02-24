@@ -1,5 +1,5 @@
-import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
-import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
+import 'package:asco/src/domain/entities/assistance_entities/control_card_entity.dart';
+import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 import 'package:equatable/equatable.dart';
 
 class DetailMeetingEntity extends Equatable {
@@ -8,26 +8,32 @@ class DetailMeetingEntity extends Equatable {
   final String? topic;
   final DateTime? meetingDate;
   final String? modulPath;
-  final ProfileEntity? assistant1;
-  final ProfileEntity? assistant2;
+  final String? assistant1Uid;
+  final String? assistant2Uid;
+  final List<AttendanceEntity>? attendances;
+  // final Map<String, ControlCardEntity>? controlCard;
 
   const DetailMeetingEntity({
-    this.assistant1,
+    this.assistant1Uid,
     this.meetingDate,
-    this.assistant2,
+    this.assistant2Uid,
     this.classUid,
     this.modulPath,
     this.topic,
     this.uid,
+    this.attendances,
+    // this.controlCard,
   });
 
   @override
   List<Object?> get props => [
         uid,
-        assistant1,
-        assistant2,
+        assistant1Uid,
+        assistant2Uid,
         classUid,
         modulPath,
         topic,
+        attendances,
+        // controlCard,
       ];
 }

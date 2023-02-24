@@ -1,5 +1,3 @@
-import 'package:asco/src/data/datasources/helpers/ds_helper.dart';
-import 'package:asco/src/data/models/profile_models/profile_model.dart';
 import 'package:asco/src/domain/entities/practicum_entities/practicum_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -18,9 +16,6 @@ class PracticumModel extends PracticumEntity {
       'badge_path': badgePath,
       'course': course,
       'course_contract_path': courseContractPath,
-      if (listAssistant != null)
-        'list_assistant':
-            listAssistant!.map((e) => ProfileModel.fromEntity(e)).toList(),
       'uid': uid,
     };
   }
@@ -35,19 +30,13 @@ class PracticumModel extends PracticumEntity {
     );
   }
 
-  factory PracticumModel.fromSnapshot(DocumentSnapshot documentSnapshot) {
-    // Iterable data = documentSnapshot['classess'] as List;
+  factory PracticumModel.fromSnapshot(
+      DocumentSnapshot documentSnapshot, List<ProfileEntity> users) {
     return PracticumModel(
       badgePath: documentSnapshot.get('badge_path'),
       course: documentSnapshot['course'],
       courseContractPath: documentSnapshot.get('course_contract_path'),
-      listAssistant: ReadHelper.isKeyExist(documentSnapshot, 'list_assistant')
-          ? List<ProfileEntity>.from(
-              documentSnapshot.get('list_assistant').map(
-                    (e) => ProfileModel.fromMap(e).toEntity(),
-                  ),
-            )
-          : [],
+      listAssistant: users,
       uid: documentSnapshot['uid'],
     );
   }

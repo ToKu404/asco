@@ -3,7 +3,7 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/core/services/user_helper.dart';
+import 'package:asco/core/services/reusable_helper.dart';
 import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
 import 'package:asco/src/domain/entities/practicum_entities/practicum_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
@@ -254,7 +254,6 @@ class _ClassroomSection extends StatefulWidget {
 class _ClassroomSectionState extends State<_ClassroomSection> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Future.microtask(
       () => Provider.of<ClassroomNotifier>(context, listen: false)
@@ -409,7 +408,10 @@ class PracticumClassCard extends StatelessWidget {
       color: Colors.white,
       margin: const EdgeInsets.only(bottom: 12),
       onTap: () {
-        showAdminClassDetailPage(context: context);
+        showAdminClassDetailPage(
+          context: context,
+          classroomUid: classroomEntity.uid!,
+        );
       },
       radius: 12,
       child: Container(

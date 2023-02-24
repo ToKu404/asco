@@ -1,5 +1,6 @@
+import 'package:asco/src/data/datasources/helpers/ds_helper.dart';
+import 'package:asco/src/data/datasources/helpers/reference_helper.dart';
 import 'package:asco/src/data/models/practicum_models/practicum_model.dart';
-import 'package:asco/src/data/models/profile_models/profile_model.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,6 @@ class PracticumDataSourceImpl implements PracticumDataSource {
           badgePath: practicum.badgePath,
           course: practicum.course,
           courseContractPath: practicum.courseContractPath,
-          listAssistant: practicum.listAssistant,
           uid: uid,
         );
         if (!value.exists) {
@@ -45,27 +45,11 @@ class PracticumDataSourceImpl implements PracticumDataSource {
         return true;
       }).catchError(
         (error, stackTrace) {
-          print(error.toString());
           throw Exception();
         },
       );
       return false;
-
-      // await collectionReference
-      //     .add(
-      //       PracticumModel(
-      //         badgePath: practicum.badgePath,
-      //         course: practicum.course,
-      //         courseContractPath: practicum.courseContractPath,
-      //         listAssistant: practicum.listAssistant,
-      //         uid: uid,
-      //       ).toDocument(),
-      //     )
-      //     .then((value) => true)
-      //     .catchError((error) => false);
-      // return false;
     } catch (e) {
-      print(e.toString());
       throw Exception();
     }
   }
@@ -85,10 +69,21 @@ class PracticumDataSourceImpl implements PracticumDataSource {
       }
 
       //? all
-      return await snapshot.then(
-        (value) =>
-            value.docs.map((e) => PracticumModel.fromSnapshot(e)).toList(),
-      );
+      return await snapshot.then((value) async {
+        final List<PracticumModel> listData = [];
+        for (var element in value.docs) {
+          listData.add(
+            PracticumModel.fromSnapshot(
+              element,
+              ReadHelper.isKeyExist(element, 'list_assistant')
+                  ? await ReferenceHelper.referenceProfiles(
+                      element['list_assistant'])
+                  : [],
+            ),
+          );
+        }
+        return listData;
+      });
     } catch (e) {
       debugPrint(e.toString());
       throw Exception();
@@ -101,9 +96,15 @@ class PracticumDataSourceImpl implements PracticumDataSource {
       return await collectionReference
           .doc(uid)
           .get()
-          .then((DocumentSnapshot documentSnapshot) {
+          .then((DocumentSnapshot documentSnapshot) async {
         if (documentSnapshot.exists) {
-          return PracticumModel.fromSnapshot(documentSnapshot);
+          return PracticumModel.fromSnapshot(
+            documentSnapshot,
+            ReadHelper.isKeyExist(documentSnapshot, 'list_assistant')
+                ? await ReferenceHelper.referenceProfiles(
+                    documentSnapshot['list_assistant'])
+                : [],
+          );
         } else {
           throw Exception();
         }
@@ -123,7 +124,7 @@ class PracticumDataSourceImpl implements PracticumDataSource {
           .update({
             "list_assistant": assistants
                 .map(
-                  (e) => ProfileModel.fromEntity(e).toDocument(),
+                  (e) => firestore.collection('profiles').doc(e.uid),
                 )
                 .toList()
           })

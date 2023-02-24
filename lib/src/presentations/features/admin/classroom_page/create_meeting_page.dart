@@ -12,16 +12,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
-void showAdminCreateMeetingPage(
-    {required BuildContext context,
-    bool isEdit = false,
-    required String classroomUid}) {
+void showAdminCreateMeetingPage({
+  required BuildContext context,
+  bool isEdit = false,
+  required String classroomUid,
+  required List<ProfileEntity> students,
+}) {
   Navigator.push(
     context,
     MaterialPageRoute(
       builder: (context) => CreateMeetingPage(
         isEdit: isEdit,
         classroomUid: classroomUid,
+        students: students,
       ),
       settings: const RouteSettings(
         name: AppRoute.adminUsersPage,
@@ -33,8 +36,13 @@ void showAdminCreateMeetingPage(
 class CreateMeetingPage extends StatefulWidget {
   final String classroomUid;
   final bool isEdit;
-  const CreateMeetingPage(
-      {super.key, required this.isEdit, required this.classroomUid});
+  final List<ProfileEntity> students;
+  const CreateMeetingPage({
+    super.key,
+    required this.isEdit,
+    required this.classroomUid,
+    required this.students,
+  });
 
   @override
   State<CreateMeetingPage> createState() => _CreateMeetingPageState();
@@ -114,21 +122,19 @@ class _CreateMeetingPageState extends State<CreateMeetingPage> {
                     (element) => element.username == _assistant2.value);
                 //* Create new practicum
                 provider.create(
-                  entity: DetailMeetingEntity(
-                    assistant1: assistant1Index != -1
-                        ? ProfileEntity.fromDetail(
-                            listAssistant[assistant1Index])
-                        : null,
-                    assistant2: assistant2Index != -1
-                        ? ProfileEntity.fromDetail(
-                            listAssistant[assistant2Index])
-                        : null,
-                    classUid: widget.classroomUid,
-                    meetingDate: meetingDate,
-                    modulPath: '',
-                    topic: _topicController.text,
-                  ),
-                );
+                    entity: DetailMeetingEntity(
+                      assistant1Uid: assistant1Index != -1
+                          ? listAssistant[assistant1Index].uid
+                          : null,
+                      assistant2Uid: assistant2Index != -1
+                          ? listAssistant[assistant2Index].uid
+                          : null,
+                      classUid: widget.classroomUid,
+                      meetingDate: meetingDate,
+                      modulPath: '',
+                      topic: _topicController.text,
+                    ),
+                    listStudentId: widget.students.map((e) => e.uid!).toList());
               }
             },
             icon: const Icon(

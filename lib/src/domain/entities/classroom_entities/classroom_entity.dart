@@ -1,3 +1,4 @@
+import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:equatable/equatable.dart';
 
 class ClassroomEntity extends Equatable {
@@ -10,6 +11,7 @@ class ClassroomEntity extends Equatable {
   final String? classCode;
   final String? practicumUid;
   final String? courseName;
+  final List<ProfileEntity>? students;
 
   const ClassroomEntity({
     this.startHour,
@@ -21,6 +23,7 @@ class ClassroomEntity extends Equatable {
     this.startMinute,
     this.practicumUid,
     this.courseName,
+    this.students,
   });
 
   @override
@@ -33,5 +36,6 @@ class ClassroomEntity extends Equatable {
         endMinute,
         startMinute,
         courseName,
+        students,
       ];
 }

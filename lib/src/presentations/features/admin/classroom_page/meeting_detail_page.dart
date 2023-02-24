@@ -2,10 +2,10 @@ import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/core/services/user_helper.dart';
+import 'package:asco/core/services/reusable_helper.dart';
 import 'package:asco/src/domain/entities/meeting_entities/detail_meeting_entity.dart';
-import 'package:asco/src/presentations/features/admin/practicum_page/create_practicum_page.dart';
 import 'package:asco/src/presentations/providers/classroom_notifier.dart';
+import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:asco/src/presentations/widgets/input_field/input_time_field.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -42,17 +42,25 @@ class _MeetingDetailPageState extends State<MeetingDetailPage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(
-      () => Provider.of<ClassroomNotifier>(context, listen: false)
-        ..getDetail(
-          uid: widget.meeting.classUid!,
-        ),
-    );
+    Future.microtask(() {
+      Provider.of<ClassroomNotifier>(context, listen: false).getDetail(
+        uid: widget.meeting.classUid!,
+      );
+      Provider.of<ProfileNotifier>(context, listen: false).fetchMultiple(
+          multipleId: [
+            widget.meeting.assistant1Uid!,
+            widget.meeting.assistant2Uid!
+          ]);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final classNotifier = context.watch<ClassroomNotifier>();
+    final profileNotifier = context.watch<ProfileNotifier>();
+
+ 
+
     return Scaffold(
       backgroundColor: Palette.grey,
       appBar: AppBar(
@@ -68,9 +76,7 @@ class _MeetingDetailPageState extends State<MeetingDetailPage> {
         ),
         actions: [
           IconButton(
-            onPressed: () {
-              showAdminCreatePracticumPage(context: context, isEdit: true);
-            },
+            onPressed: () {},
             icon: const Icon(
               Icons.more_vert_outlined,
               color: Palette.white,
@@ -110,7 +116,11 @@ class _MeetingDetailPageState extends State<MeetingDetailPage> {
                       ),
                     ),
                     const SizedBox(
-                      height: 16,
+                      height: 8,
+                    ),
+                    const Divider(),
+                    const SizedBox(
+                      height: 8,
                     ),
                     Text(
                       'Tanggal Pertemuan',
@@ -130,7 +140,11 @@ class _MeetingDetailPageState extends State<MeetingDetailPage> {
                       ),
                     ),
                     const SizedBox(
-                      height: 16,
+                      height: 8,
+                    ),
+                    const Divider(),
+                    const SizedBox(
+                      height: 8,
                     ),
                     Text(
                       'Pukul',
@@ -154,7 +168,11 @@ class _MeetingDetailPageState extends State<MeetingDetailPage> {
                       ),
                     ),
                     const SizedBox(
-                      height: 16,
+                      height: 8,
+                    ),
+                    const Divider(),
+                    const SizedBox(
+                      height: 8,
                     ),
                     Text(
                       'Pemateri',
@@ -163,17 +181,35 @@ class _MeetingDetailPageState extends State<MeetingDetailPage> {
                         height: 1.2,
                       ),
                     ),
-                    Text(
-                      widget.meeting.assistant1 != null
-                          ? widget.meeting.assistant1!.fullName!
-                          : '-',
-                      style: kTextTheme.titleMedium?.copyWith(
-                        color: Palette.blackPurple,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                    Builder(builder: (context) {
+                      if (profileNotifier.isSuccessState('multiple')) {
+                        int index = profileNotifier.listData.indexWhere(
+                            (element) =>
+                                element.uid == widget.meeting.assistant1Uid);
+                        if (index != -1) {
+                          return Text(
+                            profileNotifier.listData[index].fullName!,
+                            style: kTextTheme.titleMedium?.copyWith(
+                              color: Palette.blackPurple,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          );
+                        }
+                      }
+                      return Text(
+                        '...',
+                        style: kTextTheme.titleMedium?.copyWith(
+                          color: Palette.blackPurple,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      );
+                    }),
                     const SizedBox(
-                      height: 16,
+                      height: 8,
+                    ),
+                    const Divider(),
+                    const SizedBox(
+                      height: 8,
                     ),
                     Text(
                       'Pendamping',
@@ -182,15 +218,29 @@ class _MeetingDetailPageState extends State<MeetingDetailPage> {
                         height: 1.2,
                       ),
                     ),
-                    Text(
-                      widget.meeting.assistant2 != null
-                          ? widget.meeting.assistant2!.fullName!
-                          : '-',
-                      style: kTextTheme.titleMedium?.copyWith(
-                        color: Palette.blackPurple,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                    Builder(builder: (context) {
+                      if (profileNotifier.isSuccessState('multiple')) {
+                        int index = profileNotifier.listData.indexWhere(
+                            (element) =>
+                                element.uid == widget.meeting.assistant2Uid);
+                        if (index != -1) {
+                          return Text(
+                            profileNotifier.listData[index].fullName!,
+                            style: kTextTheme.titleMedium?.copyWith(
+                              color: Palette.blackPurple,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          );
+                        }
+                      }
+                      return Text(
+                        '...',
+                        style: kTextTheme.titleMedium?.copyWith(
+                          color: Palette.blackPurple,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      );
+                    }),
                   ],
                 ),
               ),

@@ -1,9 +1,12 @@
+import 'package:asco/src/data/datasources/profile_datasources.dart';
 import 'package:asco/src/data/models/meeting_models/detail_meeting_model.dart';
+import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 abstract class MeetingDataSources {
   Future<bool> create({
     required DetailMeetingModel meeting,
+    required List<String> listStudentId,
   });
   Future<DetailMeetingModel> single({required String uid});
   Future<List<DetailMeetingModel>> find({
@@ -13,28 +16,48 @@ abstract class MeetingDataSources {
 
 class MeetingDataSourceImpl implements MeetingDataSources {
   final FirebaseFirestore firestore;
-  MeetingDataSourceImpl({required this.firestore}) {
+  final ProfileDataSource profileDataSource;
+  MeetingDataSourceImpl({
+    required this.firestore,
+    required this.profileDataSource,
+  }) {
     collectionReference = firestore.collection('meetings');
   }
 
   late CollectionReference collectionReference;
 
   @override
-  Future<bool> create({required DetailMeetingModel meeting}) async {
+  Future<bool> create({
+    required DetailMeetingModel meeting,
+    required List<String> listStudentId,
+  }) async {
     try {
       final uid = collectionReference.doc().id;
 
+      //create meeting
+      final data = DetailMeetingModel(
+        assistant1Uid: meeting.assistant1Uid,
+        meetingDate: meeting.meetingDate,
+        assistant2Uid: meeting.assistant2Uid,
+        classUid: meeting.classUid,
+        modulPath: meeting.modulPath,
+        topic: meeting.topic,
+        uid: uid,
+        attendances: listStudentId
+            .map((e) => AttendanceEntity(
+                  attendanceStatus: 3,
+                  attendanceTime: null,
+                  note: null,
+                  pointPlus: null,
+                  studentUid: e,
+                ))
+            .toList(),
+        // controlCard: {
+        //   for (String k in listStudentId)
+        //     k: const ControlCardEntity(assistance1: null, assistance2: null)
+        // },
+      );
       collectionReference.doc(uid).get().then((value) {
-        final data = DetailMeetingModel(
-          assistant1: meeting.assistant1,
-          meetingDate: meeting.meetingDate,
-          assistant2: meeting.assistant2,
-          classUid: meeting.classUid,
-          modulPath: meeting.modulPath,
-          topic: meeting.topic,
-          uid: uid,
-        );
-
         if (!value.exists) {
           collectionReference.doc(uid).set(
                 data.toDocument(),
@@ -45,21 +68,6 @@ class MeetingDataSourceImpl implements MeetingDataSources {
         (error, stackTrace) => throw Exception(),
       );
       return false;
-      // await collectionReference
-      //     .add(
-      //       DetailMeetingModel(
-      //         assistant1: meeting.assistant1,
-      //         meetingDate: meeting.meetingDate,
-      //         assistant2: meeting.assistant2,
-      //         classUid: meeting.classUid,
-      //         modulPath: meeting.modulPath,
-      //         topic: meeting.topic,
-      //         uid: uid,
-      //       ),
-      //     )
-      //     .then((value) => true)
-      //     .catchError((error) => false);
-      // return false;
     } catch (e) {
       throw Exception();
     }
@@ -81,14 +89,10 @@ class MeetingDataSourceImpl implements MeetingDataSources {
 
       //? all
       return await snapshot.then(
-        (value) => value.docs
-            .map(
-              (e) => DetailMeetingModel.fromSnapshot(e),
-            )
-            .toList(),
+        (value) =>
+            value.docs.map((e) => DetailMeetingModel.fromSnapshot(e)).toList(),
       );
     } catch (e) {
-      print(e.toString());
       throw Exception();
     }
   }
