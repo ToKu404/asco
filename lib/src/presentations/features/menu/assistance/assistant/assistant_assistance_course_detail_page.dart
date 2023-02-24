@@ -8,6 +8,7 @@ import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/data/dummy_data.dart';
+import 'package:asco/src/presentations/features/menu/assistance/assistant/assistant_assistance_practicum_value_input_page.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/assistance_dialog.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/assistance_status_dialog.dart';
 import 'package:asco/src/presentations/widgets/circle_border_container.dart';
@@ -231,7 +232,9 @@ class _AssistantAssistanceCourseDetailPageState
               SizedBox(
                 width: double.infinity,
                 child: FilledButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showAssistantAssistancePracticumValueInputPage(context);
+                  },
                   style: FilledButton.styleFrom(
                     backgroundColor: Palette.purple60,
                     shape: RoundedRectangleBorder(
