@@ -73,11 +73,6 @@ class ClassroomModel extends ClassroomEntity {
       practicumUid: documentSnapshot['practicum_uid'],
       classCode: documentSnapshot['class_code'],
       courseName: documentSnapshot['course_name'],
-      students: List<ProfileEntity>.from(
-        documentSnapshot['students'].map(
-          (e) => ProfileModel.fromMap(e).toEntity(),
-        ),
-      ),
     );
   }
 

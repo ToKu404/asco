@@ -42,4 +42,6 @@ class AssistanceGroupModel extends AssistanceGroupEntity {
       uid: assistanceEntity.uid,
     );
   }
+
+  static fromMap(Map<String, dynamic> map) {}
 }

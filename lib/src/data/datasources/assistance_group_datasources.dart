@@ -1,6 +1,7 @@
 import 'package:asco/src/data/datasources/helpers/ds_helper.dart';
 import 'package:asco/src/data/datasources/helpers/reference_helper.dart';
 import 'package:asco/src/data/models/assistance_models/assistance_model.dart';
+import 'package:asco/src/data/models/profile_models/profile_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../domain/entities/profile_entities/profile_entity.dart';
@@ -70,6 +71,8 @@ class AttendancesDataSourceImpl implements AssistancesGroupDataSources {
       return await snapshot.then((value) async {
         final List<AssistanceGroupModel> listData = [];
         for (var element in value.docs) {
+          print(ReadHelper.isKeyExist(element, 'assistant'));
+
           listData.add(
             AssistanceGroupModel.fromSnapshot(
                 element,
@@ -77,9 +80,10 @@ class AttendancesDataSourceImpl implements AssistancesGroupDataSources {
                     ? await ReferenceHelper.referenceProfiles(
                         element['students'])
                     : [],
-                element['assistant'] != null
-                    ? await ReferenceHelper.referenceSingleProfile(
-                        element['assistant'])
+                ReadHelper.isKeyExist(element, 'assistant')
+                    ? ProfileModel.fromMap(
+                        await ReferenceHelper.referenceSingle<ProfileEntity>(
+                            element['assistant']))
                     : null),
           );
         }
@@ -106,8 +110,9 @@ class AttendancesDataSourceImpl implements AssistancesGroupDataSources {
                       documentSnapshot['students'])
                   : [],
               documentSnapshot['assistant'] != null
-                  ? await ReferenceHelper.referenceSingleProfile(
-                      documentSnapshot['assistant'])
+                  ? ProfileModel.fromMap(
+                      await ReferenceHelper.referenceSingle<ProfileEntity>(
+                          documentSnapshot['assistant']))
                   : null);
         } else {
           throw Exception();

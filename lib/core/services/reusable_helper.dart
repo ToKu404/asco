@@ -4,6 +4,7 @@ import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.d
 import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/user_practicum_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/user_practicum_helper.dart';
 import 'package:asco/src/presentations/features/admin/attendance_page/widgets/attendance_card.dart';
 import 'package:asco/src/presentations/widgets/input_field/input_time_field.dart';
 // ignore: depend_on_referenced_packages
@@ -103,7 +104,7 @@ class ReusableHelper {
     return i.toString();
   }
 
-  static Map<String, Map<String, UserPracticumEntity>> getPracticumData({
+  static Map<String, Map<String, UserPracticumHelper>> getPracticumData({
     required List<DetailProfileEntity> allData,
     required List<ProfileEntity> selectData,
     String? practicumUid,
@@ -111,32 +112,41 @@ class ReusableHelper {
     String? groupUid,
   }) {
     try {
-      Map<String, Map<String, UserPracticumEntity>> data = {};
+      Map<String, Map<String, UserPracticumHelper>> data = {};
 
       for (var element in selectData) {
         final idsx = allData.indexWhere((d) => element.uid == d.uid);
-        final mapPracticum = allData[idsx].userPracticums;
 
-        final temp = UserPracticumEntity(
-            classUid: classroomUid, assistanceGroupUid: groupUid);
+        final Map<String, UserPracticumHelper> mapPracticum = {};
+        if (allData[idsx].userPracticums != null) {
+          allData[idsx].userPracticums!.entries.map((e) {
+            mapPracticum[e.key] = UserPracticumHelper(
+                classroomUid:
+                    e.value.classroom != null ? e.value.classroom!.uid : null,
+                groupUid: e.value.group != null ? e.value.group!.uid : null);
+          });
 
-        if (!mapPracticum!.containsKey(practicumUid)) {
-          mapPracticum[practicumUid!] = temp;
-        } else {
-          if (mapPracticum.containsValue(temp)) {
-            continue;
+          final temp = UserPracticumHelper(
+              classroomUid: classroomUid, groupUid: groupUid);
+
+          if (!mapPracticum.containsKey(practicumUid)) {
+            mapPracticum[practicumUid!] = temp;
           } else {
-            mapPracticum[practicumUid!] = UserPracticumEntity(
-                assistanceGroupUid:
-                    groupUid ?? mapPracticum[practicumUid]!.assistanceGroupUid,
-                classUid: classroomUid ?? mapPracticum[practicumUid]!.classUid);
+            if (mapPracticum.containsValue(temp)) {
+              continue;
+            } else {
+              mapPracticum[practicumUid!] = UserPracticumHelper(
+                  groupUid: groupUid ?? mapPracticum[practicumUid]!.groupUid,
+                  classroomUid:
+                      classroomUid ?? mapPracticum[practicumUid]!.classroomUid);
+            }
           }
         }
-
         data[element.uid!] = mapPracticum;
       }
       return data;
     } catch (e) {
+      print(e.toString());
       throw Exception();
     }
   }

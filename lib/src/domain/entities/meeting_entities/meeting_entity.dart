@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 
 class MeetingEntity extends Equatable {
   final String? uid;
-
   final String? topic;
   final DateTime? meetingDate;
 

@@ -118,6 +118,13 @@ void init() {
   );
 
   // locator.registerFactory(
+  //   () => UserPracticumNotifier(
+  //     getListUsecase: locator(),
+  //     setUsecase: locator(),
+  //   ),
+  // );
+
+  // locator.registerFactory(
   //   () => AttendanceNotifier(
   //     createUsecase: locator(),
   //     getListDataUsecase: locator(),
@@ -162,6 +169,11 @@ void init() {
       datasource: locator(),
     ),
   );
+  // locator.registerLazySingleton<UserPracticumRepository>(
+  //   () => UserPracticumRepositoryImpl(
+  //     datasource: locator(),
+  //   ),
+  // );
 
   //! usecases
   //? Auth Usecase
@@ -334,6 +346,18 @@ void init() {
     ),
   );
 
+  //* Practicum Usecase
+  // locator.registerLazySingleton(
+  //   () => SetUserPracticum(
+  //     repository: locator(),
+  //   ),
+  // );
+  // locator.registerLazySingleton(
+  //   () => GetListUserPracticum(
+  //     repository: locator(),
+  //   ),
+  // );
+
   //! datasources
   locator.registerLazySingleton<AuthDataSources>(
     () => AuthDataSourcesImpl(
@@ -373,6 +397,12 @@ void init() {
       firestore: locator(),
     ),
   );
+
+  // locator.registerLazySingleton<UserPracticumDataSource>(
+  //   () => UserPracticumDataSourceImpl(
+  //     firestore: locator(),
+  //   ),
+  // );
 
   //! external
   final firestore = FirebaseFirestore.instance;

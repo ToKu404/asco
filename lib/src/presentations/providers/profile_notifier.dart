@@ -2,6 +2,7 @@ import 'package:asco/core/services/data_service.dart';
 import 'package:asco/core/state/request_state.dart';
 import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/user_practicum_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/user_practicum_helper.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/create_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/get_list_profile.dart';
 import 'package:asco/src/domain/usecases/profile_usecases/get_multiple_profile.dart';
@@ -121,7 +122,7 @@ class ProfileNotifier extends CrudDataService<DetailProfileEntity> {
   }
 
   Future<void> multiplePracticumUpdate(
-      {required Map<String, Map<String, UserPracticumEntity>> data}) async {
+      {required Map<String, Map<String, UserPracticumHelper>> data}) async {
     updateState(state: RequestState.loading, key: 'update_practicums');
     notifyListeners();
     try {

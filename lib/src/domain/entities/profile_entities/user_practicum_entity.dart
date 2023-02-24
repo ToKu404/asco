@@ -1,20 +1,22 @@
+import 'package:asco/src/domain/entities/assistance_entities/assistance_entity.dart';
+import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
 import 'package:equatable/equatable.dart';
 
 class UserPracticumEntity extends Equatable {
   // final String? practicumUid;
-  final String? classUid;
-  final String? assistanceGroupUid;
+  final ClassroomEntity? classroom;
+  final AssistanceGroupEntity? group;
 
   const UserPracticumEntity({
-    this.assistanceGroupUid,
-    this.classUid,
+    this.group,
+    this.classroom,
     // this.practicumUid,
   });
 
   factory UserPracticumEntity.fromDetail(UserPracticumEntity entity) {
     return UserPracticumEntity(
-      assistanceGroupUid: entity.assistanceGroupUid,
-      classUid: entity.classUid,
+      group: entity.group,
+      classroom: entity.classroom,
       // practicumUid: entity.practicumUid,
     );
   }
@@ -22,7 +24,7 @@ class UserPracticumEntity extends Equatable {
   @override
   List<Object?> get props => [
         // practicumUid,
-        classUid,
-        assistanceGroupUid,
+        classroom,
+        group,
       ];
 }
