@@ -36,21 +36,21 @@ class ReferenceHelper {
     }
   }
 
-  static Future<ProfileEntity> referenceSingleProfile(
+  static Future<Map<String, dynamic>> referenceSingle<T>(
       dynamic studentRefs) async {
     try {
       //
       return await studentRefs.get().then((snapshot) {
         if (snapshot.exists) {
           Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-          return ProfileModel.fromMap(data);
-        } else {
-          print('Dokumen tidak ditemukan');
-        }
+          return data;
+        } else {}
       }).catchError((error) {
         print('Terjadi kesalahan: $error');
       });
     } catch (e) {
+      print(e.toString());
+
       throw Exception();
     }
   }

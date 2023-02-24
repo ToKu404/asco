@@ -1,9 +1,9 @@
 import 'package:asco/core/utils/failure.dart';
 import 'package:asco/src/data/datasources/profile_datasources.dart';
 import 'package:asco/src/data/models/profile_models/detail_profile_model.dart';
-import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/user_practicum_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/user_practicum_helper.dart';
 import 'package:asco/src/domain/repositories/profile_repository.dart';
 import 'package:dartz/dartz.dart';
 
@@ -99,7 +99,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
 
   @override
   Future<Either<Failure, bool>> multiplePracticumUpdate(
-      {required Map<String, Map<String, UserPracticumEntity>> data}) async {
+      {required Map<String, Map<String, UserPracticumHelper>> data}) async {
     try {
       final result = await datasource.multiplePracticumUpdate(data: data);
       return Right(result);
@@ -107,6 +107,4 @@ class ProfileRepositoryImpl implements ProfileRepository {
       return const Left(FirestoreFailure(''));
     }
   }
-
-  
 }

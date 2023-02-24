@@ -1,6 +1,5 @@
 import 'package:asco/src/data/datasources/profile_datasources.dart';
 import 'package:asco/src/data/models/meeting_models/detail_meeting_model.dart';
-import 'package:asco/src/domain/entities/assistance_entities/control_card_entity.dart';
 import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -53,10 +52,10 @@ class MeetingDataSourceImpl implements MeetingDataSources {
                   studentUid: e,
                 ))
             .toList(),
-        controlCard: {
-          for (String k in listStudentId)
-            k: const ControlCardEntity(assistance1: null, assistance2: null)
-        },
+        // controlCard: {
+        //   for (String k in listStudentId)
+        //     k: const ControlCardEntity(assistance1: null, assistance2: null)
+        // },
       );
       collectionReference.doc(uid).get().then((value) {
         if (!value.exists) {

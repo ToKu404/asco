@@ -2,8 +2,6 @@ import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/src/presentations/providers/assistances_notifier.dart';
-import 'package:asco/src/presentations/providers/classroom_notifier.dart';
 import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
@@ -13,12 +11,14 @@ import 'package:provider/provider.dart';
 void showAdminControlCardPage({
   required BuildContext context,
   required String practicumUid,
+  required String courseName,
 }) {
   Navigator.push(
     context,
     MaterialPageRoute(
       builder: (context) => AdminControlCardPage(
         practicumUid: practicumUid,
+        courseName: courseName,
       ),
       settings: const RouteSettings(
         name: AppRoute.adminUsersPage,
@@ -29,10 +29,12 @@ void showAdminControlCardPage({
 
 class AdminControlCardPage extends StatefulWidget {
   final String practicumUid;
+  final String courseName;
 
   const AdminControlCardPage({
     super.key,
     required this.practicumUid,
+    required this.courseName,
   });
 
   @override
@@ -73,7 +75,7 @@ class _AdminControlCardPageState extends State<AdminControlCardPage> {
           ),
         ),
         title: Text(
-          'Pemrograman Mobile',
+          widget.courseName,
           style: kTextTheme.titleSmall?.copyWith(color: Palette.white),
         ),
         centerTitle: true,
@@ -154,11 +156,18 @@ class _AdminControlCardPageState extends State<AdminControlCardPage> {
                   itemBuilder: (context, index) {
                     final student = profileNotifier.listData[index];
                     return StudentCard(
-                      classUid: student
-                          .userPracticums?[widget.practicumUid]!.classUid,
-                      practicumUid: widget.practicumUid,
-                      groupUid: student.userPracticums?[widget.practicumUid]!
-                          .assistanceGroupUid,
+                      classCode: student.userPracticums != null &&
+                              student.userPracticums?[widget] != null &&
+                              student.userPracticums?[widget]?.classroom != null
+                          ? student.userPracticums![widget.practicumUid]!
+                              .classroom!.classCode
+                          : null,
+                      groupName: student.userPracticums != null &&
+                              student.userPracticums?[widget] != null &&
+                              student.userPracticums?[widget]?.group != null
+                          ? student
+                              .userPracticums![widget.practicumUid]!.group!.name
+                          : null,
                       fullname: student.fullName,
                       username: student.username,
                     );
@@ -175,18 +184,16 @@ class _AdminControlCardPageState extends State<AdminControlCardPage> {
 }
 
 class StudentCard extends StatefulWidget {
-  final String practicumUid;
-  final String? classUid;
-  final String? groupUid;
+  final String? classCode;
+  final String? groupName;
   final String? username;
   final String? fullname;
   const StudentCard({
     super.key,
-    this.classUid,
-    this.groupUid,
+    this.classCode,
+    this.groupName,
     required this.fullname,
     required this.username,
-    required this.practicumUid,
   });
 
   @override
@@ -195,34 +202,7 @@ class StudentCard extends StatefulWidget {
 
 class _StudentCardState extends State<StudentCard> {
   @override
-  void initState() {
-    super.initState();
-    Future.microtask(() {
-      if (widget.classUid != null) {
-        Provider.of<ClassroomNotifier>(context, listen: false)
-            .getDetail(uid: widget.classUid!);
-      }
-      if (widget.groupUid != null) {
-        Provider.of<AssistancesNotifier>(context, listen: false)
-            .getDetail(uuid: widget.groupUid!);
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final classProvider = context.watch<ClassroomNotifier>();
-    final groupProvider = context.watch<AssistancesNotifier>();
-
-    // // Todo : Add Shimmer
-    // if (classProvider.isLoadingState('single') ||
-    //     groupProvider.isLoadingState('single')) {
-    //   return const SizedBox.shrink();
-    // } else if (classProvider.isErrorState('find') ||
-    //     groupProvider.isErrorState('single')) {
-    //   return const SizedBox.shrink();
-    // }
-
     return InkWellContainer(
       color: Palette.white,
       onTap: () {},
@@ -253,37 +233,40 @@ class _StudentCardState extends State<StudentCard> {
             ),
             Row(
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: Palette.purple60,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  child: Text(
-                    'Kelas ${classProvider.data != null ? classProvider.data?.classCode : "..."}',
-                    style: kTextTheme.bodySmall?.copyWith(
-                      color: Palette.white,
+                if (widget.classCode != null) ...[
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Palette.purple60,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    child: Text(
+                      'Kelas ${widget.classCode}',
+                      style: kTextTheme.bodySmall?.copyWith(
+                        color: Palette.white,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  width: 4,
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Palette.purple60,
-                    borderRadius: BorderRadius.circular(8),
+                  const SizedBox(
+                    width: 4,
                   ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  child: Text(
-                    'Group ${groupProvider.data != null ? groupProvider.data?.name : "..."}',
-                    style: kTextTheme.bodySmall?.copyWith(
-                      color: Palette.white,
+                ],
+                if (widget.groupName != null)
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Palette.purple60,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    child: Text(
+                      'Group #${widget.groupName}',
+                      style: kTextTheme.bodySmall?.copyWith(
+                        color: Palette.white,
+                      ),
                     ),
                   ),
-                ),
               ],
             ),
           ],
