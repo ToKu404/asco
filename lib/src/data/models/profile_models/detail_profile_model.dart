@@ -1,9 +1,5 @@
-import 'package:asco/src/data/datasources/helpers/ds_helper.dart';
-import 'package:asco/src/data/datasources/helpers/reference_helper.dart';
-import 'package:asco/src/data/models/classroom_models/classroom_model.dart';
 import 'package:asco/src/data/models/profile_models/user_practicum_model.dart';
 import 'package:asco/src/data/models/profile_models/user_role_model.dart';
-import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/user_practicum_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -33,11 +29,6 @@ class DetailProfileModel extends DetailProfileEntity {
       'instagram': instagram,
       'nick_name': nickName,
       'profile_photo': profilePhoto,
-      // 'user_practicums': (userPracticums != null)
-      //     ? userPracticums!
-      //         .map((e) => UserPracticumModel.fromEntity(e))
-      //         .toList()
-      //     : [],
       "user_practicums": (userPracticums != null)
           ? {
               for (var k in userPracticums!.keys)
