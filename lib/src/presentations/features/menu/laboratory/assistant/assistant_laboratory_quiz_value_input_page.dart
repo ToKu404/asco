@@ -52,8 +52,8 @@ class AssistantLaboratoryQuizValueInputPage extends StatelessWidget {
           ),
           mainAxisSpacing: 24,
           crossAxisSpacing: 16,
-          itemBuilder: (_, i) => StudentQuizValueCard(student: students[i]),
           itemCount: students.length,
+          itemBuilder: (_, i) => StudentQuizValueCard(student: students[i]),
         ),
       ),
     );
@@ -62,6 +62,9 @@ class AssistantLaboratoryQuizValueInputPage extends StatelessWidget {
 
 class BottomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const BottomAppBar({super.key});
+
+  @override
+  Size get preferredSize => const Size.fromHeight(150); // default is 56.0
 
   @override
   Widget build(BuildContext context) {
@@ -111,16 +114,13 @@ class BottomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           const SizedBox(height: 12),
           SearchField(
-            text: 'Cari nama atau nim',
+            text: '',
             onChanged: (_) {},
           ),
         ],
       ),
     );
   }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(150); // default is 56.0
 }
 
 class StudentQuizValueCard extends StatelessWidget {
@@ -201,10 +201,10 @@ class StudentQuizValueCard extends StatelessWidget {
                 animation: true,
                 animationDuration: 1000,
                 curve: Curves.easeOut,
-                radius: 35,
                 reverse: true,
+                radius: 35,
                 lineWidth: 8,
-                percent: .7,
+                percent: .75,
                 progressColor: Palette.purple60,
                 backgroundColor: Colors.transparent,
                 circularStrokeCap: CircularStrokeCap.round,
@@ -218,7 +218,7 @@ class StudentQuizValueCard extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(
-                      '70.0',
+                      '75.0',
                       style: kTextTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w700,
                         color: Palette.white,
@@ -254,10 +254,10 @@ class StudentQuizValueCard extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                         color: Palette.purple80,
                       ),
-                    )
+                    ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ],
@@ -274,11 +274,11 @@ class CustomBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.fromLTRB(24, 16, 24, 30),
       decoration: const BoxDecoration(
         color: Palette.purple100,
         borderRadius: BorderRadius.vertical(
-          top: Radius.circular(24),
+          top: Radius.circular(16),
         ),
       ),
       child: Column(
@@ -310,39 +310,41 @@ class CustomBottomSheet extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          SizedBox(
-            height: 40,
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Palette.white,
-                      borderRadius: BorderRadius.circular(8),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Container(
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: Palette.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    textAlignVertical: TextAlignVertical.center,
+                    style: kTextTheme.bodyLarge?.copyWith(
+                      color: Palette.purple80,
                     ),
-                    child: TextField(
-                      keyboardType: TextInputType.number,
-                      textAlignVertical: TextAlignVertical.center,
-                      style: kTextTheme.bodyLarge?.copyWith(
-                        color: Palette.purple100,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 14,
+                        horizontal: 16,
                       ),
-                      decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.only(
-                          left: 16,
-                          bottom: 15,
-                        ),
-                        border: InputBorder.none,
-                        hintText: 'Tambah Poin',
-                        hintStyle: kTextTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.w400,
-                          color: Palette.grey50,
-                        ),
+                      border: InputBorder.none,
+                      hintText: 'Tambahan poin',
+                      hintStyle: kTextTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w400,
+                        color: Palette.purple20,
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
-                IconButton(
+              ),
+              const SizedBox(width: 12),
+              SizedBox(
+                width: 44,
+                height: 44,
+                child: IconButton(
                   onPressed: () => Navigator.pop(context),
                   icon: const Icon(
                     Icons.arrow_upward,
@@ -357,8 +359,8 @@ class CustomBottomSheet extends StatelessWidget {
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),

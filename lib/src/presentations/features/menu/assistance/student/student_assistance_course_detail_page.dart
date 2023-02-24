@@ -262,7 +262,7 @@ class AttendanceAssistanceCard extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       color: statusBadgeColor.withOpacity(.2),
-                      borderRadius: BorderRadius.circular(6),
+                      borderRadius: BorderRadius.circular(4),
                     ),
                     child: Center(
                       child: Text(

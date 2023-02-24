@@ -26,6 +26,8 @@ class AppRoute {
       '/assistant/main-menu/assistance-practitioner';
   static const assistantAssistanceControlCardPage =
       '/assistant/main-menu/assistance-control-card';
+  static const assistantAssistancePracticumValueInputPage =
+      '/assistant/main-menu/assistance-practicum-value-input';
   static const assistantValueRecapLeaderboardPage =
       '/assistant/main-menu/assistant-value-recap';
 
