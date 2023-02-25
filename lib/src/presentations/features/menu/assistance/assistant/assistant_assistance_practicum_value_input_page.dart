@@ -5,6 +5,7 @@ import 'package:asco/core/constants/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/data/dummy_data.dart';
+import 'package:asco/src/presentations/features/menu/assistance/widgets/practicum_value_input_dialog.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:asco/src/presentations/widgets/purple_app_bar.dart';
 
@@ -25,17 +26,17 @@ class AssistantAssistancePracticumValueInputPage extends StatelessWidget {
           horizontal: 16,
         ),
         itemCount: students.length,
-        itemBuilder: (_, i) => StudentPracticumValueCard(student: students[i]),
+        itemBuilder: (_, i) => PracticumValueCard(student: students[i]),
         separatorBuilder: (_, __) => const SizedBox(height: 16),
       ),
     );
   }
 }
 
-class StudentPracticumValueCard extends StatelessWidget {
+class PracticumValueCard extends StatelessWidget {
   final Student student;
 
-  const StudentPracticumValueCard({super.key, required this.student});
+  const PracticumValueCard({super.key, required this.student});
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +51,12 @@ class StudentPracticumValueCard extends StatelessWidget {
           color: Palette.purple80,
         ),
       ],
-      onTap: () {},
+      onTap: () => showDialog(
+        context: context,
+        barrierLabel: '',
+        barrierDismissible: false,
+        builder: (_) => PracticumValueInputDialog(student: student),
+      ),
       child: Column(
         children: <Widget>[
           Row(
@@ -89,6 +95,7 @@ class StudentPracticumValueCard extends StatelessWidget {
               ),
             ],
           ),
+          const SizedBox(height: 8),
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
@@ -96,7 +103,6 @@ class StudentPracticumValueCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: const <Widget>[
-                    SizedBox(height: 8),
                     PracticumBadge(
                       badgeTitle: 'Waktu asistensi',
                       badgeContent: 'Tepat waktu',
@@ -106,12 +112,12 @@ class StudentPracticumValueCard extends StatelessWidget {
                     PracticumBadge(
                       badgeTitle: 'Nilai asistensi',
                       badgeContent: 'Kurang bagus',
-                      badgeColor: Color(0xFFD35380),
+                      badgeColor: Palette.red,
                     ),
                   ],
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 12),
               CircularPercentIndicator(
                 animation: true,
                 animationDuration: 1000,

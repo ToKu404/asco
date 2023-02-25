@@ -22,10 +22,7 @@ class AssistanceStatusDialog extends StatelessWidget {
     return Dialog(
       elevation: 0,
       backgroundColor: Palette.grey10,
-      insetPadding: const EdgeInsets.symmetric(
-        horizontal: 36.0,
-        vertical: 24.0,
-      ),
+      insetPadding: const EdgeInsets.fromLTRB(36, 56, 36, 24),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
