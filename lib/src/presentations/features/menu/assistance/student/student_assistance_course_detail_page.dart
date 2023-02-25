@@ -188,7 +188,7 @@ class StudentAssistanceCourseDetailPage extends StatelessWidget {
                 date: '22 Februari 2021',
                 notes: 'Minimal bawa makanan lah',
                 statusBadgeText: 'Terlambat',
-                statusBadgeColor: Color(0xFFD35380),
+                statusBadgeColor: Palette.red,
               ),
             ],
           ),

@@ -228,7 +228,7 @@ class _AssistantAssistanceCourseDetailPageState
                 ],
               ),
               const SizedBox(height: 20),
-              const TitleSection(title: 'Nilai Tugas Praktikum'),
+              const TitleSection(title: 'Nilai Praktikum'),
               SizedBox(
                 width: double.infinity,
                 child: FilledButton(
