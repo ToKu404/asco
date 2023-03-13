@@ -41,7 +41,7 @@ class AuthRepositoryImpl implements AuthRepository {
       final result = await datasource.getUserCredential();
       return Right(result);
     } catch (e) {
-      return Left(PreferencesFailure(e.toString()));
+      return Left(PreferenceFailure(e.toString()));
     }
   }
 
@@ -51,7 +51,7 @@ class AuthRepositoryImpl implements AuthRepository {
       final result = await datasource.logOut();
       return Right(result);
     } catch (e) {
-      return Left(PreferencesFailure(e.toString()));
+      return Left(PreferenceFailure(e.toString()));
     }
   }
 
@@ -61,7 +61,7 @@ class AuthRepositoryImpl implements AuthRepository {
       final result = await datasource.deleteUser(username: username);
       return Right(result);
     } catch (e) {
-      return Left(PreferencesFailure(e.toString()));
+      return Left(PreferenceFailure(e.toString()));
     }
   }
 }

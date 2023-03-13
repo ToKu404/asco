@@ -1,16 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UpdateHelper {
-  final Map<String, dynamic> _map = {};
-  UpdateHelper();
+  final _map = <String, dynamic>{};
+
+  Map<String, dynamic> get map => _map;
 
   void onUpdate(String key, dynamic value) {
     if (value != null && value != '') {
       _map[key] = value;
     }
   }
-
-  Map<String, dynamic> get map => _map;
 }
 
 class ReadHelper {
