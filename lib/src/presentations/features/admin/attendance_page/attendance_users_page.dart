@@ -238,7 +238,7 @@ class CustomStudentCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     attendance.attendanceStatus == 0
-                        ? 'Waktu absensi: ${ReusableHelper.datetimeToString(attendance.attendanceTime!)}'
+                        ? 'Waktu absensi: ${ReusableHelper.dateTimeToString(attendance.attendanceTime!)}'
                         : attendance.note ?? '',
                     style: kTextTheme.bodySmall?.copyWith(
                       color: Colors.grey,

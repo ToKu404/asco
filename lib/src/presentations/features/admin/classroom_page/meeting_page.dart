@@ -252,7 +252,7 @@ class MeetingCard extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         meeting.meetingDate != null
-                            ? ReusableHelper.datetimeToString(
+                            ? ReusableHelper.dateTimeToString(
                                 meeting.meetingDate!)
                             : '-',
                         maxLines: 1,

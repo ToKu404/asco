@@ -53,7 +53,7 @@ class _InputDateFieldState extends State<InputDateField> {
             if (selected == null) return;
             setState(() {
               widget.controller.text =
-                  ReusableHelper.datetimeToString(selected);
+                  ReusableHelper.dateTimeToString(selected);
               widget.action!.call(selected);
             });
           },

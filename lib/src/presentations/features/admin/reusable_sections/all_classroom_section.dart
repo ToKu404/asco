@@ -157,7 +157,7 @@ class ClassroomCard extends StatelessWidget {
               height: 8,
             ),
             Text(
-              'Setiap ${classroom.meetingDay} ${ReusableHelper.timeFormater(TimeHelper(
+              'Setiap ${classroom.meetingDay} ${ReusableHelper.timeFormatter(TimeHelper(
                 startHour: classroom.startHour,
                 endHour: classroom.endHour,
                 startMinute: classroom.startMinute,
