@@ -64,7 +64,7 @@ class _AdminAllClassroomSectionState extends State<AdminAllClassroomSection> {
                     height: 18,
                     width: 18,
                     child: SvgPicture.asset(
-                      AssetPath.getIcons('search_outlined.svg'),
+                      AssetPath.getIcon('search_outlined.svg'),
                       height: 18,
                       width: 18,
                     ),
@@ -157,7 +157,7 @@ class ClassroomCard extends StatelessWidget {
               height: 8,
             ),
             Text(
-              'Setiap ${classroom.meetingDay} ${ReusableHelper.timeFormater(TimeHelper(
+              'Setiap ${classroom.meetingDay} ${ReusableHelper.timeFormatter(TimeHelper(
                 startHour: classroom.startHour,
                 endHour: classroom.endHour,
                 startMinute: classroom.startMinute,

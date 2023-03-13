@@ -1,6 +1,7 @@
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/core/services/reusable_helper.dart';
+import 'package:asco/core/state/attendance_state.dart';
 import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 import 'package:asco/src/domain/entities/meeting_entities/detail_meeting_entity.dart';
 import 'package:asco/src/presentations/features/admin/attendance_page/attendance_users_page.dart';
@@ -61,7 +62,7 @@ class _AdminAttendanceCardState extends State<AdminAttendanceCard> {
                       ),
                     ),
                     Text(
-                      ReusableHelper.datetimeToString(
+                      ReusableHelper.dateTimeToString(
                         widget.entity.meetingDate!,
                       ),
                       style: kTextTheme.bodyMedium?.copyWith(
@@ -97,7 +98,7 @@ class _BuildMeetStat extends StatelessWidget {
       children: [
         Row(children: [
           Flexible(
-            flex: statData[AttendanceStatus.hadir] ?? 0,
+            flex: statData[AttendanceState.attend] ?? 0,
             child: Container(
               height: 4,
               decoration: BoxDecoration(
@@ -106,12 +107,12 @@ class _BuildMeetStat extends StatelessWidget {
               ),
             ),
           ),
-          if (statData[AttendanceStatus.hadir] != 0)
+          if (statData[AttendanceState.attend] != 0)
             const SizedBox(
               width: 4,
             ),
           Flexible(
-            flex: statData[AttendanceStatus.sakit] ?? 0,
+            flex: statData[AttendanceState.ache] ?? 0,
             child: Container(
               height: 4,
               decoration: BoxDecoration(
@@ -120,12 +121,12 @@ class _BuildMeetStat extends StatelessWidget {
               ),
             ),
           ),
-          if (statData[AttendanceStatus.sakit] != 0)
+          if (statData[AttendanceState.ache] != 0)
             const SizedBox(
               width: 4,
             ),
           Flexible(
-            flex: statData[AttendanceStatus.izin] ?? 0,
+            flex: statData[AttendanceState.leave] ?? 0,
             child: Container(
               height: 4,
               decoration: BoxDecoration(
@@ -134,12 +135,12 @@ class _BuildMeetStat extends StatelessWidget {
               ),
             ),
           ),
-          if (statData[AttendanceStatus.izin] != 0)
+          if (statData[AttendanceState.leave] != 0)
             const SizedBox(
               width: 4,
             ),
           Flexible(
-            flex: statData[AttendanceStatus.tidakHadir] ?? 0,
+            flex: statData[AttendanceState.absent] ?? 0,
             child: Container(
               height: 4,
               decoration: BoxDecoration(
@@ -169,8 +170,6 @@ class _BuildMeetStat extends StatelessWidget {
   }
 }
 
-enum AttendanceStatus { hadir, izin, tidakHadir, sakit }
-
 class AbsentData {
   final String title;
   final Color color;
@@ -184,7 +183,7 @@ class AbsentData {
 }
 
 class _DetailCoursePercent extends StatelessWidget {
-  final AttendanceStatus absentStatus;
+  final AttendanceState absentStatus;
   final int value;
   const _DetailCoursePercent({
     required this.absentStatus,
@@ -193,16 +192,14 @@ class _DetailCoursePercent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Map<AttendanceStatus, AbsentData> data = {
-      AttendanceStatus.hadir: AbsentData(
+    final Map<AttendanceState, AbsentData> data = {
+      AttendanceState.attend: AbsentData(
         title: 'Hadir',
         color: Palette.purple60,
       ),
-      AttendanceStatus.sakit:
-          AbsentData(title: 'Sakit', color: Palette.orange20),
-      AttendanceStatus.izin: AbsentData(title: 'Izin', color: Palette.azure40),
-      AttendanceStatus.tidakHadir:
-          AbsentData(title: 'Alfa', color: Palette.plum60),
+      AttendanceState.ache: AbsentData(title: 'Sakit', color: Palette.orange20),
+      AttendanceState.leave: AbsentData(title: 'Izin', color: Palette.azure40),
+      AttendanceState.absent: AbsentData(title: 'Alfa', color: Palette.plum60),
     };
 
     return Row(

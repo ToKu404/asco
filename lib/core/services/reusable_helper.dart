@@ -1,46 +1,45 @@
 import 'dart:convert';
+import 'package:crypto/crypto.dart';
+import 'package:intl/intl.dart';
+import 'package:asco/core/state/attendance_state.dart';
 import 'package:asco/src/domain/entities/assistance_entities/assistance_entity.dart';
 import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
-import 'package:asco/src/domain/entities/profile_entities/user_practicum_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/user_practicum_helper.dart';
-import 'package:asco/src/presentations/features/admin/attendance_page/widgets/attendance_card.dart';
 import 'package:asco/src/presentations/widgets/input_field/input_time_field.dart';
-// ignore: depend_on_referenced_packages
-import 'package:crypto/crypto.dart';
-import 'package:intl/intl.dart';
 
 class ReusableHelper {
   /// Hashing password
   static String hashPassword(String password) {
     final bytes = utf8.encode(password);
     final digest = sha256.convert(bytes);
+
     return digest.toString();
   }
 
-  /// Membuat nama depan jadi huruf kapital
+  /// Create title-case
   static String titleMaker(String title) {
     final listTitle = title.split(' ');
-    String newTitle = '';
+
+    var newTitle = '';
+
     for (var t in listTitle) {
       newTitle += "${t[0].toUpperCase()}${t.substring(1, t.length)} ";
     }
+
     return newTitle.trim();
   }
 
-  /// membuat nama panggilan dari nama lengkap
+  /// Create nickname from students fullname
   static String nicknameGenerator(String fullname) {
     final listName = fullname.trim().split(' ');
-    if (listName.length <= 1) {
-      return fullname;
-    } else {
-      return listName[1];
-    }
+
+    return listName.length <= 1 ? fullname : listName[1];
   }
 
-  ///time
-  static String timeFormater(TimeHelper th) {
+  /// Time formatter
+  static String timeFormatter(TimeHelper th) {
     final startTime = '${th.startHour}:${th.startMinute}';
     final endTime = '${th.endHour}:${th.endMinute}';
 
@@ -55,15 +54,17 @@ class ReusableHelper {
     return '$startTime1:$startTime2-$endTime1:$endTime2';
   }
 
-  //datetime to string
-  static String datetimeToString(DateTime date,
-      {bool isShowTime = false, String? format}) {
+  /// Convert DateTime to String
+  static String dateTimeToString(
+    DateTime date, {
+    bool isShowTime = false,
+    String? format,
+  }) {
     return isShowTime
         ? DateFormat(format ?? 'HH:MM, dd MMMM yyyy', "id_ID").format(date)
         : DateFormat(format ?? 'EEEE, dd MMMM yyyy', "id_ID").format(date);
   }
 
-  // string ke datetime
   /// Convert String to DateTime
   static DateTime stringToDateTime(String date, {bool isShowTime = false}) {
     return isShowTime
@@ -71,30 +72,35 @@ class ReusableHelper {
         : DateFormat("EEEE, dd MMMM yyyy", "id_ID").parse(date);
   }
 
-  static Map<AttendanceStatus, int> calculateAttendanceStat(
-      List<AttendanceEntity> attendaces) {
-    final listStatus = [
-      AttendanceStatus.hadir,
-      AttendanceStatus.sakit,
-      AttendanceStatus.izin,
-      AttendanceStatus.tidakHadir
+  static Map<AttendanceState, int> calculateAttendanceStat(
+      List<AttendanceEntity> attendances) {
+    final status = <AttendanceState>[
+      AttendanceState.attend,
+      AttendanceState.ache,
+      AttendanceState.leave,
+      AttendanceState.absent,
     ];
 
-    final Map<AttendanceStatus, int> attendanceStat = {};
-    for (int i = 0; i < listStatus.length; i++) {
-      attendanceStat[listStatus[i]] =
-          attendaces.where((e) => e.attendanceStatus == i).length;
+    final attendanceMap = <AttendanceState, int>{};
+
+    for (var i = 0; i < status.length; i++) {
+      final value = attendances
+          .where((attendance) => attendance.attendanceStatus == i)
+          .length;
+
+      attendanceMap[status[i]] = value;
     }
 
-    return attendanceStat;
+    return attendanceMap;
   }
 
   static String createPredictId(List<AssistanceGroupEntity> listData) {
-    int i = 1;
+    var i = 1;
+
     while (true) {
-      int foundStatus =
-          listData.indexWhere((element) => element.name! == i.toString());
-      if (foundStatus != -1) {
+      final index = listData.indexWhere((data) => data.name! == i.toString());
+
+      if (index != -1) {
         i++;
       } else {
         break;
@@ -112,41 +118,53 @@ class ReusableHelper {
     String? groupUid,
   }) {
     try {
-      Map<String, Map<String, UserPracticumHelper>> data = {};
+      final data = <String, Map<String, UserPracticumHelper>>{};
 
-      for (var element in selectData) {
-        final idsx = allData.indexWhere((d) => element.uid == d.uid);
+      for (var profile in selectData) {
+        final uid = allData
+            .indexWhere((detailProfile) => profile.uid == detailProfile.uid);
 
-        final Map<String, UserPracticumHelper> mapPracticum = {};
-        if (allData[idsx].userPracticums != null) {
-          allData[idsx].userPracticums!.entries.map((e) {
-            mapPracticum[e.key] = UserPracticumHelper(
-                classroomUid:
-                    e.value.classroom != null ? e.value.classroom!.uid : null,
-                groupUid: e.value.group != null ? e.value.group!.uid : null);
-          });
+        final practicumMap = <String, UserPracticumHelper>{};
+
+        if (allData[uid].userPracticums != null) {
+          allData[uid].userPracticums!.entries.map(
+            (element) {
+              practicumMap[element.key] = UserPracticumHelper(
+                classroomUid: element.value.classroom != null
+                    ? element.value.classroom!.uid
+                    : null,
+                groupUid: element.value.group != null
+                    ? element.value.group!.uid
+                    : null,
+              );
+            },
+          );
 
           final temp = UserPracticumHelper(
-              classroomUid: classroomUid, groupUid: groupUid);
+            classroomUid: classroomUid,
+            groupUid: groupUid,
+          );
 
-          if (!mapPracticum.containsKey(practicumUid)) {
-            mapPracticum[practicumUid!] = temp;
+          if (!practicumMap.containsKey(practicumUid)) {
+            practicumMap[practicumUid!] = temp;
           } else {
-            if (mapPracticum.containsValue(temp)) {
+            if (practicumMap.containsValue(temp)) {
               continue;
             } else {
-              mapPracticum[practicumUid!] = UserPracticumHelper(
-                  groupUid: groupUid ?? mapPracticum[practicumUid]!.groupUid,
-                  classroomUid:
-                      classroomUid ?? mapPracticum[practicumUid]!.classroomUid);
+              practicumMap[practicumUid!] = UserPracticumHelper(
+                classroomUid:
+                    classroomUid ?? practicumMap[practicumUid]!.classroomUid,
+                groupUid: groupUid ?? practicumMap[practicumUid]!.groupUid,
+              );
             }
           }
         }
-        data[element.uid!] = mapPracticum;
+
+        data[profile.uid!] = practicumMap;
       }
+
       return data;
     } catch (e) {
-      print(e.toString());
       throw Exception();
     }
   }

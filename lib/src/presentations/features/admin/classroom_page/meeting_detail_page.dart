@@ -59,8 +59,6 @@ class _MeetingDetailPageState extends State<MeetingDetailPage> {
     final classNotifier = context.watch<ClassroomNotifier>();
     final profileNotifier = context.watch<ProfileNotifier>();
 
- 
-
     return Scaffold(
       backgroundColor: Palette.grey,
       appBar: AppBar(
@@ -131,7 +129,7 @@ class _MeetingDetailPageState extends State<MeetingDetailPage> {
                     ),
                     Text(
                       widget.meeting.meetingDate != null
-                          ? ReusableHelper.datetimeToString(
+                          ? ReusableHelper.dateTimeToString(
                               widget.meeting.meetingDate!)
                           : '',
                       style: kTextTheme.titleMedium?.copyWith(
@@ -155,7 +153,7 @@ class _MeetingDetailPageState extends State<MeetingDetailPage> {
                     ),
                     Text(
                       classNotifier.data != null
-                          ? '${ReusableHelper.timeFormater(TimeHelper(
+                          ? '${ReusableHelper.timeFormatter(TimeHelper(
                               startHour: classNotifier.data?.startHour,
                               endHour: classNotifier.data?.endHour,
                               startMinute: classNotifier.data?.startMinute,

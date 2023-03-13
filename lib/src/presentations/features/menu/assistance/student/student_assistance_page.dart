@@ -125,7 +125,7 @@ class StudentAssistancePage extends StatelessWidget {
                             trailing: IconButton(
                               onPressed: () {},
                               icon: SvgPicture.asset(
-                                AssetPath.getIcons('github_filled.svg'),
+                                AssetPath.getIcon('github_filled.svg'),
                                 width: 24,
                                 color: Palette.purple80,
                               ),

@@ -47,33 +47,33 @@ class _SideMenuState extends State<SideMenu> {
   final listMenu = [
     MenuHelper(
       title: 'Beranda',
-      unselectedIconPath: AssetPath.getIcons('home_outlined.svg'),
-      selectedIconPath: AssetPath.getIcons('home_filled.svg'),
+      unselectedIconPath: AssetPath.getIcon('home_outlined.svg'),
+      selectedIconPath: AssetPath.getIcon('home_filled.svg'),
     ),
     MenuHelper(
       title: 'Laboratorium',
-      unselectedIconPath: AssetPath.getIcons('class_outlined.svg'),
-      selectedIconPath: AssetPath.getIcons('class_filled.svg'),
+      unselectedIconPath: AssetPath.getIcon('class_outlined.svg'),
+      selectedIconPath: AssetPath.getIcon('class_filled.svg'),
     ),
     MenuHelper(
       title: 'Asistensi',
-      unselectedIconPath: AssetPath.getIcons('assistance_outlined.svg'),
-      selectedIconPath: AssetPath.getIcons('assistance_filled.svg'),
+      unselectedIconPath: AssetPath.getIcon('assistance_outlined.svg'),
+      selectedIconPath: AssetPath.getIcon('assistance_filled.svg'),
     ),
     MenuHelper(
       title: 'Leaderboard',
-      unselectedIconPath: AssetPath.getIcons('leaderboard_outlined.svg'),
-      selectedIconPath: AssetPath.getIcons('leaderboard_filled.svg'),
+      unselectedIconPath: AssetPath.getIcon('leaderboard_outlined.svg'),
+      selectedIconPath: AssetPath.getIcon('leaderboard_filled.svg'),
     ),
     MenuHelper(
       title: 'Extras',
-      unselectedIconPath: AssetPath.getIcons('extras_outlined.svg'),
-      selectedIconPath: AssetPath.getIcons('extras_filled.svg'),
+      unselectedIconPath: AssetPath.getIcon('extras_outlined.svg'),
+      selectedIconPath: AssetPath.getIcon('extras_filled.svg'),
     ),
     MenuHelper(
       title: 'People',
-      unselectedIconPath: AssetPath.getIcons('people_outlined.svg'),
-      selectedIconPath: AssetPath.getIcons('people_filled.svg'),
+      unselectedIconPath: AssetPath.getIcon('people_outlined.svg'),
+      selectedIconPath: AssetPath.getIcon('people_filled.svg'),
     ),
     // MenuHelper(
     //   title: 'Tentang',
@@ -82,8 +82,8 @@ class _SideMenuState extends State<SideMenu> {
     // ),
     MenuHelper(
       title: 'Keluar',
-      unselectedIconPath: AssetPath.getIcons('logout_outlined.svg'),
-      selectedIconPath: AssetPath.getIcons('logout_outlined.svg'),
+      unselectedIconPath: AssetPath.getIcon('logout_outlined.svg'),
+      selectedIconPath: AssetPath.getIcon('logout_outlined.svg'),
     ),
   ];
 
@@ -103,7 +103,7 @@ class _SideMenuState extends State<SideMenu> {
                     Builder(builder: (context) {
                       final userNotifier = context.watch<ProfileNotifier>();
                       final profile = userNotifier.data;
-                    
+
                       return GestureDetector(
                         onTap: () {
                           widget.selectedIndex.value = -2;

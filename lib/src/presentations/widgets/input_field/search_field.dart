@@ -65,7 +65,7 @@ class _SearchFieldState extends State<SearchField> {
               end: 12,
             ),
             child: SvgPicture.asset(
-              AssetPath.getIcons('search_outlined.svg'),
+              AssetPath.getIcon('search_outlined.svg'),
               color: Palette.purple80,
             ),
           ),

@@ -113,7 +113,7 @@ class _AdminControlCardPageState extends State<AdminControlCardPage> {
                         height: 18,
                         width: 18,
                         child: SvgPicture.asset(
-                          AssetPath.getIcons('search_outlined.svg'),
+                          AssetPath.getIcon('search_outlined.svg'),
                           height: 18,
                           width: 18,
                         ),

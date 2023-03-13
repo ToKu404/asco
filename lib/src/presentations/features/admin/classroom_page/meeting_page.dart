@@ -129,7 +129,7 @@ class _AdminClassroomMeetingPageState extends State<AdminClassroomMeetingPage> {
                         height: 18,
                         width: 18,
                         child: SvgPicture.asset(
-                          AssetPath.getIcons('search_outlined.svg'),
+                          AssetPath.getIcon('search_outlined.svg'),
                           height: 18,
                           width: 18,
                         ),
@@ -174,7 +174,6 @@ class _AdminClassroomMeetingPageState extends State<AdminClassroomMeetingPage> {
                           showAdminMeetingDetailPage(
                             context: context,
                             meetingEntity: dataProvider.listData[index],
-                            
                           );
                         },
                         meetingNumber: index + 1,
@@ -253,7 +252,7 @@ class MeetingCard extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         meeting.meetingDate != null
-                            ? ReusableHelper.datetimeToString(
+                            ? ReusableHelper.dateTimeToString(
                                 meeting.meetingDate!)
                             : '-',
                         maxLines: 1,

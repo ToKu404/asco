@@ -189,8 +189,8 @@ class _SideMenuParentState extends State<SideMenuParent>
                                     ),
                                     child: SvgPicture.asset(
                                       value
-                                          ? AssetPath.getIcons('hamburger.svg')
-                                          : AssetPath.getIcons('close.svg'),
+                                          ? AssetPath.getIcon('hamburger.svg')
+                                          : AssetPath.getIcon('close.svg'),
                                     ),
                                   ),
                                 ),
@@ -217,11 +217,10 @@ class _SideMenuParentState extends State<SideMenuParent>
                                             widget.onSelect!(0);
                                             _selectedIndex.value = 0;
                                           },
-                                          selectedIconPath: AssetPath.getIcons(
+                                          selectedIconPath: AssetPath.getIcon(
                                               'class_filled.svg'),
-                                          unselectedIconPath:
-                                              AssetPath.getIcons(
-                                                  'class_outlined.svg'),
+                                          unselectedIconPath: AssetPath.getIcon(
+                                              'class_outlined.svg'),
                                         ),
                                         TabIcon(
                                           isActive: selectValue == 1,
@@ -229,11 +228,10 @@ class _SideMenuParentState extends State<SideMenuParent>
                                             widget.onSelect!(1);
                                             _selectedIndex.value = 1;
                                           },
-                                          selectedIconPath: AssetPath.getIcons(
+                                          selectedIconPath: AssetPath.getIcon(
                                               'assistance_filled.svg'),
-                                          unselectedIconPath:
-                                              AssetPath.getIcons(
-                                                  'assistance_outlined.svg'),
+                                          unselectedIconPath: AssetPath.getIcon(
+                                              'assistance_outlined.svg'),
                                         ),
                                         TabIcon(
                                           isActive: selectValue == 2,
@@ -241,11 +239,10 @@ class _SideMenuParentState extends State<SideMenuParent>
                                             widget.onSelect!(2);
                                             _selectedIndex.value = 2;
                                           },
-                                          selectedIconPath: AssetPath.getIcons(
+                                          selectedIconPath: AssetPath.getIcon(
                                               'leaderboard_filled.svg'),
-                                          unselectedIconPath:
-                                              AssetPath.getIcons(
-                                                  'leaderboard_outlined.svg'),
+                                          unselectedIconPath: AssetPath.getIcon(
+                                              'leaderboard_outlined.svg'),
                                         ),
                                         TabIcon(
                                           isActive: selectValue == 3,
@@ -253,11 +250,10 @@ class _SideMenuParentState extends State<SideMenuParent>
                                             widget.onSelect!(3);
                                             _selectedIndex.value = 3;
                                           },
-                                          selectedIconPath: AssetPath.getIcons(
+                                          selectedIconPath: AssetPath.getIcon(
                                               'extras_filled.svg'),
-                                          unselectedIconPath:
-                                              AssetPath.getIcons(
-                                                  'extras_outlined.svg'),
+                                          unselectedIconPath: AssetPath.getIcon(
+                                              'extras_outlined.svg'),
                                         ),
                                         TabIcon(
                                           isActive: selectValue == 4,
@@ -265,11 +261,10 @@ class _SideMenuParentState extends State<SideMenuParent>
                                             widget.onSelect!(4);
                                             _selectedIndex.value = 4;
                                           },
-                                          selectedIconPath: AssetPath.getIcons(
+                                          selectedIconPath: AssetPath.getIcon(
                                               'people_filled.svg'),
-                                          unselectedIconPath:
-                                              AssetPath.getIcons(
-                                                  'people_outlined.svg'),
+                                          unselectedIconPath: AssetPath.getIcon(
+                                              'people_outlined.svg'),
                                         ),
                                       ],
                                     ),

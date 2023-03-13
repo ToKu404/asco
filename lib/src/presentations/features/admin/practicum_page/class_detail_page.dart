@@ -154,7 +154,7 @@ class _ClassDetailPageState extends State<ClassDetailPage> {
                         ),
                       ),
                       Text(
-                        ReusableHelper.timeFormater(TimeHelper(
+                        ReusableHelper.timeFormatter(TimeHelper(
                           startHour: dataProvider.data?.startHour,
                           endHour: dataProvider.data?.endHour,
                           startMinute: dataProvider.data?.startMinute,

@@ -66,7 +66,7 @@ class AscoSnackBar extends StatelessWidget {
                           onTap: () => ScaffoldMessenger.of(context)
                               .hideCurrentSnackBar(),
                           child: SvgPicture.asset(
-                            AssetPath.getIcons('failure_outlined.svg'),
+                            AssetPath.getIcon('failure_outlined.svg'),
                             height: height * 0.022,
                           ),
                         ),
@@ -128,25 +128,25 @@ class AscoSnackBar extends StatelessWidget {
   String assetSvg(ContentType type) {
     if (type == ContentType.success) {
       // success will show `check icon`
-      return AssetPath.getIcons('success_outlined.svg');
+      return AssetPath.getIcon('success_outlined.svg');
     }
 
     if (type == ContentType.failure) {
       // failure will show `cross icon`
-      return AssetPath.getIcons('failure_outlined.svg');
+      return AssetPath.getIcon('failure_outlined.svg');
     }
 
     if (type == ContentType.warning) {
       // warning will show `warning icon`
-      return AssetPath.getIcons('warning_outlined.svg');
+      return AssetPath.getIcon('warning_outlined.svg');
     }
 
     if (type == ContentType.help) {
       // help will show `question icon`
-      return AssetPath.getIcons('help_outlined.svg');
+      return AssetPath.getIcon('help_outlined.svg');
     }
 
     // the default
-    return AssetPath.getIcons('success_outlined.svg');
+    return AssetPath.getIcon('success_outlined.svg');
   }
 }

@@ -53,7 +53,7 @@ class AssistantLaboratoryQuizValueInputPage extends StatelessWidget {
           mainAxisSpacing: 24,
           crossAxisSpacing: 16,
           itemCount: students.length,
-          itemBuilder: (_, i) => StudentQuizValueCard(student: students[i]),
+          itemBuilder: (_, i) => QuizValueCard(student: students[i]),
         ),
       ),
     );
@@ -123,10 +123,10 @@ class BottomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
-class StudentQuizValueCard extends StatelessWidget {
+class QuizValueCard extends StatelessWidget {
   final Student student;
 
-  const StudentQuizValueCard({super.key, required this.student});
+  const QuizValueCard({super.key, required this.student});
 
   @override
   Widget build(BuildContext context) {

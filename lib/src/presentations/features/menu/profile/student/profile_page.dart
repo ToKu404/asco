@@ -51,7 +51,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                   width: 24,
                   height: 24,
                   child: SvgPicture.asset(
-                    AssetPath.getIcons('edit.svg'),
+                    AssetPath.getIcon('edit.svg'),
                     color: Palette.white,
                   ),
                 )
@@ -93,7 +93,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                           width: 32,
                           height: 32,
                           child: SvgPicture.asset(
-                            AssetPath.getIcons('flip.svg'),
+                            AssetPath.getIcon('flip.svg'),
                             color: Palette.white,
                           ),
                         ),
@@ -268,7 +268,7 @@ class IdCardFrontSide extends StatelessWidget {
                                 width: 20,
                                 height: 20,
                                 child: SvgPicture.asset(
-                                  AssetPath.getIcons(
+                                  AssetPath.getIcon(
                                     'github_filled.svg',
                                   ),
                                 ),
@@ -296,7 +296,7 @@ class IdCardFrontSide extends StatelessWidget {
                                 width: 20,
                                 height: 20,
                                 child: SvgPicture.asset(
-                                  AssetPath.getIcons(
+                                  AssetPath.getIcon(
                                     'instagram_filled.svg',
                                   ),
                                 ),
