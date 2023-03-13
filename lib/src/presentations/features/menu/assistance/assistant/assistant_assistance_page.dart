@@ -132,7 +132,7 @@ class AssistantAssistancePage extends StatelessWidget {
                                   GestureDetector(
                                     onTap: () {},
                                     child: SvgPicture.asset(
-                                      AssetPath.getIcons('github_filled.svg'),
+                                      AssetPath.getIcon('github_filled.svg'),
                                       width: 22,
                                     ),
                                   ),
@@ -145,7 +145,7 @@ class AssistantAssistancePage extends StatelessWidget {
                                       builder: (_) => const GithubDialog(),
                                     ),
                                     child: SvgPicture.asset(
-                                      AssetPath.getIcons('edit.svg'),
+                                      AssetPath.getIcon('edit.svg'),
                                       width: 18,
                                     ),
                                   ),

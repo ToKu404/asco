@@ -39,7 +39,7 @@ class AssistantAssistancePractitionerPage extends StatelessWidget {
           trailing: IconButton(
             onPressed: () {},
             icon: SvgPicture.asset(
-              AssetPath.getIcons('github_filled.svg'),
+              AssetPath.getIcon('github_filled.svg'),
               color: Palette.purple80,
               width: 24,
             ),

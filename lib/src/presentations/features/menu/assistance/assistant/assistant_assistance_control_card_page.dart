@@ -72,7 +72,7 @@ class AssistantAssistanceControlCardPage extends StatelessWidget {
                           child: GestureDetector(
                             onTap: () {},
                             child: SvgPicture.asset(
-                              AssetPath.getIcons('github_filled.svg'),
+                              AssetPath.getIcon('github_filled.svg'),
                               width: 24,
                               color: Palette.white,
                             ),
@@ -84,7 +84,7 @@ class AssistantAssistanceControlCardPage extends StatelessWidget {
                           child: GestureDetector(
                             onTap: () {},
                             child: SvgPicture.asset(
-                              AssetPath.getIcons('instagram_filled.svg'),
+                              AssetPath.getIcon('instagram_filled.svg'),
                               width: 24,
                               color: Palette.white,
                             ),

@@ -61,7 +61,7 @@ class _AssistantProfilePageState extends State<AssistantProfilePage> {
                         child: GestureDetector(
                           onTap: () {},
                           child: SvgPicture.asset(
-                            AssetPath.getIcons('github_filled.svg'),
+                            AssetPath.getIcon('github_filled.svg'),
                             width: 24,
                             color: Palette.white,
                           ),
@@ -75,7 +75,7 @@ class _AssistantProfilePageState extends State<AssistantProfilePage> {
                         child: GestureDetector(
                           onTap: () {},
                           child: SvgPicture.asset(
-                            AssetPath.getIcons('instagram_filled.svg'),
+                            AssetPath.getIcon('instagram_filled.svg'),
                             width: 24,
                             color: Palette.white,
                           ),
@@ -152,7 +152,7 @@ class _AssistantProfilePageState extends State<AssistantProfilePage> {
                         ),
                         onPressed: () {},
                         icon: SvgPicture.asset(
-                          AssetPath.getIcons(
+                          AssetPath.getIcon(
                             'edit.svg',
                           ),
                           color: Palette.white,

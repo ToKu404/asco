@@ -158,7 +158,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                         width: 16,
                         height: 16,
                         child: SvgPicture.asset(
-                          AssetPath.getIcons('logout_outlined.svg'),
+                          AssetPath.getIcon('logout_outlined.svg'),
                           color: Palette.white,
                         ),
                       ),

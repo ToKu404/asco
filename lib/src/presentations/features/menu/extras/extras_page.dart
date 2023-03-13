@@ -122,7 +122,7 @@ class CardExtras extends StatelessWidget {
                   ),
                   padding: const EdgeInsets.all(8),
                   child: SvgPicture.asset(
-                    AssetPath.getIcons(iconAsset),
+                    AssetPath.getIcon(iconAsset),
                   ),
                 ),
                 const SizedBox(height: 24),

@@ -3,7 +3,7 @@ class AppRoute {
   static const homePage = '/home';
   static const wrapper = '/wrapper';
 
-  // Student routes
+  // Student
   static const studentMainMenuPage = '/student/main-menu';
   static const studentLaboratoryCourseDetailPage =
       '/student/main-menu/laboratory-course-detail';
@@ -13,7 +13,7 @@ class AppRoute {
       '/student/main-menu/assistance-practitioner';
   static const valueRecapLeaderboardPage = '/student/main-menu/value-recap';
 
-  // Assistant routes
+  // Assistant
   static const assistantLaboratoryCourseDetailPage =
       '/assistant/main-menu/laboratory-course-detail';
   static const assistantLaboratorySchedulePage =
@@ -31,7 +31,7 @@ class AppRoute {
   static const assistantValueRecapLeaderboardPage =
       '/assistant/main-menu/assistant-value-recap';
 
-  // Admin routes
+  // Admin
   static const adminHomePage = '/admin/home';
   static const adminUsersPage = '/admin/users';
   static const adminDetailUserPage = '/admin/users/user-detail';

@@ -1,31 +1,33 @@
 import 'dart:convert';
+import 'package:crypto/crypto.dart';
+import 'package:intl/intl.dart';
 import 'package:asco/src/domain/entities/assistance_entities/assistance_entity.dart';
 import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
-import 'package:asco/src/domain/entities/profile_entities/user_practicum_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/user_practicum_helper.dart';
 import 'package:asco/src/presentations/features/admin/attendance_page/widgets/attendance_card.dart';
 import 'package:asco/src/presentations/widgets/input_field/input_time_field.dart';
-// ignore: depend_on_referenced_packages
-import 'package:crypto/crypto.dart';
-import 'package:intl/intl.dart';
 
 class ReusableHelper {
   /// Hashing password
   static String hashPassword(String password) {
     final bytes = utf8.encode(password);
     final digest = sha256.convert(bytes);
+
     return digest.toString();
   }
 
-  /// Membuat nama depan jadi huruf kapital
+  /// Create title-case
   static String titleMaker(String title) {
     final listTitle = title.split(' ');
+
     String newTitle = '';
+
     for (var t in listTitle) {
       newTitle += "${t[0].toUpperCase()}${t.substring(1, t.length)} ";
     }
+    
     return newTitle.trim();
   }
 

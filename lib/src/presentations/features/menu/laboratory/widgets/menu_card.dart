@@ -52,7 +52,7 @@ class MenuCard extends StatelessWidget {
                 ),
                 child: Center(
                   child: SvgPicture.asset(
-                    AssetPath.getIcons(iconName),
+                    AssetPath.getIcon(iconName),
                   ),
                 ),
               ),

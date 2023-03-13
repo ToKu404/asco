@@ -144,7 +144,7 @@ class StudentLaboratoryPage extends StatelessWidget {
                   IconButton(
                     onPressed: () {},
                     icon: SvgPicture.asset(
-                      AssetPath.getIcons('arrow_sort_filled.svg'),
+                      AssetPath.getIcon('arrow_sort_filled.svg'),
                       color: Palette.purple100,
                       width: 20,
                     ),
