@@ -1,6 +1,6 @@
 import 'package:asco/src/data/models/auth_models/user_credential.dart';
 import 'package:asco/src/data/models/auth_models/user_model.dart';
-import 'package:asco/src/data/services/preferences_services.dart';
+import 'package:asco/core/services/preference_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 abstract class AuthDataSources {

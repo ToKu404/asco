@@ -1,4 +1,7 @@
-import 'package:asco/src/data/datasources/assistance_group_datasources.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get_it/get_it.dart';
+
+import 'package:asco/src/data/datasources/assistance_group_datasource.dart';
 import 'package:asco/src/data/datasources/auth_datasources.dart';
 import 'package:asco/src/data/datasources/classroom_datasources.dart';
 import 'package:asco/src/data/datasources/meeting_datasources.dart';
@@ -10,7 +13,7 @@ import 'package:asco/src/data/repositories/classroom_repository_impl.dart';
 import 'package:asco/src/data/repositories/meeting_repository_impl.dart';
 import 'package:asco/src/data/repositories/practicum_repository_impl.dart';
 import 'package:asco/src/data/repositories/profile_repository_impl.dart';
-import 'package:asco/src/domain/repositories/assitances_repository.dart';
+import 'package:asco/src/domain/repositories/assistance_repository.dart';
 import 'package:asco/src/domain/repositories/auth_repository.dart';
 import 'package:asco/src/domain/repositories/classroom_repository.dart';
 import 'package:asco/src/domain/repositories/meeting_repository.dart';
@@ -25,10 +28,10 @@ import 'package:asco/src/domain/usecases/auth_usecases/get_user.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/login.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/logout.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/remove_user.dart';
-import 'package:asco/src/domain/usecases/classroom_usecases/update_student_classroom.dart';
 import 'package:asco/src/domain/usecases/classroom_usecases/create_classroom.dart';
 import 'package:asco/src/domain/usecases/classroom_usecases/get_list_classroom.dart';
 import 'package:asco/src/domain/usecases/classroom_usecases/get_single_classroom.dart';
+import 'package:asco/src/domain/usecases/classroom_usecases/update_student_classroom.dart';
 import 'package:asco/src/domain/usecases/meeting_usecases/create_meeting.dart';
 import 'package:asco/src/domain/usecases/meeting_usecases/get_list_meeting.dart';
 import 'package:asco/src/domain/usecases/meeting_usecases/get_single_meeting.dart';
@@ -50,10 +53,8 @@ import 'package:asco/src/presentations/providers/classroom_notifier.dart';
 import 'package:asco/src/presentations/providers/meeting_notifier.dart';
 import 'package:asco/src/presentations/providers/practicum_notifier.dart';
 import 'package:asco/src/presentations/providers/profile_notifier.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:get_it/get_it.dart';
 
-import 'src/data/services/preferences_services.dart';
+import 'core/services/preference_service.dart';
 
 final locator = GetIt.instance;
 
@@ -144,8 +145,8 @@ void init() {
     ),
   );
 
-  locator.registerLazySingleton<AssistancesGroupRepository>(
-    () => AssistancesGroupRepositoryImpl(
+  locator.registerLazySingleton<AssistanceGroupRepository>(
+    () => AssistanceGroupRepositoryImpl(
       datasource: locator(),
     ),
   );
@@ -300,8 +301,6 @@ void init() {
     ),
   );
 
-
-
   //! datasources
   locator.registerLazySingleton<AuthDataSources>(
     () => AuthDataSourcesImpl(
@@ -331,12 +330,11 @@ void init() {
       profileDataSource: locator(),
     ),
   );
-  locator.registerLazySingleton<AssistancesGroupDataSources>(
-    () => AttendancesDataSourceImpl(
+  locator.registerLazySingleton<AssistanceGroupDataSource>(
+    () => AssistanceGroupDataSourceImpl(
       firestore: locator(),
     ),
   );
-
 
   //! external
   final firestore = FirebaseFirestore.instance;

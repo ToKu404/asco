@@ -4,7 +4,7 @@ import 'package:asco/src/data/models/assistance_models/assistance_model.dart';
 import 'package:asco/src/data/models/classroom_models/classroom_model.dart';
 import 'package:asco/src/data/models/profile_models/detail_profile_model.dart';
 import 'package:asco/src/data/models/profile_models/user_practicum_model.dart';
-import 'package:asco/src/data/services/preferences_services.dart';
+import 'package:asco/core/services/preference_service.dart';
 import 'package:asco/src/domain/entities/assistance_entities/assistance_entity.dart';
 import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/user_practicum_entity.dart';

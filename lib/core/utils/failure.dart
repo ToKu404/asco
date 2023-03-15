@@ -14,8 +14,3 @@ abstract class Failure extends Equatable {
 class FirestoreFailure extends Failure {
   const FirestoreFailure(super.message);
 }
-
-/// A class that will be returned when a **Preference Failure** occurs.
-class PreferenceFailure extends Failure {
-  const PreferenceFailure(super.message);
-}
