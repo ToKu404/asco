@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:intl/intl.dart';
-import 'package:asco/core/state/attendance_state.dart';
-import 'package:asco/src/domain/entities/assistance_entities/assistance_entity.dart';
+import 'package:asco/core/states/attendance_state.dart';
+import 'package:asco/src/domain/entities/assistance_entities/assistance_group_entity.dart';
 import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';

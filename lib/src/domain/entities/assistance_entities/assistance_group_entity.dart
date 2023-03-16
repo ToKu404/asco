@@ -1,5 +1,5 @@
-import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:equatable/equatable.dart';
+import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 
 class AssistanceGroupEntity extends Equatable {
   final String? uid;
@@ -9,11 +9,11 @@ class AssistanceGroupEntity extends Equatable {
   final List<ProfileEntity>? students;
 
   const AssistanceGroupEntity({
-    this.assistant,
-    this.name,
-    this.practicumUid,
-    this.students,
     this.uid,
+    this.practicumUid,
+    this.name,
+    this.assistant,
+    this.students,
   });
 
   @override

@@ -1,4 +1,3 @@
-import 'package:asco/src/data/models/profile_models/profile_model.dart';
 import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

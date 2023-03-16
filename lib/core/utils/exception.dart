@@ -1,5 +1,5 @@
 /// Exception class that will be thrown when there is a problem
-/// related to the firestore.
+/// related to Firestore.
 class FirestoreException implements Exception {
   final String message;
 
@@ -7,9 +7,9 @@ class FirestoreException implements Exception {
 }
 
 /// Exception class that will be thrown when there is a problem
-/// related to the reference.
-class ReferenceException implements Exception {
+/// related to Shared Preferences.
+class PreferenceException implements Exception {
   final String message;
 
-  ReferenceException(this.message);
+  PreferenceException(this.message);
 }

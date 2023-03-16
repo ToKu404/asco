@@ -1,7 +1,7 @@
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/core/services/reusable_helper.dart';
-import 'package:asco/core/state/attendance_state.dart';
+import 'package:asco/core/states/attendance_state.dart';
 import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 import 'package:asco/src/domain/entities/meeting_entities/detail_meeting_entity.dart';
 import 'package:asco/src/presentations/features/admin/attendance_page/attendance_users_page.dart';

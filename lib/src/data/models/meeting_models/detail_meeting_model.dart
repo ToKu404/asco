@@ -1,5 +1,4 @@
 import 'package:asco/src/data/datasources/helpers/ds_helper.dart';
-import 'package:asco/src/data/models/assistance_models/control_card_model.dart';
 import 'package:asco/src/data/models/attendance_models/attendance_model.dart';
 import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 import 'package:asco/src/domain/entities/meeting_entities/detail_meeting_entity.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:asco/core/state/request_state.dart';
+import 'package:asco/core/states/request_state.dart';
 
 /// Generic type of class type send on `T`
 class CrudDataService<T> with ChangeNotifier {

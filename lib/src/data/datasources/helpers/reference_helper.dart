@@ -38,7 +38,7 @@ class ReferenceHelper {
 
       return Future.value(users);
     } catch (e) {
-      throw ReferenceException(e.toString());
+      throw FirestoreException(e.toString());
     }
   }
 
@@ -51,13 +51,13 @@ class ReferenceHelper {
 
           return data;
         }
-      }).catchError((_) => {});
+      }).catchError((_) => <String, dynamic>{});
 
       final referenceDataMap = referenceData as Map<String, dynamic>;
 
       return Future.value(referenceDataMap);
     } catch (e) {
-      throw ReferenceException(e.toString());
+      throw FirestoreException(e.toString());
     }
   }
 }

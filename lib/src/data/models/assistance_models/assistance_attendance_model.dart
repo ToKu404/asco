@@ -3,23 +3,23 @@ import 'package:asco/src/domain/entities/assistance_entities/assistance_attendan
 class AssistanceAttendanceModel extends AssistanceAttendanceEntity {
   const AssistanceAttendanceModel({
     required super.assistanceDateTime,
-    required super.note,
     required super.status,
+    required super.note,
   });
 
   Map<String, dynamic> toDocument() {
     return {
       "assistance_datetime": assistanceDateTime,
-      "note": note,
       "status": status,
+      "note": note,
     };
   }
 
   AssistanceAttendanceEntity toEntity() {
     return AssistanceAttendanceEntity(
       assistanceDateTime: assistanceDateTime,
-      note: note,
       status: status,
+      note: note,
     );
   }
 
@@ -27,8 +27,8 @@ class AssistanceAttendanceModel extends AssistanceAttendanceEntity {
       Map<String, dynamic> documentSnapshot) {
     return AssistanceAttendanceModel(
       assistanceDateTime: documentSnapshot['assistance_datetime'],
-      note: documentSnapshot['note'],
       status: documentSnapshot['status'],
+      note: documentSnapshot['note'],
     );
   }
 
@@ -36,8 +36,8 @@ class AssistanceAttendanceModel extends AssistanceAttendanceEntity {
       AssistanceAttendanceEntity entity) {
     return AssistanceAttendanceModel(
       assistanceDateTime: entity.assistanceDateTime,
-      note: entity.note,
       status: entity.status,
+      note: entity.note,
     );
   }
 }

@@ -1,6 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:asco/src/data/models/assistance_models/assistance_attendance_model.dart';
 import 'package:asco/src/domain/entities/assistance_entities/control_card_entity.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ControlCardModel extends ControlCardEntity {
   const ControlCardModel({

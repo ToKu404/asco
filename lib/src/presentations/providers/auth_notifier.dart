@@ -1,6 +1,6 @@
 import 'package:asco/core/services/data_service.dart';
-import 'package:asco/core/state/request_state.dart';
-import 'package:asco/src/domain/entities/auth_entities/user_credential.dart';
+import 'package:asco/core/states/request_state.dart';
+import 'package:asco/src/domain/entities/auth_entities/user_credential_entity.dart';
 import 'package:asco/src/domain/entities/auth_entities/user_entity.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/create_user.dart';
 import 'package:asco/src/domain/usecases/auth_usecases/get_user.dart';

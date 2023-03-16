@@ -1,5 +1,5 @@
 import 'package:asco/core/services/data_service.dart';
-import 'package:asco/core/state/request_state.dart';
+import 'package:asco/core/states/request_state.dart';
 import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:asco/src/domain/usecases/classroom_usecases/update_student_classroom.dart';
