@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:asco/src/data/models/auth_models/user_credential.dart';
+import 'package:asco/core/utils/exception.dart';
+import 'package:asco/src/data/models/auth_models/user_credential_model.dart';
 
 /// **Auth Preferences Helper**
 ///
@@ -45,7 +46,7 @@ class AuthPreferenceHelper {
 
       return false;
     } catch (e) {
-      throw Exception(e.toString());
+      throw PreferenceException(e.toString());
     }
   }
 
@@ -79,7 +80,7 @@ class AuthPreferenceHelper {
 
       return false;
     } catch (e) {
-      throw Exception(e.toString());
+      throw PreferenceException(e.toString());
     }
   }
 }

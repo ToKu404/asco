@@ -1,5 +1,5 @@
 import 'package:asco/core/services/data_service.dart';
-import 'package:asco/core/state/request_state.dart';
+import 'package:asco/core/states/request_state.dart';
 import 'package:asco/src/domain/entities/practicum_entities/practicum_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:asco/src/domain/usecases/practicum_usecases/create_practicum.dart';

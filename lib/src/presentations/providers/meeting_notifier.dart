@@ -1,5 +1,5 @@
 import 'package:asco/core/services/data_service.dart';
-import 'package:asco/core/state/request_state.dart';
+import 'package:asco/core/states/request_state.dart';
 import 'package:asco/src/domain/entities/meeting_entities/detail_meeting_entity.dart';
 import 'package:asco/src/domain/usecases/meeting_usecases/create_meeting.dart';
 import 'package:asco/src/domain/usecases/meeting_usecases/get_list_meeting.dart';

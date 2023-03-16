@@ -1,17 +1,17 @@
 import 'package:equatable/equatable.dart';
 
 class UserCredentialEntity extends Equatable {
-  final String username;
   final int roleId;
+  final String username;
 
   const UserCredentialEntity({
-    required this.username,
     required this.roleId,
+    required this.username,
   });
 
   @override
   List<Object?> get props => [
-        username,
         roleId,
+        username,
       ];
 }

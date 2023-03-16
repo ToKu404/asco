@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:asco/core/utils/exception.dart';
 import 'package:asco/src/data/datasources/helpers/ds_helper.dart';
 import 'package:asco/src/data/datasources/helpers/reference_helper.dart';
-import 'package:asco/src/data/models/assistance_models/assistance_model.dart';
+import 'package:asco/src/data/models/assistance_models/assistance_group_model.dart';
 import 'package:asco/src/data/models/profile_models/profile_model.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 
@@ -27,9 +27,9 @@ abstract class AssistanceGroupDataSource {
 }
 
 class AssistanceGroupDataSourceImpl implements AssistanceGroupDataSource {
-  final FirebaseFirestore firestore;
-
   late CollectionReference collectionReference;
+
+  final FirebaseFirestore firestore;
 
   AssistanceGroupDataSourceImpl({required this.firestore}) {
     collectionReference = firestore.collection('assistance_groups');
@@ -90,7 +90,7 @@ class AssistanceGroupDataSourceImpl implements AssistanceGroupDataSource {
                   : null,
             );
           } else {
-            throw FirestoreException('document is not exists');
+            throw FirestoreException('document is not exists.');
           }
         },
       );

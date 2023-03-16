@@ -4,7 +4,7 @@ import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/size_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/core/services/reusable_helper.dart';
-import 'package:asco/src/domain/entities/assistance_entities/assistance_entity.dart';
+import 'package:asco/src/domain/entities/assistance_entities/assistance_group_entity.dart';
 import 'package:asco/src/domain/entities/practicum_entities/practicum_entity.dart';
 import 'package:asco/src/presentations/features/admin/assistance_page/assistance_group_detail_page.dart';
 import 'package:asco/src/presentations/features/admin/assistance_page/create_assistance_page.dart';
