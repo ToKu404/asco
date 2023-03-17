@@ -95,7 +95,7 @@ class AssistanceGroupDataSourceImpl implements AssistanceGroupDataSource {
         },
       );
 
-      return Future.value(model);
+      return model;
     } catch (e) {
       throw FirestoreException(e.toString());
     }
@@ -118,9 +118,7 @@ class AssistanceGroupDataSourceImpl implements AssistanceGroupDataSource {
             AssistanceGroupModel.fromSnapshot(
               element,
               ReadHelper.isKeyExist(element, 'students')
-                  ? await ReferenceHelper.referenceProfiles(
-                      element['students'],
-                    )
+                  ? await ReferenceHelper.referenceProfiles(element['students'])
                   : <ProfileEntity>[],
               ReadHelper.isKeyExist(element, 'assistant')
                   ? ProfileModel.fromMap(
@@ -133,7 +131,7 @@ class AssistanceGroupDataSourceImpl implements AssistanceGroupDataSource {
           );
         }
 
-        return Future.value(listData);
+        return listData;
       });
     } catch (e) {
       throw FirestoreException(e.toString());
@@ -148,13 +146,11 @@ class AssistanceGroupDataSourceImpl implements AssistanceGroupDataSource {
     try {
       collectionReference
           .doc(assistantGroupUid)
-          .update(
-            {
-              "students": students
-                  .map((e) => firestore.collection('profiles').doc(e.uid))
-                  .toList()
-            },
-          )
+          .update({
+            'students': students
+                .map((e) => firestore.collection('profiles').doc(e.uid))
+                .toList()
+          })
           .then((_) => true)
           .catchError((_) => false);
 

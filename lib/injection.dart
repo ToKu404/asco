@@ -3,7 +3,7 @@ import 'package:get_it/get_it.dart';
 
 import 'package:asco/src/data/datasources/assistance_group_datasource.dart';
 import 'package:asco/src/data/datasources/auth_datasource.dart';
-import 'package:asco/src/data/datasources/classroom_datasources.dart';
+import 'package:asco/src/data/datasources/classroom_datasource.dart';
 import 'package:asco/src/data/datasources/meeting_datasources.dart';
 import 'package:asco/src/data/datasources/practicum_datasources.dart';
 import 'package:asco/src/data/datasources/profile_datasources.dart';

@@ -1,30 +1,32 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:asco/core/utils/exception.dart';
 import 'package:asco/src/data/datasources/profile_datasources.dart';
 import 'package:asco/src/data/models/meeting_models/detail_meeting_model.dart';
 import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 abstract class MeetingDataSources {
   Future<bool> create({
     required DetailMeetingModel meeting,
     required List<String> listStudentId,
   });
+
   Future<DetailMeetingModel> single({required String uid});
-  Future<List<DetailMeetingModel>> find({
-    String? classroomUid,
-  });
+
+  Future<List<DetailMeetingModel>> find({String? classroomUid});
 }
 
 class MeetingDataSourceImpl implements MeetingDataSources {
+  late CollectionReference collectionReference;
+
   final FirebaseFirestore firestore;
   final ProfileDataSource profileDataSource;
+
   MeetingDataSourceImpl({
     required this.firestore,
     required this.profileDataSource,
   }) {
     collectionReference = firestore.collection('meetings');
   }
-
-  late CollectionReference collectionReference;
 
   @override
   Future<bool> create({
@@ -34,22 +36,21 @@ class MeetingDataSourceImpl implements MeetingDataSources {
     try {
       final uid = collectionReference.doc().id;
 
-      //create meeting
       final data = DetailMeetingModel(
-        assistant1Uid: meeting.assistant1Uid,
-        meetingDate: meeting.meetingDate,
-        assistant2Uid: meeting.assistant2Uid,
-        classUid: meeting.classUid,
-        modulPath: meeting.modulPath,
-        topic: meeting.topic,
         uid: uid,
+        classUid: meeting.classUid,
+        assistant1Uid: meeting.assistant1Uid,
+        assistant2Uid: meeting.assistant2Uid,
+        meetingDate: meeting.meetingDate,
+        topic: meeting.topic,
+        modulPath: meeting.modulPath,
         attendances: listStudentId
-            .map((e) => AttendanceEntity(
-                  attendanceStatus: 3,
+            .map((id) => AttendanceEntity(
+                  studentUid: id,
                   attendanceTime: null,
-                  note: null,
+                  attendanceStatus: 3,
                   pointPlus: null,
-                  studentUid: e,
+                  note: null,
                 ))
             .toList(),
         // controlCard: {
@@ -57,26 +58,44 @@ class MeetingDataSourceImpl implements MeetingDataSources {
         //     k: const ControlCardEntity(assistance1: null, assistance2: null)
         // },
       );
+
       collectionReference.doc(uid).get().then((value) {
         if (!value.exists) {
-          collectionReference.doc(uid).set(
-                data.toDocument(),
-              );
+          collectionReference.doc(uid).set(data.toDocument());
         }
+
         return true;
-      }).catchError(
-        (error, stackTrace) => throw Exception(),
-      );
+      }).catchError((e) => throw FirestoreException(e.toString()));
+
       return false;
     } catch (e) {
-      throw Exception();
+      throw FirestoreException(e.toString());
+    }
+  }
+
+  @override
+  Future<DetailMeetingModel> single({required String uid}) async {
+    try {
+      final model = await collectionReference.doc(uid).get().then(
+        (documentSnapshot) {
+          if (documentSnapshot.exists) {
+            return DetailMeetingModel.fromSnapshot(documentSnapshot);
+          } else {
+            throw FirestoreException('document is not exists.');
+          }
+        },
+      );
+
+      return model;
+    } catch (e) {
+      throw FirestoreException(e.toString());
     }
   }
 
   @override
   Future<List<DetailMeetingModel>> find({String? classroomUid}) async {
     try {
-      Future<QuerySnapshot> snapshot = collectionReference.get();
+      var snapshot = collectionReference.get();
 
       if (classroomUid != null) {
         if (classroomUid.isNotEmpty) {
@@ -87,32 +106,15 @@ class MeetingDataSourceImpl implements MeetingDataSources {
         }
       }
 
-      //? all
       return await snapshot.then(
-        (value) =>
-            value.docs.map((e) => DetailMeetingModel.fromSnapshot(e)).toList(),
+        (value) {
+          return value.docs
+              .map((snapshot) => DetailMeetingModel.fromSnapshot(snapshot))
+              .toList();
+        },
       );
     } catch (e) {
-      throw Exception();
-    }
-  }
-
-  @override
-  Future<DetailMeetingModel> single({required String uid}) async {
-    try {
-      await collectionReference
-          .doc(uid)
-          .get()
-          .then((DocumentSnapshot documentSnapshot) {
-        if (documentSnapshot.exists) {
-          return DetailMeetingModel.fromSnapshot(documentSnapshot);
-        } else {
-          throw Exception();
-        }
-      });
-      throw Exception();
-    } catch (e) {
-      throw Exception();
+      throw FirestoreException(e.toString());
     }
   }
 }

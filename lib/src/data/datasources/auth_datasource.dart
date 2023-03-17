@@ -44,7 +44,7 @@ class AuthDataSourceImpl implements AuthDataSource {
             .catchError((error) => false);
       }
 
-      return Future.value(false);
+      return false;
     } catch (e) {
       throw FirestoreException(e.toString());
     }
@@ -92,7 +92,7 @@ class AuthDataSourceImpl implements AuthDataSource {
 
           pref.setUserData(credential);
 
-          return Future.value(credential);
+          return credential;
         } else {
           throw FirestoreException('password not match.');
         }
@@ -125,14 +125,12 @@ class AuthDataSourceImpl implements AuthDataSource {
             .where('username', isEqualTo: credential.username)
             .get();
 
-        if (snapshot.docs.isNotEmpty) {
-          return Future.value(credential);
-        }
+        if (snapshot.docs.isNotEmpty) return credential;
 
         throw FirestoreException('user not found');
       }
 
-      return Future.value(null);
+      return null;
     } catch (e) {
       throw PreferenceException(e.toString());
     }

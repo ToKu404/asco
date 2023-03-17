@@ -185,7 +185,7 @@ class _AssistanceGroupSectionState extends State<_AssistanceGroupSection> {
                             dataProvider.listData),
                       );
                     } catch (e) {
-                      print(e.toString());
+                      debugPrint(e.toString());
                     }
                   },
                   icon: const Icon(

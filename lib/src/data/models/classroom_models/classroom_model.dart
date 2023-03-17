@@ -1,91 +1,93 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ClassroomModel extends ClassroomEntity {
   const ClassroomModel({
-    super.startHour,
-    super.endHour,
-    super.meetingDay,
     super.uid,
     super.practicumUid,
-    super.endMinute,
-    super.startMinute,
     super.classCode,
     super.courseName,
+    super.meetingDay,
+    super.startHour,
+    super.endHour,
+    super.startMinute,
+    super.endMinute,
     super.students,
   });
 
   Map<String, dynamic> toDocument() {
     return {
-      "start_hour": startHour,
-      "end_hour": endHour,
-      "start_minute": startMinute,
-      "end_minute": endMinute,
-      "meeting_day": meetingDay,
       "uid": uid,
       "practicum_uid": practicumUid,
       "class_code": classCode,
       "course_name": courseName,
+      "meeting_day": meetingDay,
+      "start_hour": startHour,
+      "end_hour": endHour,
+      "start_minute": startMinute,
+      "end_minute": endMinute,
     };
   }
 
   ClassroomEntity toEntity() {
     return ClassroomEntity(
-      startHour: startHour,
-      endHour: endHour,
-      meetingDay: meetingDay,
       uid: uid,
-      startMinute: startMinute,
-      endMinute: endMinute,
       practicumUid: practicumUid,
       classCode: classCode,
       courseName: courseName,
+      meetingDay: meetingDay,
+      startHour: startHour,
+      endHour: endHour,
+      startMinute: startMinute,
+      endMinute: endMinute,
       students: students,
     );
   }
 
   factory ClassroomModel.fromSnapshot(
-      DocumentSnapshot documentSnapshot, List<ProfileEntity> users) {
+    DocumentSnapshot documentSnapshot,
+    List<ProfileEntity> users,
+  ) {
     return ClassroomModel(
-      endHour: documentSnapshot['end_hour'],
-      endMinute: documentSnapshot['end_minute'],
-      startHour: documentSnapshot['start_hour'],
-      startMinute: documentSnapshot['start_minute'],
-      meetingDay: documentSnapshot['meeting_day'],
       uid: documentSnapshot['uid'],
-      classCode: documentSnapshot['class_code'],
       practicumUid: documentSnapshot['practicum_uid'],
+      classCode: documentSnapshot['class_code'],
       courseName: documentSnapshot['course_name'],
+      meetingDay: documentSnapshot['meeting_day'],
+      startHour: documentSnapshot['start_hour'],
+      endHour: documentSnapshot['end_hour'],
+      startMinute: documentSnapshot['start_minute'],
+      endMinute: documentSnapshot['end_minute'],
       students: users,
     );
   }
 
   factory ClassroomModel.fromMap(Map<String, dynamic> documentSnapshot) {
     return ClassroomModel(
-      endHour: documentSnapshot['end_hour'],
-      endMinute: documentSnapshot['end_minute'],
-      startHour: documentSnapshot['start_hour'],
-      startMinute: documentSnapshot['start_minute'],
-      meetingDay: documentSnapshot['meeting_day'],
       uid: documentSnapshot['uid'],
       practicumUid: documentSnapshot['practicum_uid'],
       classCode: documentSnapshot['class_code'],
       courseName: documentSnapshot['course_name'],
+      meetingDay: documentSnapshot['meeting_day'],
+      startHour: documentSnapshot['start_hour'],
+      endHour: documentSnapshot['end_hour'],
+      startMinute: documentSnapshot['start_minute'],
+      endMinute: documentSnapshot['end_minute'],
     );
   }
 
   factory ClassroomModel.fromEntity(ClassroomEntity entity) {
     return ClassroomModel(
+      uid: entity.uid,
+      practicumUid: entity.practicumUid,
+      classCode: entity.classCode,
+      courseName: entity.courseName,
       startHour: entity.startHour,
       endHour: entity.endHour,
       startMinute: entity.startMinute,
       endMinute: entity.endMinute,
       meetingDay: entity.meetingDay,
-      uid: entity.uid,
-      practicumUid: entity.practicumUid,
-      classCode: entity.classCode,
-      courseName: entity.courseName,
       students: entity.students,
     );
   }
