@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:asco/core/utils/exception.dart';
-import 'package:asco/src/data/datasources/profile_datasources.dart';
+import 'package:asco/src/data/datasources/profile_datasource.dart';
 import 'package:asco/src/data/models/meeting_models/detail_meeting_model.dart';
 import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 

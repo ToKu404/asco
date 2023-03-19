@@ -32,7 +32,7 @@ class AuthPreferenceHelper {
   static const usernameKey = 'USER_NAME';
   static const userRoleKey = 'USER_ROLE';
 
-  /// For save user credential data
+  /// Save user credential data
   Future<bool> setUserData(UserCredentialModel user) async {
     final pref = await preferences;
 
@@ -50,7 +50,7 @@ class AuthPreferenceHelper {
     }
   }
 
-  /// For get use credential data
+  /// Get user credential data
   Future<UserCredentialModel?> getUser() async {
     final pref = await preferences;
 
@@ -66,7 +66,7 @@ class AuthPreferenceHelper {
     return null;
   }
 
-  /// For delete user credential data
+  /// Delete user credential data
   Future<bool> removeUserData() async {
     final pref = await preferences;
 

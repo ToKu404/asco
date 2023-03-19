@@ -9,6 +9,6 @@ class SelfProfile {
   SelfProfile({required this.repository});
 
   Future<Either<Failure, DetailProfileEntity>> execute() {
-    return repository.me();
+    return repository.self();
   }
 }

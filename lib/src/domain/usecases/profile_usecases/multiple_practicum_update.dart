@@ -10,6 +10,6 @@ class MultiplePracticumUpdate {
 
   Future<Either<Failure, bool>> execute(
       {required Map<String, Map<String, UserPracticumHelper>> data}) {
-    return repository.multiplePracticumUpdate(data: data);
+    return repository.updateMultiplePracticums(data: data);
   }
 }

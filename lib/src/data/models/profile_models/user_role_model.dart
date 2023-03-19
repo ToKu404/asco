@@ -1,36 +1,33 @@
 import 'package:asco/src/domain/entities/profile_entities/user_role_entity.dart';
 
 class UserRoleModel extends UserRoleEntity {
-  const UserRoleModel({
-    super.name,
-    super.id,
-  });
+  const UserRoleModel({super.id, super.name});
 
   Map<String, dynamic> toDocument() {
     return {
-      'name': name,
       'id': id,
+      'name': name,
     };
   }
 
   UserRoleEntity toEntity() {
     return UserRoleEntity(
-      name: name,
       id: id,
+      name: name,
     );
   }
 
   factory UserRoleModel.fromMap(Map<String, dynamic> documentSnapshot) {
     return UserRoleModel(
-      name: documentSnapshot['name'],
       id: documentSnapshot['id'],
+      name: documentSnapshot['name'],
     );
   }
 
   factory UserRoleModel.fromEntity(UserRoleEntity userRole) {
     return UserRoleModel(
-      name: userRole.name,
       id: userRole.id,
+      name: userRole.name,
     );
   }
 }

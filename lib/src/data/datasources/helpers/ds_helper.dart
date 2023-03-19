@@ -6,7 +6,7 @@ class UpdateHelper {
   Map<String, dynamic> get map => _map;
 
   void onUpdate(String key, dynamic value) {
-    if (value != null && value != '') {
+    if (key.isNotEmpty && value != null) {
       _map[key] = value;
     }
   }
