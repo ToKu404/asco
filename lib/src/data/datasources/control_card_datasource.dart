@@ -46,7 +46,7 @@ class ControlCardDataSourceImpl implements ControlCardDataSource {
   @override
   Future<ControlCardModel> single({required String uid}) async {
     try {
-      final model = await collectionReference.doc(uid).get().then(
+      return await collectionReference.doc(uid).get().then(
         (documentSnapshot) {
           if (documentSnapshot.exists) {
             return ControlCardModel.fromSnapshot(documentSnapshot);
@@ -55,8 +55,6 @@ class ControlCardDataSourceImpl implements ControlCardDataSource {
           }
         },
       );
-
-      return model;
     } catch (e) {
       throw FirestoreException(e.toString());
     }
@@ -68,13 +66,11 @@ class ControlCardDataSourceImpl implements ControlCardDataSource {
       final snapshot =
           collectionReference.where('student_id', isEqualTo: studentId).get();
 
-      final listData = await snapshot.then((value) {
-        return value.docs.map((snapshot) {
-          return ControlCardModel.fromSnapshot(snapshot);
-        }).toList();
+      return await snapshot.then((value) {
+        return value.docs
+            .map((snapshot) => ControlCardModel.fromSnapshot(snapshot))
+            .toList();
       });
-
-      return listData;
     } catch (e) {
       throw FirestoreException(e.toString());
     }

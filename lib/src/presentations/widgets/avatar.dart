@@ -1,4 +1,4 @@
-import 'package:asco/core/constants/asset_path.dart';
+import 'package:asco/core/helpers/asset_path.dart';
 import 'package:flutter/material.dart';
 
 class Avatar extends StatelessWidget {

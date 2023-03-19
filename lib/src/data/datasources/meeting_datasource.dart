@@ -76,7 +76,7 @@ class MeetingDataSourceImpl implements MeetingDataSource {
   @override
   Future<DetailMeetingModel> single({required String uid}) async {
     try {
-      final model = await collectionReference.doc(uid).get().then(
+      return await collectionReference.doc(uid).get().then(
         (documentSnapshot) {
           if (documentSnapshot.exists) {
             return DetailMeetingModel.fromSnapshot(documentSnapshot);
@@ -85,8 +85,6 @@ class MeetingDataSourceImpl implements MeetingDataSource {
           }
         },
       );
-
-      return model;
     } catch (e) {
       throw FirestoreException(e.toString());
     }
@@ -106,13 +104,11 @@ class MeetingDataSourceImpl implements MeetingDataSource {
         }
       }
 
-      return await snapshot.then(
-        (value) {
-          return value.docs
-              .map((snapshot) => DetailMeetingModel.fromSnapshot(snapshot))
-              .toList();
-        },
-      );
+      return await snapshot.then((value) {
+        return value.docs
+            .map((snapshot) => DetailMeetingModel.fromSnapshot(snapshot))
+            .toList();
+      });
     } catch (e) {
       throw FirestoreException(e.toString());
     }

@@ -12,7 +12,7 @@ class UpdatePracticumAssistant {
     required List<ProfileEntity> assistants,
     required String practicumUid,
   }) {
-    return repository.updateAssistant(
+    return repository.updateAssistants(
       assistants: assistants,
       practicumUid: practicumUid,
     );

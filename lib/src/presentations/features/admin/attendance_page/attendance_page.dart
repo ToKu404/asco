@@ -1,6 +1,6 @@
 import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/color_const.dart';
-import 'package:asco/core/constants/size_const.dart';
+import 'package:asco/core/helpers/app_size.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/presentations/features/admin/attendance_page/widgets/attendance_card.dart';
 import 'package:asco/src/presentations/providers/meeting_notifier.dart';

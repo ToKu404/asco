@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:asco/core/constants/app_name.dart';
-import 'package:asco/core/constants/asset_path.dart';
+import 'package:asco/core/constants/app_info.dart';
+import 'package:asco/core/helpers/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/src/presentations/features/initial/wrapper.dart';
 import 'package:flutter/material.dart';

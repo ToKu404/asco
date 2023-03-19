@@ -1,9 +1,9 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:asco/core/constants/asset_path.dart';
+import 'package:asco/core/helpers/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
-import 'package:asco/core/constants/size_const.dart';
+import 'package:asco/core/helpers/app_size.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/data/dummy_data.dart';
 import 'package:asco/src/presentations/features/menu/assistance/student/student_assistance_course_detail_page.dart';

@@ -1,4 +1,4 @@
-import 'package:asco/core/constants/app_name.dart';
+import 'package:asco/core/constants/app_info.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/src/presentations/features/initial/splash_page.dart';
 import 'package:asco/src/presentations/providers/assistances_notifier.dart';

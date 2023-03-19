@@ -71,7 +71,7 @@ class AssistanceGroupDataSourceImpl implements AssistanceGroupDataSource {
     String? assistant,
   }) async {
     try {
-      final model = await collectionReference.doc(uuid).get().then(
+      return await collectionReference.doc(uuid).get().then(
         (documentSnapshot) async {
           if (documentSnapshot.exists) {
             return AssistanceGroupModel.fromSnapshot(
@@ -94,8 +94,6 @@ class AssistanceGroupDataSourceImpl implements AssistanceGroupDataSource {
           }
         },
       );
-
-      return model;
     } catch (e) {
       throw FirestoreException(e.toString());
     }
@@ -153,7 +151,7 @@ class AssistanceGroupDataSourceImpl implements AssistanceGroupDataSource {
           })
           .then((_) => true)
           .catchError((_) => false);
-
+          
       return false;
     } catch (e) {
       throw FirestoreException(e.toString());

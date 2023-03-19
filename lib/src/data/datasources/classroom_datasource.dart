@@ -67,7 +67,7 @@ class ClassroomDataSourceImpl implements ClassroomDataSource {
   @override
   Future<ClassroomModel> single({required String uid}) async {
     try {
-      final model = await collectionReference.doc(uid).get().then(
+      return await collectionReference.doc(uid).get().then(
         (documentSnapshot) async {
           if (documentSnapshot.exists) {
             return ClassroomModel.fromSnapshot(
@@ -83,8 +83,6 @@ class ClassroomDataSourceImpl implements ClassroomDataSource {
           }
         },
       );
-
-      return model;
     } catch (e) {
       throw FirestoreException(e.toString());
     }

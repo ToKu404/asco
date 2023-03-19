@@ -5,6 +5,7 @@ class RoleHelper {
       1: 'Praktikan',
       2: 'Asisten',
     };
+
     return map[id];
   }
 
@@ -13,6 +14,7 @@ class RoleHelper {
       'Praktikan': 1,
       'Asisten': 2,
     };
+
     return map[name];
   }
 }
