@@ -4,7 +4,7 @@ import 'package:asco/src/data/datasources/profile_datasources.dart';
 import 'package:asco/src/data/models/meeting_models/detail_meeting_model.dart';
 import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 
-abstract class MeetingDataSources {
+abstract class MeetingDataSource {
   Future<bool> create({
     required DetailMeetingModel meeting,
     required List<String> listStudentId,
@@ -15,7 +15,7 @@ abstract class MeetingDataSources {
   Future<List<DetailMeetingModel>> find({String? classroomUid});
 }
 
-class MeetingDataSourceImpl implements MeetingDataSources {
+class MeetingDataSourceImpl implements MeetingDataSource {
   late CollectionReference collectionReference;
 
   final FirebaseFirestore firestore;

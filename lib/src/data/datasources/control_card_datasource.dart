@@ -10,12 +10,12 @@ abstract class ControlCardDataSource {
   Future<List<ControlCardModel>> find({String? studentId});
 }
 
-class ControlCardDataSourcesImpl implements ControlCardDataSource {
+class ControlCardDataSourceImpl implements ControlCardDataSource {
   late CollectionReference collectionReference;
 
   final FirebaseFirestore firestore;
 
-  ControlCardDataSourcesImpl({required this.firestore}) {
+  ControlCardDataSourceImpl({required this.firestore}) {
     collectionReference = firestore.collection('control_cards');
   }
 

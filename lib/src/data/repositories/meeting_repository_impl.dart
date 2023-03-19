@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:asco/core/utils/failure.dart';
-import 'package:asco/src/data/datasources/meeting_datasources.dart';
+import 'package:asco/src/data/datasources/meeting_datasource.dart';
 import 'package:asco/src/data/models/meeting_models/detail_meeting_model.dart';
 import 'package:asco/src/domain/entities/meeting_entities/detail_meeting_entity.dart';
 import 'package:asco/src/domain/repositories/meeting_repository.dart';
 
 class MeetingRepositoryImpl implements MeetingRepository {
-  final MeetingDataSources datasource;
+  final MeetingDataSource datasource;
 
   MeetingRepositoryImpl({required this.datasource});
 

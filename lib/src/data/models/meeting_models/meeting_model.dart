@@ -29,7 +29,7 @@ class MeetingModel extends MeetingEntity {
     return MeetingModel(
       uid: documentSnapshot['uid'],
       topic: documentSnapshot['topic'],
-      meetingDate: documentSnapshot['meeting_date'].toDate(),
+      meetingDate: (documentSnapshot['meeting_date'] as Timestamp).toDate(),
     );
   }
 
