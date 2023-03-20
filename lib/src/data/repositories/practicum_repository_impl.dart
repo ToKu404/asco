@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:asco/core/utils/exception.dart';
 import 'package:asco/core/utils/failure.dart';
 import 'package:asco/src/data/datasources/practicum_datasource.dart';
 import 'package:asco/src/data/models/practicum_models/practicum_model.dart';
@@ -21,7 +22,7 @@ class PracticumRepositoryImpl implements PracticumRepository {
       );
 
       return Right(result);
-    } catch (e) {
+    } on FirestoreException {
       return const Left(FirestoreFailure('failed to create data'));
     }
   }
@@ -32,7 +33,7 @@ class PracticumRepositoryImpl implements PracticumRepository {
       final result = await datasource.single(uid: uid);
 
       return Right(result);
-    } catch (e) {
+    } on FirestoreException {
       return const Left(FirestoreFailure('failed to get data'));
     }
   }
@@ -43,7 +44,7 @@ class PracticumRepositoryImpl implements PracticumRepository {
       final result = await datasource.find(query: query);
 
       return Right(result);
-    } catch (e) {
+    } on FirestoreException {
       return const Left(FirestoreFailure('failed to find data'));
     }
   }
@@ -60,7 +61,7 @@ class PracticumRepositoryImpl implements PracticumRepository {
       );
 
       return Right(result);
-    } catch (e) {
+    } on FirestoreException {
       return const Left(FirestoreFailure('failed to update data'));
     }
   }

@@ -1,16 +1,16 @@
 import 'package:asco/core/services/data_service.dart';
 import 'package:asco/core/states/request_state.dart';
-import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
+import 'package:asco/src/domain/entities/assistance_entities/assistance_group_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
-import 'package:asco/src/domain/usecases/classroom_usecases/classroom_usecases.dart';
+import 'package:asco/src/domain/usecases/assistance_usecases/assistance_usecases.dart';
 
-class ClassroomNotifier extends CrudDataService<ClassroomEntity> {
-  final CreateClassroom createUsecase;
-  final GetSingleClassroom getSingleDataUsecase;
-  final GetListClassroom getListDataUsecase;
-  final UpdateStudentClassroom updateStudentUsecase;
+class AssistanceNotifier extends CrudDataService<AssistanceGroupEntity> {
+  final CreateAssistanceGroup createUsecase;
+  final GetSingleAssistanceGroup getSingleDataUsecase;
+  final GetListAssistanceGroup getListDataUsecase;
+  final UpdateStudentAssistanceGroup updateStudentUsecase;
 
-  ClassroomNotifier({
+  AssistanceNotifier({
     required this.createUsecase,
     required this.getSingleDataUsecase,
     required this.getListDataUsecase,
@@ -19,16 +19,10 @@ class ClassroomNotifier extends CrudDataService<ClassroomEntity> {
     createState(['create', 'single', 'find', 'update_student']);
   }
 
-  Future<void> create({
-    required ClassroomEntity entity,
-    required String practicumUid,
-  }) async {
+  Future<void> create({required AssistanceGroupEntity entity}) async {
     updateState(state: RequestState.loading, key: 'create');
 
-    final result = await createUsecase.execute(
-      classroom: entity,
-      practicumUid: practicumUid,
-    );
+    final result = await createUsecase.execute(assistanceGroup: entity);
 
     result.fold(
       (l) {
@@ -42,10 +36,13 @@ class ClassroomNotifier extends CrudDataService<ClassroomEntity> {
     );
   }
 
-  Future<void> getDetail({required String uid}) async {
+  Future<void> getDetail({required String uuid, String? assistant}) async {
     updateState(state: RequestState.loading, key: 'single');
 
-    final result = await getSingleDataUsecase.execute(uid: uid);
+    final result = await getSingleDataUsecase.execute(
+      uuid: uuid,
+      assistant: assistant,
+    );
 
     result.fold(
       (l) {
@@ -61,7 +58,7 @@ class ClassroomNotifier extends CrudDataService<ClassroomEntity> {
     );
   }
 
-  Future<void> fetch({String? practicumUid}) async {
+  Future<void> fetch({required String practicumUid}) async {
     updateState(state: RequestState.loading, key: 'find');
 
     final result = await getListDataUsecase.execute(practicumUid: practicumUid);
@@ -81,13 +78,13 @@ class ClassroomNotifier extends CrudDataService<ClassroomEntity> {
   }
 
   Future<void> updateStudent({
-    required String classroomUid,
+    required String assistanceGroupUid,
     required List<ProfileEntity> students,
   }) async {
     updateState(state: RequestState.loading, key: 'update_student');
 
     final result = await updateStudentUsecase.execute(
-      classroomUid: classroomUid,
+      assistanceGroupUid: assistanceGroupUid,
       students: students,
     );
 

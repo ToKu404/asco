@@ -194,7 +194,7 @@ class ProfileDataSourceImpl implements ProfileDataSource {
         throw FirestoreException('document is empty');
       }
     } catch (e) {
-      throw Exception(e.toString());
+      throw PreferenceException(e.toString());
     }
   }
 

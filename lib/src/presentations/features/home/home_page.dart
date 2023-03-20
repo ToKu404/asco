@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
               : const AssistantProfilePage();
         } else if (_selectedIndex == 5) {
           SchedulerBinding.instance.addPostFrameCallback((_) {
-            context.read<AuthNotifier>().logOut();
+            context.read<AuthNotifier>().logout();
             showWelcomePage(context: context);
           });
           return const Scaffold(

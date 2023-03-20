@@ -1,17 +1,16 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:asco/core/constants/app_info.dart';
 import 'package:asco/core/constants/color_const.dart';
+import 'package:asco/injection.dart' as di;
 import 'package:asco/src/presentations/features/initial/splash_page.dart';
-import 'package:asco/src/presentations/providers/assistances_notifier.dart';
+import 'package:asco/src/presentations/providers/assistance_notifier.dart';
 import 'package:asco/src/presentations/providers/auth_notifier.dart';
 import 'package:asco/src/presentations/providers/classroom_notifier.dart';
 import 'package:asco/src/presentations/providers/meeting_notifier.dart';
 import 'package:asco/src/presentations/providers/practicum_notifier.dart';
 import 'package:asco/src/presentations/providers/profile_notifier.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:asco/injection.dart' as di;
-
-import 'package:provider/provider.dart';
 
 class AscoApp extends StatelessWidget {
   const AscoApp({super.key});
@@ -51,7 +50,7 @@ class AscoApp extends StatelessWidget {
         //   create: (_) => di.locator<AttendanceNotifier>(),
         // ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<AssistancesNotifier>(),
+          create: (_) => di.locator<AssistanceNotifier>(),
         ),
         // ChangeNotifierProvider(
         //   create: (_) => di.locator<UserPracticumNotifier>(),

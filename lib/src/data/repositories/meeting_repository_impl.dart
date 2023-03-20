@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:asco/core/utils/exception.dart';
 import 'package:asco/core/utils/failure.dart';
 import 'package:asco/src/data/datasources/meeting_datasource.dart';
 import 'package:asco/src/data/models/meeting_models/detail_meeting_model.dart';
@@ -22,7 +23,7 @@ class MeetingRepositoryImpl implements MeetingRepository {
       );
 
       return Right(result);
-    } catch (e) {
+    } on FirestoreException {
       return const Left(FirestoreFailure('failed to create data'));
     }
   }
@@ -35,7 +36,7 @@ class MeetingRepositoryImpl implements MeetingRepository {
       final result = await datasource.single(uid: uid);
 
       return Right(result);
-    } catch (e) {
+    } on FirestoreException {
       return const Left(FirestoreFailure('failed to get data'));
     }
   }
@@ -48,7 +49,7 @@ class MeetingRepositoryImpl implements MeetingRepository {
       final result = await datasource.find(classroomUid: classroomUid);
 
       return Right(result);
-    } catch (e) {
+    } on FirestoreException {
       return const Left(FirestoreFailure('failed to find data'));
     }
   }

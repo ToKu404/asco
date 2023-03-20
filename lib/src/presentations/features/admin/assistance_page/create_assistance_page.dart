@@ -3,7 +3,7 @@ import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/domain/entities/assistance_entities/assistance_group_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
-import 'package:asco/src/presentations/providers/assistances_notifier.dart';
+import 'package:asco/src/presentations/providers/assistance_notifier.dart';
 import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:asco/src/presentations/widgets/input_field/input_dropdown_field.dart';
 import 'package:asco/src/presentations/widgets/input_field/input_text_field.dart';
@@ -78,7 +78,7 @@ class _CreateAssistancePageState extends State<CreateAssistancePage> {
     final profileNotifier = context.watch<ProfileNotifier>();
     final listAssistant = profileNotifier.listData;
 
-    final notifier = context.watch<AssistancesNotifier>();
+    final notifier = context.watch<AssistanceNotifier>();
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       if (notifier.isSuccessState('create')) {
@@ -106,7 +106,7 @@ class _CreateAssistancePageState extends State<CreateAssistancePage> {
           IconButton(
             onPressed: () {
               FocusScope.of(context).unfocus();
-              final provider = context.read<AssistancesNotifier>();
+              final provider = context.read<AssistanceNotifier>();
 
               if (_formKey.currentState!.validate()) {
                 final assistantIndex = listAssistant.indexWhere(

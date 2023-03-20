@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:asco/core/utils/exception.dart';
 import 'package:asco/core/utils/failure.dart';
 import 'package:asco/src/data/datasources/profile_datasource.dart';
 import 'package:asco/src/data/models/profile_models/detail_profile_model.dart';
@@ -21,7 +22,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
       );
 
       return Right(result);
-    } catch (e) {
+    } on FirestoreException {
       return const Left(FirestoreFailure('failed to create data'));
     }
   }
@@ -36,7 +37,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
       );
 
       return Right(result);
-    } catch (e) {
+    } on FirestoreException {
       return const Left(FirestoreFailure('failed to update data'));
     }
   }
@@ -49,7 +50,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
       final result = await datasource.updateMultiplePracticums(data: data);
 
       return Right(result);
-    } catch (e) {
+    } on FirestoreException {
       return const Left(FirestoreFailure('failed to update multiple data'));
     }
   }
@@ -60,7 +61,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
       final result = await datasource.remove(uid: uid);
 
       return Right(result);
-    } catch (e) {
+    } on FirestoreException {
       return const Left(FirestoreFailure('failed to delete data'));
     }
   }
@@ -71,8 +72,10 @@ class ProfileRepositoryImpl implements ProfileRepository {
       final result = await datasource.self();
 
       return Right(result);
-    } catch (e) {
+    } on FirestoreException {
       return const Left(FirestoreFailure('failed to get data'));
+    } on PreferenceException {
+      return const Left(PreferenceFailure('failed to get data'));
     }
   }
 
@@ -84,7 +87,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
       final result = await datasource.single(uid: uid);
 
       return Right(result);
-    } catch (e) {
+    } on FirestoreException {
       return const Left(FirestoreFailure('failed to get data'));
     }
   }
@@ -97,7 +100,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
       final result = await datasource.multiple(multipleId: multipleId);
 
       return Right(result);
-    } catch (e) {
+    } on FirestoreException {
       return const Left(FirestoreFailure('failed to get multiple data'));
     }
   }
@@ -116,7 +119,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
       );
 
       return Right(result);
-    } catch (e) {
+    } on FirestoreException {
       return const Left(FirestoreFailure('failed to find data'));
     }
   }
