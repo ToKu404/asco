@@ -1,5 +1,5 @@
-import 'package:asco/src/domain/entities/score_entities/exam_result_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:asco/src/domain/entities/score_entities/exam_result_entity.dart';
 
 class ExamResultModel extends ExamResultEntity {
   const ExamResultModel({

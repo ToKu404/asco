@@ -71,7 +71,7 @@ class AssistanceGroupDataSourceImpl implements AssistanceGroupDataSource {
     String? assistant,
   }) async {
     try {
-      final model = await collectionReference.doc(uuid).get().then(
+      return await collectionReference.doc(uuid).get().then(
         (documentSnapshot) async {
           if (documentSnapshot.exists) {
             return AssistanceGroupModel.fromSnapshot(
@@ -94,8 +94,6 @@ class AssistanceGroupDataSourceImpl implements AssistanceGroupDataSource {
           }
         },
       );
-
-      return Future.value(model);
     } catch (e) {
       throw FirestoreException(e.toString());
     }
@@ -118,9 +116,7 @@ class AssistanceGroupDataSourceImpl implements AssistanceGroupDataSource {
             AssistanceGroupModel.fromSnapshot(
               element,
               ReadHelper.isKeyExist(element, 'students')
-                  ? await ReferenceHelper.referenceProfiles(
-                      element['students'],
-                    )
+                  ? await ReferenceHelper.referenceProfiles(element['students'])
                   : <ProfileEntity>[],
               ReadHelper.isKeyExist(element, 'assistant')
                   ? ProfileModel.fromMap(
@@ -133,7 +129,7 @@ class AssistanceGroupDataSourceImpl implements AssistanceGroupDataSource {
           );
         }
 
-        return Future.value(listData);
+        return listData;
       });
     } catch (e) {
       throw FirestoreException(e.toString());
@@ -148,16 +144,14 @@ class AssistanceGroupDataSourceImpl implements AssistanceGroupDataSource {
     try {
       collectionReference
           .doc(assistantGroupUid)
-          .update(
-            {
-              "students": students
-                  .map((e) => firestore.collection('profiles').doc(e.uid))
-                  .toList()
-            },
-          )
+          .update({
+            'students': students
+                .map((e) => firestore.collection('profiles').doc(e.uid))
+                .toList()
+          })
           .then((_) => true)
           .catchError((_) => false);
-
+          
       return false;
     } catch (e) {
       throw FirestoreException(e.toString());

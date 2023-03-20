@@ -19,7 +19,7 @@ class ProfileNotifier extends CrudDataService<DetailProfileEntity> {
   final UpdateProfile updateDataUsecase;
   final SelfProfile selfDataUsecase;
   final GetMultipleProfile getMultipleUsecase;
-  final MultiplePracticumUpdate multiplePracticumUpdateUsecase;
+  final UpdateMultiplePracticums multiplePracticumUpdateUsecase;
 
   ProfileNotifier({
     required this.createUsecase,
@@ -64,7 +64,7 @@ class ProfileNotifier extends CrudDataService<DetailProfileEntity> {
     updateState(state: RequestState.loading, key: 'find');
     try {
       final result = await getListDataUsecase.execute(
-          byRole: roleId, practicumUid: practicumUid);
+          roleId: roleId, practicumUid: practicumUid);
       result.fold((l) {
         updateState(state: RequestState.error, key: 'find');
         setErrorMessage(l.message);

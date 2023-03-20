@@ -1,7 +1,7 @@
+import 'package:dartz/dartz.dart';
 import 'package:asco/core/utils/failure.dart';
 import 'package:asco/src/domain/entities/meeting_entities/detail_meeting_entity.dart';
 import 'package:asco/src/domain/repositories/meeting_repository.dart';
-import 'package:dartz/dartz.dart';
 
 class CreateMeeting {
   final MeetingRepository repository;
@@ -9,11 +9,11 @@ class CreateMeeting {
   CreateMeeting({required this.repository});
 
   Future<Either<Failure, bool>> execute({
-    required DetailMeetingEntity entity,
+    required DetailMeetingEntity meeting,
     required List<String> listStudentId,
   }) {
     return repository.create(
-      meeting: entity,
+      meeting: meeting,
       listStudentId: listStudentId,
     );
   }

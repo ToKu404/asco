@@ -1,4 +1,4 @@
-import 'package:asco/core/constants/asset_path.dart';
+import 'package:asco/core/helpers/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/presentations/widgets/custom_badge.dart';

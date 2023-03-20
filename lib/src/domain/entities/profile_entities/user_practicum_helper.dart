@@ -4,14 +4,8 @@ class UserPracticumHelper extends Equatable {
   final String? classroomUid;
   final String? groupUid;
 
-  const UserPracticumHelper({
-    this.groupUid,
-    this.classroomUid,
-  });
+  const UserPracticumHelper({this.classroomUid, this.groupUid});
 
   @override
-  List<Object?> get props => [
-        classroomUid,
-        groupUid,
-      ];
+  List<Object?> get props => [classroomUid, groupUid];
 }

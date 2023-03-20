@@ -1,113 +1,111 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:asco/src/data/models/profile_models/user_practicum_model.dart';
 import 'package:asco/src/data/models/profile_models/user_role_model.dart';
 import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/user_practicum_entity.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DetailProfileModel extends DetailProfileEntity {
   const DetailProfileModel({
-    super.classOf,
-    super.fullName,
-    super.gender,
-    super.github,
-    super.username,
-    super.instagram,
-    super.nickName,
-    super.profilePhoto,
     super.uid,
+    super.username,
+    super.fullName,
+    super.nickName,
+    super.gender,
+    super.classOf,
+    super.github,
+    super.instagram,
+    super.profilePhoto,
     super.userRole,
     super.userPracticums,
   });
 
   Map<String, dynamic> toDocument() {
     return {
-      'class_of': classOf,
-      'full_name': fullName,
-      'gender': gender,
-      'github': github,
-      'username': username,
-      'instagram': instagram,
-      'nick_name': nickName,
-      'profile_photo': profilePhoto,
-      "user_practicums": (userPracticums != null)
-          ? {
-              for (var k in userPracticums!.keys)
-                k: UserPracticumModel.fromEntity(userPracticums![k]!)
-                    .toDocument()
-            }
-          : null,
       'uid': uid,
+      'username': username,
+      'full_name': fullName,
+      'nick_name': nickName,
+      'gender': gender,
+      'class_of': classOf,
+      'github': github,
+      'instagram': instagram,
+      'profile_photo': profilePhoto,
       if (userRole != null)
         'role': {
           'id': userRole!.id,
           'name': userRole!.name,
-        }
+        },
+      'user_practicums': (userPracticums != null)
+          ? {
+              for (var key in userPracticums!.keys)
+                key: UserPracticumModel.fromEntity(userPracticums![key]!)
+                    .toDocument()
+            }
+          : null,
     };
   }
 
   DetailProfileEntity toEntity() {
     return DetailProfileEntity(
-      classOf: classOf,
-      fullName: fullName,
-      gender: gender,
-      github: github,
-      username: username,
-      instagram: instagram,
-      nickName: nickName,
-      profilePhoto: profilePhoto,
       uid: uid,
+      username: username,
+      fullName: fullName,
+      nickName: nickName,
+      gender: gender,
+      classOf: classOf,
+      github: github,
+      instagram: instagram,
+      profilePhoto: profilePhoto,
       userRole: userRole,
       userPracticums: userPracticums,
     );
   }
 
-  factory DetailProfileModel.fromSnapshot(DocumentSnapshot documentSnapshot,
-      Map<String, UserPracticumEntity>? userPracticum) {
+  factory DetailProfileModel.fromSnapshot(
+    DocumentSnapshot documentSnapshot,
+    Map<String, UserPracticumEntity>? userPracticums,
+  ) {
     return DetailProfileModel(
-      classOf: documentSnapshot['class_of'],
-      fullName: documentSnapshot['full_name'],
-      gender: documentSnapshot['gender'],
-      github: documentSnapshot['github'],
-      username: documentSnapshot['username'],
-      instagram: documentSnapshot['instagram'],
-      nickName: documentSnapshot['nick_name'],
-      profilePhoto: documentSnapshot['profile_photo'],
       uid: documentSnapshot['uid'],
-      userRole: UserRoleModel.fromMap(
-        documentSnapshot.get('role'),
-      ),
-      userPracticums: userPracticum,
+      username: documentSnapshot['username'],
+      fullName: documentSnapshot['full_name'],
+      nickName: documentSnapshot['nick_name'],
+      gender: documentSnapshot['gender'],
+      classOf: documentSnapshot['class_of'],
+      github: documentSnapshot['github'],
+      instagram: documentSnapshot['instagram'],
+      profilePhoto: documentSnapshot['profile_photo'],
+      userRole: UserRoleModel.fromMap(documentSnapshot.get('role')),
+      userPracticums: userPracticums,
     );
   }
 
   factory DetailProfileModel.fromMap(Map<String, dynamic> documentSnapshot) {
     return DetailProfileModel(
-      classOf: documentSnapshot['class_of'],
-      fullName: documentSnapshot['full_name'],
-      gender: documentSnapshot['gender'],
-      github: documentSnapshot['github'],
-      username: documentSnapshot['username'],
-      instagram: documentSnapshot['instagram'],
-      nickName: documentSnapshot['nick_name'],
-      profilePhoto: documentSnapshot['profile_photo'],
       uid: documentSnapshot['uid'],
-      userRole: UserRoleModel.fromMap(
-        documentSnapshot['role'],
-      ),
+      username: documentSnapshot['username'],
+      fullName: documentSnapshot['full_name'],
+      nickName: documentSnapshot['nick_name'],
+      gender: documentSnapshot['gender'],
+      classOf: documentSnapshot['class_of'],
+      github: documentSnapshot['github'],
+      instagram: documentSnapshot['instagram'],
+      profilePhoto: documentSnapshot['profile_photo'],
+      userRole: UserRoleModel.fromMap(documentSnapshot['role']),
     );
   }
 
   factory DetailProfileModel.fromEntity(DetailProfileEntity userProfileEntity) {
     return DetailProfileModel(
-      classOf: userProfileEntity.classOf,
-      fullName: userProfileEntity.fullName,
-      gender: userProfileEntity.gender,
-      github: userProfileEntity.github,
-      username: userProfileEntity.username,
-      instagram: userProfileEntity.instagram,
-      nickName: userProfileEntity.nickName,
-      profilePhoto: userProfileEntity.profilePhoto,
       uid: userProfileEntity.uid,
+      username: userProfileEntity.username,
+      fullName: userProfileEntity.fullName,
+      nickName: userProfileEntity.nickName,
+      gender: userProfileEntity.gender,
+      classOf: userProfileEntity.classOf,
+      github: userProfileEntity.github,
+      instagram: userProfileEntity.instagram,
+      profilePhoto: userProfileEntity.profilePhoto,
       userRole: userProfileEntity.userRole,
       userPracticums: userProfileEntity.userPracticums,
     );

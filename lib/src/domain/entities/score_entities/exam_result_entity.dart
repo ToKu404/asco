@@ -1,5 +1,5 @@
-import 'package:asco/src/domain/entities/score_entities/score_entity.dart';
 import 'package:equatable/equatable.dart';
+import 'package:asco/src/domain/entities/score_entities/score_entity.dart';
 
 class ExamResultEntity extends Equatable {
   final String? uid;
@@ -14,8 +14,8 @@ class ExamResultEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        examUid,
         uid,
+        examUid,
         results,
       ];
 }

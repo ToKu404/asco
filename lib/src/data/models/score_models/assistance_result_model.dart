@@ -1,21 +1,21 @@
-import 'package:asco/src/domain/entities/score_entities/assistance_result_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:asco/src/domain/entities/score_entities/assistance_result_entity.dart';
 
 class AssistanceResultModel extends AssistanceResultEntity {
   const AssistanceResultModel({
     required super.uid,
+    required super.meetingUid,
     required super.courseUid,
     required super.groupUid,
-    required super.meetingUid,
     required super.results,
   });
 
   Map<String, dynamic> toDocument() {
     return {
       'uid': uid,
+      'meeting_uid': meetingUid,
       'course_uid': courseUid,
       'group_uid': groupUid,
-      'meeting_uid': meetingUid,
       'results': results,
     };
   }
@@ -23,9 +23,9 @@ class AssistanceResultModel extends AssistanceResultEntity {
   AssistanceResultEntity toEntity() {
     return AssistanceResultEntity(
       uid: uid,
+      meetingUid: meetingUid,
       courseUid: courseUid,
       groupUid: groupUid,
-      meetingUid: meetingUid,
       results: results,
     );
   }
@@ -34,9 +34,9 @@ class AssistanceResultModel extends AssistanceResultEntity {
       DocumentSnapshot documentSnapshot) {
     return AssistanceResultModel(
       uid: documentSnapshot['uid'],
+      meetingUid: documentSnapshot['meeting_uid'],
       courseUid: documentSnapshot['course_uid'],
       groupUid: documentSnapshot['group_uid'],
-      meetingUid: documentSnapshot['meeting_uid'],
       results: documentSnapshot['results'],
     );
   }
@@ -44,9 +44,9 @@ class AssistanceResultModel extends AssistanceResultEntity {
   factory AssistanceResultModel.fromEntity(AssistanceResultEntity entity) {
     return AssistanceResultModel(
       uid: entity.uid,
+      meetingUid: entity.meetingUid,
       courseUid: entity.courseUid,
       groupUid: entity.groupUid,
-      meetingUid: entity.meetingUid,
       results: entity.results,
     );
   }

@@ -1,5 +1,5 @@
-import 'package:asco/src/domain/entities/score_entities/recap_score_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:asco/src/domain/entities/score_entities/recap_score_entity.dart';
 
 class RecapScoreModel extends RecapScoreEntity {
   const RecapScoreModel({

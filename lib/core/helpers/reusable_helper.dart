@@ -121,24 +121,18 @@ class ReusableHelper {
       final data = <String, Map<String, UserPracticumHelper>>{};
 
       for (var profile in selectData) {
-        final uid = allData
-            .indexWhere((detailProfile) => profile.uid == detailProfile.uid);
+        final uid = allData.indexWhere((entity) => profile.uid == entity.uid);
 
         final practicumMap = <String, UserPracticumHelper>{};
 
         if (allData[uid].userPracticums != null) {
-          allData[uid].userPracticums!.entries.map(
-            (element) {
-              practicumMap[element.key] = UserPracticumHelper(
-                classroomUid: element.value.classroom != null
-                    ? element.value.classroom!.uid
-                    : null,
-                groupUid: element.value.group != null
-                    ? element.value.group!.uid
-                    : null,
-              );
-            },
-          );
+          allData[uid].userPracticums!.entries.map((e) {
+            practicumMap[e.key] = UserPracticumHelper(
+              classroomUid:
+                  e.value.classroom != null ? e.value.classroom!.uid : null,
+              groupUid: e.value.group != null ? e.value.group!.uid : null,
+            );
+          });
 
           final temp = UserPracticumHelper(
             classroomUid: classroomUid,
@@ -165,7 +159,7 @@ class ReusableHelper {
 
       return data;
     } catch (e) {
-      throw Exception();
+      throw Exception(e.toString());
     }
   }
 }

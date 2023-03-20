@@ -1,8 +1,8 @@
-import 'package:asco/core/constants/asset_path.dart';
+import 'package:asco/core/helpers/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
-import 'package:asco/core/constants/size_const.dart';
+import 'package:asco/core/helpers/app_size.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/core/services/reusable_helper.dart';
+import 'package:asco/core/helpers/reusable_helper.dart';
 import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
 import 'package:asco/src/presentations/providers/classroom_notifier.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';

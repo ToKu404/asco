@@ -9,8 +9,8 @@ class CreateAssistanceGroup {
   CreateAssistanceGroup({required this.repository});
 
   Future<Either<Failure, bool>> execute({
-    required AssistanceGroupEntity entity,
+    required AssistanceGroupEntity assistanceGroup,
   }) {
-    return repository.create(assistanceGroup: entity);
+    return repository.create(assistanceGroup: assistanceGroup);
   }
 }

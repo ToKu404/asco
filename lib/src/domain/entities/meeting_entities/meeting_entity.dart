@@ -1,5 +1,5 @@
-import 'package:asco/src/domain/entities/meeting_entities/detail_meeting_entity.dart';
 import 'package:equatable/equatable.dart';
+import 'package:asco/src/domain/entities/meeting_entities/detail_meeting_entity.dart';
 
 class MeetingEntity extends Equatable {
   final String? uid;
@@ -7,23 +7,23 @@ class MeetingEntity extends Equatable {
   final DateTime? meetingDate;
 
   const MeetingEntity({
-    this.meetingDate,
-    this.topic,
     this.uid,
+    this.topic,
+    this.meetingDate,
   });
 
   factory MeetingEntity.fromDetail(DetailMeetingEntity detail) {
     return MeetingEntity(
-      meetingDate: detail.meetingDate,
+      uid: detail.uid,
       topic: detail.topic,
-      uid: detail.uid
+      meetingDate: detail.meetingDate,
     );
   }
 
   @override
   List<Object?> get props => [
         uid,
-        meetingDate,
         topic,
+        meetingDate,
       ];
 }

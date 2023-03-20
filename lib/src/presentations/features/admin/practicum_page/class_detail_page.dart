@@ -1,9 +1,9 @@
 import 'package:asco/core/constants/app_route.dart';
-import 'package:asco/core/constants/asset_path.dart';
+import 'package:asco/core/helpers/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
-import 'package:asco/core/constants/size_const.dart';
+import 'package:asco/core/helpers/app_size.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/core/services/reusable_helper.dart';
+import 'package:asco/core/helpers/reusable_helper.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:asco/src/presentations/features/admin/practicum_page/class_student_page.dart';
 import 'package:asco/src/presentations/features/admin/practicum_page/create_practicum_page.dart';

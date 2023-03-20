@@ -3,10 +3,10 @@ import 'package:get_it/get_it.dart';
 
 import 'package:asco/src/data/datasources/assistance_group_datasource.dart';
 import 'package:asco/src/data/datasources/auth_datasource.dart';
-import 'package:asco/src/data/datasources/classroom_datasources.dart';
-import 'package:asco/src/data/datasources/meeting_datasources.dart';
-import 'package:asco/src/data/datasources/practicum_datasources.dart';
-import 'package:asco/src/data/datasources/profile_datasources.dart';
+import 'package:asco/src/data/datasources/classroom_datasource.dart';
+import 'package:asco/src/data/datasources/meeting_datasource.dart';
+import 'package:asco/src/data/datasources/practicum_datasource.dart';
+import 'package:asco/src/data/datasources/profile_datasource.dart';
 import 'package:asco/src/data/repositories/assistance_group_repository_impl.dart';
 import 'package:asco/src/data/repositories/auth_repository_impl.dart';
 import 'package:asco/src/data/repositories/classroom_repository_impl.dart';
@@ -159,7 +159,7 @@ void init() {
     ),
   );
   locator.registerLazySingleton(
-    () => Login(
+    () => LogIn(
       repository: locator(),
     ),
   );
@@ -215,7 +215,7 @@ void init() {
     ),
   );
   locator.registerLazySingleton(
-    () => MultiplePracticumUpdate(
+    () => UpdateMultiplePracticums(
       repository: locator(),
     ),
   );
@@ -324,7 +324,7 @@ void init() {
       firestore: locator(),
     ),
   );
-  locator.registerLazySingleton<MeetingDataSources>(
+  locator.registerLazySingleton<MeetingDataSource>(
     () => MeetingDataSourceImpl(
       firestore: locator(),
       profileDataSource: locator(),

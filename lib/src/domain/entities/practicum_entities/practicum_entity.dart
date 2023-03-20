@@ -1,5 +1,5 @@
-import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:equatable/equatable.dart';
+import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 
 class PracticumEntity extends Equatable {
   final String? uid;
@@ -9,19 +9,19 @@ class PracticumEntity extends Equatable {
   final List<ProfileEntity>? listAssistant;
 
   const PracticumEntity({
+    this.uid,
     this.badgePath,
     this.course,
     this.courseContractPath,
     this.listAssistant,
-    this.uid,
   });
 
   @override
   List<Object?> get props => [
+        uid,
         badgePath,
         course,
         courseContractPath,
         listAssistant,
-        uid,
       ];
 }
