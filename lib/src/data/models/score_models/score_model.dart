@@ -2,45 +2,45 @@ import 'package:asco/src/domain/entities/score_entities/score_entity.dart';
 
 class ScoreModel extends ScoreEntity {
   const ScoreModel({
-    required super.score,
     required super.studentId,
-    required super.note,
+    required super.score,
     required super.predicate,
+    required super.note,
   });
 
   Map<String, dynamic> toDocument() {
     return {
-      'score': score,
       'student_id': studentId,
-      'note': note,
+      'score': score,
       'predicate': predicate,
+      'note': note,
     };
   }
 
   ScoreEntity toEntity() {
     return ScoreEntity(
-      score: score,
       studentId: studentId,
-      note: note,
+      score: score,
       predicate: predicate,
+      note: note,
     );
   }
 
   factory ScoreModel.fromMap(Map<String, dynamic> documentSnapshot) {
     return ScoreModel(
-      score: documentSnapshot['score'],
       studentId: documentSnapshot['student_id'],
-      note: documentSnapshot['note'],
+      score: documentSnapshot['score'],
       predicate: documentSnapshot['predicate'],
+      note: documentSnapshot['note'],
     );
   }
 
   factory ScoreModel.fromEntity(ScoreEntity entity) {
     return ScoreModel(
-      score: entity.score,
       studentId: entity.studentId,
-      note: entity.note,
+      score: entity.score,
       predicate: entity.predicate,
+      note: entity.note,
     );
   }
 }

@@ -19,7 +19,7 @@ class ProfileNotifier extends CrudDataService<DetailProfileEntity> {
   final UpdateProfile updateDataUsecase;
   final SelfProfile selfDataUsecase;
   final GetMultipleProfile getMultipleUsecase;
-  final MultiplePracticumUpdate multiplePracticumUpdateUsecase;
+  final UpdateMultiplePracticums multiplePracticumUpdateUsecase;
 
   ProfileNotifier({
     required this.createUsecase,

@@ -1,5 +1,5 @@
-import 'package:asco/src/domain/entities/score_entities/score_entity.dart';
 import 'package:equatable/equatable.dart';
+import 'package:asco/src/domain/entities/score_entities/score_entity.dart';
 
 class AssistanceResultEntity extends Equatable {
   final String? uid;
@@ -10,17 +10,17 @@ class AssistanceResultEntity extends Equatable {
 
   const AssistanceResultEntity({
     this.uid,
+    this.meetingUid,
     this.courseUid,
     this.groupUid,
-    this.meetingUid,
     this.results,
   });
 
   @override
   List<Object?> get props => [
-        courseUid,
         uid,
         meetingUid,
+        courseUid,
         groupUid,
         results,
       ];

@@ -159,7 +159,7 @@ void init() {
     ),
   );
   locator.registerLazySingleton(
-    () => Login(
+    () => LogIn(
       repository: locator(),
     ),
   );
@@ -215,7 +215,7 @@ void init() {
     ),
   );
   locator.registerLazySingleton(
-    () => MultiplePracticumUpdate(
+    () => UpdateMultiplePracticums(
       repository: locator(),
     ),
   );

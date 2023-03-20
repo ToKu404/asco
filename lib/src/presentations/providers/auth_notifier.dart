@@ -10,7 +10,7 @@ import 'package:asco/src/domain/usecases/auth_usecases/remove_user.dart';
 
 class AuthNotifier extends CrudDataService<UserCredentialEntity> {
   final CreateUser createUsecase;
-  final Login loginUsecase;
+  final LogIn loginUsecase;
   final LogOut logoutUsecase;
   final GetUser singleUsecase;
   final RemoveUser removeUserUsecase;

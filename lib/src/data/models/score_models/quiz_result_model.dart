@@ -1,21 +1,21 @@
-import 'package:asco/src/domain/entities/score_entities/quiz_result_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:asco/src/domain/entities/score_entities/quiz_result_entity.dart';
 
 class QuizResultModel extends QuizResultEntity {
   const QuizResultModel({
     required super.uid,
+    required super.meetingUid,
     required super.courseUid,
     required super.maxPoint,
-    required super.meetingUid,
     required super.results,
   });
 
   Map<String, dynamic> toDocument() {
     return {
       'uid': uid,
+      'meeting_uid': meetingUid,
       'course_uid': courseUid,
       'max_point': maxPoint,
-      'meeting_uid': meetingUid,
       'results': results,
     };
   }
@@ -23,9 +23,9 @@ class QuizResultModel extends QuizResultEntity {
   QuizResultEntity toEntity() {
     return QuizResultEntity(
       uid: uid,
+      meetingUid: meetingUid,
       courseUid: courseUid,
       maxPoint: maxPoint,
-      meetingUid: meetingUid,
       results: results,
     );
   }
@@ -33,9 +33,9 @@ class QuizResultModel extends QuizResultEntity {
   factory QuizResultModel.fromSnapshot(DocumentSnapshot documentSnapshot) {
     return QuizResultModel(
       uid: documentSnapshot['uid'],
+      meetingUid: documentSnapshot['meeting_uid'],
       courseUid: documentSnapshot['course_uid'],
       maxPoint: documentSnapshot['max_point'],
-      meetingUid: documentSnapshot['meeting_uid'],
       results: documentSnapshot['results'],
     );
   }
@@ -43,9 +43,9 @@ class QuizResultModel extends QuizResultEntity {
   factory QuizResultModel.fromEntity(QuizResultEntity entity) {
     return QuizResultModel(
       uid: entity.uid,
+      meetingUid: entity.meetingUid,
       courseUid: entity.courseUid,
       maxPoint: entity.maxPoint,
-      meetingUid: entity.meetingUid,
       results: entity.results,
     );
   }

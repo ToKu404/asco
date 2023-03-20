@@ -3,21 +3,21 @@ import 'package:equatable/equatable.dart';
 class ScoreEntity extends Equatable {
   final String? studentId;
   final double? score;
-  final String? note;
   final String? predicate;
+  final String? note;
 
   const ScoreEntity({
-    this.score,
     this.studentId,
-    this.note,
+    this.score,
     this.predicate,
+    this.note,
   });
 
   @override
   List<Object?> get props => [
-        score,
         studentId,
-        note,
+        score,
         predicate,
+        note,
       ];
 }

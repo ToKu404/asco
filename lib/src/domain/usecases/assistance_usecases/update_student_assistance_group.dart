@@ -9,12 +9,12 @@ class UpdateStudentAssistanceGroup {
   UpdateStudentAssistanceGroup({required this.repository});
 
   Future<Either<Failure, bool>> execute({
-    required List<ProfileEntity> students,
     required String assistanceGroupUid,
+    required List<ProfileEntity> students,
   }) {
     return repository.updateStudents(
-      students: students,
       assistantGroupUid: assistanceGroupUid,
+      students: students,
     );
   }
 }

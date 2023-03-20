@@ -1,5 +1,5 @@
-import 'package:asco/src/domain/entities/score_entities/score_entity.dart';
 import 'package:equatable/equatable.dart';
+import 'package:asco/src/domain/entities/score_entities/score_entity.dart';
 
 class QuizResultEntity extends Equatable {
   final String? uid;
@@ -10,17 +10,17 @@ class QuizResultEntity extends Equatable {
 
   const QuizResultEntity({
     this.uid,
+    this.meetingUid,
     this.courseUid,
     this.maxPoint,
-    this.meetingUid,
     this.results,
   });
 
   @override
   List<Object?> get props => [
-        courseUid,
         uid,
         meetingUid,
+        courseUid,
         maxPoint,
         results,
       ];
