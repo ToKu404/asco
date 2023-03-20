@@ -100,7 +100,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
           );
         } else if (_selectedIndex == 5) {
           SchedulerBinding.instance.addPostFrameCallback((_) {
-            userNotifier.logOut();
+            userNotifier.logout();
             showWelcomePage(context: context);
           });
           return const Scaffold(

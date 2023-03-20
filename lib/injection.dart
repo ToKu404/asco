@@ -1,60 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
-
-import 'package:asco/src/data/datasources/assistance_group_datasource.dart';
-import 'package:asco/src/data/datasources/auth_datasource.dart';
-import 'package:asco/src/data/datasources/classroom_datasource.dart';
-import 'package:asco/src/data/datasources/meeting_datasource.dart';
-import 'package:asco/src/data/datasources/practicum_datasource.dart';
-import 'package:asco/src/data/datasources/profile_datasource.dart';
-import 'package:asco/src/data/repositories/assistance_group_repository_impl.dart';
-import 'package:asco/src/data/repositories/auth_repository_impl.dart';
-import 'package:asco/src/data/repositories/classroom_repository_impl.dart';
-import 'package:asco/src/data/repositories/meeting_repository_impl.dart';
-import 'package:asco/src/data/repositories/practicum_repository_impl.dart';
-import 'package:asco/src/data/repositories/profile_repository_impl.dart';
-import 'package:asco/src/domain/repositories/assistance_repository.dart';
-import 'package:asco/src/domain/repositories/auth_repository.dart';
-import 'package:asco/src/domain/repositories/classroom_repository.dart';
-import 'package:asco/src/domain/repositories/meeting_repository.dart';
-import 'package:asco/src/domain/repositories/practicum_repository.dart';
-import 'package:asco/src/domain/repositories/profile_repository.dart';
-import 'package:asco/src/domain/usecases/assistance_usecases/create_assistance_group.dart';
-import 'package:asco/src/domain/usecases/assistance_usecases/get_list_assistance_group.dart';
-import 'package:asco/src/domain/usecases/assistance_usecases/get_single_assistance_group.dart';
-import 'package:asco/src/domain/usecases/assistance_usecases/update_student_assistance_group.dart';
-import 'package:asco/src/domain/usecases/auth_usecases/create_user.dart';
-import 'package:asco/src/domain/usecases/auth_usecases/get_user.dart';
-import 'package:asco/src/domain/usecases/auth_usecases/login.dart';
-import 'package:asco/src/domain/usecases/auth_usecases/logout.dart';
-import 'package:asco/src/domain/usecases/auth_usecases/remove_user.dart';
-import 'package:asco/src/domain/usecases/classroom_usecases/create_classroom.dart';
-import 'package:asco/src/domain/usecases/classroom_usecases/get_list_classroom.dart';
-import 'package:asco/src/domain/usecases/classroom_usecases/get_single_classroom.dart';
-import 'package:asco/src/domain/usecases/classroom_usecases/update_student_classroom.dart';
-import 'package:asco/src/domain/usecases/meeting_usecases/create_meeting.dart';
-import 'package:asco/src/domain/usecases/meeting_usecases/get_list_meeting.dart';
-import 'package:asco/src/domain/usecases/meeting_usecases/get_single_meeting.dart';
-import 'package:asco/src/domain/usecases/practicum_usecases/create_practicum.dart';
-import 'package:asco/src/domain/usecases/practicum_usecases/get_list_practicum.dart';
-import 'package:asco/src/domain/usecases/practicum_usecases/get_single_practicum.dart';
-import 'package:asco/src/domain/usecases/practicum_usecases/update_practicum_assistant.dart';
-import 'package:asco/src/domain/usecases/profile_usecases/create_profile.dart';
-import 'package:asco/src/domain/usecases/profile_usecases/get_list_profile.dart';
-import 'package:asco/src/domain/usecases/profile_usecases/get_multiple_profile.dart';
-import 'package:asco/src/domain/usecases/profile_usecases/get_single_profile.dart';
-import 'package:asco/src/domain/usecases/profile_usecases/multiple_practicum_update.dart';
-import 'package:asco/src/domain/usecases/profile_usecases/remove_profile.dart';
-import 'package:asco/src/domain/usecases/profile_usecases/self_profile.dart';
-import 'package:asco/src/domain/usecases/profile_usecases/update_profile.dart';
+import 'package:asco/core/services/preference_service.dart';
+import 'package:asco/src/data/datasources/datasources.dart';
+import 'package:asco/src/data/repositories/repositories.dart';
+import 'package:asco/src/domain/repositories/repositories.dart';
+import 'package:asco/src/domain/usecases/usecases.dart';
 import 'package:asco/src/presentations/providers/assistance_notifier.dart';
 import 'package:asco/src/presentations/providers/auth_notifier.dart';
 import 'package:asco/src/presentations/providers/classroom_notifier.dart';
 import 'package:asco/src/presentations/providers/meeting_notifier.dart';
 import 'package:asco/src/presentations/providers/practicum_notifier.dart';
 import 'package:asco/src/presentations/providers/profile_notifier.dart';
-
-import 'core/services/preference_service.dart';
 
 final locator = GetIt.instance;
 
@@ -79,7 +35,7 @@ void init() {
       updateDataUsecase: locator(),
       selfDataUsecase: locator(),
       getMultipleUsecase: locator(),
-      multiplePracticumUpdateUsecase: locator(),
+      updateMultiplePracticumsUsecase: locator(),
     ),
   );
 
