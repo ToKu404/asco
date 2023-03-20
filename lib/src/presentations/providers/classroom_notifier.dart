@@ -27,7 +27,7 @@ class ClassroomNotifier extends CrudDataService<ClassroomEntity> {
     updateState(state: RequestState.loading, key: 'create');
     try {
       final result = await createUsecase.execute(
-        entity: entity,
+        classroom: entity,
         practicumUid: practicumUid,
       );
       result.fold((l) {

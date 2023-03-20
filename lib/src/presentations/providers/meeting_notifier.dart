@@ -26,7 +26,7 @@ class MeetingNotifier extends CrudDataService<DetailMeetingEntity> {
     updateState(state: RequestState.loading, key: 'create');
     try {
       final result = await createUsecase.execute(
-        entity: entity,
+        meeting: entity,
         listStudentId: listStudentId,
       );
       result.fold((l) {

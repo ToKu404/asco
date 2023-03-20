@@ -45,7 +45,7 @@ class ProfileNotifier extends CrudDataService<DetailProfileEntity> {
     updateState(state: RequestState.loading, key: 'create');
     notifyListeners();
     try {
-      final result = await createUsecase.execute(userEntity: entity);
+      final result = await createUsecase.execute(userProfileEntity: entity);
       result.fold((l) {
         updateState(state: RequestState.error, key: 'create');
         setErrorMessage(l.message);

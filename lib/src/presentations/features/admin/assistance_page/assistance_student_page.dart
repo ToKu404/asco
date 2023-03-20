@@ -5,7 +5,7 @@ import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/core/helpers/reusable_helper.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:asco/src/presentations/features/admin/providers/asset_select_provider.dart';
-import 'package:asco/src/presentations/providers/assistances_notifier.dart';
+import 'package:asco/src/presentations/providers/assistance_notifier.dart';
 import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -71,7 +71,7 @@ class _AdminAssistanceStudentPageState
 
   @override
   Widget build(BuildContext context) {
-    final notifier = context.watch<AssistancesNotifier>();
+    final notifier = context.watch<AssistanceNotifier>();
     final profileNotifier = context.watch<ProfileNotifier>();
     // final userPracticumNotifier = context.watch<UserPracticumNotifier>();
 

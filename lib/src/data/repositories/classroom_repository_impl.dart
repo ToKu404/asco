@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:asco/core/utils/exception.dart';
 import 'package:asco/core/utils/failure.dart';
 import 'package:asco/src/data/datasources/classroom_datasource.dart';
 import 'package:asco/src/data/models/classroom_models/classroom_model.dart';
@@ -23,7 +24,7 @@ class ClassroomRepositoryImpl implements ClassroomRepository {
       );
 
       return Right(result);
-    } catch (e) {
+    } on FirestoreException {
       return const Left(FirestoreFailure('failed to create data'));
     }
   }
@@ -34,7 +35,7 @@ class ClassroomRepositoryImpl implements ClassroomRepository {
       final result = await datasource.single(uid: uid);
 
       return Right(result);
-    } catch (e) {
+    } on FirestoreException {
       return const Left(FirestoreFailure('failed to get data'));
     }
   }
@@ -47,7 +48,7 @@ class ClassroomRepositoryImpl implements ClassroomRepository {
       final result = await datasource.find(practicumUid: practicumUid);
 
       return Right(result);
-    } catch (e) {
+    } on FirestoreException {
       return const Left(FirestoreFailure('failed to find data'));
     }
   }
@@ -64,7 +65,7 @@ class ClassroomRepositoryImpl implements ClassroomRepository {
       );
 
       return Right(result);
-    } catch (e) {
+    } on FirestoreException {
       return const Left(FirestoreFailure('failed to update data'));
     }
   }

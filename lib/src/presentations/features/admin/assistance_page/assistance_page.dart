@@ -8,7 +8,7 @@ import 'package:asco/src/domain/entities/assistance_entities/assistance_group_en
 import 'package:asco/src/domain/entities/practicum_entities/practicum_entity.dart';
 import 'package:asco/src/presentations/features/admin/assistance_page/assistance_group_detail_page.dart';
 import 'package:asco/src/presentations/features/admin/assistance_page/create_assistance_page.dart';
-import 'package:asco/src/presentations/providers/assistances_notifier.dart';
+import 'package:asco/src/presentations/providers/assistance_notifier.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -129,14 +129,14 @@ class _AssistanceGroupSectionState extends State<_AssistanceGroupSection> {
   void initState() {
     super.initState();
     Future.microtask(() {
-      Provider.of<AssistancesNotifier>(context, listen: false)
+      Provider.of<AssistanceNotifier>(context, listen: false)
           .fetch(practicumUid: widget.practicumUid);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final dataProvider = context.watch<AssistancesNotifier>();
+    final dataProvider = context.watch<AssistanceNotifier>();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
