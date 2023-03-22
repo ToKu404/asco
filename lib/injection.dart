@@ -5,12 +5,7 @@ import 'package:asco/src/data/datasources/datasources.dart';
 import 'package:asco/src/data/repositories/repositories.dart';
 import 'package:asco/src/domain/repositories/repositories.dart';
 import 'package:asco/src/domain/usecases/usecases.dart';
-import 'package:asco/src/presentations/providers/assistance_notifier.dart';
-import 'package:asco/src/presentations/providers/auth_notifier.dart';
-import 'package:asco/src/presentations/providers/classroom_notifier.dart';
-import 'package:asco/src/presentations/providers/meeting_notifier.dart';
-import 'package:asco/src/presentations/providers/practicum_notifier.dart';
-import 'package:asco/src/presentations/providers/profile_notifier.dart';
+import 'package:asco/src/presentations/providers/providers.dart';
 
 final locator = GetIt.instance;
 

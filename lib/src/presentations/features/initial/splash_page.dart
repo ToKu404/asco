@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'package:asco/core/constants/app_info.dart';
-import 'package:asco/core/helpers/asset_path.dart';
-import 'package:asco/core/constants/color_const.dart';
-import 'package:asco/src/presentations/features/initial/wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:asco/core/constants/app_info.dart';
+import 'package:asco/core/constants/color_const.dart';
+import 'package:asco/core/helpers/asset_path.dart';
+import 'package:asco/src/presentations/features/initial/wrapper.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -16,12 +16,10 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   @override
   void didChangeDependencies() {
-    // Will change page after two second
+    // Will change page after three second
     super.didChangeDependencies();
-    Timer(const Duration(seconds: 5), () {
-      if (mounted) {
-        showWrapper(context: context);
-      }
+    Timer(const Duration(seconds: 3), () {
+      if (mounted) showWrapper(context: context);
     });
   }
 
@@ -30,7 +28,7 @@ class _SplashPageState extends State<SplashPage> {
     return Scaffold(
       body: SafeArea(
         child: Stack(
-          children: [
+          children: <Widget>[
             Positioned.fill(
               child: Container(
                 color: Palette.purple80,
@@ -57,7 +55,7 @@ class _SplashPageState extends State<SplashPage> {
               alignment: Alignment.center,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+                children: <Widget>[
                   SizedBox(
                     height: 116,
                     width: 116,
@@ -75,10 +73,10 @@ class _SplashPageState extends State<SplashPage> {
                       fontFamily: 'OpenSans',
                       color: Palette.white,
                     ),
-                  )
+                  ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
