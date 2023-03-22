@@ -104,10 +104,10 @@ class WelcomePage extends StatelessWidget {
                       onPressed: () {
                         showGeneralDialog(
                           context: context,
+                          barrierLabel: 'login',
                           barrierDismissible: true,
-                          transitionDuration: const Duration(milliseconds: 400),
-                          transitionBuilder:
-                              (context, animation, secondaryAnimation, child) {
+                          transitionDuration: const Duration(milliseconds: 500),
+                          transitionBuilder: (context, anim1, anim2, child) {
                             final tween = Tween<Offset>(
                               begin: const Offset(0, -1),
                               end: Offset.zero,
@@ -116,28 +116,32 @@ class WelcomePage extends StatelessWidget {
                             return SlideTransition(
                               position: tween.animate(
                                 CurvedAnimation(
-                                  parent: animation,
+                                  parent: anim1,
                                   curve: Curves.easeInOut,
                                 ),
                               ),
                               child: child,
                             );
                           },
-                          barrierLabel: 'Masuk',
                           pageBuilder: (_, __, ___) => const LoginModal(),
                         ).then((value) {
-                          final isError = value == null ? false : value as bool;
+                          if (value != null) {
+                            Future.delayed(
+                              const Duration(milliseconds: 500),
+                              () {
+                                final message = value as String;
 
-                          if (isError) {
-                            final snackbar = SnackBarUtils.createSnackBar(
-                              title: 'Login Gagal!',
-                              message: 'Username atau password salah.',
-                              type: ContentType.failure,
+                                final snackbar = SnackBarUtils.createSnackBar(
+                                  title: 'Login Gagal!',
+                                  message: message,
+                                  type: ContentType.failure,
+                                );
+
+                                ScaffoldMessenger.of(context)
+                                  ..hideCurrentSnackBar()
+                                  ..showSnackBar(snackbar);
+                              },
                             );
-
-                            ScaffoldMessenger.of(context)
-                              ..hideCurrentSnackBar()
-                              ..showSnackBar(snackbar);
                           }
                         });
                       },

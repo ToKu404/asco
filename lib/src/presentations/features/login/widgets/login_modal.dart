@@ -59,6 +59,7 @@ class LoginModal extends StatelessWidget {
                   child: InkWell(
                     onTap: () {
                       context.read<AuthNotifier>().reset();
+
                       Navigator.pop(context);
                     },
                     child: const CircleAvatar(
@@ -131,9 +132,11 @@ class _SignInFormState extends State<_SignInForm> {
 
           isLoadingStart = false;
         }).then((value) {
-          provider.reset();
+          final message = provider.message;
 
-          Navigator.pop(context, true);
+          context.read<AuthNotifier>().reset();
+          
+          Navigator.pop(context, message);
         });
       } else if (provider.isLoadingState('login')) {
         isLoadingStart = true;
@@ -159,7 +162,7 @@ class _SignInFormState extends State<_SignInForm> {
             }
           }
 
-          provider.reset();
+          context.read<AuthNotifier>().reset();
         });
       }
     });

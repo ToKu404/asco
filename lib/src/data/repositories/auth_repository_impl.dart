@@ -51,7 +51,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
       return Right(result);
     } on FirestoreException {
-      return const Left(FirestoreFailure('login failed'));
+      return const Left(FirestoreFailure('Username atau password salah.'));
     } on PreferenceException {
       return const Left(PreferenceFailure('failed to save user credential'));
     }
