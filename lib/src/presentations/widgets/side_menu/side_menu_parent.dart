@@ -1,18 +1,19 @@
 import 'dart:math';
-import 'package:asco/core/helpers/asset_path.dart';
-import 'package:asco/core/constants/color_const.dart';
-import 'package:asco/core/helpers/app_size.dart';
-import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/src/presentations/features/menu/main_menu_page.dart';
-import 'package:asco/src/presentations/widgets/side_menu/side_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:asco/core/constants/color_const.dart';
+import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/core/helpers/app_size.dart';
+import 'package:asco/core/helpers/asset_path.dart';
+import 'package:asco/src/presentations/features/menu/main_menu_page.dart';
+import 'package:asco/src/presentations/widgets/side_menu/side_menu.dart';
 
 class SideMenuParent extends StatefulWidget {
   final Widget body;
-  final Function(int)? onSelect;
+  final ValueChanged<int>? onSelect;
   final bool isMainMenu;
   final bool isShowBottomNav;
+
   const SideMenuParent({
     super.key,
     required this.body,
@@ -213,7 +214,7 @@ class _SideMenuParentState extends State<SideMenuParent>
                                       children: [
                                         TabIcon(
                                           isActive: selectValue == 0,
-                                          onPress: () {
+                                          onTap: () {
                                             widget.onSelect!(0);
                                             _selectedIndex.value = 0;
                                           },
@@ -224,7 +225,7 @@ class _SideMenuParentState extends State<SideMenuParent>
                                         ),
                                         TabIcon(
                                           isActive: selectValue == 1,
-                                          onPress: () {
+                                          onTap: () {
                                             widget.onSelect!(1);
                                             _selectedIndex.value = 1;
                                           },
@@ -235,7 +236,7 @@ class _SideMenuParentState extends State<SideMenuParent>
                                         ),
                                         TabIcon(
                                           isActive: selectValue == 2,
-                                          onPress: () {
+                                          onTap: () {
                                             widget.onSelect!(2);
                                             _selectedIndex.value = 2;
                                           },
@@ -246,7 +247,7 @@ class _SideMenuParentState extends State<SideMenuParent>
                                         ),
                                         TabIcon(
                                           isActive: selectValue == 3,
-                                          onPress: () {
+                                          onTap: () {
                                             widget.onSelect!(3);
                                             _selectedIndex.value = 3;
                                           },
@@ -257,7 +258,7 @@ class _SideMenuParentState extends State<SideMenuParent>
                                         ),
                                         TabIcon(
                                           isActive: selectValue == 4,
-                                          onPress: () {
+                                          onTap: () {
                                             widget.onSelect!(4);
                                             _selectedIndex.value = 4;
                                           },
