@@ -118,12 +118,14 @@ class ProfileDataSourceImpl implements ProfileDataSource {
         final map = {
           for (var userPracticumUid in data[userUid]!.keys)
             userPracticumUid: {
-              'classroom': firestore
-                  .collection('classrooms')
-                  .doc(data[userUid]![userPracticumUid]!.classroomUid),
-              'group': firestore
-                  .collection('assistance_groups')
-                  .doc(data[userUid]![userPracticumUid]!.groupUid),
+              if (data[userUid]![userPracticumUid]!.classroomUid != null)
+                'classroom': firestore
+                    .collection('classrooms')
+                    .doc(data[userUid]![userPracticumUid]!.classroomUid),
+              if (data[userUid]![userPracticumUid]!.groupUid != null)
+                'group': firestore
+                    .collection('assistance_groups')
+                    .doc(data[userUid]![userPracticumUid]!.groupUid),
             }
         };
 
@@ -173,13 +175,13 @@ class ProfileDataSourceImpl implements ProfileDataSource {
                 'classroom': map[key]['classroom'] != null
                     ? ClassroomModel.fromMap(
                         await ReferenceHelper.referenceSingle<ClassroomEntity>(
-                            map[key]['classroom']),
+                            map[key], 'classroom'),
                       )
                     : null,
                 'group': map[key]['group'] != null
                     ? AssistanceGroupModel.fromMap(
                         await ReferenceHelper.referenceSingle<
-                            AssistanceGroupEntity>(map[key]['group']),
+                            AssistanceGroupEntity>(map[key], 'group'),
                       )
                     : null,
               }).toEntity(),
@@ -216,13 +218,13 @@ class ProfileDataSourceImpl implements ProfileDataSource {
                   'classroom': map[key]['classroom'] != null
                       ? ClassroomModel.fromMap(
                           await ReferenceHelper.referenceSingle<
-                              ClassroomEntity>(map[key]['classroom']),
+                              ClassroomEntity>(map[key], 'classroom'),
                         )
                       : null,
                   'group': map[key]['group'] != null
                       ? AssistanceGroupModel.fromMap(
                           await ReferenceHelper.referenceSingle<
-                              AssistanceGroupEntity>(map[key]['group']),
+                              AssistanceGroupEntity>(map[key], 'group'),
                         )
                       : null,
                 }).toEntity(),
@@ -269,13 +271,13 @@ class ProfileDataSourceImpl implements ProfileDataSource {
                   'classroom': map[key]['classroom'] != null
                       ? ClassroomModel.fromMap(
                           await ReferenceHelper.referenceSingle<
-                              ClassroomEntity>(map[key]['classroom']),
+                              ClassroomEntity>(map[key], 'classroom'),
                         )
                       : null,
                   'group': map[key]['group'] != null
                       ? AssistanceGroupModel.fromMap(
                           await ReferenceHelper.referenceSingle<
-                              AssistanceGroupEntity>(map[key]['group']),
+                              AssistanceGroupEntity>(map[key], 'group'),
                         )
                       : null,
                 }).toEntity(),
@@ -332,17 +334,16 @@ class ProfileDataSourceImpl implements ProfileDataSource {
                   'classroom': map[key]['classroom'] != null
                       ? ClassroomModel.fromMap(
                           await ReferenceHelper.referenceSingle<
-                              ClassroomEntity>(map[key]['classroom']))
+                              ClassroomEntity>(map[key], 'classroom'))
                       : null,
                   'group': map[key]['group'] != null
                       ? AssistanceGroupModel.fromMap(
                           await ReferenceHelper.referenceSingle<
-                              AssistanceGroupEntity>(map[key]['group']))
+                              AssistanceGroupEntity>(map[key], 'group'))
                       : null,
                 }).toEntity(),
             };
           }
-
           listData.add(DetailProfileModel.fromSnapshot(
             element,
             userPracticums,

@@ -24,7 +24,9 @@ class UserSelectedProvider with ChangeNotifier {
   List<ProfileEntity> get user => _assets;
 
   bool isItemSelected(ProfileEntity asset) {
-    return _assets.contains(asset) ? true : false;
+    return _assets.indexWhere((element) => element.uid == asset.uid) == -1
+        ? false
+        : true;
   }
 
   void addAsset(ProfileEntity asset) {
@@ -33,7 +35,7 @@ class UserSelectedProvider with ChangeNotifier {
   }
 
   void removeAsset(ProfileEntity asset) {
-    _assets.remove(asset);
+    _assets.removeWhere((element) => element.uid == asset.uid);
     notifyListeners();
   }
 }

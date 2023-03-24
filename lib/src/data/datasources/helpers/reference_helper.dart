@@ -43,8 +43,9 @@ class ReferenceHelper {
   }
 
   static Future<Map<String, dynamic>> referenceSingle<T>(
-      dynamic studentRef) async {
+      dynamic data, String key) async {
     try {
+      final studentRef = data[key];
       final referenceData = await studentRef.get().then((snapshot) {
         if (snapshot.exists) {
           final data = snapshot.data() as Map<String, dynamic>;
