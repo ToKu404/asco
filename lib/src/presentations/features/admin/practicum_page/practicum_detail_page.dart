@@ -266,7 +266,6 @@ class _ClassroomSectionState extends State<_ClassroomSection> {
   @override
   Widget build(BuildContext context) {
     final dataProvider = context.watch<ClassroomNotifier>();
-
     // Todo : Add Shimmer
     if (dataProvider.isLoadingState('find')) {
       return const SizedBox.shrink();

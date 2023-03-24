@@ -1,12 +1,9 @@
+import 'package:asco/src/data/models/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:asco/core/services/preference_service.dart';
 import 'package:asco/core/utils/exception.dart';
 import 'package:asco/src/data/datasources/helpers/ds_helper.dart';
 import 'package:asco/src/data/datasources/helpers/reference_helper.dart';
-import 'package:asco/src/data/models/assistance_models/assistance_group_model.dart';
-import 'package:asco/src/data/models/classroom_models/classroom_model.dart';
-import 'package:asco/src/data/models/profile_models/detail_profile_model.dart';
-import 'package:asco/src/data/models/profile_models/user_practicum_model.dart';
 import 'package:asco/src/domain/entities/assistance_entities/assistance_group_entity.dart';
 import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/user_practicum_entity.dart';
@@ -176,6 +173,7 @@ class ProfileDataSourceImpl implements ProfileDataSource {
                     ? ClassroomModel.fromMap(
                         await ReferenceHelper.referenceSingle<ClassroomEntity>(
                             map[key], 'classroom'),
+                      
                       )
                     : null,
                 'group': map[key]['group'] != null

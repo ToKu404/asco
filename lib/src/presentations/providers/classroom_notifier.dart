@@ -1,7 +1,6 @@
 import 'package:asco/core/services/data_service.dart';
 import 'package:asco/core/states/request_state.dart';
-import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
-import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
+import 'package:asco/src/domain/entities/entities.dart';
 import 'package:asco/src/domain/usecases/classroom_usecases/classroom_usecases.dart';
 
 class ClassroomNotifier extends CrudDataService<ClassroomEntity> {
@@ -21,13 +20,13 @@ class ClassroomNotifier extends CrudDataService<ClassroomEntity> {
 
   Future<void> create({
     required ClassroomEntity entity,
-    required String practicumUid,
+    required PracticumEntity? practicum,
   }) async {
     updateState(state: RequestState.loading, key: 'create');
 
     final result = await createUsecase.execute(
       classroom: entity,
-      practicumUid: practicumUid,
+      practicum: practicum,
     );
 
     result.fold(

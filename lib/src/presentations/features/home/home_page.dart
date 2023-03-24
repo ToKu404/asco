@@ -70,29 +70,35 @@ class _HomePageState extends State<HomePage> {
             title: const AppBarTitle(),
           ),
           body: SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(
-                16,
-              ),
-              child: Column(
-                children: [
-                  CourseCard(
-                    badge: AssetPath.getVector('badge_android.svg'),
-                    colorBg: Palette.purple60,
-                    time: 'Setiap hari Senin Pukul 10.10 - 12.40',
-                    title: 'Pemrograman Mobile A',
+            child: Builder(
+              builder: (context) {
+
+
+                return SingleChildScrollView(
+                  padding: const EdgeInsets.all(
+                    16,
                   ),
-                  const SizedBox(
-                    height: 12,
+                  child: Column(
+                    children: [
+                      CourseCard(
+                        badge: AssetPath.getVector('badge_android.svg'),
+                        colorBg: Palette.purple60,
+                        time: 'Setiap hari Senin Pukul 10.10 - 12.40',
+                        title: 'Pemrograman Mobile A',
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      CourseCard(
+                        badge: AssetPath.getVector('badge_oop.svg'),
+                        colorBg: Palette.azure40,
+                        time: 'Setiap hari Senin Pukul 10.10 - 12.40',
+                        title: 'Pemrograman Berbasis Objek B',
+                      ),
+                    ],
                   ),
-                  CourseCard(
-                    badge: AssetPath.getVector('badge_oop.svg'),
-                    colorBg: Palette.azure40,
-                    time: 'Setiap hari Senin Pukul 10.10 - 12.40',
-                    title: 'Pemrograman Berbasis Objek B',
-                  ),
-                ],
-              ),
+                );
+              }
             ),
           ),
         );

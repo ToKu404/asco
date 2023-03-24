@@ -1,10 +1,9 @@
+import 'package:asco/src/domain/entities/entities.dart';
 import 'package:dartz/dartz.dart';
 import 'package:asco/core/utils/exception.dart';
 import 'package:asco/core/utils/failure.dart';
 import 'package:asco/src/data/datasources/classroom_datasource.dart';
 import 'package:asco/src/data/models/classroom_models/classroom_model.dart';
-import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
-import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:asco/src/domain/repositories/classroom_repository.dart';
 
 class ClassroomRepositoryImpl implements ClassroomRepository {
@@ -15,12 +14,12 @@ class ClassroomRepositoryImpl implements ClassroomRepository {
   @override
   Future<Either<Failure, bool>> create({
     required ClassroomEntity classroom,
-    required String practicumUid,
+    required PracticumEntity? practicum,
   }) async {
     try {
       final result = await datasource.create(
         classroom: ClassroomModel.fromEntity(classroom),
-        practicumUid: practicumUid,
+        practicum: practicum,
       );
 
       return Right(result);

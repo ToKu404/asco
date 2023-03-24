@@ -174,7 +174,7 @@ class _ClassDetailPageState extends State<ClassDetailPage> {
                 _StudentsSection(
                   classroomUid: widget.classroomUid,
                   students: dataProvider.data!.students!,
-                  practicumUid: dataProvider.data!.practicumUid!,
+                  practicumUid: dataProvider.data!.practicum!.uid!,
                 ),
               ],
             ),
