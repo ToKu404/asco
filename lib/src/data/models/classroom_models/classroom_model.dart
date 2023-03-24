@@ -1,4 +1,3 @@
-import 'package:asco/src/data/models/models.dart';
 import 'package:asco/src/domain/entities/entities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -14,7 +13,6 @@ class ClassroomModel extends ClassroomEntity {
     super.endMinute,
     super.students,
   });
-
 
   ClassroomEntity toEntity() {
     return ClassroomEntity(
@@ -50,10 +48,11 @@ class ClassroomModel extends ClassroomEntity {
 
   factory ClassroomModel.fromMap(
     Map<String, dynamic> documentSnapshot,
+    PracticumEntity? practicumEntity,
   ) {
     return ClassroomModel(
       uid: documentSnapshot['uid'],
-      practicum: PracticumModel.fromMap(documentSnapshot['practicum']),
+      practicum: practicumEntity,
       classCode: documentSnapshot['class_code'],
       meetingDay: documentSnapshot['meeting_day'],
       startHour: documentSnapshot['start_hour'],

@@ -3,12 +3,15 @@ import 'package:asco/core/helpers/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/helpers/app_size.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/domain/entities/classroom_entities/classroom_entities.dart';
 import 'package:asco/src/presentations/features/login/welcome_page.dart';
 import 'package:asco/src/presentations/features/menu/main_menu_page.dart';
 import 'package:asco/src/presentations/features/menu/profile/assistant/assistant_profile_page.dart';
 import 'package:asco/src/presentations/features/menu/profile/student/profile_page.dart';
 import 'package:asco/src/presentations/providers/auth_notifier.dart';
+import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:asco/src/presentations/widgets/app_bar_title.dart';
+import 'package:asco/src/presentations/widgets/asco_loading.dart';
 import 'package:asco/src/presentations/widgets/side_menu/side_menu_parent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -38,6 +41,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      Provider.of<ProfileNotifier>(context, listen: false).getSelfDetail();
+    });
+  }
+
   int _selectedIndex = -1;
 
   @override
@@ -70,36 +81,35 @@ class _HomePageState extends State<HomePage> {
             title: const AppBarTitle(),
           ),
           body: SafeArea(
-            child: Builder(
-              builder: (context) {
+            child: Builder(builder: (context) {
+              final provider = context.watch<ProfileNotifier>();
 
-
-                return SingleChildScrollView(
-                  padding: const EdgeInsets.all(
-                    16,
-                  ),
-                  child: Column(
-                    children: [
-                      CourseCard(
-                        badge: AssetPath.getVector('badge_android.svg'),
-                        colorBg: Palette.purple60,
-                        time: 'Setiap hari Senin Pukul 10.10 - 12.40',
-                        title: 'Pemrograman Mobile A',
-                      ),
-                      const SizedBox(
-                        height: 12,
-                      ),
-                      CourseCard(
-                        badge: AssetPath.getVector('badge_oop.svg'),
-                        colorBg: Palette.azure40,
-                        time: 'Setiap hari Senin Pukul 10.10 - 12.40',
-                        title: 'Pemrograman Berbasis Objek B',
-                      ),
-                    ],
-                  ),
+              if (provider.isLoadingState('self') || provider.data == null) {
+                return const AscoLoading();
+              } else if (provider.isErrorState('self')) {
+                return const Center(
+                  child: Text('Error'),
                 );
               }
-            ),
+              final List<ClassroomEntity> classrooms = [];
+              for (var k in provider.data!.userPracticums!.keys) {
+                classrooms.add(provider.data!.userPracticums![k]!.classroom!);
+              }
+              return ListView.builder(
+                padding: const EdgeInsets.all(
+                  16,
+                ),
+                itemBuilder: (context, index) {
+                  return CourseCard(
+                    badge: AssetPath.getVector('badge_android.svg'),
+                    colorBg: Palette.purple60,
+                    time: 'Setiap hari Senin Pukul 10.10 - 12.40',
+                    title: 'Pemrograman Mobile A',
+                  );
+                },
+                itemCount: classrooms.length,
+              );
+            }),
           ),
         );
       }),

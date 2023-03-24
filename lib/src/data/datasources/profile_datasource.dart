@@ -173,7 +173,15 @@ class ProfileDataSourceImpl implements ProfileDataSource {
                     ? ClassroomModel.fromMap(
                         await ReferenceHelper.referenceSingle<ClassroomEntity>(
                             map[key], 'classroom'),
-                      
+                        map['assistant'] != null
+                            ? PracticumModel.fromMap(
+                                await ReferenceHelper.referenceSingle<
+                                    PracticumModel>(
+                                  map,
+                                  'assistant',
+                                ),
+                              )
+                            : null,
                       )
                     : null,
                 'group': map[key]['group'] != null
@@ -217,6 +225,15 @@ class ProfileDataSourceImpl implements ProfileDataSource {
                       ? ClassroomModel.fromMap(
                           await ReferenceHelper.referenceSingle<
                               ClassroomEntity>(map[key], 'classroom'),
+                          map['assistant'] != null
+                              ? PracticumModel.fromMap(
+                                  await ReferenceHelper.referenceSingle<
+                                      PracticumModel>(
+                                    map,
+                                    'assistant',
+                                  ),
+                                )
+                              : null,
                         )
                       : null,
                   'group': map[key]['group'] != null
@@ -270,6 +287,15 @@ class ProfileDataSourceImpl implements ProfileDataSource {
                       ? ClassroomModel.fromMap(
                           await ReferenceHelper.referenceSingle<
                               ClassroomEntity>(map[key], 'classroom'),
+                          map['assistant'] != null
+                              ? PracticumModel.fromMap(
+                                  await ReferenceHelper.referenceSingle<
+                                      PracticumModel>(
+                                    map,
+                                    'assistant',
+                                  ),
+                                )
+                              : null,
                         )
                       : null,
                   'group': map[key]['group'] != null
@@ -332,7 +358,17 @@ class ProfileDataSourceImpl implements ProfileDataSource {
                   'classroom': map[key]['classroom'] != null
                       ? ClassroomModel.fromMap(
                           await ReferenceHelper.referenceSingle<
-                              ClassroomEntity>(map[key], 'classroom'))
+                              ClassroomEntity>(map[key], 'classroom'),
+                          map['assistant'] != null
+                              ? PracticumModel.fromMap(
+                                  await ReferenceHelper.referenceSingle<
+                                      PracticumModel>(
+                                    map,
+                                    'assistant',
+                                  ),
+                                )
+                              : null,
+                        )
                       : null,
                   'group': map[key]['group'] != null
                       ? AssistanceGroupModel.fromMap(
