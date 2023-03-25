@@ -1,11 +1,11 @@
+import 'package:asco/src/domain/entities/practicum_entities/practicum_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:equatable/equatable.dart';
 
 class ClassroomEntity extends Equatable {
   final String? uid;
-  final String? practicumUid;
+  final PracticumEntity? practicum;
   final String? classCode;
-  final String? courseName;
   final String? meetingDay;
   final int? startHour;
   final int? endHour;
@@ -15,9 +15,8 @@ class ClassroomEntity extends Equatable {
 
   const ClassroomEntity({
     this.uid,
-    this.practicumUid,
+    this.practicum,
     this.classCode,
-    this.courseName,
     this.meetingDay,
     this.startHour,
     this.endHour,
@@ -29,9 +28,8 @@ class ClassroomEntity extends Equatable {
   @override
   List<Object?> get props => [
         uid,
-        practicumUid,
+        practicum,
         classCode,
-        courseName,
         meetingDay,
         startHour,
         endHour,

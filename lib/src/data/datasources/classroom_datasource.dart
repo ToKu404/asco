@@ -1,14 +1,14 @@
+import 'package:asco/src/data/models/models.dart';
+import 'package:asco/src/domain/entities/entities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:asco/core/utils/exception.dart';
 import 'package:asco/src/data/datasources/helpers/ds_helper.dart';
 import 'package:asco/src/data/datasources/helpers/reference_helper.dart';
-import 'package:asco/src/data/models/classroom_models/classroom_model.dart';
-import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 
 abstract class ClassroomDataSource {
   Future<bool> create({
     required ClassroomModel classroom,
-    required String practicumUid,
+    required PracticumEntity? practicum,
   });
 
   Future<ClassroomModel> single({required String uid});
@@ -33,26 +33,23 @@ class ClassroomDataSourceImpl implements ClassroomDataSource {
   @override
   Future<bool> create({
     required ClassroomModel classroom,
-    required String practicumUid,
+    PracticumEntity? practicum,
   }) async {
     try {
       final uid = collectionReference.doc().id;
 
       collectionReference.doc(uid).get().then((value) {
-        final data = ClassroomModel(
-          uid: uid,
-          practicumUid: practicumUid,
-          classCode: classroom.classCode,
-          courseName: classroom.courseName,
-          meetingDay: classroom.meetingDay,
-          startHour: classroom.startHour,
-          endHour: classroom.endHour,
-          startMinute: classroom.startMinute,
-          endMinute: classroom.endMinute,
-        );
-
         if (!value.exists) {
-          collectionReference.doc(uid).set(data.toDocument());
+          collectionReference.doc(uid).set({
+            "uid": uid,
+            "practicum": firestore.collection('practicums').doc(practicum!.uid),
+            "class_code": classroom.classCode,
+            "meeting_day": classroom.meetingDay,
+            "start_hour": classroom.startHour,
+            "end_hour": classroom.endHour,
+            "start_minute": classroom.startMinute,
+            "end_minute": classroom.endMinute,
+          });
         }
 
         return true;
@@ -77,6 +74,14 @@ class ClassroomDataSourceImpl implements ClassroomDataSource {
                       documentSnapshot['students'],
                     )
                   : <ProfileEntity>[],
+              documentSnapshot['practicum'] != null
+                  ? PracticumModel.fromMap(
+                      await ReferenceHelper.referenceSingle<PracticumModel>(
+                        documentSnapshot,
+                        'practicum',
+                      ),
+                    ).toEntity()
+                  : null,
             );
           } else {
             throw FirestoreException('document is not exists.');
@@ -96,14 +101,15 @@ class ClassroomDataSourceImpl implements ClassroomDataSource {
       if (practicumUid != null) {
         if (practicumUid.isNotEmpty) {
           snapshot = collectionReference
-              .where('practicum_uid', isEqualTo: practicumUid)
+              .where('practicum',
+                  isEqualTo:
+                      firestore.collection('practicums').doc(practicumUid))
               .get();
         }
       }
 
       return await snapshot.then((value) async {
         final listData = <ClassroomModel>[];
-
         for (var element in value.docs) {
           listData.add(
             ClassroomModel.fromSnapshot(
@@ -111,6 +117,14 @@ class ClassroomDataSourceImpl implements ClassroomDataSource {
               ReadHelper.isKeyExist(element, 'students')
                   ? await ReferenceHelper.referenceProfiles(element['students'])
                   : <ProfileEntity>[],
+              element['practicum'] != null
+                  ? PracticumModel.fromMap(
+                      await ReferenceHelper.referenceSingle<PracticumModel>(
+                        element,
+                        'practicum',
+                      ),
+                    ).toEntity()
+                  : null,
             ),
           );
         }

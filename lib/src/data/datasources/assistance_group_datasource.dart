@@ -84,7 +84,8 @@ class AssistanceGroupDataSourceImpl implements AssistanceGroupDataSource {
               documentSnapshot['assistant'] != null
                   ? ProfileModel.fromMap(
                       await ReferenceHelper.referenceSingle<ProfileEntity>(
-                        documentSnapshot['assistant'],
+                        documentSnapshot,
+                        'assistant',
                       ),
                     )
                   : null,
@@ -121,7 +122,8 @@ class AssistanceGroupDataSourceImpl implements AssistanceGroupDataSource {
               ReadHelper.isKeyExist(element, 'assistant')
                   ? ProfileModel.fromMap(
                       await ReferenceHelper.referenceSingle<ProfileEntity>(
-                        element['assistant'],
+                        element,
+                        'assistant',
                       ),
                     )
                   : null,
@@ -151,7 +153,7 @@ class AssistanceGroupDataSourceImpl implements AssistanceGroupDataSource {
           })
           .then((_) => true)
           .catchError((_) => false);
-          
+
       return false;
     } catch (e) {
       throw FirestoreException(e.toString());

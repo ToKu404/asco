@@ -4,11 +4,11 @@ import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 
 class AssistanceGroupModel extends AssistanceGroupEntity {
   const AssistanceGroupModel({
-    required super.uid,
-    required super.practicumUid,
-    required super.name,
-    required super.assistant,
-    required super.students,
+    super.uid,
+    super.practicumUid,
+    super.name,
+    super.assistant,
+    super.students,
   });
 
   AssistanceGroupEntity toEntity() {
@@ -46,5 +46,13 @@ class AssistanceGroupModel extends AssistanceGroupEntity {
     );
   }
 
-  static fromMap(Map<String, dynamic> map) {}
+  static fromMap(
+    Map<String, dynamic> map,
+  ) {
+    return AssistanceGroupModel(
+      uid: map['uid'],
+      practicumUid: map['practicum_uid'],
+      name: map['name'],
+    );
+  }
 }

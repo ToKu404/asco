@@ -3,6 +3,7 @@ import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
 import 'package:asco/src/presentations/providers/classroom_notifier.dart';
+import 'package:asco/src/presentations/providers/practicum_notifier.dart';
 import 'package:asco/src/presentations/widgets/input_field/input_dropdown_field.dart';
 import 'package:asco/src/presentations/widgets/input_field/input_text_field.dart';
 import 'package:asco/src/presentations/widgets/input_field/input_time_field.dart';
@@ -10,19 +11,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
-void showAdminCreateClassPage(
-    {required BuildContext context,
-    bool isEdit = false,
-    required String practicumUid,
-    required String courseName,
-    }) {
+void showAdminCreateClassPage({
+  required BuildContext context,
+  bool isEdit = false,
+  required String practicumUid,
+  required String courseName,
+}) {
   Navigator.push(
     context,
     MaterialPageRoute(
       builder: (context) => CreateClassPage(
         isEdit: isEdit,
         practicumUid: practicumUid,
-        courseName: courseName,
       ),
       settings: const RouteSettings(
         name: AppRoute.adminUsersPage,
@@ -33,11 +33,10 @@ void showAdminCreateClassPage(
 
 class CreateClassPage extends StatefulWidget {
   final String practicumUid;
-  final String courseName;
   final bool isEdit;
 
   const CreateClassPage(
-      {super.key, required this.isEdit, required this.practicumUid, required this.courseName,});
+      {super.key, required this.isEdit, required this.practicumUid});
 
   @override
   State<CreateClassPage> createState() => _CreateClassPageState();
@@ -72,8 +71,17 @@ class _CreateClassPageState extends State<CreateClassPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    Future.microtask(() =>
+        Provider.of<PracticumNotifier>(context, listen: false)
+          ..getDetail(uid: widget.practicumUid));
+  }
+
+  @override
   Widget build(BuildContext context) {
     final notifier = context.watch<ClassroomNotifier>();
+    final pracNotifier = context.watch<PracticumNotifier>();
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       if (notifier.isSuccessState('create')) {
@@ -97,15 +105,16 @@ class _CreateClassPageState extends State<CreateClassPage> {
           ),
         ),
         actions: [
-          IconButton(
-            onPressed: () {
-              _onSubmit();
-            },
-            icon: const Icon(
-              Icons.check_rounded,
-              color: Palette.white,
-            ),
-          )
+          if (pracNotifier.isSuccessState('single'))
+            IconButton(
+              onPressed: () {
+                _onSubmit();
+              },
+              icon: const Icon(
+                Icons.check_rounded,
+                color: Palette.white,
+              ),
+            )
         ],
         title: Text(
           widget.isEdit ? 'Edit Data' : 'Tambah Data',
@@ -158,6 +167,7 @@ class _CreateClassPageState extends State<CreateClassPage> {
   void _onSubmit() {
     FocusScope.of(context).unfocus();
     final provider = context.read<ClassroomNotifier>();
+    final pracProvider = context.read<PracticumNotifier>();
 
     if (_formKey.currentState!.validate()) {
       //* Create new practicum
@@ -169,9 +179,8 @@ class _CreateClassPageState extends State<CreateClassPage> {
           startMinute: classTime?.startMinute,
           meetingDay: _dayNotifier.value,
           classCode: idClassController.text,
-          courseName: widget.courseName,
         ),
-        practicumUid: widget.practicumUid,
+        practicum: pracProvider.data,
       );
     }
   }

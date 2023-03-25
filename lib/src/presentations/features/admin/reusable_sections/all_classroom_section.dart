@@ -139,7 +139,7 @@ class ClassroomCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '${classroom.courseName}',
+              '${classroom.practicum?.course}',
               style: kTextTheme.bodyMedium?.copyWith(
                 color: Palette.purple80,
                 height: 1.2,

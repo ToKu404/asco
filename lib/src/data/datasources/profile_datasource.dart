@@ -1,12 +1,9 @@
+import 'package:asco/src/data/models/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:asco/core/services/preference_service.dart';
 import 'package:asco/core/utils/exception.dart';
 import 'package:asco/src/data/datasources/helpers/ds_helper.dart';
 import 'package:asco/src/data/datasources/helpers/reference_helper.dart';
-import 'package:asco/src/data/models/assistance_models/assistance_group_model.dart';
-import 'package:asco/src/data/models/classroom_models/classroom_model.dart';
-import 'package:asco/src/data/models/profile_models/detail_profile_model.dart';
-import 'package:asco/src/data/models/profile_models/user_practicum_model.dart';
 import 'package:asco/src/domain/entities/assistance_entities/assistance_group_entity.dart';
 import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/user_practicum_entity.dart';
@@ -118,12 +115,14 @@ class ProfileDataSourceImpl implements ProfileDataSource {
         final map = {
           for (var userPracticumUid in data[userUid]!.keys)
             userPracticumUid: {
-              'classroom': firestore
-                  .collection('classrooms')
-                  .doc(data[userUid]![userPracticumUid]!.classroomUid),
-              'group': firestore
-                  .collection('assistance_groups')
-                  .doc(data[userUid]![userPracticumUid]!.groupUid),
+              if (data[userUid]![userPracticumUid]!.classroomUid != null)
+                'classroom': firestore
+                    .collection('classrooms')
+                    .doc(data[userUid]![userPracticumUid]!.classroomUid),
+              if (data[userUid]![userPracticumUid]!.groupUid != null)
+                'group': firestore
+                    .collection('assistance_groups')
+                    .doc(data[userUid]![userPracticumUid]!.groupUid),
             }
         };
 
@@ -173,13 +172,22 @@ class ProfileDataSourceImpl implements ProfileDataSource {
                 'classroom': map[key]['classroom'] != null
                     ? ClassroomModel.fromMap(
                         await ReferenceHelper.referenceSingle<ClassroomEntity>(
-                            map[key]['classroom']),
+                            map[key], 'classroom'),
+                        map['assistant'] != null
+                            ? PracticumModel.fromMap(
+                                await ReferenceHelper.referenceSingle<
+                                    PracticumModel>(
+                                  map,
+                                  'assistant',
+                                ),
+                              )
+                            : null,
                       )
                     : null,
                 'group': map[key]['group'] != null
                     ? AssistanceGroupModel.fromMap(
                         await ReferenceHelper.referenceSingle<
-                            AssistanceGroupEntity>(map[key]['group']),
+                            AssistanceGroupEntity>(map[key], 'group'),
                       )
                     : null,
               }).toEntity(),
@@ -216,13 +224,22 @@ class ProfileDataSourceImpl implements ProfileDataSource {
                   'classroom': map[key]['classroom'] != null
                       ? ClassroomModel.fromMap(
                           await ReferenceHelper.referenceSingle<
-                              ClassroomEntity>(map[key]['classroom']),
+                              ClassroomEntity>(map[key], 'classroom'),
+                          map['assistant'] != null
+                              ? PracticumModel.fromMap(
+                                  await ReferenceHelper.referenceSingle<
+                                      PracticumModel>(
+                                    map,
+                                    'assistant',
+                                  ),
+                                )
+                              : null,
                         )
                       : null,
                   'group': map[key]['group'] != null
                       ? AssistanceGroupModel.fromMap(
                           await ReferenceHelper.referenceSingle<
-                              AssistanceGroupEntity>(map[key]['group']),
+                              AssistanceGroupEntity>(map[key], 'group'),
                         )
                       : null,
                 }).toEntity(),
@@ -269,13 +286,22 @@ class ProfileDataSourceImpl implements ProfileDataSource {
                   'classroom': map[key]['classroom'] != null
                       ? ClassroomModel.fromMap(
                           await ReferenceHelper.referenceSingle<
-                              ClassroomEntity>(map[key]['classroom']),
+                              ClassroomEntity>(map[key], 'classroom'),
+                          map['assistant'] != null
+                              ? PracticumModel.fromMap(
+                                  await ReferenceHelper.referenceSingle<
+                                      PracticumModel>(
+                                    map,
+                                    'assistant',
+                                  ),
+                                )
+                              : null,
                         )
                       : null,
                   'group': map[key]['group'] != null
                       ? AssistanceGroupModel.fromMap(
                           await ReferenceHelper.referenceSingle<
-                              AssistanceGroupEntity>(map[key]['group']),
+                              AssistanceGroupEntity>(map[key], 'group'),
                         )
                       : null,
                 }).toEntity(),
@@ -332,17 +358,26 @@ class ProfileDataSourceImpl implements ProfileDataSource {
                   'classroom': map[key]['classroom'] != null
                       ? ClassroomModel.fromMap(
                           await ReferenceHelper.referenceSingle<
-                              ClassroomEntity>(map[key]['classroom']))
+                              ClassroomEntity>(map[key], 'classroom'),
+                          map['assistant'] != null
+                              ? PracticumModel.fromMap(
+                                  await ReferenceHelper.referenceSingle<
+                                      PracticumModel>(
+                                    map,
+                                    'assistant',
+                                  ),
+                                )
+                              : null,
+                        )
                       : null,
                   'group': map[key]['group'] != null
                       ? AssistanceGroupModel.fromMap(
                           await ReferenceHelper.referenceSingle<
-                              AssistanceGroupEntity>(map[key]['group']))
+                              AssistanceGroupEntity>(map[key], 'group'))
                       : null,
                 }).toEntity(),
             };
           }
-
           listData.add(DetailProfileModel.fromSnapshot(
             element,
             userPracticums,
