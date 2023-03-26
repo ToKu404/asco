@@ -3,7 +3,7 @@ import 'package:asco/core/helpers/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/helpers/app_size.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/src/domain/entities/classroom_entities/classroom_entities.dart';
+import 'package:asco/src/domain/entities/entities.dart';
 import 'package:asco/src/presentations/features/login/welcome_page.dart';
 import 'package:asco/src/presentations/features/menu/main_menu_page.dart';
 import 'package:asco/src/presentations/features/menu/profile/assistant/assistant_profile_page.dart';
@@ -91,25 +91,30 @@ class _HomePageState extends State<HomePage> {
                   child: Text('Error'),
                 );
               }
-              final List<ClassroomEntity> classrooms = [];
+              final List<UserPracticumEntity> userPracticum = [];
               for (var k in provider.data!.userPracticums!.keys) {
-                classrooms.add(provider.data!.userPracticums![k]!.classroom!);
+                userPracticum.add(provider.data!.userPracticums![k]!);
               }
               return ListView.builder(
                 padding: const EdgeInsets.all(
                   16,
                 ),
                 itemBuilder: (context, index) {
+                  final classroom = userPracticum[index].classroom;
                   return CourseCard(
                     badge: AssetPath.getVector('badge_android.svg'),
                     colorBg: Palette.purple60,
                     time:
-                        'Setiap hari ${classrooms[index].meetingDay} Pukul 10.10 - 12.40',
+                        'Setiap hari ${classroom?.meetingDay} Pukul 10.10 - 12.40',
                     title:
-                        '${classrooms[index].practicum?.course} ${classrooms[index].classCode}',
+                        '${classroom?.practicum?.course} ${classroom?.classCode}',
+                    classroomId: classroom!.uid!,
+                    groupId: userPracticum[index].group != null
+                        ? userPracticum[index].group!.uid!
+                        : "",
                   );
                 },
-                itemCount: classrooms.length,
+                itemCount: userPracticum.length,
               );
             }),
           ),
@@ -124,12 +129,16 @@ class CourseCard extends StatelessWidget {
   final String title;
   final String time;
   final Color colorBg;
+  final String classroomId;
+  final String groupId;
   const CourseCard({
     Key? key,
     required this.badge,
     required this.title,
     required this.time,
     required this.colorBg,
+    required this.classroomId,
+    required this.groupId,
   }) : super(key: key);
 
   @override
@@ -138,7 +147,8 @@ class CourseCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         onTap: () {
-          showMainMenuPage(context: context);
+          showMainMenuPage(
+              context: context, classroomId: classroomId, groupId: groupId);
         },
         child: Stack(
           children: [

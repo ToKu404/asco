@@ -10,7 +10,9 @@ import 'package:asco/src/presentations/features/menu/leaderboard/student/leaderb
 import 'package:asco/src/presentations/features/menu/people/people_page.dart';
 import 'package:asco/src/presentations/features/menu/profile/assistant/assistant_profile_page.dart';
 import 'package:asco/src/presentations/features/menu/profile/student/profile_page.dart';
+import 'package:asco/src/presentations/providers/assistance_notifier.dart';
 import 'package:asco/src/presentations/providers/auth_notifier.dart';
+import 'package:asco/src/presentations/providers/classroom_notifier.dart';
 import 'package:asco/src/presentations/widgets/asco_loading.dart';
 import 'package:asco/src/presentations/widgets/side_menu/side_menu_parent.dart';
 import 'package:flutter/material.dart';
@@ -22,11 +24,17 @@ import '../../widgets/app_bar_title.dart';
 import 'assistance/assistant/assistant_assistance_page.dart';
 import 'leaderboard/assistant/assistant_leadeboard_page.dart';
 
-void showMainMenuPage({required BuildContext context}) {
+void showMainMenuPage(
+    {required BuildContext context,
+    required String classroomId,
+    required String groupId}) {
   Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
-        builder: (context) => const MainMenuPage(),
+        builder: (context) => MainMenuPage(
+          classroomId: classroomId,
+          groupId: groupId,
+        ),
         settings: const RouteSettings(
           name: AppRoute.studentMainMenuPage,
         ),
@@ -35,7 +43,10 @@ void showMainMenuPage({required BuildContext context}) {
 }
 
 class MainMenuPage extends StatefulWidget {
-  const MainMenuPage({super.key});
+  final String classroomId;
+  final String groupId;
+  const MainMenuPage(
+      {super.key, required this.classroomId, required this.groupId});
 
   @override
   State<MainMenuPage> createState() => _MainMenuPageState();
@@ -47,6 +58,10 @@ class _MainMenuPageState extends State<MainMenuPage> {
     super.initState();
     Future.microtask(() => {
           Provider.of<AuthNotifier>(context, listen: false)..getUser(),
+          Provider.of<ClassroomNotifier>(context, listen: false)
+            ..getDetail(uid: widget.classroomId),
+          Provider.of<AssistanceNotifier>(context, listen: false)
+            ..getDetail(uuid: widget.groupId),
         });
   }
 
@@ -55,17 +70,31 @@ class _MainMenuPageState extends State<MainMenuPage> {
   @override
   Widget build(BuildContext context) {
     final userNotifier = context.watch<AuthNotifier>();
+    final classroomNotifier = context.watch<ClassroomNotifier>();
+    final groupNotiifier = context.watch<AssistanceNotifier>();
 
-    if (userNotifier.isLoadingState('single') || userNotifier.data == null) {
+    if (userNotifier.isLoadingState('single') ||
+        userNotifier.data == null ||
+        classroomNotifier.isLoadingState('single') ||
+        classroomNotifier.data == null ||
+        groupNotiifier.isLoadingState('single') ||
+        groupNotiifier.data == null) {
       return const AscoLoading(
         withScaffold: true,
       );
     }
     final roleId = userNotifier.data?.roleId;
+    final classroom = classroomNotifier.data;
+    final group = groupNotiifier.data;
+
     final pages = roleId == 1
         ? [
-            const StudentLaboratoryPage(),
-            const StudentAssistancePage(),
+            StudentLaboratoryPage(
+              classroom: classroom,
+            ),
+            StudentAssistancePage(
+              groupEntity: group,
+            ),
             const StudentLeaderboardPage(),
             const ExtrasPage(),
             const PeoplePage(),

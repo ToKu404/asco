@@ -8,6 +8,7 @@ class ProfileModel extends ProfileEntity {
     super.uid,
     super.username,
     super.fullName,
+    super.nickName,
     super.profilePhoto,
     super.userRole,
   });
@@ -17,6 +18,7 @@ class ProfileModel extends ProfileEntity {
       'uid': uid,
       'username': username,
       'full_name': fullName,
+      'nick_name': nickName,
       'profile_photo': profilePhoto,
       if (userRole != null)
         'role': {
@@ -33,6 +35,7 @@ class ProfileModel extends ProfileEntity {
       fullName: fullName,
       profilePhoto: profilePhoto,
       userRole: userRole,
+      nickName: nickName,
     );
   }
 
@@ -41,6 +44,7 @@ class ProfileModel extends ProfileEntity {
       uid: documentSnapshot['uid'],
       username: documentSnapshot['username'],
       fullName: documentSnapshot['full_name'],
+      nickName: documentSnapshot['nick_name'],
       profilePhoto: documentSnapshot['profile_photo'],
       userRole: UserRoleModel.fromMap(documentSnapshot.get('role')),
     );
@@ -51,6 +55,7 @@ class ProfileModel extends ProfileEntity {
       uid: documentSnapshot['uid'],
       username: documentSnapshot['username'],
       fullName: documentSnapshot['full_name'],
+      nickName: documentSnapshot['nick_name'],
       profilePhoto: documentSnapshot['profile_photo'],
       userRole: UserRoleModel.fromMap(documentSnapshot['role']),
     );
@@ -61,6 +66,7 @@ class ProfileModel extends ProfileEntity {
       uid: userProfileEntity.uid,
       username: userProfileEntity.username,
       fullName: userProfileEntity.fullName,
+      nickName: userProfileEntity.nickName,
       profilePhoto: userProfileEntity.profilePhoto,
       userRole: userProfileEntity.userRole,
     );
@@ -71,6 +77,7 @@ class ProfileModel extends ProfileEntity {
       uid: userProfileEntity.uid,
       username: userProfileEntity.username,
       fullName: userProfileEntity.fullName,
+      nickName: userProfileEntity.nickName,
       profilePhoto: userProfileEntity.profilePhoto,
       userRole: userProfileEntity.userRole,
     );

@@ -187,19 +187,19 @@ class AssistantAssistancePage extends StatelessWidget {
             ),
             SizedBox(
               height: 80,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                itemBuilder: (_, i) => StudentAvatar(
-                  student: students[i],
-                  onTap: () => showAssistantAssistanceControlCardPage(
-                    context,
-                    student: students[i],
-                  ),
-                ),
-                separatorBuilder: (_, __) => const SizedBox(width: 10),
-                itemCount: students.length,
-              ),
+              // child: ListView.separated(
+              //   scrollDirection: Axis.horizontal,
+              //   padding: const EdgeInsets.symmetric(horizontal: 16),
+              //   itemBuilder: (_, i) => StudentAvatar(
+              //     student: students[i],
+              //     onTap: () => showAssistantAssistanceControlCardPage(
+              //       context,
+              //       student: students[i],
+              //     ),
+              //   ),
+              //   separatorBuilder: (_, __) => const SizedBox(width: 10),
+              //   itemCount: students.length,
+              // ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(

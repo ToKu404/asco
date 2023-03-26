@@ -1,11 +1,11 @@
+import 'package:asco/src/domain/entities/entities.dart';
 import 'package:flutter/material.dart';
 import 'package:asco/core/helpers/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/src/data/dummy_data.dart';
 
 class StudentAvatar extends StatelessWidget {
-  final Student student;
+  final ProfileEntity? student;
   final VoidCallback? onTap;
 
   const StudentAvatar({
@@ -26,11 +26,11 @@ class StudentAvatar extends StatelessWidget {
               radius: 30,
               backgroundColor: Palette.white,
               child: Hero(
-                tag: student,
+                tag: student!,
                 child: CircleAvatar(
                   radius: 28,
                   foregroundImage: AssetImage(
-                    AssetPath.getImage('avatar${student.id}.jpg'),
+                    AssetPath.getImage('avatar${1}.jpg'),
                   ),
                 ),
               ),
@@ -39,7 +39,7 @@ class StudentAvatar extends StatelessWidget {
           const SizedBox(height: 4),
           Expanded(
             child: Text(
-              student.name,
+              "${student?.nickName}",
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,

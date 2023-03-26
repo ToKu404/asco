@@ -1,3 +1,4 @@
+import 'package:asco/src/domain/entities/entities.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:asco/core/helpers/asset_path.dart';
@@ -10,7 +11,11 @@ import 'package:asco/src/presentations/features/menu/laboratory/widgets/meeting_
 import 'package:asco/src/presentations/features/menu/laboratory/widgets/menu_card.dart';
 
 class StudentLaboratoryPage extends StatelessWidget {
-  const StudentLaboratoryPage({super.key});
+  final ClassroomEntity? classroom;
+  const StudentLaboratoryPage({
+    super.key,
+    required this.classroom,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +89,7 @@ class StudentLaboratoryPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                'Pemrograman Mobile A',
+                                "${classroom?.practicum?.course} ${classroom?.classCode}",
                                 style: kTextTheme.headlineMedium?.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color: Palette.white,
@@ -93,7 +98,7 @@ class StudentLaboratoryPage extends StatelessWidget {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                'Setiap hari Senin Pukul 10.10 - 12.40',
+                                'Setiap hari ${classroom?.meetingDay} Pukul 10.10 - 12.40',
                                 style: kTextTheme.bodyMedium?.copyWith(
                                   color: Palette.white,
                                 ),

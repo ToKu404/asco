@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'package:asco/src/domain/entities/entities.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:asco/core/helpers/asset_path.dart';
@@ -13,7 +14,8 @@ import 'package:asco/src/presentations/features/menu/assistance/widgets/control_
 import 'package:asco/src/presentations/features/menu/assistance/widgets/student_avatar.dart';
 
 class StudentAssistancePage extends StatelessWidget {
-  const StudentAssistancePage({super.key});
+  final AssistanceGroupEntity? groupEntity;
+  const StudentAssistancePage({super.key, required this.groupEntity});
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +58,7 @@ class StudentAssistancePage extends StatelessWidget {
                             horizontal: 20,
                           ),
                           child: Text(
-                            'Grup Asistensi 3',
+                            'Grup Asistensi ${groupEntity?.name}',
                             style: kTextTheme.headlineMedium?.copyWith(
                               fontWeight: FontWeight.w600,
                               color: Palette.white,
@@ -116,7 +118,7 @@ class StudentAssistancePage extends StatelessWidget {
                               ),
                             ),
                             subtitle: Text(
-                              'Eurico Devon B. P.',
+                              '${groupEntity?.assistant?.fullName}',
                               style: kTextTheme.titleSmall?.copyWith(
                                 fontWeight: FontWeight.w600,
                                 color: Palette.purple100,
@@ -166,12 +168,13 @@ class StudentAssistancePage extends StatelessWidget {
             ),
             SizedBox(
               height: 80,
-              child: ListView.separated(
+              child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                itemBuilder: (_, i) => StudentAvatar(student: students[i]),
-                separatorBuilder: (_, __) => const SizedBox(width: 10),
-                itemCount: students.length,
+                itemBuilder: (context, index) {
+                  return StudentAvatar(student: groupEntity!.students![index]);
+                },
+                itemCount: groupEntity!.students!.length,
               ),
             ),
             Padding(
