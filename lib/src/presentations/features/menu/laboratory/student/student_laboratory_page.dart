@@ -1,4 +1,7 @@
+import 'package:asco/src/data/models/meeting_models/meeting_models.dart';
+import 'package:asco/src/domain/entities/entities.dart';
 import 'package:asco/src/presentations/providers/classroom_notifier.dart';
+import 'package:asco/src/presentations/providers/meeting_notifier.dart';
 import 'package:asco/src/presentations/widgets/asco_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -30,19 +33,25 @@ class _StudentLaboratoryPageState extends State<StudentLaboratoryPage> {
     Future.microtask(() => {
           Provider.of<ClassroomNotifier>(context, listen: false)
             ..getDetail(uid: widget.classroomId!),
+          Provider.of<MeetingNotifier>(context, listen: false)
+            ..fetch(classroomUid: widget.classroomId),
         });
   }
 
   @override
   Widget build(BuildContext context) {
     final labNotifier = context.watch<ClassroomNotifier>();
+    final meetingNotifier = context.watch<MeetingNotifier>();
 
-    if (labNotifier.isLoadingState('single') || labNotifier.data == null) {
+    if (labNotifier.isLoadingState('single') ||
+        labNotifier.data == null ||
+        meetingNotifier.isLoadingState("find")) {
       return const AscoLoading(
         withScaffold: true,
       );
     }
     final classroom = labNotifier.data;
+
     final labMenuCards = <MenuCard>[
       MenuCard(
         title: 'Tata Tertib',
@@ -158,60 +167,89 @@ class _StudentLaboratoryPageState extends State<StudentLaboratoryPage> {
               ),
             ),
             const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.only(left: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    'Pertemuan',
-                    style: kTextTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: Palette.purple100,
+            Builder(builder: (context) {
+              final List<DetailMeetingEntity> meetingData = [];
+              final DateTime now = DateTime.now();
+              int lastIndex = 0;
+              for (int i = 0; i < meetingNotifier.listData.length; i++) {
+                if (meetingNotifier.listData[i].meetingDate!
+                    .isBefore(DateTime(now.year, now.month, now.day))) {
+                  meetingData.add(meetingNotifier.listData[i]);
+                  lastIndex = i;
+                } else {
+                  break;
+                }
+              }
+              if (lastIndex < meetingNotifier.listData.length - 1) {
+                meetingData.add(meetingNotifier.listData[lastIndex + 1]);
+              }
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          'Pertemuan',
+                          style: kTextTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: Palette.purple100,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {},
+                          icon: SvgPicture.asset(
+                            AssetPath.getIcon('arrow_sort_filled.svg'),
+                            color: Palette.purple100,
+                            width: 20,
+                          ),
+                          tooltip: 'Sort',
+                        ),
+                      ],
                     ),
                   ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: SvgPicture.asset(
-                      AssetPath.getIcon('arrow_sort_filled.svg'),
-                      color: Palette.purple100,
-                      width: 20,
+                  if (meetingData.length < meetingNotifier.listData.length)
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton(
+                        onPressed: null,
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(
+                            width: 2,
+                            color: Palette.white,
+                          ),
+                          foregroundColor: Palette.white,
+                          disabledForegroundColor: Palette.white,
+                          backgroundColor: Palette.purple60.withOpacity(.4),
+                          disabledBackgroundColor:
+                              Palette.purple60.withOpacity(.4),
+                        ),
+                        child: Text(
+                            'Pertemuan ${meetingData.length + 1} Segera...'),
+                      ),
                     ),
-                    tooltip: 'Sort',
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton(
-                onPressed: null,
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(
-                    width: 2,
-                    color: Palette.white,
-                  ),
-                  foregroundColor: Palette.white,
-                  disabledForegroundColor: Palette.white,
-                  backgroundColor: Palette.purple60.withOpacity(.4),
-                  disabledBackgroundColor: Palette.purple60.withOpacity(.4),
-                ),
-                child: const Text('Pertemuan 4 Segera...'),
-              ),
-            ),
-            const SizedBox(height: 8),
-            ...courses
-                .where((course) => course.isLocked == false)
-                .map(
-                  (course) => MeetingCard(
-                    course: course,
-                    onTap: () {
-                      showStudentLaboratoryCourseDetailPage(context);
+                  const SizedBox(height: 8),
+                  ListView.builder(
+                    itemBuilder: (context, index) {
+                      return MeetingCard(
+                        meetingData:
+                            MeetingEntity.fromDetail(meetingData[index]),
+                        number: index + 1,
+                        onTap: () {
+                          showStudentLaboratoryCourseDetailPage(context);
+                        },
+                      );
                     },
-                  ),
-                )
-                .toList()
-                .reversed,
+                    reverse: true,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: meetingData.length,
+                  )
+                ],
+              );
+            }),
           ],
         ),
       ),

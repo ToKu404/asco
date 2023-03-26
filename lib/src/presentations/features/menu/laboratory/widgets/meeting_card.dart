@@ -1,21 +1,24 @@
+import 'package:asco/core/helpers/helpers.dart';
+import 'package:asco/src/domain/entities/entities.dart';
 import 'package:flutter/material.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/src/data/dummy_data.dart';
 
 class MeetingCard extends StatelessWidget {
-  final Course course;
+  final MeetingEntity meetingData;
   final double paddingBottom;
   final bool isThreeLine;
+  final int number;
   final Widget? thirdLine;
   final VoidCallback? onTap;
 
   const MeetingCard({
     super.key,
-    required this.course,
+    required this.meetingData,
     this.paddingBottom = 10,
     this.isThreeLine = false,
     this.thirdLine,
+    required this.number,
     this.onTap,
   });
 
@@ -41,7 +44,7 @@ class MeetingCard extends StatelessWidget {
                   radius: 36,
                   backgroundColor: Palette.purple80,
                   child: Text(
-                    '#${course.number}',
+                    '#$number',
                     style: kTextTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w700,
                       color: Palette.white,
@@ -55,7 +58,7 @@ class MeetingCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        course.topic,
+                        "${meetingData.topic}",
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: kTextTheme.bodyLarge?.copyWith(
@@ -66,7 +69,8 @@ class MeetingCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        course.date,
+                        ReusableHelper.dateTimeToString(
+                            meetingData.meetingDate!),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: kTextTheme.bodyMedium?.copyWith(

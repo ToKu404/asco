@@ -172,18 +172,18 @@ class AssistantLaboratoryPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            ...courses
-                .where((course) => course.isLocked == false)
-                .map(
-                  (course) => MeetingCard(
-                    course: course,
-                    onTap: () {
-                      showAssistantLaboratoryCourseDetailPage(context);
-                    },
-                  ),
-                )
-                .toList()
-                .reversed,
+            // ...courses
+            //     .where((course) => course.isLocked == false)
+            //     .map(
+            //       (course) => MeetingCard(
+            //         meetingData: course,
+            //         onTap: () {
+            //           showAssistantLaboratoryCourseDetailPage(context);
+            //         },
+            //       ),
+            //     )
+            //     .toList()
+            //     .reversed,
           ],
         ),
       ),

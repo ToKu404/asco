@@ -54,7 +54,7 @@ class DetailMeetingModel extends DetailMeetingEntity {
   }
 
   factory DetailMeetingModel.fromSnapshot(DocumentSnapshot documentSnapshot) {
-    return DetailMeetingModel(
+    final data = DetailMeetingModel(
       uid: documentSnapshot['uid'],
       classUid: documentSnapshot['classroom_uid'],
       assistant1Uid: documentSnapshot['assistant1_uid'],
@@ -63,12 +63,14 @@ class DetailMeetingModel extends DetailMeetingEntity {
       topic: documentSnapshot['topic'],
       modulPath: documentSnapshot['modul_path'],
       attendances: ReadHelper.isKeyExist(documentSnapshot, 'attendances')
-          ? (documentSnapshot.get('attendances') as List<Map<String, dynamic>>)
+          ? documentSnapshot['attendances']
               .map((map) => AttendanceModel.fromMap(map).toEntity())
               .toList()
+              .cast<AttendanceEntity>()
           : <AttendanceEntity>[],
-      // controlCard: null,
     );
+
+    return data;
   }
 
   factory DetailMeetingModel.fromEntity(DetailMeetingEntity entity) {
