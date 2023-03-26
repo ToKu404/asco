@@ -1,9 +1,9 @@
 import 'dart:async';
-
+import 'package:flutter/material.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/core/helpers/time_helper.dart';
 import 'package:asco/src/presentations/widgets/input_field/field_title.dart';
-import 'package:flutter/material.dart';
 
 class InputTimeField extends StatefulWidget {
   final TextEditingController controller1;
@@ -148,29 +148,5 @@ class _InputTimeFieldState extends State<InputTimeField> {
         ),
       ],
     );
-  }
-}
-
-class TimeHelper {
-  int? startHour;
-  int? startMinute;
-  int? endHour;
-  int? endMinute;
-
-  TimeHelper({
-    this.endHour,
-    this.endMinute,
-    this.startHour,
-    this.startMinute,
-  });
-
-  void setStartTime({required int? startHour, required int? startMinute}) {
-    this.startHour = startHour;
-    this.startMinute = startMinute;
-  }
-
-  void setEndTime({required int? endHour, required int? endMinute}) {
-    this.endHour = endHour;
-    this.endMinute = endMinute;
   }
 }

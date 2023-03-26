@@ -1,11 +1,11 @@
-import 'package:asco/core/helpers/asset_path.dart';
-import 'package:asco/core/constants/color_const.dart';
-import 'package:asco/core/helpers/app_size.dart';
-import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:asco/core/constants/color_const.dart';
+import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/core/helpers/app_size.dart';
+import 'package:asco/core/helpers/asset_path.dart';
+import 'package:asco/src/presentations/providers/profile_notifier.dart';
 
 class MenuHelper {
   final String title;
@@ -21,7 +21,7 @@ class MenuHelper {
 
 class SideMenu extends StatefulWidget {
   final ValueNotifier<int?> selectedIndex;
-  final Function(int)? onSelect;
+  final ValueChanged<int>? onSelect;
   final bool isMainMenu;
 
   const SideMenu({
@@ -75,11 +75,6 @@ class _SideMenuState extends State<SideMenu> {
       unselectedIconPath: AssetPath.getIcon('people_outlined.svg'),
       selectedIconPath: AssetPath.getIcon('people_filled.svg'),
     ),
-    // MenuHelper(
-    //   title: 'Tentang',
-    //   unselectedIconPath: AssetPath.getIcons('info_outlined.svg'),
-    //   selectedIconPath: AssetPath.getIcons('info_filled.svg'),
-    // ),
     MenuHelper(
       title: 'Keluar',
       unselectedIconPath: AssetPath.getIcon('logout_outlined.svg'),
