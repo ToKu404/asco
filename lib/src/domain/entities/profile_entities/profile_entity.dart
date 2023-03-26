@@ -6,6 +6,7 @@ class ProfileEntity extends Equatable {
   final String? uid;
   final String? username;
   final String? fullName;
+  final String? nickName;
   final String? profilePhoto;
   final UserRoleEntity? userRole;
 
@@ -13,6 +14,7 @@ class ProfileEntity extends Equatable {
     this.uid,
     this.username,
     this.fullName,
+    this.nickName,
     this.profilePhoto,
     this.userRole,
   });
@@ -22,6 +24,7 @@ class ProfileEntity extends Equatable {
       uid: detail.uid,
       username: detail.username,
       fullName: detail.fullName,
+      nickName: detail.nickName,
       profilePhoto: detail.profilePhoto,
       userRole: detail.userRole,
     );
@@ -33,6 +36,7 @@ class ProfileEntity extends Equatable {
         username,
         fullName,
         profilePhoto,
+        nickName,
         userRole,
       ];
 }

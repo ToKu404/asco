@@ -55,7 +55,6 @@ class ReferenceHelper {
       }).catchError((_) => <String, dynamic>{});
 
       final referenceDataMap = referenceData as Map<String, dynamic>;
-
       return referenceDataMap;
     } catch (e) {
       throw FirestoreException(e.toString());

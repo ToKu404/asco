@@ -1,3 +1,5 @@
+import 'package:asco/src/presentations/providers/classroom_notifier.dart';
+import 'package:asco/src/presentations/widgets/asco_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:asco/core/helpers/asset_path.dart';
@@ -8,12 +10,39 @@ import 'package:asco/src/data/dummy_data.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/student/student_laboratory_course_detail_page.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/widgets/meeting_card.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/widgets/menu_card.dart';
+import 'package:provider/provider.dart';
 
-class StudentLaboratoryPage extends StatelessWidget {
-  const StudentLaboratoryPage({super.key});
+class StudentLaboratoryPage extends StatefulWidget {
+  final String? classroomId;
+  const StudentLaboratoryPage({
+    super.key,
+    required this.classroomId,
+  });
+
+  @override
+  State<StudentLaboratoryPage> createState() => _StudentLaboratoryPageState();
+}
+
+class _StudentLaboratoryPageState extends State<StudentLaboratoryPage> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() => {
+          Provider.of<ClassroomNotifier>(context, listen: false)
+            ..getDetail(uid: widget.classroomId!),
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final labNotifier = context.watch<ClassroomNotifier>();
+
+    if (labNotifier.isLoadingState('single') || labNotifier.data == null) {
+      return const AscoLoading(
+        withScaffold: true,
+      );
+    }
+    final classroom = labNotifier.data;
     final labMenuCards = <MenuCard>[
       MenuCard(
         title: 'Tata Tertib',
@@ -84,7 +113,7 @@ class StudentLaboratoryPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                'Pemrograman Mobile A',
+                                "${classroom?.practicum?.course} ${classroom?.classCode}",
                                 style: kTextTheme.headlineMedium?.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color: Palette.white,
@@ -93,7 +122,7 @@ class StudentLaboratoryPage extends StatelessWidget {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                'Setiap hari Senin Pukul 10.10 - 12.40',
+                                'Setiap hari ${classroom?.meetingDay} Pukul 10.10 - 12.40',
                                 style: kTextTheme.bodyMedium?.copyWith(
                                   color: Palette.white,
                                 ),

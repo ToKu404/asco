@@ -1,4 +1,6 @@
 import 'dart:math' as math;
+import 'package:asco/src/presentations/providers/assistance_notifier.dart';
+import 'package:asco/src/presentations/widgets/asco_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:asco/core/helpers/asset_path.dart';
@@ -11,12 +13,36 @@ import 'package:asco/src/presentations/features/menu/assistance/student/student_
 import 'package:asco/src/presentations/features/menu/assistance/widgets/assistance_status_badge.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/control_card.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/student_avatar.dart';
+import 'package:provider/provider.dart';
 
-class StudentAssistancePage extends StatelessWidget {
-  const StudentAssistancePage({super.key});
+class StudentAssistancePage extends StatefulWidget {
+  final String? groupId;
+  const StudentAssistancePage({super.key, required this.groupId});
+
+  @override
+  State<StudentAssistancePage> createState() => _StudentAssistancePageState();
+}
+
+class _StudentAssistancePageState extends State<StudentAssistancePage> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() => {
+          Provider.of<AssistanceNotifier>(context, listen: false)
+            ..getDetail(uuid: widget.groupId!),
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final groupNotifier = context.watch<AssistanceNotifier>();
+
+    if (groupNotifier.isLoadingState('single') || groupNotifier.data == null) {
+      return const AscoLoading(
+        withScaffold: true,
+      );
+    }
+    final groupEntity = groupNotifier.data;
     return Scaffold(
       backgroundColor: Palette.grey,
       body: SingleChildScrollView(
@@ -56,7 +82,7 @@ class StudentAssistancePage extends StatelessWidget {
                             horizontal: 20,
                           ),
                           child: Text(
-                            'Grup Asistensi 3',
+                            'Grup Asistensi ${groupEntity?.name}',
                             style: kTextTheme.headlineMedium?.copyWith(
                               fontWeight: FontWeight.w600,
                               color: Palette.white,
@@ -116,7 +142,7 @@ class StudentAssistancePage extends StatelessWidget {
                               ),
                             ),
                             subtitle: Text(
-                              'Eurico Devon B. P.',
+                              '${groupEntity?.assistant?.fullName}',
                               style: kTextTheme.titleSmall?.copyWith(
                                 fontWeight: FontWeight.w600,
                                 color: Palette.purple100,
@@ -166,12 +192,13 @@ class StudentAssistancePage extends StatelessWidget {
             ),
             SizedBox(
               height: 80,
-              child: ListView.separated(
+              child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                itemBuilder: (_, i) => StudentAvatar(student: students[i]),
-                separatorBuilder: (_, __) => const SizedBox(width: 10),
-                itemCount: students.length,
+                itemBuilder: (context, index) {
+                  return StudentAvatar(student: groupEntity.students![index]);
+                },
+                itemCount: groupEntity!.students!.length,
               ),
             ),
             Padding(

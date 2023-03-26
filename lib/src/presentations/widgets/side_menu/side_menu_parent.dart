@@ -1,19 +1,17 @@
 import 'dart:math';
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:asco/core/constants/color_const.dart';
-import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/core/helpers/app_size.dart';
 import 'package:asco/core/helpers/asset_path.dart';
+import 'package:asco/core/constants/color_const.dart';
+import 'package:asco/core/helpers/app_size.dart';
 import 'package:asco/src/presentations/features/menu/main_menu_page.dart';
 import 'package:asco/src/presentations/widgets/side_menu/side_menu.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class SideMenuParent extends StatefulWidget {
   final Widget body;
-  final ValueChanged<int>? onSelect;
+  final Function(int)? onSelect;
   final bool isMainMenu;
   final bool isShowBottomNav;
-
   const SideMenuParent({
     super.key,
     required this.body,
@@ -214,7 +212,7 @@ class _SideMenuParentState extends State<SideMenuParent>
                                       children: [
                                         TabIcon(
                                           isActive: selectValue == 0,
-                                          onTap: () {
+                                          onPress: () {
                                             widget.onSelect!(0);
                                             _selectedIndex.value = 0;
                                           },
@@ -225,7 +223,7 @@ class _SideMenuParentState extends State<SideMenuParent>
                                         ),
                                         TabIcon(
                                           isActive: selectValue == 1,
-                                          onTap: () {
+                                          onPress: () {
                                             widget.onSelect!(1);
                                             _selectedIndex.value = 1;
                                           },
@@ -236,7 +234,7 @@ class _SideMenuParentState extends State<SideMenuParent>
                                         ),
                                         TabIcon(
                                           isActive: selectValue == 2,
-                                          onTap: () {
+                                          onPress: () {
                                             widget.onSelect!(2);
                                             _selectedIndex.value = 2;
                                           },
@@ -247,7 +245,7 @@ class _SideMenuParentState extends State<SideMenuParent>
                                         ),
                                         TabIcon(
                                           isActive: selectValue == 3,
-                                          onTap: () {
+                                          onPress: () {
                                             widget.onSelect!(3);
                                             _selectedIndex.value = 3;
                                           },
@@ -258,7 +256,7 @@ class _SideMenuParentState extends State<SideMenuParent>
                                         ),
                                         TabIcon(
                                           isActive: selectValue == 4,
-                                          onTap: () {
+                                          onPress: () {
                                             widget.onSelect!(4);
                                             _selectedIndex.value = 4;
                                           },
@@ -280,156 +278,5 @@ class _SideMenuParentState extends State<SideMenuParent>
             ),
           );
         });
-  }
-}
-
-class CourseCard extends StatelessWidget {
-  final String badge;
-  final String title;
-  final String time;
-  final Color colorBg;
-  const CourseCard({
-    Key? key,
-    required this.badge,
-    required this.title,
-    required this.time,
-    required this.colorBg,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(16),
-      child: InkWell(
-        onTap: () {
-          showMainMenuPage(context: context);
-        },
-        child: Stack(
-          children: [
-            Container(
-              width: AppSize.getAppWidth(context),
-              height: 180,
-              color: colorBg,
-            ),
-            Positioned(
-              right: 0,
-              child: SizedBox(
-                height: 180,
-                width: 200,
-                child: SvgPicture.asset(
-                  AssetPath.getVector(
-                    'bg_attribute2.svg',
-                  ),
-                  fit: BoxFit.cover,
-                  color: Palette.black.withOpacity(.1),
-                ),
-              ),
-            ),
-            Positioned(
-              right: 0,
-              child: SizedBox(
-                height: 180,
-                width: 180,
-                child: SvgPicture.asset(
-                  AssetPath.getVector(
-                    'bg_attribute2.svg',
-                  ),
-                  fit: BoxFit.cover,
-                  color: Palette.black.withOpacity(.1),
-                ),
-              ),
-            ),
-            Positioned.fill(
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: 200,
-                          child: Text(
-                            title,
-                            style: kTextTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: Palette.white,
-                              height: 1.1,
-                            ),
-                          ),
-                        ),
-                        const Spacer(),
-                        SizedBox(
-                          width: 43,
-                          height: 47,
-                          child: SvgPicture.asset(
-                            badge,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    Text(
-                      time,
-                      style: kTextTheme.bodyMedium?.copyWith(
-                        color: Palette.white,
-                      ),
-                    ),
-                    const Spacer(),
-                    Row(
-                      children: List.generate(
-                        4,
-                        (index) => Transform.translate(
-                          offset: Offset((-18 * index).toDouble(), 0),
-                          child: Builder(builder: (context) {
-                            if (index == 3) {
-                              return Container(
-                                width: 25,
-                                height: 25,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Palette.grey,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    '+10',
-                                    style: kTextTheme.bodySmall?.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                      color: Palette.black,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }
-                            return Container(
-                              width: 30,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                border:
-                                    Border.all(width: 1, color: Palette.grey),
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: AssetImage(
-                                    AssetPath.getImage(
-                                        'avatar${index + 1}.jpg'),
-                                  ),
-                                ),
-                              ),
-                            );
-                          }),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:asco/src/data/models/models.dart';
+import 'package:asco/src/domain/entities/practicum_entities/practicum_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:asco/core/services/preference_service.dart';
 import 'package:asco/core/utils/exception.dart';
@@ -166,32 +167,32 @@ class ProfileDataSourceImpl implements ProfileDataSource {
         Map<String, UserPracticumEntity>? userPracticums;
 
         if (map != null) {
-          userPracticums = {
-            for (var key in map.keys)
-              key: UserPracticumModel.fromMap({
-                'classroom': map[key]['classroom'] != null
-                    ? ClassroomModel.fromMap(
-                        await ReferenceHelper.referenceSingle<ClassroomEntity>(
-                            map[key], 'classroom'),
-                        map['assistant'] != null
-                            ? PracticumModel.fromMap(
-                                await ReferenceHelper.referenceSingle<
-                                    PracticumModel>(
-                                  map,
-                                  'assistant',
-                                ),
-                              )
-                            : null,
-                      )
-                    : null,
-                'group': map[key]['group'] != null
-                    ? AssistanceGroupModel.fromMap(
-                        await ReferenceHelper.referenceSingle<
-                            AssistanceGroupEntity>(map[key], 'group'),
-                      )
-                    : null,
-              }).toEntity(),
-          };
+          userPracticums = {};
+          for (var key in map.keys) {
+            final Map<String, dynamic> userMap = {};
+            final csMap =
+                await ReferenceHelper.referenceSingle<ClassroomEntity>(
+                    map[key], 'classroom');
+            userMap['classroom'] = map[key]['classroom'] != null
+                ? ClassroomModel.fromMap(
+                    csMap,
+                    PracticumModel.fromMap(
+                      await ReferenceHelper.referenceSingle<PracticumEntity>(
+                        csMap,
+                        'practicum',
+                      ),
+                    ),
+                  )
+                : null;
+            userMap['group'] = map[key]['group'] != null
+                ? AssistanceGroupModel.fromMap(
+                    await ReferenceHelper.referenceSingle<
+                        AssistanceGroupEntity>(map[key], 'group'),
+                  )
+                : null;
+            userPracticums[key] =
+                UserPracticumModel.fromMap(userMap).toEntity();
+          }
         }
 
         return DetailProfileModel.fromSnapshot(
@@ -218,32 +219,32 @@ class ProfileDataSourceImpl implements ProfileDataSource {
           Map<String, UserPracticumEntity>? userPracticums;
 
           if (map != null) {
-            userPracticums = {
-              for (var key in map.keys)
-                key: UserPracticumModel.fromMap({
-                  'classroom': map[key]['classroom'] != null
-                      ? ClassroomModel.fromMap(
-                          await ReferenceHelper.referenceSingle<
-                              ClassroomEntity>(map[key], 'classroom'),
-                          map['assistant'] != null
-                              ? PracticumModel.fromMap(
-                                  await ReferenceHelper.referenceSingle<
-                                      PracticumModel>(
-                                    map,
-                                    'assistant',
-                                  ),
-                                )
-                              : null,
-                        )
-                      : null,
-                  'group': map[key]['group'] != null
-                      ? AssistanceGroupModel.fromMap(
-                          await ReferenceHelper.referenceSingle<
-                              AssistanceGroupEntity>(map[key], 'group'),
-                        )
-                      : null,
-                }).toEntity(),
-            };
+            userPracticums = {};
+            for (var key in map.keys) {
+              final Map<String, dynamic> userMap = {};
+              final csMap =
+                  await ReferenceHelper.referenceSingle<ClassroomEntity>(
+                      map[key], 'classroom');
+              userMap['classroom'] = map[key]['classroom'] != null
+                  ? ClassroomModel.fromMap(
+                      csMap,
+                      PracticumModel.fromMap(
+                        await ReferenceHelper.referenceSingle<PracticumEntity>(
+                          csMap,
+                          'practicum',
+                        ),
+                      ),
+                    )
+                  : null;
+              userMap['group'] = map[key]['group'] != null
+                  ? AssistanceGroupModel.fromMap(
+                      await ReferenceHelper.referenceSingle<
+                          AssistanceGroupEntity>(map[key], 'group'),
+                    )
+                  : null;
+              userPracticums[key] =
+                  UserPracticumModel.fromMap(userMap).toEntity();
+            }
           }
 
           return DetailProfileModel.fromSnapshot(
@@ -280,32 +281,32 @@ class ProfileDataSourceImpl implements ProfileDataSource {
           Map<String, UserPracticumEntity>? userPracticums;
 
           if (map != null) {
-            userPracticums = {
-              for (var key in map.keys)
-                key: UserPracticumModel.fromMap({
-                  'classroom': map[key]['classroom'] != null
-                      ? ClassroomModel.fromMap(
-                          await ReferenceHelper.referenceSingle<
-                              ClassroomEntity>(map[key], 'classroom'),
-                          map['assistant'] != null
-                              ? PracticumModel.fromMap(
-                                  await ReferenceHelper.referenceSingle<
-                                      PracticumModel>(
-                                    map,
-                                    'assistant',
-                                  ),
-                                )
-                              : null,
-                        )
-                      : null,
-                  'group': map[key]['group'] != null
-                      ? AssistanceGroupModel.fromMap(
-                          await ReferenceHelper.referenceSingle<
-                              AssistanceGroupEntity>(map[key], 'group'),
-                        )
-                      : null,
-                }).toEntity(),
-            };
+            userPracticums = {};
+            for (var key in map.keys) {
+              final Map<String, dynamic> userMap = {};
+              final csMap =
+                  await ReferenceHelper.referenceSingle<ClassroomEntity>(
+                      map[key], 'classroom');
+              userMap['classroom'] = map[key]['classroom'] != null
+                  ? ClassroomModel.fromMap(
+                      csMap,
+                      PracticumModel.fromMap(
+                        await ReferenceHelper.referenceSingle<PracticumEntity>(
+                          csMap,
+                          'practicum',
+                        ),
+                      ),
+                    )
+                  : null;
+              userMap['group'] = map[key]['group'] != null
+                  ? AssistanceGroupModel.fromMap(
+                      await ReferenceHelper.referenceSingle<
+                          AssistanceGroupEntity>(map[key], 'group'),
+                    )
+                  : null;
+              userPracticums[key] =
+                  UserPracticumModel.fromMap(userMap).toEntity();
+            }
           }
 
           listData.add(DetailProfileModel.fromSnapshot(
@@ -352,31 +353,35 @@ class ProfileDataSourceImpl implements ProfileDataSource {
           Map<String, UserPracticumEntity>? userPracticums;
 
           if (map != null) {
-            userPracticums = {
-              for (var key in map.keys)
-                key: UserPracticumModel.fromMap({
-                  'classroom': map[key]['classroom'] != null
-                      ? ClassroomModel.fromMap(
-                          await ReferenceHelper.referenceSingle<
-                              ClassroomEntity>(map[key], 'classroom'),
-                          map['assistant'] != null
-                              ? PracticumModel.fromMap(
-                                  await ReferenceHelper.referenceSingle<
-                                      PracticumModel>(
-                                    map,
-                                    'assistant',
-                                  ),
-                                )
-                              : null,
-                        )
-                      : null,
-                  'group': map[key]['group'] != null
-                      ? AssistanceGroupModel.fromMap(
-                          await ReferenceHelper.referenceSingle<
-                              AssistanceGroupEntity>(map[key], 'group'))
-                      : null,
-                }).toEntity(),
-            };
+            userPracticums = {};
+            for (var key in map.keys) {
+              final Map<String, dynamic> userMap = {};
+              final csMap =
+                  await ReferenceHelper.referenceSingle<ClassroomEntity>(
+                      map[key], 'classroom');
+
+              userMap['group'] = map[key]['group'] != null
+                  ? AssistanceGroupModel.fromMap(
+                      await ReferenceHelper.referenceSingle<
+                          AssistanceGroupEntity>(map[key], 'group'),
+                    )
+                  : null;
+
+              userMap['classroom'] = map[key]['classroom'] != null
+                  ? ClassroomModel.fromMap(
+                      csMap,
+                      PracticumModel.fromMap(
+                        await ReferenceHelper.referenceSingle<PracticumEntity>(
+                          csMap,
+                          'practicum',
+                        ),
+                      ),
+                    )
+                  : null;
+
+              userPracticums[key] =
+                  UserPracticumModel.fromMap(userMap).toEntity();
+            }
           }
           listData.add(DetailProfileModel.fromSnapshot(
             element,

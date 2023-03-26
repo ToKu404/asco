@@ -81,7 +81,7 @@ class AssistanceGroupDataSourceImpl implements AssistanceGroupDataSource {
                       documentSnapshot['students'],
                     )
                   : <ProfileEntity>[],
-              documentSnapshot['assistant'] != null
+              ReadHelper.isKeyExist(documentSnapshot, 'assistant')
                   ? ProfileModel.fromMap(
                       await ReferenceHelper.referenceSingle<ProfileEntity>(
                         documentSnapshot,
