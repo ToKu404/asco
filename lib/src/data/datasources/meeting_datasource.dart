@@ -105,9 +105,9 @@ class MeetingDataSourceImpl implements MeetingDataSource {
       }
 
       return await snapshot.then((value) {
-        return value.docs
-            .map((snapshot) => DetailMeetingModel.fromSnapshot(snapshot))
-            .toList();
+        return value.docs.map((s) {
+          return DetailMeetingModel.fromSnapshot(s);
+        }).toList();
       });
     } catch (e) {
       throw FirestoreException(e.toString());

@@ -46,10 +46,6 @@ class PracticumModel extends PracticumEntity {
   factory PracticumModel.fromMap(
     Map<String, dynamic> documentSnapshot,
   ) {
-    // List<dynamic> assistantList = documentSnapshot['list_assistant'] ?? [];
-    // List<ProfileEntity> parsedAssistantList = assistantList
-    //     .map((assistant) => ProfileModel.fromMap(assistant))
-    //     .toList();
     final data = PracticumModel(
       uid: documentSnapshot['uid'],
       badgePath: documentSnapshot['badge_path'],
