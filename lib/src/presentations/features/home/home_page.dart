@@ -103,8 +103,10 @@ class _HomePageState extends State<HomePage> {
                   return CourseCard(
                     badge: AssetPath.getVector('badge_android.svg'),
                     colorBg: Palette.purple60,
-                    time: 'Setiap hari Senin Pukul 10.10 - 12.40',
-                    title: 'Pemrograman Mobile A',
+                    time:
+                        'Setiap hari ${classrooms[index].meetingDay} Pukul 10.10 - 12.40',
+                    title:
+                        '${classrooms[index].practicum?.course} ${classrooms[index].classCode}',
                   );
                 },
                 itemCount: classrooms.length,

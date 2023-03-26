@@ -1,4 +1,3 @@
-import 'package:asco/src/data/models/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:asco/src/domain/entities/practicum_entities/practicum_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
@@ -33,7 +32,7 @@ class PracticumModel extends PracticumEntity {
 
   factory PracticumModel.fromSnapshot(
     DocumentSnapshot documentSnapshot,
-    List<ProfileEntity> users,
+    List<ProfileEntity>? users,
   ) {
     return PracticumModel(
       uid: documentSnapshot['uid'],
@@ -47,17 +46,17 @@ class PracticumModel extends PracticumEntity {
   factory PracticumModel.fromMap(
     Map<String, dynamic> documentSnapshot,
   ) {
-    List<dynamic> assistantList = documentSnapshot['list_assistant'] ?? [];
-    List<ProfileEntity> parsedAssistantList = assistantList
-        .map((assistant) => ProfileModel.fromMap(assistant))
-        .toList();
-    return PracticumModel(
+    // List<dynamic> assistantList = documentSnapshot['list_assistant'] ?? [];
+    // List<ProfileEntity> parsedAssistantList = assistantList
+    //     .map((assistant) => ProfileModel.fromMap(assistant))
+    //     .toList();
+    final data = PracticumModel(
       uid: documentSnapshot['uid'],
       badgePath: documentSnapshot['badge_path'],
       course: documentSnapshot['course'],
       courseContractPath: documentSnapshot['course_contract_path'],
-      listAssistant: parsedAssistantList,
     );
+    return data;
   }
 
   factory PracticumModel.fromEntity(PracticumEntity entity) {
