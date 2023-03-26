@@ -1,5 +1,6 @@
 import 'dart:math' as math;
-import 'package:asco/src/domain/entities/entities.dart';
+import 'package:asco/src/presentations/providers/assistance_notifier.dart';
+import 'package:asco/src/presentations/widgets/asco_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:asco/core/helpers/asset_path.dart';
@@ -12,13 +13,36 @@ import 'package:asco/src/presentations/features/menu/assistance/student/student_
 import 'package:asco/src/presentations/features/menu/assistance/widgets/assistance_status_badge.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/control_card.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/student_avatar.dart';
+import 'package:provider/provider.dart';
 
-class StudentAssistancePage extends StatelessWidget {
-  final AssistanceGroupEntity? groupEntity;
-  const StudentAssistancePage({super.key, required this.groupEntity});
+class StudentAssistancePage extends StatefulWidget {
+  final String? groupId;
+  const StudentAssistancePage({super.key, required this.groupId});
+
+  @override
+  State<StudentAssistancePage> createState() => _StudentAssistancePageState();
+}
+
+class _StudentAssistancePageState extends State<StudentAssistancePage> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() => {
+          Provider.of<AssistanceNotifier>(context, listen: false)
+            ..getDetail(uuid: widget.groupId!),
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final groupNotifier = context.watch<AssistanceNotifier>();
+
+    if (groupNotifier.isLoadingState('single') || groupNotifier.data == null) {
+      return const AscoLoading(
+        withScaffold: true,
+      );
+    }
+    final groupEntity = groupNotifier.data;
     return Scaffold(
       backgroundColor: Palette.grey,
       body: SingleChildScrollView(
@@ -172,7 +196,7 @@ class StudentAssistancePage extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 itemBuilder: (context, index) {
-                  return StudentAvatar(student: groupEntity!.students![index]);
+                  return StudentAvatar(student: groupEntity.students![index]);
                 },
                 itemCount: groupEntity!.students!.length,
               ),

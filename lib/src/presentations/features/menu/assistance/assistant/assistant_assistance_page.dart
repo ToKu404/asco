@@ -6,12 +6,10 @@ import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/helpers/app_size.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/data/dummy_data.dart';
-import 'package:asco/src/presentations/features/menu/assistance/assistant/assistant_assistance_control_card_page.dart';
 import 'package:asco/src/presentations/features/menu/assistance/assistant/assistant_assistance_course_detail_page.dart';
 import 'package:asco/src/presentations/features/menu/assistance/assistant/assistant_assistance_practitioner_page.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/control_card.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/github_dialog.dart';
-import 'package:asco/src/presentations/features/menu/assistance/widgets/student_avatar.dart';
 
 class AssistantAssistancePage extends StatelessWidget {
   const AssistantAssistancePage({super.key});

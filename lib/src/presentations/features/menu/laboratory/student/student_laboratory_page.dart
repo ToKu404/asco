@@ -1,4 +1,5 @@
-import 'package:asco/src/domain/entities/entities.dart';
+import 'package:asco/src/presentations/providers/classroom_notifier.dart';
+import 'package:asco/src/presentations/widgets/asco_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:asco/core/helpers/asset_path.dart';
@@ -9,16 +10,39 @@ import 'package:asco/src/data/dummy_data.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/student/student_laboratory_course_detail_page.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/widgets/meeting_card.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/widgets/menu_card.dart';
+import 'package:provider/provider.dart';
 
-class StudentLaboratoryPage extends StatelessWidget {
-  final ClassroomEntity? classroom;
+class StudentLaboratoryPage extends StatefulWidget {
+  final String? classroomId;
   const StudentLaboratoryPage({
     super.key,
-    required this.classroom,
+    required this.classroomId,
   });
 
   @override
+  State<StudentLaboratoryPage> createState() => _StudentLaboratoryPageState();
+}
+
+class _StudentLaboratoryPageState extends State<StudentLaboratoryPage> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() => {
+          Provider.of<ClassroomNotifier>(context, listen: false)
+            ..getDetail(uid: widget.classroomId!),
+        });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final labNotifier = context.watch<ClassroomNotifier>();
+
+    if (labNotifier.isLoadingState('single') || labNotifier.data == null) {
+      return const AscoLoading(
+        withScaffold: true,
+      );
+    }
+    final classroom = labNotifier.data;
     final labMenuCards = <MenuCard>[
       MenuCard(
         title: 'Tata Tertib',

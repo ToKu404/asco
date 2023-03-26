@@ -10,9 +10,7 @@ import 'package:asco/src/presentations/features/menu/leaderboard/student/leaderb
 import 'package:asco/src/presentations/features/menu/people/people_page.dart';
 import 'package:asco/src/presentations/features/menu/profile/assistant/assistant_profile_page.dart';
 import 'package:asco/src/presentations/features/menu/profile/student/profile_page.dart';
-import 'package:asco/src/presentations/providers/assistance_notifier.dart';
 import 'package:asco/src/presentations/providers/auth_notifier.dart';
-import 'package:asco/src/presentations/providers/classroom_notifier.dart';
 import 'package:asco/src/presentations/widgets/asco_loading.dart';
 import 'package:asco/src/presentations/widgets/side_menu/side_menu_parent.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +25,7 @@ import 'leaderboard/assistant/assistant_leadeboard_page.dart';
 void showMainMenuPage(
     {required BuildContext context,
     required String classroomId,
+    required String practicumId,
     required String groupId}) {
   Navigator.pushAndRemoveUntil(
       context,
@@ -34,6 +33,7 @@ void showMainMenuPage(
         builder: (context) => MainMenuPage(
           classroomId: classroomId,
           groupId: groupId,
+          practicumId: practicumId,
         ),
         settings: const RouteSettings(
           name: AppRoute.studentMainMenuPage,
@@ -45,8 +45,12 @@ void showMainMenuPage(
 class MainMenuPage extends StatefulWidget {
   final String classroomId;
   final String groupId;
+  final String practicumId;
   const MainMenuPage(
-      {super.key, required this.classroomId, required this.groupId});
+      {super.key,
+      required this.classroomId,
+      required this.groupId,
+      required this.practicumId});
 
   @override
   State<MainMenuPage> createState() => _MainMenuPageState();
@@ -58,10 +62,6 @@ class _MainMenuPageState extends State<MainMenuPage> {
     super.initState();
     Future.microtask(() => {
           Provider.of<AuthNotifier>(context, listen: false)..getUser(),
-          Provider.of<ClassroomNotifier>(context, listen: false)
-            ..getDetail(uid: widget.classroomId),
-          Provider.of<AssistanceNotifier>(context, listen: false)
-            ..getDetail(uuid: widget.groupId),
         });
   }
 
@@ -70,41 +70,36 @@ class _MainMenuPageState extends State<MainMenuPage> {
   @override
   Widget build(BuildContext context) {
     final userNotifier = context.watch<AuthNotifier>();
-    final classroomNotifier = context.watch<ClassroomNotifier>();
-    final groupNotiifier = context.watch<AssistanceNotifier>();
 
-    if (userNotifier.isLoadingState('single') ||
-        userNotifier.data == null ||
-        classroomNotifier.isLoadingState('single') ||
-        classroomNotifier.data == null ||
-        groupNotiifier.isLoadingState('single') ||
-        groupNotiifier.data == null) {
+    if (userNotifier.isLoadingState('single') || userNotifier.data == null) {
       return const AscoLoading(
         withScaffold: true,
       );
     }
     final roleId = userNotifier.data?.roleId;
-    final classroom = classroomNotifier.data;
-    final group = groupNotiifier.data;
 
     final pages = roleId == 1
         ? [
             StudentLaboratoryPage(
-              classroom: classroom,
+              classroomId: widget.classroomId,
             ),
             StudentAssistancePage(
-              groupEntity: group,
+              groupId: widget.groupId,
             ),
             const StudentLeaderboardPage(),
             const ExtrasPage(),
-            const PeoplePage(),
+            PeoplePage(
+              practicumUid: widget.practicumId,
+            ),
           ]
         : [
             const AssistantLaboratoryPage(),
             const AssistantAssistancePage(),
             const AssistantLeaderboardPage(),
             const ExtrasPage(),
-            const PeoplePage(),
+            PeoplePage(
+              practicumUid: widget.practicumId,
+            ),
           ];
     return SideMenuParent(
       onSelect: (index) {
@@ -147,7 +142,10 @@ class _MainMenuPageState extends State<MainMenuPage> {
                 ),
           backgroundColor: Palette.grey,
           body: SafeArea(
-            child: pages[_selectedIndex],
+            child: IndexedStack(
+              index: _selectedIndex,
+              children: pages,
+            ),
           ),
         );
       }),

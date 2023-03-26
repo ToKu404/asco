@@ -359,6 +359,14 @@ class ProfileDataSourceImpl implements ProfileDataSource {
               final csMap =
                   await ReferenceHelper.referenceSingle<ClassroomEntity>(
                       map[key], 'classroom');
+
+              userMap['group'] = map[key]['group'] != null
+                  ? AssistanceGroupModel.fromMap(
+                      await ReferenceHelper.referenceSingle<
+                          AssistanceGroupEntity>(map[key], 'group'),
+                    )
+                  : null;
+
               userMap['classroom'] = map[key]['classroom'] != null
                   ? ClassroomModel.fromMap(
                       csMap,
@@ -370,12 +378,7 @@ class ProfileDataSourceImpl implements ProfileDataSource {
                       ),
                     )
                   : null;
-              userMap['group'] = map[key]['group'] != null
-                  ? AssistanceGroupModel.fromMap(
-                      await ReferenceHelper.referenceSingle<
-                          AssistanceGroupEntity>(map[key], 'group'),
-                    )
-                  : null;
+
               userPracticums[key] =
                   UserPracticumModel.fromMap(userMap).toEntity();
             }

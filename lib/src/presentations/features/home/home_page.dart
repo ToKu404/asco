@@ -112,6 +112,7 @@ class _HomePageState extends State<HomePage> {
                     groupId: userPracticum[index].group != null
                         ? userPracticum[index].group!.uid!
                         : "",
+                    practicumId: classroom.practicum!.uid!,
                   );
                 },
                 itemCount: userPracticum.length,
@@ -131,6 +132,7 @@ class CourseCard extends StatelessWidget {
   final Color colorBg;
   final String classroomId;
   final String groupId;
+  final String practicumId;
   const CourseCard({
     Key? key,
     required this.badge,
@@ -139,6 +141,7 @@ class CourseCard extends StatelessWidget {
     required this.colorBg,
     required this.classroomId,
     required this.groupId,
+    required this.practicumId,
   }) : super(key: key);
 
   @override
@@ -148,7 +151,10 @@ class CourseCard extends StatelessWidget {
       child: InkWell(
         onTap: () {
           showMainMenuPage(
-              context: context, classroomId: classroomId, groupId: groupId);
+              context: context,
+              classroomId: classroomId,
+              groupId: groupId,
+              practicumId: practicumId);
         },
         child: Stack(
           children: [
