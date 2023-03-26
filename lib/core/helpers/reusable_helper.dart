@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:intl/intl.dart';
+import 'package:asco/core/helpers/time_helper.dart';
 import 'package:asco/core/states/attendance_state.dart';
 import 'package:asco/src/domain/entities/assistance_entities/assistance_group_entity.dart';
 import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/user_practicum_helper.dart';
-import 'package:asco/src/presentations/widgets/input_field/input_time_field.dart';
 
 class ReusableHelper {
   /// Hashing password
@@ -51,7 +51,7 @@ class ReusableHelper {
     final endTime1 = endTimeList.first.padLeft(2, "0");
     final endTime2 = endTimeList.last.padLeft(2, "0");
 
-    return '$startTime1:$startTime2-$endTime1:$endTime2';
+    return '$startTime1:$startTime2 - $endTime1:$endTime2';
   }
 
   /// Convert DateTime to String

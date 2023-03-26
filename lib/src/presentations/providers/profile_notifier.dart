@@ -27,7 +27,7 @@ class ProfileNotifier extends CrudDataService<DetailProfileEntity> {
     createState([
       'create',
       'find',
-      'me',
+      'self',
       'multiple',
       'update_practicums',
       'by_classroom',
@@ -94,18 +94,18 @@ class ProfileNotifier extends CrudDataService<DetailProfileEntity> {
 
   /// Self user profile
   Future<void> getSelfDetail() async {
-    updateState(state: RequestState.loading, key: 'me');
+    updateState(state: RequestState.loading, key: 'self');
 
     final result = await selfDataUsecase.execute();
 
     result.fold(
       (l) {
-        updateState(state: RequestState.error, key: 'me');
+        updateState(state: RequestState.error, key: 'self');
 
         setErrorMessage(l.message);
       },
       (r) {
-        updateState(state: RequestState.success, key: 'me');
+        updateState(state: RequestState.success, key: 'self');
 
         setData(r);
       },
