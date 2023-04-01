@@ -135,7 +135,7 @@ class _SignInFormState extends State<_SignInForm> {
           final message = provider.message;
 
           context.read<AuthNotifier>().reset();
-          
+
           Navigator.pop(context, message);
         });
       } else if (provider.isLoadingState('login')) {

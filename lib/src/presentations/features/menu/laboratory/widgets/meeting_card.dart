@@ -1,24 +1,24 @@
-import 'package:asco/core/helpers/helpers.dart';
-import 'package:asco/src/domain/entities/entities.dart';
 import 'package:flutter/material.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/core/helpers/helpers.dart';
+import 'package:asco/src/domain/entities/meeting_entities/detail_meeting_entity.dart';
 
 class MeetingCard extends StatelessWidget {
-  final MeetingEntity meetingData;
+  final int number;
+  final DetailMeetingEntity meeting;
   final double paddingBottom;
   final bool isThreeLine;
-  final int number;
   final Widget? thirdLine;
   final VoidCallback? onTap;
 
   const MeetingCard({
     super.key,
-    required this.meetingData,
+    required this.number,
+    required this.meeting,
     this.paddingBottom = 10,
     this.isThreeLine = false,
     this.thirdLine,
-    required this.number,
     this.onTap,
   });
 
@@ -58,7 +58,7 @@ class MeetingCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        "${meetingData.topic}",
+                        meeting.topic!,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: kTextTheme.bodyLarge?.copyWith(
@@ -70,7 +70,9 @@ class MeetingCard extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         ReusableHelper.dateTimeToString(
-                            meetingData.meetingDate!),
+                          meeting.meetingDate!,
+                          format: 'dd MMMM yyyy',
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: kTextTheme.bodyMedium?.copyWith(

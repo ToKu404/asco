@@ -1,5 +1,3 @@
-import 'package:asco/core/helpers/reusable_helper.dart';
-import 'package:asco/core/helpers/time_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
@@ -9,6 +7,8 @@ import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/core/helpers/app_size.dart';
 import 'package:asco/core/helpers/asset_path.dart';
+import 'package:asco/core/helpers/reusable_helper.dart';
+import 'package:asco/core/helpers/time_helper.dart';
 import 'package:asco/src/domain/entities/entities.dart';
 import 'package:asco/src/presentations/features/login/welcome_page.dart';
 import 'package:asco/src/presentations/features/menu/main_menu_page.dart';
@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage> {
 
                   if (provider.isErrorState('self')) {
                     return const Center(
-                      child: Text('Error'),
+                      child: Text('unknown error occured'),
                     );
                   }
 

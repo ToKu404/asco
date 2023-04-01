@@ -16,8 +16,7 @@ import 'package:asco/src/presentations/features/menu/leaderboard/student/leaderb
 import 'package:asco/src/presentations/features/menu/people/people_page.dart';
 import 'package:asco/src/presentations/features/menu/profile/assistant/assistant_profile_page.dart';
 import 'package:asco/src/presentations/features/menu/profile/student/profile_page.dart';
-import 'package:asco/src/presentations/providers/auth_notifier.dart';
-import 'package:asco/src/presentations/providers/profile_notifier.dart';
+import 'package:asco/src/presentations/providers/providers.dart';
 import 'package:asco/src/presentations/widgets/app_bar_title.dart';
 import 'package:asco/src/presentations/widgets/asco_loading.dart';
 import 'package:asco/src/presentations/widgets/side_menu/side_menu_parent.dart';
@@ -127,7 +126,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
           if (_selectedIndex == 5) {
             SchedulerBinding.instance.addPostFrameCallback((_) {
               context.read<ProfileNotifier>().reset();
-              
+
               userNotifier.logout();
 
               showWelcomePage(context: context);
