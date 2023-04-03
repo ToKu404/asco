@@ -19,9 +19,14 @@ import 'package:asco/src/presentations/providers/meeting_notifier.dart';
 import 'package:asco/src/presentations/widgets/asco_loading.dart';
 
 class AssistantLaboratoryPage extends StatefulWidget {
+  final String userId;
   final String classroomId;
 
-  const AssistantLaboratoryPage({super.key, required this.classroomId});
+  const AssistantLaboratoryPage({
+    super.key,
+    required this.userId,
+    required this.classroomId,
+  });
 
   @override
   State<AssistantLaboratoryPage> createState() =>
@@ -70,7 +75,25 @@ class _AssistantLaboratoryPageState extends State<AssistantLaboratoryPage> {
         strokeColor: Palette.azure40,
         fillColor: Palette.azure20,
         iconName: 'calendar_blank_outlined.svg',
-        onTap: () => showAssistantLaboratorySchedulePage(context),
+        onTap: () {
+          final listMeetingMap = <Map<int, DetailMeetingEntity>>[];
+
+          final meetings =
+              Provider.of<MeetingNotifier>(context, listen: false).listData;
+
+          for (var meeting in meetings) {
+            if (meeting.assistant1Uid == widget.userId) {
+              listMeetingMap.add({0: meeting});
+            } else if (meeting.assistant2Uid == widget.userId) {
+              listMeetingMap.add({1: meeting});
+            }
+          }
+
+          return showAssistantLaboratorySchedulePage(
+            context,
+            listMeetingMap: listMeetingMap,
+          );
+        },
       ),
     ];
 

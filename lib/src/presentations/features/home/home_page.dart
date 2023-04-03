@@ -131,6 +131,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         colorBg: Palette.purple60,
+                        userId: provider.data!.uid!,
                         classroomId: classroom!.uid!,
                         groupId: userPracticum[i].group != null
                             ? userPracticum[i].group!.uid!
@@ -162,6 +163,7 @@ class CourseCard extends StatelessWidget {
   final String title;
   final String time;
   final Color colorBg;
+  final String userId;
   final String classroomId;
   final String groupId;
   final String practicumId;
@@ -172,6 +174,7 @@ class CourseCard extends StatelessWidget {
     required this.title,
     required this.time,
     required this.colorBg,
+    required this.userId,
     required this.classroomId,
     required this.groupId,
     required this.practicumId,
@@ -184,6 +187,7 @@ class CourseCard extends StatelessWidget {
       child: InkWell(
         onTap: () => showMainMenuPage(
           context: context,
+          userId: userId,
           classroomId: classroomId,
           groupId: groupId,
           practicumId: practicumId,
