@@ -13,7 +13,6 @@ import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.d
 import 'package:asco/src/domain/entities/meeting_entities/detail_meeting_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/assistant/assistant_laboratory_quiz_value_input_page.dart';
-import 'package:asco/src/presentations/features/menu/laboratory/widgets/attendance_dialog.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/widgets/mentor_tile.dart';
 import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:asco/src/presentations/widgets/asco_loading.dart';

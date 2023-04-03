@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:asco/core/constants/color_const.dart';
-import 'package:asco/src/presentations/widgets/custom_network_image.dart';
+import 'package:asco/src/presentations/widgets/circle_network_image.dart';
 
 class MentorTile extends StatelessWidget {
   final String name;
@@ -17,20 +17,12 @@ class MentorTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Container(
+      leading: CircleNetworkImage(
         width: 44,
         height: 44,
-        clipBehavior: Clip.antiAlias,
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle,
-        ),
-        child: CustomNetworkImage(
-          width: 44,
-          height: 44,
-          imgUrl: image,
-          placeholderSize: 16,
-          errorIcon: Icons.person_rounded,
-        ),
+        imgUrl: image,
+        placeholderSize: 16,
+        errorIcon: Icons.person_rounded,
       ),
       title: Text(
         name,

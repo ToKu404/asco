@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
-import 'package:asco/src/presentations/widgets/custom_network_image.dart';
+import 'package:asco/src/presentations/widgets/circle_network_image.dart';
 
 class CustomStudentCard extends StatelessWidget {
   final DetailProfileEntity student;
@@ -44,18 +44,17 @@ class CustomStudentCard extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              CircleAvatar(
-                radius: 28,
-                backgroundColor: Palette.purple80,
-                child: Hero(
-                  tag: student,
-                  child: CustomNetworkImage(
-                    width: hasAvatarBorder ? 52 : 56,
-                    height: hasAvatarBorder ? 52 : 56,
-                    imgUrl: student.profilePhoto!,
-                    placeholderSize: 20,
-                    errorIcon: Icons.person_rounded,
-                  ),
+              Hero(
+                tag: student,
+                child: CircleNetworkImage(
+                  width: 56,
+                  height: 56,
+                  imgUrl: student.profilePhoto!,
+                  placeholderSize: 20,
+                  errorIcon: Icons.person_rounded,
+                  withBorder: true,
+                  borderWidth: 2,
+                  borderColor: Palette.purple80,
                 ),
               ),
               const SizedBox(width: 12),
