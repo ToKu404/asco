@@ -1,4 +1,4 @@
-class RoleHelper {
+class MapHelper {
   static String? idToName(int id) {
     final map = <int, String>{
       0: 'Super Admin',
@@ -16,5 +16,16 @@ class RoleHelper {
     };
 
     return map[name];
+  }
+
+  static String? getAttendanceStatus(int key) {
+    final map = <int, String>{
+      0: 'Alfa',
+      1: 'Izin',
+      2: 'Sakit',
+      3: 'Hadir',
+    };
+
+    return map[key];
   }
 }

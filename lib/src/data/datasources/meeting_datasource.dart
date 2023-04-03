@@ -48,7 +48,7 @@ class MeetingDataSourceImpl implements MeetingDataSource {
             .map((id) => AttendanceEntity(
                   studentUid: id,
                   attendanceTime: null,
-                  attendanceStatus: 3,
+                  attendanceStatus: null,
                   pointPlus: null,
                   note: null,
                 ))

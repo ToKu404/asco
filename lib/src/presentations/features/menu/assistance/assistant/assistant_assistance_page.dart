@@ -183,7 +183,7 @@ class AssistantAssistancePage extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 80,
               // child: ListView.separated(
               //   scrollDirection: Axis.horizontal,

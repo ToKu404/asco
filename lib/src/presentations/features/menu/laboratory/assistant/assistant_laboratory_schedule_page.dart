@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/color_const.dart';
-import 'package:asco/src/data/dummy_data.dart';
-import 'package:asco/src/presentations/features/menu/laboratory/widgets/meeting_card.dart';
-import 'package:asco/src/presentations/widgets/custom_badge.dart';
 import 'package:asco/src/presentations/widgets/purple_app_bar.dart';
 
 class AssistantLaboratorySchedulePage extends StatelessWidget {

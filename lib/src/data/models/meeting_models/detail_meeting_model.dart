@@ -14,7 +14,6 @@ class DetailMeetingModel extends DetailMeetingEntity {
     required super.topic,
     required super.modulPath,
     required super.attendances,
-    // required super.controlCard,
   });
 
   Map<String, dynamic> toDocument() {
@@ -31,12 +30,6 @@ class DetailMeetingModel extends DetailMeetingEntity {
               .map((entity) => AttendanceModel.fromEntity(entity).toDocument())
               .toList()
           : <Map<String, dynamic>>[],
-      // "control_cards": (controlCard != null)
-      //     ? {
-      //         for (var k in controlCard!.keys)
-      //           k: ControlCardModel.fromEntity(controlCard![k]!).toDocument()
-      //       }
-      //     : null,
     };
   }
 
@@ -54,7 +47,7 @@ class DetailMeetingModel extends DetailMeetingEntity {
   }
 
   factory DetailMeetingModel.fromSnapshot(DocumentSnapshot documentSnapshot) {
-    final data = DetailMeetingModel(
+    return DetailMeetingModel(
       uid: documentSnapshot['uid'],
       classUid: documentSnapshot['classroom_uid'],
       assistant1Uid: documentSnapshot['assistant1_uid'],
@@ -69,8 +62,6 @@ class DetailMeetingModel extends DetailMeetingEntity {
               .cast<AttendanceEntity>()
           : <AttendanceEntity>[],
     );
-
-    return data;
   }
 
   factory DetailMeetingModel.fromEntity(DetailMeetingEntity entity) {
@@ -83,7 +74,6 @@ class DetailMeetingModel extends DetailMeetingEntity {
       topic: entity.topic,
       modulPath: entity.modulPath,
       attendances: entity.attendances,
-      // controlCard: entity.controlCard,
     );
   }
 }

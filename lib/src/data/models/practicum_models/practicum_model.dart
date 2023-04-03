@@ -46,13 +46,12 @@ class PracticumModel extends PracticumEntity {
   factory PracticumModel.fromMap(
     Map<String, dynamic> documentSnapshot,
   ) {
-    final data = PracticumModel(
+    return PracticumModel(
       uid: documentSnapshot['uid'],
       badgePath: documentSnapshot['badge_path'],
       course: documentSnapshot['course'],
       courseContractPath: documentSnapshot['course_contract_path'],
     );
-    return data;
   }
 
   factory PracticumModel.fromEntity(PracticumEntity entity) {

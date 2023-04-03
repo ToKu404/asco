@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+
 import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/src/presentations/features/home/home_page.dart';
@@ -84,7 +85,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
             PeoplePage(practicumUid: widget.practicumId),
           ]
         : [
-            const AssistantLaboratoryPage(),
+            AssistantLaboratoryPage(classroomId: widget.classroomId),
             const AssistantAssistancePage(),
             const AssistantLeaderboardPage(),
             const ExtrasPage(),

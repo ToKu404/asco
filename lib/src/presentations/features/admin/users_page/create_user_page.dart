@@ -3,7 +3,7 @@ import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/core/helpers/reusable_helper.dart';
 import 'package:asco/src/domain/entities/auth_entities/user_entity.dart';
-import 'package:asco/core/helpers/role_map.dart';
+import 'package:asco/core/helpers/map_helper.dart';
 import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/user_role_entity.dart';
 import 'package:asco/src/presentations/providers/auth_notifier.dart';
@@ -276,7 +276,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
           profilePhoto: 'https://i.mydramalist.com/e3AQef.jpg',
           username: _usernameController.text,
           userRole: UserRoleEntity(
-              id: RoleHelper.nameToId(_roleNotifier.value!),
+              id: MapHelper.nameToId(_roleNotifier.value!),
               name: _roleNotifier.value!),
         ),
       );

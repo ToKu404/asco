@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:asco/core/helpers/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
+import 'package:asco/src/presentations/widgets/circle_network_image.dart';
 
 class MentorTile extends StatelessWidget {
   final String name;
   final String role;
-  final String assetName;
+  final String image;
 
   const MentorTile({
     super.key,
     required this.name,
     required this.role,
-    required this.assetName,
+    required this.image,
   });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: CircleAvatar(
-        radius: 22,
-        backgroundColor: Palette.disable,
-        foregroundImage: AssetImage(
-          AssetPath.getImage(assetName),
-        ),
+      leading: CircleNetworkImage(
+        width: 44,
+        height: 44,
+        imgUrl: image,
+        placeholderSize: 16,
+        errorIcon: Icons.person_rounded,
       ),
       title: Text(
         name,
