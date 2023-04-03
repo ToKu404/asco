@@ -72,7 +72,7 @@ class _AssistantLaboratoryCourseDetailPageState
     return Consumer<ProfileNotifier>(
       builder: (context, profileNotifier, child) {
         if (profileNotifier.isSuccessState('multiple')) {
-          return _buildMainPage(
+          return buildMainPage(
             context,
             assistant1: profileNotifier.listData
                 .where((e) => e.uid == widget.meetingDetail.assistant1Uid!)
@@ -104,7 +104,7 @@ class _AssistantLaboratoryCourseDetailPageState
     );
   }
 
-  Scaffold _buildMainPage(
+  Scaffold buildMainPage(
     BuildContext context, {
     required DetailProfileEntity assistant1,
     required DetailProfileEntity assistant2,
@@ -367,17 +367,17 @@ class _AssistantLaboratoryCourseDetailPageState
       // ),
       isThreeLine: true,
       thirdLine: Text(
-        _setStudentCardText(attendance),
+        setStudentCardText(attendance),
         style: kTextTheme.bodySmall?.copyWith(
           color: Colors.grey,
         ),
       ),
       hasTrailing: true,
-      trailing: _setStudentCardTrailing(attendance),
+      trailing: buildStudentCardTrailing(attendance),
     );
   }
 
-  String _setStudentCardText(AttendanceEntity attendance) {
+  String setStudentCardText(AttendanceEntity attendance) {
     return attendance.attendanceStatus == null
         ? 'Belum absen'
         : attendance.attendanceStatus == 3
@@ -389,7 +389,7 @@ class _AssistantLaboratoryCourseDetailPageState
             : '${MapHelper.getAttendanceStatus(attendance.attendanceStatus!)} ${attendance.note != null ? "(${attendance.note})" : ""}';
   }
 
-  CircleBorderContainer _setStudentCardTrailing(AttendanceEntity attendance) {
+  CircleBorderContainer buildStudentCardTrailing(AttendanceEntity attendance) {
     return attendance.attendanceStatus == null
         ? const CircleBorderContainer(size: 32)
         : attendance.attendanceStatus == 3

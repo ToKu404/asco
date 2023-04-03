@@ -115,11 +115,11 @@ class _HomePageState extends State<HomePage> {
 
                       return CourseCard(
                         badge: AssetPath.getVector('badge_android.svg'),
-                        title: _setTitleText(
+                        title: setTitleText(
                           classroom?.practicum?.course,
                           classroom?.classCode,
                         ),
-                        time: _setTimeText(
+                        time: setTimeText(
                           classroom?.meetingDay,
                           ReusableHelper.timeFormatter(
                             TimeHelper(
@@ -149,11 +149,11 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  String _setTitleText(String? text1, String? text2) {
+  String setTitleText(String? text1, String? text2) {
     return '${text1 ?? ''} ${text2 ?? ''}';
   }
 
-  String _setTimeText(String? day, String? time) {
+  String setTimeText(String? day, String? time) {
     return 'Setiap hari ${day ?? ''}, Pukul ${time ?? ''}';
   }
 }

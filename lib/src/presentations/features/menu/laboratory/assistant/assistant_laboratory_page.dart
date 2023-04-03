@@ -98,29 +98,30 @@ class _AssistantLaboratoryPageState extends State<AssistantLaboratoryPage> {
     ];
 
     return Consumer2<ClassroomNotifier, MeetingNotifier>(
-        builder: (context, classroomNotifier, meetingNotifier, child) {
-      if (classroomNotifier.isSuccessState('single') &&
-          meetingNotifier.isSuccessState('find')) {
-        return _buildMainPage(
-          context,
-          labMenuCards: labMenuCards,
-          classroom: classroomNotifier.data,
-          meetings: meetingNotifier.listData,
-        );
-      }
+      builder: (context, classroomNotifier, meetingNotifier, child) {
+        if (classroomNotifier.isSuccessState('single') &&
+            meetingNotifier.isSuccessState('find')) {
+          return buildMainPage(
+            context,
+            labMenuCards: labMenuCards,
+            classroom: classroomNotifier.data,
+            meetings: meetingNotifier.listData,
+          );
+        }
 
-      if (classroomNotifier.isErrorState('single') ||
-          meetingNotifier.isErrorState('find')) {
-        return const Center(
-          child: Text('unknown error occured'),
-        );
-      }
+        if (classroomNotifier.isErrorState('single') ||
+            meetingNotifier.isErrorState('find')) {
+          return const Center(
+            child: Text('unknown error occured'),
+          );
+        }
 
-      return const AscoLoading();
-    });
+        return const AscoLoading();
+      },
+    );
   }
 
-  Scaffold _buildMainPage(
+  Scaffold buildMainPage(
     BuildContext context, {
     required List<MenuCard> labMenuCards,
     required ClassroomEntity? classroom,
@@ -165,7 +166,7 @@ class _AssistantLaboratoryPageState extends State<AssistantLaboratoryPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                _setTitleText(
+                                setTitleText(
                                   classroom?.practicum?.course,
                                   classroom?.classCode,
                                 ),
@@ -177,7 +178,7 @@ class _AssistantLaboratoryPageState extends State<AssistantLaboratoryPage> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                _setTimeText(
+                                setTimeText(
                                   classroom?.meetingDay,
                                   ReusableHelper.timeFormatter(
                                     TimeHelper(
@@ -281,11 +282,11 @@ class _AssistantLaboratoryPageState extends State<AssistantLaboratoryPage> {
     );
   }
 
-  String _setTitleText(String? text1, String? text2) {
+  String setTitleText(String? text1, String? text2) {
     return '${text1 ?? ''} ${text2 ?? ''}';
   }
 
-  String _setTimeText(String? day, String? time) {
+  String setTimeText(String? day, String? time) {
     return 'Setiap hari ${day ?? ''}, Pukul ${time ?? ''}';
   }
 }
