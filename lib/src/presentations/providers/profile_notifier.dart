@@ -30,7 +30,6 @@ class ProfileNotifier extends CrudDataService<DetailProfileEntity> {
       'self',
       'multiple',
       'update_practicums',
-      'by_classroom',
     ]);
   }
 
@@ -73,25 +72,6 @@ class ProfileNotifier extends CrudDataService<DetailProfileEntity> {
     );
   }
 
-  Future<void> fetchMultiple({required List<String> multipleId}) async {
-    updateState(state: RequestState.loading, key: 'multiple');
-
-    final result = await getMultipleUsecase.execute(multipleId: multipleId);
-
-    result.fold(
-      (l) {
-        updateState(state: RequestState.error, key: 'multiple');
-
-        setErrorMessage(l.message);
-      },
-      (r) {
-        updateState(state: RequestState.success, key: 'multiple');
-
-        setListData(r);
-      },
-    );
-  }
-
   /// Self user profile
   Future<void> getSelfDetail() async {
     updateState(state: RequestState.loading, key: 'self');
@@ -108,6 +88,25 @@ class ProfileNotifier extends CrudDataService<DetailProfileEntity> {
         updateState(state: RequestState.success, key: 'self');
 
         setData(r);
+      },
+    );
+  }
+
+  Future<void> fetchMultiple({required List<String> multipleId}) async {
+    updateState(state: RequestState.loading, key: 'multiple');
+
+    final result = await getMultipleUsecase.execute(multipleId: multipleId);
+
+    result.fold(
+      (l) {
+        updateState(state: RequestState.error, key: 'multiple');
+
+        setErrorMessage(l.message);
+      },
+      (r) {
+        updateState(state: RequestState.success, key: 'multiple');
+
+        setListData(r);
       },
     );
   }

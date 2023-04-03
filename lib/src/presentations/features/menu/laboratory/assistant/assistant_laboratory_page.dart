@@ -1,17 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:asco/core/helpers/asset_path.dart';
+import 'package:provider/provider.dart';
+
 import 'package:asco/core/constants/color_const.dart';
-import 'package:asco/core/helpers/app_size.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/src/data/dummy_data.dart';
+import 'package:asco/core/helpers/app_size.dart';
+import 'package:asco/core/helpers/asset_path.dart';
+import 'package:asco/core/helpers/reusable_helper.dart';
+import 'package:asco/core/helpers/time_helper.dart';
+import 'package:asco/src/domain/entities/classroom_entities/classroom_entities.dart';
+import 'package:asco/src/domain/entities/meeting_entities/detail_meeting_entity.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/assistant/assistant_laboratory_course_detail_page.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/assistant/assistant_laboratory_schedule_page.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/widgets/meeting_card.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/widgets/menu_card.dart';
+import 'package:asco/src/presentations/providers/classroom_notifier.dart';
+import 'package:asco/src/presentations/providers/meeting_notifier.dart';
+import 'package:asco/src/presentations/widgets/asco_loading.dart';
 
-class AssistantLaboratoryPage extends StatelessWidget {
-  const AssistantLaboratoryPage({super.key});
+class AssistantLaboratoryPage extends StatefulWidget {
+  final String classroomId;
+
+  const AssistantLaboratoryPage({super.key, required this.classroomId});
+
+  @override
+  State<AssistantLaboratoryPage> createState() =>
+      _AssistantLaboratoryPageState();
+}
+
+class _AssistantLaboratoryPageState extends State<AssistantLaboratoryPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(() => {
+          Provider.of<ClassroomNotifier>(context, listen: false)
+              .getDetail(uid: widget.classroomId),
+          Provider.of<MeetingNotifier>(context, listen: false)
+              .fetch(classroomUid: widget.classroomId),
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +74,35 @@ class AssistantLaboratoryPage extends StatelessWidget {
       ),
     ];
 
+    return Consumer2<ClassroomNotifier, MeetingNotifier>(
+        builder: (context, classroomNotifier, meetingNotifier, child) {
+      if (classroomNotifier.isSuccessState('single') &&
+          meetingNotifier.isSuccessState('find')) {
+        return _buildMainPage(
+          context,
+          labMenuCards: labMenuCards,
+          classroom: classroomNotifier.data,
+          meetings: meetingNotifier.listData,
+        );
+      }
+
+      if (classroomNotifier.isErrorState('single') ||
+          meetingNotifier.isErrorState('find')) {
+        return const Center(
+          child: Text('unknown error occured'),
+        );
+      }
+
+      return const AscoLoading();
+    });
+  }
+
+  Scaffold _buildMainPage(
+    BuildContext context, {
+    required List<MenuCard> labMenuCards,
+    required ClassroomEntity? classroom,
+    required List<DetailMeetingEntity> meetings,
+  }) {
     return Scaffold(
       backgroundColor: Palette.grey,
       body: SingleChildScrollView(
@@ -85,7 +142,10 @@ class AssistantLaboratoryPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                'Pemrograman Mobile A',
+                                _setTitleText(
+                                  classroom?.practicum?.course,
+                                  classroom?.classCode,
+                                ),
                                 style: kTextTheme.headlineMedium?.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color: Palette.white,
@@ -94,7 +154,17 @@ class AssistantLaboratoryPage extends StatelessWidget {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                'Setiap hari Senin Pukul 10.10 - 12.40',
+                                _setTimeText(
+                                  classroom?.meetingDay,
+                                  ReusableHelper.timeFormatter(
+                                    TimeHelper(
+                                      startHour: classroom?.startHour,
+                                      endHour: classroom?.endHour,
+                                      startMinute: classroom?.startMinute,
+                                      endMinute: classroom?.endMinute,
+                                    ),
+                                  ),
+                                ),
                                 style: kTextTheme.bodyMedium?.copyWith(
                                   color: Palette.white,
                                 ),
@@ -172,21 +242,23 @@ class AssistantLaboratoryPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            // ...courses
-            //     .where((course) => course.isLocked == false)
-            //     .map(
-            //       (course) => MeetingCard(
-            //         meetingData: course,
-            //         onTap: () {
-            //           showAssistantLaboratoryCourseDetailPage(context);
-            //         },
-            //       ),
-            //     )
-            //     .toList()
-            //     .reversed,
+            for (var i = 0; i < meetings.length; i++)
+              MeetingCard(
+                number: i + 1,
+                meeting: meetings[i],
+                onTap: () => showAssistantLaboratoryCourseDetailPage(context),
+              ),
           ],
         ),
       ),
     );
+  }
+
+  String _setTitleText(String? text1, String? text2) {
+    return '${text1 ?? ''} ${text2 ?? ''}';
+  }
+
+  String _setTimeText(String? day, String? time) {
+    return 'Setiap hari ${day ?? ''}, Pukul ${time ?? ''}';
   }
 }

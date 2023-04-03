@@ -79,16 +79,16 @@ class _AssistantLaboratoryCourseDetailPageState
                             ),
                           ),
                         ),
-                        const MentorTile(
-                          name: 'Richard Enrico',
-                          role: 'Pemateri',
-                          assetName: 'avatar1.jpg',
-                        ),
-                        const MentorTile(
-                          name: 'Muh. Yusuf Syam',
-                          role: 'Pendamping',
-                          assetName: 'avatar2.jpg',
-                        ),
+                        // const MentorTile(
+                        //   name: 'Richard Enrico',
+                        //   role: 'Pemateri',
+                        //   assetName: 'avatar1.jpg',
+                        // ),
+                        // const MentorTile(
+                        //   name: 'Muh. Yusuf Syam',
+                        //   role: 'Pendamping',
+                        //   assetName: 'avatar2.jpg',
+                        // ),
                         const SizedBox(height: 12),
                       ],
                     ),

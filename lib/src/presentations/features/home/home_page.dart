@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+
 import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
@@ -114,11 +115,11 @@ class _HomePageState extends State<HomePage> {
 
                       return CourseCard(
                         badge: AssetPath.getVector('badge_android.svg'),
-                        title: setTitleText(
+                        title: _setTitleText(
                           classroom?.practicum?.course,
                           classroom?.classCode,
                         ),
-                        time: setTimeText(
+                        time: _setTimeText(
                           classroom?.meetingDay,
                           ReusableHelper.timeFormatter(
                             TimeHelper(
@@ -147,11 +148,11 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  String setTitleText(String? text1, String? text2) {
+  String _setTitleText(String? text1, String? text2) {
     return '${text1 ?? ''} ${text2 ?? ''}';
   }
 
-  String setTimeText(String? day, String? time) {
+  String _setTimeText(String? day, String? time) {
     return 'Setiap hari ${day ?? ''}, Pukul ${time ?? ''}';
   }
 }
