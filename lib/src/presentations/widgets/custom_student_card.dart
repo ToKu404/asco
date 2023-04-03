@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:asco/core/helpers/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/src/data/dummy_data.dart';
+import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
+import 'package:asco/src/presentations/widgets/custom_network_image.dart';
 
 class CustomStudentCard extends StatelessWidget {
-  final Student student;
+  final DetailProfileEntity student;
   final bool hasAvatarBorder;
   final bool hasTrailing;
   final Widget? trailing;
@@ -49,11 +49,12 @@ class CustomStudentCard extends StatelessWidget {
                 backgroundColor: Palette.purple80,
                 child: Hero(
                   tag: student,
-                  child: CircleAvatar(
-                    radius: hasAvatarBorder ? 26 : 28,
-                    foregroundImage: AssetImage(
-                      AssetPath.getImage('avatar${student.id}.jpg'),
-                    ),
+                  child: CustomNetworkImage(
+                    width: hasAvatarBorder ? 52 : 56,
+                    height: hasAvatarBorder ? 52 : 56,
+                    imgUrl: student.profilePhoto!,
+                    placeholderSize: 20,
+                    errorIcon: Icons.person_rounded,
                   ),
                 ),
               ),
@@ -64,14 +65,14 @@ class CustomStudentCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      student.nim,
+                      student.username ?? '',
                       style: kTextTheme.bodyMedium?.copyWith(
                         color: Palette.purple60,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      student.name,
+                      student.fullName ?? '',
                       style: kTextTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w600,
                         color: Palette.purple80,

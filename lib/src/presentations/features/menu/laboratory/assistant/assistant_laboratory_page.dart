@@ -246,7 +246,11 @@ class _AssistantLaboratoryPageState extends State<AssistantLaboratoryPage> {
               MeetingCard(
                 number: i + 1,
                 meeting: meetings[i],
-                onTap: () => showAssistantLaboratoryCourseDetailPage(context),
+                onTap: () => showAssistantLaboratoryCourseDetailPage(
+                  context,
+                  meetingNumber: i + 1,
+                  meetingDetail: meetings[i],
+                ),
               ),
           ],
         ),

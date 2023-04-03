@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:asco/core/helpers/asset_path.dart';
+
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/core/helpers/asset_path.dart';
 import 'package:asco/src/data/dummy_data.dart';
 import 'package:asco/src/presentations/widgets/circle_border_container.dart';
 
@@ -16,6 +17,29 @@ class AttendanceDialog extends StatefulWidget {
 }
 
 class _AttendanceDialogState extends State<AttendanceDialog> {
+  final _listStatus = <FaceStatus>[
+    const FaceStatus(
+      status: 'Alfa',
+      icon: 'face_dizzy_filled.svg',
+      color: Color(0xFFFA78A6),
+    ),
+    const FaceStatus(
+      status: 'Izin',
+      icon: 'face_neutral_filled.svg',
+      color: Color(0xFF788DFA),
+    ),
+    const FaceStatus(
+      status: 'Sakit',
+      icon: 'face_sick_filled.svg',
+      color: Color(0xFFFAC678),
+    ),
+    const FaceStatus(
+      status: 'Hadir',
+      icon: 'face_smile_filled.svg',
+      color: Palette.purple60,
+    ),
+  ];
+
   final _listPoints = <String>['+5', '+10', '+15', '+20', '+25', '+30'];
 
   late final ValueNotifier<FaceStatus> _statusNotifier;
@@ -24,7 +48,7 @@ class _AttendanceDialogState extends State<AttendanceDialog> {
 
   @override
   void initState() {
-    _statusNotifier = ValueNotifier(listStatus.first);
+    _statusNotifier = ValueNotifier(_listStatus.first);
     _pointNotifier = ValueNotifier(_listPoints.first);
     _noteController = TextEditingController();
 
@@ -118,6 +142,7 @@ class _AttendanceDialogState extends State<AttendanceDialog> {
                     statusNotifier: _statusNotifier,
                     pointNotifier: _pointNotifier,
                     noteController: _noteController,
+                    listStatus: _listStatus,
                     listPoints: _listPoints,
                   ),
                 ],
@@ -134,6 +159,7 @@ class AttendanceOptions extends StatelessWidget {
   final ValueNotifier<FaceStatus> statusNotifier;
   final ValueNotifier<String> pointNotifier;
   final TextEditingController noteController;
+  final List<FaceStatus> listStatus;
   final List<String> listPoints;
 
   const AttendanceOptions({
@@ -141,6 +167,7 @@ class AttendanceOptions extends StatelessWidget {
     required this.statusNotifier,
     required this.pointNotifier,
     required this.noteController,
+    required this.listStatus,
     required this.listPoints,
   });
 
@@ -306,4 +333,16 @@ class ExtraPointWidget extends StatelessWidget {
       ),
     );
   }
+}
+
+class FaceStatus {
+  final String status;
+  final String icon;
+  final Color color;
+
+  const FaceStatus({
+    required this.status,
+    required this.icon,
+    required this.color,
+  });
 }
