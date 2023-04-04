@@ -8,6 +8,7 @@ import 'package:asco/core/helpers/app_size.dart';
 import 'package:asco/core/helpers/asset_path.dart';
 import 'package:asco/core/helpers/reusable_helper.dart';
 import 'package:asco/core/helpers/time_helper.dart';
+import 'package:asco/core/utils/snack_bar_utils.dart';
 import 'package:asco/src/domain/entities/classroom_entities/classroom_entities.dart';
 import 'package:asco/src/domain/entities/meeting_entities/detail_meeting_entity.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/assistant/assistant_laboratory_course_detail_page.dart';
@@ -17,11 +18,17 @@ import 'package:asco/src/presentations/features/menu/laboratory/widgets/menu_car
 import 'package:asco/src/presentations/providers/classroom_notifier.dart';
 import 'package:asco/src/presentations/providers/meeting_notifier.dart';
 import 'package:asco/src/presentations/widgets/asco_loading.dart';
+import 'package:asco/src/presentations/widgets/snack_bar/content_type.dart';
 
 class AssistantLaboratoryPage extends StatefulWidget {
+  final String userId;
   final String classroomId;
 
-  const AssistantLaboratoryPage({super.key, required this.classroomId});
+  const AssistantLaboratoryPage({
+    super.key,
+    required this.userId,
+    required this.classroomId,
+  });
 
   @override
   State<AssistantLaboratoryPage> createState() =>
@@ -70,34 +77,35 @@ class _AssistantLaboratoryPageState extends State<AssistantLaboratoryPage> {
         strokeColor: Palette.azure40,
         fillColor: Palette.azure20,
         iconName: 'calendar_blank_outlined.svg',
-        onTap: () => showAssistantLaboratorySchedulePage(context),
+        onTap: () => onTapAssistantScheduleMenuCard(context),
       ),
     ];
 
     return Consumer2<ClassroomNotifier, MeetingNotifier>(
-        builder: (context, classroomNotifier, meetingNotifier, child) {
-      if (classroomNotifier.isSuccessState('single') &&
-          meetingNotifier.isSuccessState('find')) {
-        return _buildMainPage(
-          context,
-          labMenuCards: labMenuCards,
-          classroom: classroomNotifier.data,
-          meetings: meetingNotifier.listData,
-        );
-      }
+      builder: (context, classroomNotifier, meetingNotifier, child) {
+        if (classroomNotifier.isSuccessState('single') &&
+            meetingNotifier.isSuccessState('find')) {
+          return buildMainPage(
+            context,
+            labMenuCards: labMenuCards,
+            classroom: classroomNotifier.data,
+            meetings: meetingNotifier.listData,
+          );
+        }
 
-      if (classroomNotifier.isErrorState('single') ||
-          meetingNotifier.isErrorState('find')) {
-        return const Center(
-          child: Text('unknown error occured'),
-        );
-      }
+        if (classroomNotifier.isErrorState('single') ||
+            meetingNotifier.isErrorState('find')) {
+          return const Center(
+            child: Text('unknown error occured'),
+          );
+        }
 
-      return const AscoLoading();
-    });
+        return const AscoLoading();
+      },
+    );
   }
 
-  Scaffold _buildMainPage(
+  Scaffold buildMainPage(
     BuildContext context, {
     required List<MenuCard> labMenuCards,
     required ClassroomEntity? classroom,
@@ -142,7 +150,7 @@ class _AssistantLaboratoryPageState extends State<AssistantLaboratoryPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                _setTitleText(
+                                setTitleText(
                                   classroom?.practicum?.course,
                                   classroom?.classCode,
                                 ),
@@ -154,7 +162,7 @@ class _AssistantLaboratoryPageState extends State<AssistantLaboratoryPage> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                _setTimeText(
+                                setTimeText(
                                   classroom?.meetingDay,
                                   ReusableHelper.timeFormatter(
                                     TimeHelper(
@@ -246,11 +254,26 @@ class _AssistantLaboratoryPageState extends State<AssistantLaboratoryPage> {
               MeetingCard(
                 number: i + 1,
                 meeting: meetings[i],
-                onTap: () => showAssistantLaboratoryCourseDetailPage(
-                  context,
-                  meetingNumber: i + 1,
-                  meetingDetail: meetings[i],
-                ),
+                onTap: isMeetingCardPressable(meetings[i])
+                    ? () {
+                        showAssistantLaboratoryCourseDetailPage(
+                          context,
+                          meetingNumber: i + 1,
+                          meetingDetail: meetings[i],
+                        );
+                      }
+                    : () {
+                        final snackbar = SnackBarUtils.createSnackBar(
+                          title: 'Akses Ditutup!',
+                          message:
+                              'Hanya dapat dilihat jika Anda sebagai Pemateri atau Pendamping.',
+                          type: ContentType.warning,
+                        );
+
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(snackbar);
+                      },
               ),
           ],
         ),
@@ -258,11 +281,36 @@ class _AssistantLaboratoryPageState extends State<AssistantLaboratoryPage> {
     );
   }
 
-  String _setTitleText(String? text1, String? text2) {
+  void onTapAssistantScheduleMenuCard(BuildContext context) {
+    final listMeetingMap = <Map<int, DetailMeetingEntity>>[];
+
+    final meetings =
+        Provider.of<MeetingNotifier>(context, listen: false).listData;
+
+    for (var meeting in meetings) {
+      if (meeting.assistant1Uid == widget.userId) {
+        listMeetingMap.add({0: meeting});
+      } else if (meeting.assistant2Uid == widget.userId) {
+        listMeetingMap.add({1: meeting});
+      }
+    }
+
+    showAssistantLaboratorySchedulePage(
+      context,
+      listMeetingMap: listMeetingMap,
+    );
+  }
+
+  bool isMeetingCardPressable(DetailMeetingEntity meeting) {
+    return meeting.assistant1Uid == widget.userId ||
+        meeting.assistant2Uid == widget.userId;
+  }
+
+  String setTitleText(String? text1, String? text2) {
     return '${text1 ?? ''} ${text2 ?? ''}';
   }
 
-  String _setTimeText(String? day, String? time) {
+  String setTimeText(String? day, String? time) {
     return 'Setiap hari ${day ?? ''}, Pukul ${time ?? ''}';
   }
 }

@@ -52,7 +52,7 @@ class _StudentLaboratoryCourseDetailPageState
     return Consumer<ProfileNotifier>(
       builder: (context, profileNotifier, child) {
         if (profileNotifier.isSuccessState('multiple')) {
-          return _buildMainPage(
+          return buildMainPage(
             context,
             assistant1: profileNotifier.listData
                 .where((e) => e.uid == widget.meetingDetail.assistant1Uid!)
@@ -64,8 +64,11 @@ class _StudentLaboratoryCourseDetailPageState
         }
 
         if (profileNotifier.isErrorState('multiple')) {
-          return const Center(
-            child: Text('unknown error occured'),
+          return const Scaffold(
+            backgroundColor: Palette.grey,
+            body: Center(
+              child: Text('unknown error occured'),
+            ),
           );
         }
 
@@ -76,7 +79,7 @@ class _StudentLaboratoryCourseDetailPageState
     );
   }
 
-  Scaffold _buildMainPage(
+  Scaffold buildMainPage(
     BuildContext context, {
     required DetailProfileEntity assistant1,
     required DetailProfileEntity assistant2,

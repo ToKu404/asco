@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:flutter/material.dart';
 
 class TempBadgeHelper {
   final int badgeId;

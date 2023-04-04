@@ -49,10 +49,10 @@ class CustomStudentCard extends StatelessWidget {
                 child: CircleNetworkImage(
                   width: 56,
                   height: 56,
-                  imgUrl: student.profilePhoto!,
+                  imgUrl: student.profilePhoto ?? '',
                   placeholderSize: 20,
                   errorIcon: Icons.person_rounded,
-                  withBorder: true,
+                  withBorder: hasAvatarBorder,
                   borderWidth: 2,
                   borderColor: Palette.purple80,
                 ),

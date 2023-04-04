@@ -76,7 +76,7 @@ class _StudentLaboratoryPageState extends State<StudentLaboratoryPage> {
       builder: (context, classroomNotifier, meetingNotifier, child) {
         if (classroomNotifier.isSuccessState('single') &&
             meetingNotifier.isSuccessState('find')) {
-          return _buildMainPage(
+          return buildMainPage(
             context,
             labMenuCards: labMenuCards,
             classroom: classroomNotifier.data,
@@ -96,7 +96,7 @@ class _StudentLaboratoryPageState extends State<StudentLaboratoryPage> {
     );
   }
 
-  Scaffold _buildMainPage(
+  Scaffold buildMainPage(
     BuildContext context, {
     required List<MenuCard> labMenuCards,
     required ClassroomEntity? classroom,
@@ -141,7 +141,7 @@ class _StudentLaboratoryPageState extends State<StudentLaboratoryPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                _setTitleText(
+                                setTitleText(
                                   classroom?.practicum?.course,
                                   classroom?.classCode,
                                 ),
@@ -153,7 +153,7 @@ class _StudentLaboratoryPageState extends State<StudentLaboratoryPage> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                _setTimeText(
+                                setTimeText(
                                   classroom?.meetingDay,
                                   ReusableHelper.timeFormatter(
                                     TimeHelper(
@@ -257,11 +257,11 @@ class _StudentLaboratoryPageState extends State<StudentLaboratoryPage> {
     );
   }
 
-  String _setTitleText(String? text1, String? text2) {
+  String setTitleText(String? text1, String? text2) {
     return '${text1 ?? ''} ${text2 ?? ''}';
   }
 
-  String _setTimeText(String? day, String? time) {
+  String setTimeText(String? day, String? time) {
     return 'Setiap hari ${day ?? ''}, Pukul ${time ?? ''}';
   }
 }

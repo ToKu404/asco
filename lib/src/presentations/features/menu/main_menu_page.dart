@@ -24,6 +24,7 @@ import 'package:asco/src/presentations/widgets/side_menu/side_menu_parent.dart';
 
 void showMainMenuPage({
   required BuildContext context,
+  required String userId,
   required String classroomId,
   required String practicumId,
   required String groupId,
@@ -32,6 +33,7 @@ void showMainMenuPage({
     context,
     MaterialPageRoute(
       builder: (context) => MainMenuPage(
+        userId: userId,
         classroomId: classroomId,
         groupId: groupId,
         practicumId: practicumId,
@@ -43,12 +45,14 @@ void showMainMenuPage({
 }
 
 class MainMenuPage extends StatefulWidget {
+  final String userId;
   final String classroomId;
   final String groupId;
   final String practicumId;
 
   const MainMenuPage({
     super.key,
+    required this.userId,
     required this.classroomId,
     required this.groupId,
     required this.practicumId,
@@ -79,13 +83,19 @@ class _MainMenuPageState extends State<MainMenuPage> {
     final pages = roleId == 1
         ? [
             StudentLaboratoryPage(classroomId: widget.classroomId),
-            StudentAssistancePage(groupId: widget.groupId),
+            StudentAssistancePage(
+              groupId: widget.groupId,
+              practicumId: widget.practicumId,
+            ),
             const StudentLeaderboardPage(),
             const ExtrasPage(),
             PeoplePage(practicumUid: widget.practicumId),
           ]
         : [
-            AssistantLaboratoryPage(classroomId: widget.classroomId),
+            AssistantLaboratoryPage(
+              userId: widget.userId,
+              classroomId: widget.classroomId,
+            ),
             const AssistantAssistancePage(),
             const AssistantLeaderboardPage(),
             const ExtrasPage(),
