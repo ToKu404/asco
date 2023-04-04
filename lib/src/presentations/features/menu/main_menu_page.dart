@@ -70,7 +70,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
     super.initState();
 
     Future.microtask(
-      () => Provider.of<AuthNotifier>(context, listen: false)..getUser(),
+      () => Provider.of<AuthNotifier>(context, listen: false).getUser(),
     );
   }
 
@@ -84,6 +84,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
         ? [
             StudentLaboratoryPage(classroomId: widget.classroomId),
             StudentAssistancePage(
+              userId: widget.userId,
               groupId: widget.groupId,
               practicumId: widget.practicumId,
             ),
