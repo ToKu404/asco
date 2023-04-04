@@ -266,7 +266,7 @@ class _AssistantLaboratoryPageState extends State<AssistantLaboratoryPage> {
                         final snackbar = SnackBarUtils.createSnackBar(
                           title: 'Akses Ditutup!',
                           message:
-                              'Hanya dapat dilihat jika Anda sebagai Pemateri atau Pendamping.',
+                              'Hanya dapat dilihat oleh Pemateri atau Pendamping.',
                           type: ContentType.warning,
                         );
 

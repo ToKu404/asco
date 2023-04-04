@@ -1,6 +1,5 @@
 import 'dart:math' as math;
 
-import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -11,21 +10,25 @@ import 'package:asco/core/helpers/app_size.dart';
 import 'package:asco/core/helpers/asset_path.dart';
 import 'package:asco/src/data/dummy_data.dart';
 import 'package:asco/src/domain/entities/assistance_entities/assistance_group_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:asco/src/presentations/features/menu/assistance/student/student_assistance_course_detail_page.dart';
 import 'package:asco/src/presentations/features/menu/assistance/student/student_assistance_practitioner_page.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/assistance_status_badge.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/control_card.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/student_avatar.dart';
 import 'package:asco/src/presentations/providers/assistance_notifier.dart';
+import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:asco/src/presentations/widgets/asco_loading.dart';
 import 'package:asco/src/presentations/widgets/circle_network_image.dart';
 
 class StudentAssistancePage extends StatefulWidget {
+  final String userId;
   final String groupId;
   final String practicumId;
 
   const StudentAssistancePage({
     super.key,
+    required this.userId,
     required this.groupId,
     required this.practicumId,
   });
@@ -71,6 +74,14 @@ class _StudentAssistancePageState extends State<StudentAssistancePage> {
     BuildContext context, {
     required AssistanceGroupEntity? assistanceGroup,
   }) {
+    final self =
+        assistanceGroup?.students?.where((e) => e.uid == widget.userId).first;
+
+    final students = <ProfileEntity>[
+      self!.copyWith(nickName: 'You'),
+      ...?assistanceGroup?.students?.where((e) => e.uid != widget.userId),
+    ];
+
     return Scaffold(
       backgroundColor: Palette.grey,
       body: SingleChildScrollView(
@@ -210,9 +221,6 @@ class _StudentAssistancePageState extends State<StudentAssistancePage> {
                             context,
                             groupName: assistanceGroup!.name!,
                             practicumId: widget.practicumId,
-                            studentIds: assistanceGroup.students!
-                                .map((e) => e.uid!)
-                                .toList(),
                           );
                         },
                         child: Text(
@@ -233,11 +241,9 @@ class _StudentAssistancePageState extends State<StudentAssistancePage> {
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                itemBuilder: (_, index) => StudentAvatar(
-                  student: assistanceGroup?.students?[index],
-                ),
+                itemBuilder: (_, i) => StudentAvatar(student: students[i]),
                 separatorBuilder: (_, __) => const SizedBox(width: 10),
-                itemCount: assistanceGroup?.students?.length ?? 0,
+                itemCount: students.length,
               ),
             ),
             Padding(

@@ -18,13 +18,11 @@ import 'package:asco/src/presentations/widgets/snack_bar/content_type.dart';
 class StudentAssistancePractitionerPage extends StatefulWidget {
   final String groupName;
   final String practicumId;
-  final List<String> studentIds;
 
   const StudentAssistancePractitionerPage({
     super.key,
     required this.groupName,
     required this.practicumId,
-    required this.studentIds,
   });
 
   @override
@@ -40,7 +38,7 @@ class _StudentAssistancePractitionerPageState
 
     Future.microtask(
       () => Provider.of<ProfileNotifier>(context, listen: false)
-          .fetchMultiple(multipleId: widget.studentIds),
+          .fetchAll(practicumUid: widget.practicumId),
     );
   }
 
@@ -48,8 +46,12 @@ class _StudentAssistancePractitionerPageState
   Widget build(BuildContext context) {
     return Consumer<ProfileNotifier>(
       builder: (context, profileNotifier, child) {
-        if (profileNotifier.isSuccessState('multiple')) {
-          final classCodes = profileNotifier.listData.map((detailProfile) {
+        if (profileNotifier.isSuccessState('find')) {
+          final students = profileNotifier.listData
+              .where((e) => e.userRole!.id == 1)
+              .toList();
+
+          final classCodes = students.map((detailProfile) {
             final key = detailProfile.userPracticums!.keys
                 .where((e) => e == widget.practicumId)
                 .first;
@@ -59,12 +61,12 @@ class _StudentAssistancePractitionerPageState
 
           return buildMainPage(
             context,
-            students: profileNotifier.listData,
+            students: students,
             classCodes: classCodes,
           );
         }
 
-        if (profileNotifier.isErrorState('multiple')) {
+        if (profileNotifier.isErrorState('find')) {
           return const Scaffold(
             backgroundColor: Palette.grey,
             body: Center(
@@ -144,7 +146,6 @@ void showStudentAssistancePractitionerPage(
   BuildContext context, {
   required String groupName,
   required String practicumId,
-  required List<String> studentIds,
 }) {
   Navigator.push(
     context,
@@ -152,7 +153,6 @@ void showStudentAssistancePractitionerPage(
       builder: (_) => StudentAssistancePractitionerPage(
         groupName: groupName,
         practicumId: practicumId,
-        studentIds: studentIds,
       ),
       settings: const RouteSettings(
         name: AppRoute.studentAssistancePractitionerPage,
