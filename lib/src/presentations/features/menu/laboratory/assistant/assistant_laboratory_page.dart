@@ -8,6 +8,7 @@ import 'package:asco/core/helpers/app_size.dart';
 import 'package:asco/core/helpers/asset_path.dart';
 import 'package:asco/core/helpers/reusable_helper.dart';
 import 'package:asco/core/helpers/time_helper.dart';
+import 'package:asco/core/utils/snack_bar_utils.dart';
 import 'package:asco/src/domain/entities/classroom_entities/classroom_entities.dart';
 import 'package:asco/src/domain/entities/meeting_entities/detail_meeting_entity.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/assistant/assistant_laboratory_course_detail_page.dart';
@@ -17,6 +18,7 @@ import 'package:asco/src/presentations/features/menu/laboratory/widgets/menu_car
 import 'package:asco/src/presentations/providers/classroom_notifier.dart';
 import 'package:asco/src/presentations/providers/meeting_notifier.dart';
 import 'package:asco/src/presentations/widgets/asco_loading.dart';
+import 'package:asco/src/presentations/widgets/snack_bar/content_type.dart';
 
 class AssistantLaboratoryPage extends StatefulWidget {
   final String userId;
@@ -75,25 +77,7 @@ class _AssistantLaboratoryPageState extends State<AssistantLaboratoryPage> {
         strokeColor: Palette.azure40,
         fillColor: Palette.azure20,
         iconName: 'calendar_blank_outlined.svg',
-        onTap: () {
-          final listMeetingMap = <Map<int, DetailMeetingEntity>>[];
-
-          final meetings =
-              Provider.of<MeetingNotifier>(context, listen: false).listData;
-
-          for (var meeting in meetings) {
-            if (meeting.assistant1Uid == widget.userId) {
-              listMeetingMap.add({0: meeting});
-            } else if (meeting.assistant2Uid == widget.userId) {
-              listMeetingMap.add({1: meeting});
-            }
-          }
-
-          return showAssistantLaboratorySchedulePage(
-            context,
-            listMeetingMap: listMeetingMap,
-          );
-        },
+        onTap: () => onTapAssistantScheduleMenuCard(context),
       ),
     ];
 
@@ -270,16 +254,56 @@ class _AssistantLaboratoryPageState extends State<AssistantLaboratoryPage> {
               MeetingCard(
                 number: i + 1,
                 meeting: meetings[i],
-                onTap: () => showAssistantLaboratoryCourseDetailPage(
-                  context,
-                  meetingNumber: i + 1,
-                  meetingDetail: meetings[i],
-                ),
+                onTap: isMeetingCardPressable(meetings[i])
+                    ? () {
+                        showAssistantLaboratoryCourseDetailPage(
+                          context,
+                          meetingNumber: i + 1,
+                          meetingDetail: meetings[i],
+                        );
+                      }
+                    : () {
+                        final snackbar = SnackBarUtils.createSnackBar(
+                          title: 'Akses Ditutup!',
+                          message:
+                              'Hanya dapat dilihat jika Anda sebagai Pemateri atau Pendamping.',
+                          type: ContentType.warning,
+                        );
+
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(snackbar);
+                      },
               ),
           ],
         ),
       ),
     );
+  }
+
+  void onTapAssistantScheduleMenuCard(BuildContext context) {
+    final listMeetingMap = <Map<int, DetailMeetingEntity>>[];
+
+    final meetings =
+        Provider.of<MeetingNotifier>(context, listen: false).listData;
+
+    for (var meeting in meetings) {
+      if (meeting.assistant1Uid == widget.userId) {
+        listMeetingMap.add({0: meeting});
+      } else if (meeting.assistant2Uid == widget.userId) {
+        listMeetingMap.add({1: meeting});
+      }
+    }
+
+    showAssistantLaboratorySchedulePage(
+      context,
+      listMeetingMap: listMeetingMap,
+    );
+  }
+
+  bool isMeetingCardPressable(DetailMeetingEntity meeting) {
+    return meeting.assistant1Uid == widget.userId ||
+        meeting.assistant2Uid == widget.userId;
   }
 
   String setTitleText(String? text1, String? text2) {

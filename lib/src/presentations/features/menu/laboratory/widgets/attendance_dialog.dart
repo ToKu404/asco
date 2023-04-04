@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/core/helpers/asset_path.dart';
-import 'package:asco/src/data/dummy_data.dart';
+import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:asco/src/presentations/widgets/circle_border_container.dart';
 
 class AttendanceDialog extends StatefulWidget {
-  final Student student;
+  final ProfileEntity student;
 
   const AttendanceDialog({super.key, required this.student});
 
@@ -124,14 +123,14 @@ class _AttendanceDialogState extends State<AttendanceDialog> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    widget.student.nim,
+                    widget.student.username!,
                     style: kTextTheme.bodyLarge?.copyWith(
                       color: Palette.purple60,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    widget.student.name,
+                    widget.student.fullName!,
                     style: kTextTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w700,
                       color: Palette.purple80,

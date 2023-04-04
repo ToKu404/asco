@@ -1,22 +1,25 @@
 import 'dart:math' as math;
-import 'package:asco/src/presentations/providers/assistance_notifier.dart';
-import 'package:asco/src/presentations/widgets/asco_loading.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:asco/core/helpers/asset_path.dart';
+import 'package:provider/provider.dart';
+
 import 'package:asco/core/constants/color_const.dart';
-import 'package:asco/core/helpers/app_size.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/core/helpers/app_size.dart';
+import 'package:asco/core/helpers/asset_path.dart';
 import 'package:asco/src/data/dummy_data.dart';
 import 'package:asco/src/presentations/features/menu/assistance/student/student_assistance_course_detail_page.dart';
 import 'package:asco/src/presentations/features/menu/assistance/student/student_assistance_practitioner_page.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/assistance_status_badge.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/control_card.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/student_avatar.dart';
-import 'package:provider/provider.dart';
+import 'package:asco/src/presentations/providers/assistance_notifier.dart';
+import 'package:asco/src/presentations/widgets/asco_loading.dart';
 
 class StudentAssistancePage extends StatefulWidget {
   final String? groupId;
+  
   const StudentAssistancePage({super.key, required this.groupId});
 
   @override

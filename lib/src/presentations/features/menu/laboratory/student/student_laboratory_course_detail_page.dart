@@ -64,8 +64,11 @@ class _StudentLaboratoryCourseDetailPageState
         }
 
         if (profileNotifier.isErrorState('multiple')) {
-          return const Center(
-            child: Text('unknown error occured'),
+          return const Scaffold(
+            backgroundColor: Palette.grey,
+            body: Center(
+              child: Text('unknown error occured'),
+            ),
           );
         }
 

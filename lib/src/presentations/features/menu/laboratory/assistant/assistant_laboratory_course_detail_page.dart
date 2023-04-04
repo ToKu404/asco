@@ -12,7 +12,9 @@ import 'package:asco/core/helpers/reusable_helper.dart';
 import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 import 'package:asco/src/domain/entities/meeting_entities/detail_meeting_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/assistant/assistant_laboratory_quiz_value_input_page.dart';
+import 'package:asco/src/presentations/features/menu/laboratory/widgets/attendance_dialog.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/widgets/mentor_tile.dart';
 import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:asco/src/presentations/widgets/asco_loading.dart';
@@ -92,8 +94,11 @@ class _AssistantLaboratoryCourseDetailPageState
         }
 
         if (profileNotifier.isErrorState('multiple')) {
-          return const Center(
-            child: Text('unknown error occured'),
+          return const Scaffold(
+            backgroundColor: Palette.grey,
+            body: Center(
+              child: Text('unknown error occured'),
+            ),
           );
         }
 
@@ -359,12 +364,14 @@ class _AssistantLaboratoryCourseDetailPageState
     return CustomStudentCard(
       student: student,
       hasAvatarBorder: true,
-      // onTap: () => showDialog(
-      //   context: context,
-      //   barrierLabel: '',
-      //   barrierDismissible: false,
-      //   builder: (_) => AttendanceDialog(student: student),
-      // ),
+      onTap: () => showDialog(
+        context: context,
+        barrierLabel: '',
+        barrierDismissible: false,
+        builder: (_) => AttendanceDialog(
+          student: ProfileEntity.fromDetail(student),
+        ),
+      ),
       isThreeLine: true,
       thirdLine: Text(
         setStudentCardText(attendance),

@@ -22,28 +22,32 @@ class AssistantLaboratorySchedulePage extends StatelessWidget {
         titleText: 'Jadwal Asisten',
         onPressedBackButton: () => Navigator.pop(context),
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.fromLTRB(16, 24, 16, 14),
-        itemCount: listMeetingMap.length,
-        itemBuilder: (_, i) => MeetingCard(
-          number: i + 1,
-          meeting: listMeetingMap[i].values.first,
-          isThreeLine: true,
-          thirdLine: listMeetingMap[i].keys.first == 0
-              ? BuildBadge(
-                  badgeHelper: TempBadgeHelper(
-                    badgeId: 2,
-                    title: 'Pemateri',
-                  ),
-                )
-              : BuildBadge(
-                  badgeHelper: TempBadgeHelper(
-                    badgeId: 4,
-                    title: 'Pendamping',
-                  ),
-                ),
-        ),
-      ),
+      body: listMeetingMap.isEmpty
+          ? const Center(
+              child: Text('Anda tidak memiliki jadwal pertemuan.'),
+            )
+          : ListView.builder(
+              padding: const EdgeInsets.fromLTRB(16, 24, 16, 14),
+              itemCount: listMeetingMap.length,
+              itemBuilder: (_, i) => MeetingCard(
+                number: i + 1,
+                meeting: listMeetingMap[i].values.first,
+                isThreeLine: true,
+                thirdLine: listMeetingMap[i].keys.first == 0
+                    ? BuildBadge(
+                        badgeHelper: TempBadgeHelper(
+                          badgeId: 2,
+                          title: 'Pemateri',
+                        ),
+                      )
+                    : BuildBadge(
+                        badgeHelper: TempBadgeHelper(
+                          badgeId: 4,
+                          title: 'Pendamping',
+                        ),
+                      ),
+              ),
+            ),
     );
   }
 }
