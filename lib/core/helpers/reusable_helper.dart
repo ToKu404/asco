@@ -1,6 +1,9 @@
 import 'dart:convert';
+
 import 'package:crypto/crypto.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import 'package:asco/core/helpers/time_helper.dart';
 import 'package:asco/core/states/attendance_state.dart';
 import 'package:asco/src/domain/entities/assistance_entities/assistance_group_entity.dart';
@@ -160,6 +163,14 @@ class ReusableHelper {
       return data;
     } catch (e) {
       throw Exception(e.toString());
+    }
+  }
+
+  static Future<void> urlLauncher(String uri) async {
+    final Uri url = Uri.parse(uri);
+
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      throw Exception('Could not launch $url');
     }
   }
 }

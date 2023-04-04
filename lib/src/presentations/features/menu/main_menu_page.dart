@@ -83,7 +83,10 @@ class _MainMenuPageState extends State<MainMenuPage> {
     final pages = roleId == 1
         ? [
             StudentLaboratoryPage(classroomId: widget.classroomId),
-            StudentAssistancePage(groupId: widget.groupId),
+            StudentAssistancePage(
+              groupId: widget.groupId,
+              practicumId: widget.practicumId,
+            ),
             const StudentLeaderboardPage(),
             const ExtrasPage(),
             PeoplePage(practicumUid: widget.practicumId),

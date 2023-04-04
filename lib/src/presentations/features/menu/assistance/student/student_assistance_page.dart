@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +10,7 @@ import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/core/helpers/app_size.dart';
 import 'package:asco/core/helpers/asset_path.dart';
 import 'package:asco/src/data/dummy_data.dart';
+import 'package:asco/src/domain/entities/assistance_entities/assistance_group_entity.dart';
 import 'package:asco/src/presentations/features/menu/assistance/student/student_assistance_course_detail_page.dart';
 import 'package:asco/src/presentations/features/menu/assistance/student/student_assistance_practitioner_page.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/assistance_status_badge.dart';
@@ -16,11 +18,17 @@ import 'package:asco/src/presentations/features/menu/assistance/widgets/control_
 import 'package:asco/src/presentations/features/menu/assistance/widgets/student_avatar.dart';
 import 'package:asco/src/presentations/providers/assistance_notifier.dart';
 import 'package:asco/src/presentations/widgets/asco_loading.dart';
+import 'package:asco/src/presentations/widgets/circle_network_image.dart';
 
 class StudentAssistancePage extends StatefulWidget {
-  final String? groupId;
-  
-  const StudentAssistancePage({super.key, required this.groupId});
+  final String groupId;
+  final String practicumId;
+
+  const StudentAssistancePage({
+    super.key,
+    required this.groupId,
+    required this.practicumId,
+  });
 
   @override
   State<StudentAssistancePage> createState() => _StudentAssistancePageState();
@@ -30,22 +38,39 @@ class _StudentAssistancePageState extends State<StudentAssistancePage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => {
-          Provider.of<AssistanceNotifier>(context, listen: false)
-            ..getDetail(uuid: widget.groupId!),
-        });
+
+    Future.microtask(
+      () => Provider.of<AssistanceNotifier>(context, listen: false)
+          .getDetail(uuid: widget.groupId),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final groupNotifier = context.watch<AssistanceNotifier>();
+    return Consumer<AssistanceNotifier>(
+      builder: (context, assistanceNotifier, child) {
+        if (assistanceNotifier.isSuccessState('single')) {
+          return buildMainPage(
+            context,
+            assistanceGroup: assistanceNotifier.data,
+          );
+        }
 
-    if (groupNotifier.isLoadingState('single') || groupNotifier.data == null) {
-      return const AscoLoading(
-        withScaffold: true,
-      );
-    }
-    final groupEntity = groupNotifier.data;
+        if (assistanceNotifier.isErrorState('single')) {
+          return const Center(
+            child: Text('unknown error occured'),
+          );
+        }
+
+        return const AscoLoading();
+      },
+    );
+  }
+
+  Scaffold buildMainPage(
+    BuildContext context, {
+    required AssistanceGroupEntity? assistanceGroup,
+  }) {
     return Scaffold(
       backgroundColor: Palette.grey,
       body: SingleChildScrollView(
@@ -85,7 +110,7 @@ class _StudentAssistancePageState extends State<StudentAssistancePage> {
                             horizontal: 20,
                           ),
                           child: Text(
-                            'Grup Asistensi ${groupEntity?.name}',
+                            'Group Asistensi ${assistanceGroup?.name}',
                             style: kTextTheme.headlineMedium?.copyWith(
                               fontWeight: FontWeight.w600,
                               color: Palette.white,
@@ -127,15 +152,16 @@ class _StudentAssistancePageState extends State<StudentAssistancePage> {
                           ),
                           child: ListTile(
                             horizontalTitleGap: 12,
-                            leading: CircleAvatar(
-                              radius: 28,
-                              backgroundColor: Palette.purple60,
-                              child: CircleAvatar(
-                                radius: 26,
-                                foregroundImage: AssetImage(
-                                  AssetPath.getImage('avatar3.jpg'),
-                                ),
-                              ),
+                            leading: CircleNetworkImage(
+                              width: 56,
+                              height: 56,
+                              imgUrl:
+                                  '${assistanceGroup?.assistant?.profilePhoto}',
+                              placeholderSize: 20,
+                              errorIcon: Icons.person_rounded,
+                              withBorder: true,
+                              borderWidth: 2,
+                              borderColor: Palette.purple60,
                             ),
                             title: Text(
                               'Asisten',
@@ -145,7 +171,7 @@ class _StudentAssistancePageState extends State<StudentAssistancePage> {
                               ),
                             ),
                             subtitle: Text(
-                              '${groupEntity?.assistant?.fullName}',
+                              '${assistanceGroup?.assistant?.fullName}',
                               style: kTextTheme.titleSmall?.copyWith(
                                 fontWeight: FontWeight.w600,
                                 color: Palette.purple100,
@@ -178,7 +204,16 @@ class _StudentAssistancePageState extends State<StudentAssistancePage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          showStudentAssistancePractitionerPage(context);
+                          context.read<ProfileNotifier>().reset();
+
+                          showStudentAssistancePractitionerPage(
+                            context,
+                            groupName: assistanceGroup!.name!,
+                            practicumId: widget.practicumId,
+                            studentIds: assistanceGroup.students!
+                                .map((e) => e.uid!)
+                                .toList(),
+                          );
                         },
                         child: Text(
                           'Lihat Detail',
@@ -195,13 +230,14 @@ class _StudentAssistancePageState extends State<StudentAssistancePage> {
             ),
             SizedBox(
               height: 80,
-              child: ListView.builder(
+              child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                itemBuilder: (context, index) {
-                  return StudentAvatar(student: groupEntity.students![index]);
-                },
-                itemCount: groupEntity!.students!.length,
+                itemBuilder: (_, index) => StudentAvatar(
+                  student: assistanceGroup?.students?[index],
+                ),
+                separatorBuilder: (_, __) => const SizedBox(width: 10),
+                itemCount: assistanceGroup?.students?.length ?? 0,
               ),
             ),
             Padding(
