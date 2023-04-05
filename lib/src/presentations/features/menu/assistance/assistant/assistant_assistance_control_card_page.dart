@@ -1,18 +1,21 @@
 import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:asco/core/constants/app_route.dart';
-import 'package:asco/core/helpers/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
-import 'package:asco/core/helpers/app_size.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/core/helpers/app_size.dart';
+import 'package:asco/core/helpers/asset_path.dart';
 import 'package:asco/src/data/dummy_data.dart';
+import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/assistance_status_badge.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/control_card.dart';
 import 'package:asco/src/presentations/widgets/purple_app_bar.dart';
 
 class AssistantAssistanceControlCardPage extends StatelessWidget {
-  final Student student;
+  final DetailProfileEntity student;
 
   const AssistantAssistanceControlCardPage({super.key, required this.student});
 
@@ -116,7 +119,7 @@ class AssistantAssistanceControlCardPage extends StatelessWidget {
                                       radius: 48,
                                       foregroundImage: AssetImage(
                                         AssetPath.getImage(
-                                          'avatar${student.id}.jpg',
+                                          'avatar${student.uid}.jpg',
                                         ),
                                       ),
                                     ),
@@ -124,7 +127,7 @@ class AssistantAssistanceControlCardPage extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 16),
                                 Text(
-                                  student.name,
+                                  '${student.fullName}',
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: kTextTheme.titleLarge?.copyWith(
@@ -134,7 +137,7 @@ class AssistantAssistanceControlCardPage extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  student.nim,
+                                  '${student.username}',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: kTextTheme.titleSmall?.copyWith(
@@ -229,7 +232,7 @@ class AssistantAssistanceControlCardPage extends StatelessWidget {
 
 void showAssistantAssistanceControlCardPage(
   BuildContext context, {
-  required Student student,
+  required DetailProfileEntity student,
 }) {
   Navigator.push(
     context,

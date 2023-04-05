@@ -16,12 +16,10 @@ import 'package:asco/src/presentations/widgets/purple_app_bar.dart';
 import 'package:asco/src/presentations/widgets/snack_bar/content_type.dart';
 
 class StudentAssistancePractitionerPage extends StatefulWidget {
-  final String groupName;
   final String practicumId;
 
   const StudentAssistancePractitionerPage({
     super.key,
-    required this.groupName,
     required this.practicumId,
   });
 
@@ -90,7 +88,7 @@ class _StudentAssistancePractitionerPageState
     return Scaffold(
       backgroundColor: Palette.grey,
       appBar: PurpleAppBar(
-        titleText: 'Grup Asistensi ${widget.groupName}',
+        titleText: 'Praktikan',
         onPressedBackButton: () => Navigator.pop(context),
       ),
       body: ListView.separated(
@@ -144,14 +142,12 @@ class _StudentAssistancePractitionerPageState
 
 void showStudentAssistancePractitionerPage(
   BuildContext context, {
-  required String groupName,
   required String practicumId,
 }) {
   Navigator.push(
     context,
     MaterialPageRoute(
       builder: (_) => StudentAssistancePractitionerPage(
-        groupName: groupName,
         practicumId: practicumId,
       ),
       settings: const RouteSettings(

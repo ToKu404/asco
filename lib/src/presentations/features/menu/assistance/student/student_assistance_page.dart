@@ -219,7 +219,6 @@ class _StudentAssistancePageState extends State<StudentAssistancePage> {
 
                           showStudentAssistancePractitionerPage(
                             context,
-                            groupName: assistanceGroup!.name!,
                             practicumId: widget.practicumId,
                           );
                         },
