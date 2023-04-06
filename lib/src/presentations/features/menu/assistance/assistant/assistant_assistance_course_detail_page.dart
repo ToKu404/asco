@@ -11,7 +11,11 @@ import 'package:asco/core/helpers/app_size.dart';
 import 'package:asco/core/helpers/asset_path.dart';
 import 'package:asco/src/data/dummy_data.dart';
 import 'package:asco/src/presentations/features/menu/assistance/assistant/assistant_assistance_practicum_value_input_page.dart';
+import 'package:asco/src/presentations/features/menu/assistance/widgets/assistance_dialog.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/assistance_status_dialog.dart';
+import 'package:asco/src/presentations/widgets/circle_border_container.dart';
+import 'package:asco/src/presentations/widgets/custom_badge.dart';
+import 'package:asco/src/presentations/widgets/custom_student_card.dart';
 import 'package:asco/src/presentations/widgets/purple_app_bar.dart';
 import 'package:asco/src/presentations/widgets/title_section.dart';
 

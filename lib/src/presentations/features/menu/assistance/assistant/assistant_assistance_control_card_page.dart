@@ -9,14 +9,12 @@ import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/core/helpers/app_size.dart';
 import 'package:asco/core/helpers/asset_path.dart';
 import 'package:asco/core/helpers/reusable_helper.dart';
-import 'package:asco/core/utils/snack_bar_utils.dart';
 import 'package:asco/src/data/dummy_data.dart';
 import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/assistance_status_badge.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/control_card.dart';
 import 'package:asco/src/presentations/widgets/circle_network_image.dart';
 import 'package:asco/src/presentations/widgets/purple_app_bar.dart';
-import 'package:asco/src/presentations/widgets/snack_bar/content_type.dart';
 
 class AssistantAssistanceControlCardPage extends StatelessWidget {
   final String practicumId;
@@ -89,7 +87,7 @@ class AssistantAssistanceControlCardPage extends StatelessWidget {
                           padding: const EdgeInsets.all(2),
                           child: GestureDetector(
                             onTap: () {
-                              onPressedSocialMediaIcon(
+                              ReusableHelper.onPressedSocialMediaIcon(
                                 context,
                                 socialMedia: 'Github',
                                 isAvailable: student.github!.isNotEmpty,
@@ -108,7 +106,7 @@ class AssistantAssistanceControlCardPage extends StatelessWidget {
                           padding: const EdgeInsets.all(2),
                           child: GestureDetector(
                             onTap: () {
-                              onPressedSocialMediaIcon(
+                              ReusableHelper.onPressedSocialMediaIcon(
                                 context,
                                 socialMedia: 'Instagram',
                                 isAvailable: student.instagram!.isNotEmpty,
@@ -254,27 +252,6 @@ class AssistantAssistanceControlCardPage extends StatelessWidget {
       hasTrailing: true,
       trailing: AssistanceStatusBadge(course: course),
     );
-  }
-
-  void onPressedSocialMediaIcon(
-    BuildContext context, {
-    required bool isAvailable,
-    required String uri,
-    required String socialMedia,
-  }) async {
-    if (isAvailable) {
-      await ReusableHelper.urlLauncher(uri);
-    } else {
-      final snackbar = SnackBarUtils.createSnackBar(
-        title: '$socialMedia Tidak Ada!',
-        message: 'Siswa belum melengkapi akun $socialMedia.',
-        type: ContentType.warning,
-      );
-
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(snackbar);
-    }
   }
 }
 

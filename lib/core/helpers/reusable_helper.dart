@@ -1,16 +1,19 @@
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:asco/core/helpers/time_helper.dart';
 import 'package:asco/core/states/attendance_state.dart';
+import 'package:asco/core/utils/snack_bar_utils.dart';
 import 'package:asco/src/domain/entities/assistance_entities/assistance_group_entity.dart';
 import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/user_practicum_helper.dart';
+import 'package:asco/src/presentations/widgets/snack_bar/content_type.dart';
 
 class ReusableHelper {
   /// Hashing password
@@ -171,6 +174,29 @@ class ReusableHelper {
 
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
       throw Exception('Could not launch $url');
+    }
+  }
+
+  static void onPressedSocialMediaIcon(
+    BuildContext context, {
+    required bool isAvailable,
+    required String uri,
+    required String socialMedia,
+    String? title,
+    String? message,
+  }) async {
+    if (isAvailable) {
+      await urlLauncher(uri);
+    } else {
+      final snackbar = SnackBarUtils.createSnackBar(
+        title: title ?? '$socialMedia Tidak Ada',
+        message: message ?? 'Siswa belum melengkapi akun $socialMedia',
+        type: ContentType.help,
+      );
+
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackbar);
     }
   }
 }

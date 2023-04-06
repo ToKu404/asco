@@ -8,6 +8,7 @@ import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/core/helpers/app_size.dart';
 import 'package:asco/core/helpers/asset_path.dart';
+import 'package:asco/core/helpers/reusable_helper.dart';
 import 'package:asco/src/data/dummy_data.dart';
 import 'package:asco/src/domain/entities/assistance_entities/assistance_group_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
@@ -188,7 +189,18 @@ class _AssistantAssistancePageState extends State<AssistantAssistancePage> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   GestureDetector(
-                                    onTap: () {},
+                                    onTap: () {
+                                      ReusableHelper.onPressedSocialMediaIcon(
+                                        context,
+                                        isAvailable:
+                                            assistanceGroup!.github!.isNotEmpty,
+                                        uri: assistanceGroup.github!,
+                                        socialMedia: 'Github',
+                                        title: 'Repository Tidak Ada',
+                                        message:
+                                            'Anda belum mengisi link repository Github',
+                                      );
+                                    },
                                     child: SvgPicture.asset(
                                       AssetPath.getIcon('github_filled.svg'),
                                       width: 22,

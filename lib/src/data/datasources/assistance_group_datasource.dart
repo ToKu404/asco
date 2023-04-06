@@ -49,6 +49,7 @@ class AssistanceGroupDataSourceImpl implements AssistanceGroupDataSource {
               "name": assistanceGroup.name,
               "practicum_uid": assistanceGroup.practicumUid,
               "uid": uid,
+              "github": assistanceGroup.github,
               "assistant": firestore
                   .collection('profiles')
                   .doc(assistanceGroup.assistant!.uid)
