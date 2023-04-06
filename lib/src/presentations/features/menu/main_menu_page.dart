@@ -97,7 +97,10 @@ class _MainMenuPageState extends State<MainMenuPage> {
               userId: widget.userId,
               classroomId: widget.classroomId,
             ),
-            const AssistantAssistancePage(),
+            AssistantAssistancePage(
+              groupId: widget.groupId,
+              practicumId: widget.practicumId,
+            ),
             const AssistantLeaderboardPage(),
             const ExtrasPage(),
             PeoplePage(practicumUid: widget.practicumId),

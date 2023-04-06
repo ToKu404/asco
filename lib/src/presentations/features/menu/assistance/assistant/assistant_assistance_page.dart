@@ -1,21 +1,81 @@
 import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:asco/core/helpers/asset_path.dart';
+import 'package:provider/provider.dart';
+
 import 'package:asco/core/constants/color_const.dart';
-import 'package:asco/core/helpers/app_size.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/core/helpers/app_size.dart';
+import 'package:asco/core/helpers/asset_path.dart';
+import 'package:asco/core/helpers/reusable_helper.dart';
 import 'package:asco/src/data/dummy_data.dart';
+import 'package:asco/src/domain/entities/assistance_entities/assistance_group_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:asco/src/presentations/features/menu/assistance/assistant/assistant_assistance_course_detail_page.dart';
 import 'package:asco/src/presentations/features/menu/assistance/assistant/assistant_assistance_practitioner_page.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/control_card.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/github_dialog.dart';
+import 'package:asco/src/presentations/features/menu/assistance/widgets/student_avatar.dart';
+import 'package:asco/src/presentations/providers/assistance_notifier.dart';
+import 'package:asco/src/presentations/providers/profile_notifier.dart';
+import 'package:asco/src/presentations/widgets/asco_loading.dart';
+import 'package:asco/src/presentations/widgets/circle_network_image.dart';
 
-class AssistantAssistancePage extends StatelessWidget {
-  const AssistantAssistancePage({super.key});
+class AssistantAssistancePage extends StatefulWidget {
+  final String groupId;
+  final String practicumId;
+
+  const AssistantAssistancePage({
+    super.key,
+    required this.groupId,
+    required this.practicumId,
+  });
+
+  @override
+  State<AssistantAssistancePage> createState() =>
+      _AssistantAssistancePageState();
+}
+
+class _AssistantAssistancePageState extends State<AssistantAssistancePage> {
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(
+      () => Provider.of<AssistanceNotifier>(context, listen: false)
+          .getDetail(uuid: widget.groupId),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    return Consumer<AssistanceNotifier>(
+      builder: (context, assistanceNotifier, child) {
+        if (assistanceNotifier.isSuccessState('single')) {
+          return buildMainPage(
+            context,
+            assistanceGroup: assistanceNotifier.data,
+          );
+        }
+
+        if (assistanceNotifier.isErrorState('single')) {
+          return const Center(
+            child: Text('unknown error occured'),
+          );
+        }
+
+        return const AscoLoading();
+      },
+    );
+  }
+
+  Scaffold buildMainPage(
+    BuildContext context, {
+    required AssistanceGroupEntity? assistanceGroup,
+  }) {
+    final students = assistanceGroup?.students ?? <ProfileEntity>[];
+
     return Scaffold(
       backgroundColor: Palette.grey,
       body: SingleChildScrollView(
@@ -55,7 +115,7 @@ class AssistantAssistancePage extends StatelessWidget {
                             horizontal: 20,
                           ),
                           child: Text(
-                            'Grup Asistensi 3',
+                            'Group Asistensi ${assistanceGroup?.name}',
                             style: kTextTheme.headlineMedium?.copyWith(
                               fontWeight: FontWeight.w600,
                               color: Palette.white,
@@ -94,15 +154,16 @@ class AssistantAssistancePage extends StatelessWidget {
                           padding: const EdgeInsets.fromLTRB(4, 8, 0, 8),
                           child: ListTile(
                             horizontalTitleGap: 12,
-                            leading: CircleAvatar(
-                              radius: 28,
-                              backgroundColor: Palette.purple60,
-                              child: CircleAvatar(
-                                radius: 26,
-                                foregroundImage: AssetImage(
-                                  AssetPath.getImage('avatar3.jpg'),
-                                ),
-                              ),
+                            leading: CircleNetworkImage(
+                              width: 56,
+                              height: 56,
+                              imgUrl:
+                                  '${assistanceGroup?.assistant?.profilePhoto}',
+                              placeholderSize: 20,
+                              errorIcon: Icons.person_rounded,
+                              withBorder: true,
+                              borderWidth: 2,
+                              borderColor: Palette.purple60,
                             ),
                             title: Text(
                               'Asisten',
@@ -112,7 +173,7 @@ class AssistantAssistancePage extends StatelessWidget {
                               ),
                             ),
                             subtitle: Text(
-                              'Eurico Devon B. P.',
+                              '${assistanceGroup?.assistant?.fullName}',
                               style: kTextTheme.titleSmall?.copyWith(
                                 fontWeight: FontWeight.w600,
                                 color: Palette.purple100,
@@ -128,7 +189,18 @@ class AssistantAssistancePage extends StatelessWidget {
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   GestureDetector(
-                                    onTap: () {},
+                                    onTap: () {
+                                      ReusableHelper.onPressedSocialMediaIcon(
+                                        context,
+                                        isAvailable:
+                                            assistanceGroup!.github!.isNotEmpty,
+                                        uri: assistanceGroup.github!,
+                                        socialMedia: 'Github',
+                                        title: 'Repository Tidak Ada',
+                                        message:
+                                            'Anda belum mengisi link repository Github',
+                                      );
+                                    },
                                     child: SvgPicture.asset(
                                       AssetPath.getIcon('github_filled.svg'),
                                       width: 22,
@@ -168,7 +240,12 @@ class AssistantAssistancePage extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          showAssistantAssistancePractitionerPage(context);
+                          context.read<ProfileNotifier>().reset();
+
+                          showAssistantAssistancePractitionerPage(
+                            context,
+                            practicumId: widget.practicumId,
+                          );
                         },
                         child: Text(
                           'Lihat Detail',
@@ -183,21 +260,15 @@ class AssistantAssistancePage extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(
+            SizedBox(
               height: 80,
-              // child: ListView.separated(
-              //   scrollDirection: Axis.horizontal,
-              //   padding: const EdgeInsets.symmetric(horizontal: 16),
-              //   itemBuilder: (_, i) => StudentAvatar(
-              //     student: students[i],
-              //     onTap: () => showAssistantAssistanceControlCardPage(
-              //       context,
-              //       student: students[i],
-              //     ),
-              //   ),
-              //   separatorBuilder: (_, __) => const SizedBox(width: 10),
-              //   itemCount: students.length,
-              // ),
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemBuilder: (_, i) => StudentAvatar(student: students[i]),
+                separatorBuilder: (_, __) => const SizedBox(width: 10),
+                itemCount: students.length,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(

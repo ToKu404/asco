@@ -7,6 +7,7 @@ class AssistanceGroupModel extends AssistanceGroupEntity {
     super.uid,
     super.practicumUid,
     super.name,
+    super.github,
     super.assistant,
     super.students,
   });
@@ -16,6 +17,7 @@ class AssistanceGroupModel extends AssistanceGroupEntity {
       uid: uid,
       practicumUid: practicumUid,
       name: name,
+      github: github,
       assistant: assistant,
       students: students,
     );
@@ -30,6 +32,7 @@ class AssistanceGroupModel extends AssistanceGroupEntity {
       uid: documentSnapshot['uid'],
       practicumUid: documentSnapshot['practicum_uid'],
       name: documentSnapshot['name'],
+      github: documentSnapshot['github'],
       assistant: assistant,
       students: students,
     );
@@ -41,6 +44,7 @@ class AssistanceGroupModel extends AssistanceGroupEntity {
       uid: assistanceEntity.uid,
       practicumUid: assistanceEntity.practicumUid,
       name: assistanceEntity.name,
+      github: assistanceEntity.github,
       assistant: assistanceEntity.assistant,
       students: assistanceEntity.students,
     );
@@ -53,6 +57,7 @@ class AssistanceGroupModel extends AssistanceGroupEntity {
       uid: map['uid'],
       practicumUid: map['practicum_uid'],
       name: map['name'],
+      github: map['github'],
     );
   }
 }

@@ -6,22 +6,18 @@ import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/helpers/asset_path.dart';
 import 'package:asco/core/helpers/reusable_helper.dart';
-import 'package:asco/core/utils/snack_bar_utils.dart';
 import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
 import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:asco/src/presentations/widgets/asco_loading.dart';
 import 'package:asco/src/presentations/widgets/custom_badge.dart';
 import 'package:asco/src/presentations/widgets/custom_student_card.dart';
 import 'package:asco/src/presentations/widgets/purple_app_bar.dart';
-import 'package:asco/src/presentations/widgets/snack_bar/content_type.dart';
 
 class StudentAssistancePractitionerPage extends StatefulWidget {
-  final String groupName;
   final String practicumId;
 
   const StudentAssistancePractitionerPage({
     super.key,
-    required this.groupName,
     required this.practicumId,
   });
 
@@ -90,7 +86,7 @@ class _StudentAssistancePractitionerPageState
     return Scaffold(
       backgroundColor: Palette.grey,
       appBar: PurpleAppBar(
-        titleText: 'Grup Asistensi ${widget.groupName}',
+        titleText: 'Praktikan',
         onPressedBackButton: () => Navigator.pop(context),
       ),
       body: ListView.separated(
@@ -110,21 +106,14 @@ class _StudentAssistancePractitionerPageState
           ),
           hasTrailing: true,
           trailing: IconButton(
-            onPressed: students[index].github!.isEmpty
-                ? () {
-                    final snackbar = SnackBarUtils.createSnackBar(
-                      title: 'Github Tidak Ada!',
-                      message: 'Siswa belum melengkapi akun Github.',
-                      type: ContentType.warning,
-                    );
-
-                    ScaffoldMessenger.of(context)
-                      ..hideCurrentSnackBar()
-                      ..showSnackBar(snackbar);
-                  }
-                : () async {
-                    await ReusableHelper.urlLauncher(students[index].github!);
-                  },
+            onPressed: () {
+              ReusableHelper.onPressedSocialMediaIcon(
+                context,
+                isAvailable: students[index].github!.isNotEmpty,
+                uri: students[index].github!,
+                socialMedia: 'Github',
+              );
+            },
             icon: SvgPicture.asset(
               AssetPath.getIcon('github_filled.svg'),
               color: Palette.purple80,
@@ -144,14 +133,12 @@ class _StudentAssistancePractitionerPageState
 
 void showStudentAssistancePractitionerPage(
   BuildContext context, {
-  required String groupName,
   required String practicumId,
 }) {
   Navigator.push(
     context,
     MaterialPageRoute(
       builder: (_) => StudentAssistancePractitionerPage(
-        groupName: groupName,
         practicumId: practicumId,
       ),
       settings: const RouteSettings(

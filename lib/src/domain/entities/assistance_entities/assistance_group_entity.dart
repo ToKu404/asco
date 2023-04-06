@@ -5,6 +5,7 @@ class AssistanceGroupEntity extends Equatable {
   final String? uid;
   final String? practicumUid;
   final String? name;
+  final String? github;
   final ProfileEntity? assistant;
   final List<ProfileEntity>? students;
 
@@ -12,6 +13,7 @@ class AssistanceGroupEntity extends Equatable {
     this.uid,
     this.practicumUid,
     this.name,
+    this.github,
     this.assistant,
     this.students,
   });
@@ -21,6 +23,7 @@ class AssistanceGroupEntity extends Equatable {
         uid,
         practicumUid,
         name,
+        github,
         assistant,
         students,
       ];
