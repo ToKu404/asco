@@ -136,6 +136,7 @@ class _AssistantAssistancePractitionerPageState
           ),
           onTap: () => showAssistantAssistanceControlCardPage(
             context,
+            practicumId: widget.practicumId,
             student: students[index],
           ),
         ),

@@ -8,19 +8,34 @@ import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/core/helpers/app_size.dart';
 import 'package:asco/core/helpers/asset_path.dart';
+import 'package:asco/core/helpers/reusable_helper.dart';
+import 'package:asco/core/utils/snack_bar_utils.dart';
 import 'package:asco/src/data/dummy_data.dart';
 import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/assistance_status_badge.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/control_card.dart';
+import 'package:asco/src/presentations/widgets/circle_network_image.dart';
 import 'package:asco/src/presentations/widgets/purple_app_bar.dart';
+import 'package:asco/src/presentations/widgets/snack_bar/content_type.dart';
 
 class AssistantAssistanceControlCardPage extends StatelessWidget {
+  final String practicumId;
   final DetailProfileEntity student;
 
-  const AssistantAssistanceControlCardPage({super.key, required this.student});
+  const AssistantAssistanceControlCardPage({
+    super.key,
+    required this.practicumId,
+    required this.student,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final practicumKey =
+        student.userPracticums!.keys.where((e) => e == practicumId).first;
+
+    final classroom = student.userPracticums![practicumKey]!.classroom;
+    final group = student.userPracticums![practicumKey]!.group;
+
     return Scaffold(
       backgroundColor: Palette.grey,
       appBar: PurpleAppBar(
@@ -73,7 +88,14 @@ class AssistantAssistanceControlCardPage extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.all(2),
                           child: GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              onPressedSocialMediaIcon(
+                                context,
+                                socialMedia: 'Github',
+                                isAvailable: student.github!.isNotEmpty,
+                                uri: student.github!,
+                              );
+                            },
                             child: SvgPicture.asset(
                               AssetPath.getIcon('github_filled.svg'),
                               width: 24,
@@ -85,7 +107,14 @@ class AssistantAssistanceControlCardPage extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.all(2),
                           child: GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              onPressedSocialMediaIcon(
+                                context,
+                                socialMedia: 'Instagram',
+                                isAvailable: student.instagram!.isNotEmpty,
+                                uri: student.instagram!,
+                              );
+                            },
                             child: SvgPicture.asset(
                               AssetPath.getIcon('instagram_filled.svg'),
                               width: 24,
@@ -110,19 +139,17 @@ class AssistantAssistanceControlCardPage extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                CircleAvatar(
-                                  radius: 50,
-                                  backgroundColor: Palette.white,
-                                  child: Hero(
-                                    tag: student,
-                                    child: CircleAvatar(
-                                      radius: 48,
-                                      foregroundImage: AssetImage(
-                                        AssetPath.getImage(
-                                          'avatar${student.uid}.jpg',
-                                        ),
-                                      ),
-                                    ),
+                                Hero(
+                                  tag: student,
+                                  child: CircleNetworkImage(
+                                    width: 100,
+                                    height: 100,
+                                    imgUrl: student.profilePhoto!,
+                                    placeholderSize: 32,
+                                    errorIcon: Icons.person_rounded,
+                                    withBorder: true,
+                                    borderWidth: 2,
+                                    borderColor: Palette.white,
                                   ),
                                 ),
                                 const SizedBox(height: 16),
@@ -165,7 +192,7 @@ class AssistantAssistanceControlCardPage extends StatelessWidget {
                                     color: Palette.purple60,
                                   ),
                                   child: Text(
-                                    'Pemrograman Mobile A',
+                                    '${classroom?.practicum?.course} ${classroom?.classCode}',
                                     style: kTextTheme.bodyMedium?.copyWith(
                                       fontWeight: FontWeight.w500,
                                       color: Palette.white,
@@ -184,7 +211,7 @@ class AssistantAssistanceControlCardPage extends StatelessWidget {
                                     color: Palette.plum60,
                                   ),
                                   child: Text(
-                                    'Grup Asistensi 16',
+                                    'Group Asistensi ${group?.name}',
                                     style: kTextTheme.bodyMedium?.copyWith(
                                       fontWeight: FontWeight.w500,
                                       color: Palette.white,
@@ -228,16 +255,41 @@ class AssistantAssistanceControlCardPage extends StatelessWidget {
       trailing: AssistanceStatusBadge(course: course),
     );
   }
+
+  void onPressedSocialMediaIcon(
+    BuildContext context, {
+    required bool isAvailable,
+    required String uri,
+    required String socialMedia,
+  }) async {
+    if (isAvailable) {
+      await ReusableHelper.urlLauncher(uri);
+    } else {
+      final snackbar = SnackBarUtils.createSnackBar(
+        title: '$socialMedia Tidak Ada!',
+        message: 'Siswa belum melengkapi akun $socialMedia.',
+        type: ContentType.warning,
+      );
+
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackbar);
+    }
+  }
 }
 
 void showAssistantAssistanceControlCardPage(
   BuildContext context, {
+  required String practicumId,
   required DetailProfileEntity student,
 }) {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (_) => AssistantAssistanceControlCardPage(student: student),
+      builder: (_) => AssistantAssistanceControlCardPage(
+        practicumId: practicumId,
+        student: student,
+      ),
       settings: const RouteSettings(
         name: AppRoute.assistantAssistanceControlCardPage,
       ),
