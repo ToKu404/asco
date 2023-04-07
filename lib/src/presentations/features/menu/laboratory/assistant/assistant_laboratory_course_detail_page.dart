@@ -42,6 +42,9 @@ class AssistantLaboratoryCourseDetailPage extends StatefulWidget {
 class _AssistantLaboratoryCourseDetailPageState
     extends State<AssistantLaboratoryCourseDetailPage> {
   late final ValueNotifier<String> _queryNotifier;
+  late final ValueNotifier<List<Map<int, dynamic>>?> _meetingsNotifier;
+
+  List<Map<int, dynamic>> meetings = <Map<int, dynamic>>[];
 
   @override
   void initState() {
@@ -60,6 +63,7 @@ class _AssistantLaboratoryCourseDetailPageState
     );
 
     _queryNotifier = ValueNotifier('');
+    _meetingsNotifier = ValueNotifier(null);
   }
 
   @override
@@ -67,6 +71,7 @@ class _AssistantLaboratoryCourseDetailPageState
     super.dispose();
 
     _queryNotifier.dispose();
+    _meetingsNotifier.dispose();
   }
 
   @override
@@ -74,6 +79,24 @@ class _AssistantLaboratoryCourseDetailPageState
     return Consumer<ProfileNotifier>(
       builder: (context, profileNotifier, child) {
         if (profileNotifier.isSuccessState('multiple')) {
+          final listData = <Map<int, dynamic>>[];
+
+          final students = profileNotifier.listData
+              .where((e) =>
+                  e.uid != widget.meetingDetail.assistant1Uid! &&
+                  e.uid != widget.meetingDetail.assistant2Uid!)
+              .toList()
+            ..sort((a, b) => a.uid!.compareTo(b.uid!));
+
+          final attendances = widget.meetingDetail.attendances!
+            ..sort((a, b) => a.studentUid!.compareTo(b.studentUid!));
+
+          for (var i = 0; i < students.length; i++) {
+            listData.add({0: students[i], 1: attendances[i]});
+          }
+
+          meetings = listData;
+
           return buildMainPage(
             context,
             assistant1: profileNotifier.listData
@@ -82,14 +105,6 @@ class _AssistantLaboratoryCourseDetailPageState
             assistant2: profileNotifier.listData
                 .where((e) => e.uid == widget.meetingDetail.assistant2Uid!)
                 .first,
-            students: profileNotifier.listData
-                .where((e) =>
-                    e.uid != widget.meetingDetail.assistant1Uid! &&
-                    e.uid != widget.meetingDetail.assistant2Uid!)
-                .toList()
-              ..sort((a, b) => a.uid!.compareTo(b.uid!)),
-            attendances: widget.meetingDetail.attendances!
-              ..sort((a, b) => a.studentUid!.compareTo(b.studentUid!)),
           );
         }
 
@@ -113,8 +128,6 @@ class _AssistantLaboratoryCourseDetailPageState
     BuildContext context, {
     required DetailProfileEntity assistant1,
     required DetailProfileEntity assistant2,
-    required List<DetailProfileEntity> students,
-    required List<AttendanceEntity> attendances,
   }) {
     return Scaffold(
       backgroundColor: Palette.grey,
@@ -309,7 +322,7 @@ class _AssistantLaboratoryCourseDetailPageState
                         builder: (context, value, child) {
                           return SearchField(
                             text: value,
-                            onChanged: (query) => _queryNotifier.value = query,
+                            onChanged: (query) => searchMeeting(query),
                           );
                         },
                       ),
@@ -320,20 +333,24 @@ class _AssistantLaboratoryCourseDetailPageState
             ),
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 14),
-              sliver: SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  childCount: students.length,
-                  (_, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: buildStudentCard(
-                        context,
-                        students[index],
-                        attendances[index],
-                      ),
-                    );
-                  },
-                ),
+              sliver: ValueListenableBuilder(
+                valueListenable: _meetingsNotifier,
+                builder: (context, values, child) {
+                  return SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      childCount: values?.length ?? meetings.length,
+                      (_, index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: buildStudentCard(
+                            context,
+                            meeting: values?[index] ?? meetings[index],
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
               ),
             ),
           ],
@@ -357,10 +374,12 @@ class _AssistantLaboratoryCourseDetailPageState
   }
 
   CustomStudentCard buildStudentCard(
-    BuildContext context,
-    DetailProfileEntity student,
-    AttendanceEntity attendance,
-  ) {
+    BuildContext context, {
+    required Map<int, dynamic> meeting,
+  }) {
+    final student = meeting[0] as DetailProfileEntity;
+    final attendance = meeting[1] as AttendanceEntity;
+
     return CustomStudentCard(
       student: student,
       hasAvatarBorder: true,
@@ -420,6 +439,23 @@ class _AssistantLaboratoryCourseDetailPageState
                   color: Palette.white,
                 ),
               );
+  }
+
+  void searchMeeting(String query) {
+    final result = meetings.where((meeting) {
+      final fullnameLower =
+          (meeting[0] as DetailProfileEntity).fullName!.toLowerCase();
+      final usernameLower =
+          (meeting[0] as DetailProfileEntity).username!.toLowerCase();
+
+      final queryLower = query.toLowerCase();
+
+      return fullnameLower.contains(queryLower) ||
+          usernameLower.contains(queryLower);
+    }).toList();
+
+    _queryNotifier.value = query;
+    _meetingsNotifier.value = result;
   }
 }
 
