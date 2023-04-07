@@ -300,7 +300,11 @@ class _AssistantAssistancePageState extends State<AssistantAssistancePage> {
                   const SizedBox(height: 8),
                   ...courses
                       .where((course) => course.isLocked == false)
-                      .map((course) => buildControlCard(context, course))
+                      .map((course) => buildControlCard(
+                            context,
+                            course: course,
+                            students: students,
+                          ))
                       .toList(),
                 ],
               ),
@@ -311,7 +315,11 @@ class _AssistantAssistancePageState extends State<AssistantAssistancePage> {
     );
   }
 
-  ControlCard buildControlCard(BuildContext context, Course course) {
+  ControlCard buildControlCard(
+    BuildContext context, {
+    required Course course,
+    required List<ProfileEntity> students,
+  }) {
     return ControlCard(
       course: course,
       verticalAlignment: CrossAxisAlignment.start,
@@ -320,6 +328,7 @@ class _AssistantAssistancePageState extends State<AssistantAssistancePage> {
       onTap: () => showAssistantAssistanceCourseDetailPage(
         context,
         title: course.topic,
+        students: students,
       ),
     );
   }

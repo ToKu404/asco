@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/domain/entities/profile_entities/detail_profile_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:asco/src/presentations/widgets/circle_network_image.dart';
 
 class CustomStudentCard extends StatelessWidget {
-  final DetailProfileEntity student;
+  final ProfileEntity? student;
+  final DetailProfileEntity? studentDetail;
   final bool hasAvatarBorder;
   final bool hasTrailing;
   final Widget? trailing;
@@ -15,7 +17,8 @@ class CustomStudentCard extends StatelessWidget {
 
   const CustomStudentCard({
     super.key,
-    required this.student,
+    this.student,
+    this.studentDetail,
     this.hasAvatarBorder = false,
     this.hasTrailing = false,
     this.isThreeLine = false,
@@ -45,11 +48,11 @@ class CustomStudentCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Hero(
-                tag: student,
+                tag: student ?? studentDetail!,
                 child: CircleNetworkImage(
                   width: 56,
                   height: 56,
-                  imgUrl: student.profilePhoto ?? '',
+                  imgUrl: student?.profilePhoto ?? studentDetail!.profilePhoto!,
                   placeholderSize: 20,
                   errorIcon: Icons.person_rounded,
                   withBorder: hasAvatarBorder,
@@ -64,14 +67,14 @@ class CustomStudentCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      student.username ?? '',
+                      student?.username ?? studentDetail!.username!,
                       style: kTextTheme.bodyMedium?.copyWith(
                         color: Palette.purple60,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      student.fullName ?? '',
+                      student?.fullName ?? studentDetail!.fullName!,
                       style: kTextTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w600,
                         color: Palette.purple80,

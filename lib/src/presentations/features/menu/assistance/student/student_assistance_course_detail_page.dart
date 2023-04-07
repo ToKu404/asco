@@ -165,10 +165,9 @@ class StudentAssistanceCourseDetailPage extends StatelessWidget {
                 width: double.infinity,
                 margin: const EdgeInsets.only(top: 4),
                 child: Text(
-                  '3 Hari, 2 Jam',
-                  textAlign: TextAlign.end,
+                  '3 hari lagi (10 Apr)',
                   style: kTextTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w400,
                     color: Palette.purple80,
                   ),
                 ),
