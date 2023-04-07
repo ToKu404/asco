@@ -37,7 +37,7 @@ class _AssistantAssistanceCourseDetailPageState
     extends State<AssistantAssistanceCourseDetailPage> {
   DateTimeRange _dateRange = DateTimeRange(
     start: DateTime.now(),
-    end: DateTime.now().add(const Duration(days: 5)),
+    end: DateTime.now().add(const Duration(days: 6)),
   );
 
   Timer? _timer;
