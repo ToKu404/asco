@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
-import 'package:asco/core/helpers/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/src/data/dummy_data.dart';
+import 'package:asco/core/helpers/asset_path.dart';
+import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 
 class AssistanceStatusDialog extends StatelessWidget {
   final int number;
-  final Student student;
+  final ProfileEntity student;
 
   const AssistanceStatusDialog({
     super.key,
@@ -83,7 +83,7 @@ class AssistanceStatusDialog extends StatelessWidget {
                 ),
                 const SizedBox(height: 40),
                 Text(
-                  student.name,
+                  '${student.fullName}',
                   textAlign: TextAlign.center,
                   style: kTextTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w700,
@@ -92,7 +92,7 @@ class AssistanceStatusDialog extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  student.nim,
+                  '${student.username}',
                   textAlign: TextAlign.center,
                   style: kTextTheme.bodyLarge?.copyWith(
                     color: Palette.purple100,

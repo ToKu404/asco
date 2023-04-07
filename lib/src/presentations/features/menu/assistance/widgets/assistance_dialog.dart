@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/src/data/dummy_data.dart';
+import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 
 class AssistanceDialog extends StatefulWidget {
   final int number;
-  final Student student;
+  final ProfileEntity student;
 
   const AssistanceDialog({
     super.key,
@@ -103,14 +103,14 @@ class _AssistanceDialogState extends State<AssistanceDialog> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    widget.student.nim,
+                    '${widget.student.username}',
                     style: kTextTheme.bodyLarge?.copyWith(
                       color: Palette.purple60,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    widget.student.name,
+                    '${widget.student.fullName}',
                     style: kTextTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w700,
                       color: Palette.purple80,
@@ -223,8 +223,8 @@ class _AssistanceDialogState extends State<AssistanceDialog> {
     final newDate = await showDatePicker(
       context: context,
       initialDate: _date,
-      firstDate: DateTime(_date.year),
-      lastDate: DateTime(_date.year, 12, 31),
+      firstDate: DateTime.now().subtract(const Duration(days: 90)),
+      lastDate: DateTime.now().add(const Duration(days: 90)),
       currentDate: _date,
       initialEntryMode: DatePickerEntryMode.calendarOnly,
       helpText: 'Pilih Tanggal Asistensi',

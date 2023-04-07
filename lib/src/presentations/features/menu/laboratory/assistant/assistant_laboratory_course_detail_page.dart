@@ -381,7 +381,7 @@ class _AssistantLaboratoryCourseDetailPageState
     final attendance = meeting[1] as AttendanceEntity;
 
     return CustomStudentCard(
-      student: student,
+      studentDetail: student,
       hasAvatarBorder: true,
       onTap: () => showDialog(
         context: context,

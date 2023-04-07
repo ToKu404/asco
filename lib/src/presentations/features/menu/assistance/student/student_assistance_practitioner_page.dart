@@ -96,7 +96,7 @@ class _StudentAssistancePractitionerPageState
         ),
         itemCount: students.length,
         itemBuilder: (_, index) => CustomStudentCard(
-          student: students[index],
+          studentDetail: students[index],
           isThreeLine: true,
           thirdLine: BuildBadge(
             badgeHelper: TempBadgeHelper(

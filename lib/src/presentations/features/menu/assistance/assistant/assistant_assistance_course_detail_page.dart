@@ -9,20 +9,24 @@ import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/core/helpers/app_size.dart';
 import 'package:asco/core/helpers/asset_path.dart';
-import 'package:asco/src/data/dummy_data.dart';
+import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:asco/src/presentations/features/menu/assistance/assistant/assistant_assistance_practicum_value_input_page.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/assistance_dialog.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/assistance_status_dialog.dart';
 import 'package:asco/src/presentations/widgets/circle_border_container.dart';
-import 'package:asco/src/presentations/widgets/custom_badge.dart';
 import 'package:asco/src/presentations/widgets/custom_student_card.dart';
 import 'package:asco/src/presentations/widgets/purple_app_bar.dart';
 import 'package:asco/src/presentations/widgets/title_section.dart';
 
 class AssistantAssistanceCourseDetailPage extends StatefulWidget {
   final String title;
+  final List<ProfileEntity> students;
 
-  const AssistantAssistanceCourseDetailPage({super.key, required this.title});
+  const AssistantAssistanceCourseDetailPage({
+    super.key,
+    required this.title,
+    required this.students,
+  });
 
   @override
   State<AssistantAssistanceCourseDetailPage> createState() =>
@@ -31,6 +35,11 @@ class AssistantAssistanceCourseDetailPage extends StatefulWidget {
 
 class _AssistantAssistanceCourseDetailPageState
     extends State<AssistantAssistanceCourseDetailPage> {
+  DateTimeRange _dateRange = DateTimeRange(
+    start: DateTime.now(),
+    end: DateTime.now().add(const Duration(days: 6)),
+  );
+
   Timer? _timer;
 
   @override
@@ -201,9 +210,9 @@ class _AssistantAssistanceCourseDetailPageState
                         Padding(
                           padding: const EdgeInsets.only(top: 4),
                           child: Text(
-                            '3 Hari, 2 Jam',
+                            '3 hari lagi (10 Apr)',
                             style: kTextTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w400,
                               color: Palette.purple80,
                             ),
                           ),
@@ -213,13 +222,13 @@ class _AssistantAssistanceCourseDetailPageState
                   ),
                   const SizedBox(width: 8),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () => showAssistanceDateRangePicker(context),
                     icon: const Icon(
                       Icons.date_range_outlined,
                       color: Palette.white,
                       size: 20,
                     ),
-                    tooltip: 'Select Date Range',
+                    tooltip: 'Date Range',
                     style: IconButton.styleFrom(
                       backgroundColor: const Color(0xFFE395E7),
                       shape: RoundedRectangleBorder(
@@ -251,8 +260,8 @@ class _AssistantAssistanceCourseDetailPageState
                 title: 'Asistensi',
                 paddingBottom: 12,
               ),
-              ...students
-                  .map((student) => buildStudentCard(context, student))
+              ...widget.students
+                  .map((student) => buildStudentCard(context, student: student))
                   .toList(),
             ],
           ),
@@ -275,77 +284,80 @@ class _AssistantAssistanceCourseDetailPageState
     );
   }
 
-  Padding buildStudentCard(BuildContext context, Student student) {
-    return const Padding(
-      padding: EdgeInsets.only(bottom: 10),
-      child: Placeholder(),
-      // child: CustomStudentCard(
-      //   student: student,
-      //   isThreeLine: true,
-      //   thirdLine: BuildBadge(
-      //     badgeHelper: TempBadgeHelper(
-      //       badgeId: 3,
-      //       title: 'Kelas A',
-      //     ),
-      //   ),
-      //   hasTrailing: true,
-      //   trailing: Row(
-      //     mainAxisSize: MainAxisSize.min,
-      //     children: <Widget>[
-      //       CircleBorderContainer(
-      //         size: 30,
-      //         borderColor: Palette.purple80,
-      //         fillColor: Palette.purple60,
-      //         onTap: () => showDialog(
-      //           context: context,
-      //           barrierLabel: '',
-      //           barrierDismissible: false,
-      //           builder: (_) => AssistanceDialog(
-      //             number: 1,
-      //             student: student,
-      //           ),
-      //         ).then((value) {
-      //           final isSubmitted = value == null ? false : value as bool;
+  Padding buildStudentCard(
+    BuildContext context, {
+    required ProfileEntity student,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: CustomStudentCard(
+        student: student,
+        hasTrailing: true,
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            CircleBorderContainer(
+              size: 30,
+              borderColor: Palette.purple80,
+              fillColor: Palette.purple60,
+              onTap: () => showDialog(
+                context: context,
+                barrierLabel: '',
+                barrierDismissible: false,
+                builder: (_) => AssistanceDialog(
+                  number: 1,
+                  student: student,
+                ),
+              ).then((value) {
+                final isSubmitted = value == null ? false : value as bool;
 
-      //           if (isSubmitted) showStatusDialog(context, 1, student);
-      //         }),
-      //         child: const Icon(
-      //           Icons.check_rounded,
-      //           size: 16,
-      //           color: Palette.white,
-      //         ),
-      //       ),
-      //       const SizedBox(width: 4),
-      //       CircleBorderContainer(
-      //         size: 30,
-      //         borderColor: const Color(0xFFD35380),
-      //         fillColor: const Color(0xFFFA78A6),
-      //         onTap: () => showDialog(
-      //           context: context,
-      //           barrierLabel: '',
-      //           barrierDismissible: false,
-      //           builder: (_) => AssistanceDialog(
-      //             number: 2,
-      //             student: student,
-      //           ),
-      //         ).then((value) {
-      //           final isSubmitted = value == null ? false : value as bool;
+                if (isSubmitted) {
+                  showStatusDialog(context, number: 1, student: student);
+                }
+              }),
+              child: const Icon(
+                Icons.check_rounded,
+                size: 16,
+                color: Palette.white,
+              ),
+            ),
+            const SizedBox(width: 4),
+            CircleBorderContainer(
+              size: 30,
+              borderColor: const Color(0xFFD35380),
+              fillColor: const Color(0xFFFA78A6),
+              onTap: () => showDialog(
+                context: context,
+                barrierLabel: '',
+                barrierDismissible: false,
+                builder: (_) => AssistanceDialog(
+                  number: 2,
+                  student: student,
+                ),
+              ).then((value) {
+                final isSubmitted = value == null ? false : value as bool;
 
-      //           if (isSubmitted) showStatusDialog(context, 2, student);
-      //         }),
-      //         child: const Icon(
-      //           Icons.close_rounded,
-      //           size: 16,
-      //           color: Palette.white,
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // ),
+                if (isSubmitted) {
+                  showStatusDialog(context, number: 2, student: student);
+                }
+              }),
+              child: const Icon(
+                Icons.close_rounded,
+                size: 16,
+                color: Palette.white,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
-  void showStatusDialog(BuildContext context, int number, Student student) {
+  void showStatusDialog(
+    BuildContext context, {
+    required int number,
+    required ProfileEntity student,
+  }) {
     showDialog(
       context: context,
       builder: (_) {
@@ -370,16 +382,51 @@ class _AssistantAssistanceCourseDetailPageState
       if (_timer!.isActive) _timer!.cancel();
     });
   }
+
+  Future<void> showAssistanceDateRangePicker(BuildContext context) async {
+    final newDateRange = await showDateRangePicker(
+      context: context,
+      initialDateRange: _dateRange,
+      firstDate: DateTime.now().subtract(const Duration(days: 90)),
+      lastDate: DateTime.now().add(const Duration(days: 90)),
+      currentDate: _dateRange.start,
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
+      helpText: 'Tentukan Waktu Asistensi',
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            dialogBackgroundColor: Palette.purple40,
+            appBarTheme: Theme.of(context).appBarTheme.copyWith(
+                  iconTheme: const IconThemeData(color: Palette.purple80),
+                ),
+            colorScheme: Theme.of(context).colorScheme.copyWith(
+                  primary: Palette.purple40,
+                  onPrimary: Palette.purple80,
+                ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (newDateRange != null) {
+      _dateRange = newDateRange;
+    }
+  }
 }
 
 void showAssistantAssistanceCourseDetailPage(
   BuildContext context, {
   required String title,
+  required List<ProfileEntity> students,
 }) {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (_) => AssistantAssistanceCourseDetailPage(title: title),
+      builder: (_) => AssistantAssistanceCourseDetailPage(
+        title: title,
+        students: students,
+      ),
       settings: const RouteSettings(
         name: AppRoute.assistantAssistanceCourseDetailPage,
       ),
