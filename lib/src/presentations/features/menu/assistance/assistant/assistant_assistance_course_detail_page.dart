@@ -387,20 +387,20 @@ class _AssistantAssistanceCourseDetailPageState
     final newDateRange = await showDateRangePicker(
       context: context,
       initialDateRange: _dateRange,
-      firstDate: DateTime.now().subtract(const Duration(days: 90)),
-      lastDate: DateTime.now().add(const Duration(days: 90)),
+      firstDate: DateTime(_dateRange.start.year),
+      lastDate: DateTime(_dateRange.start.year, 12, 31),
       currentDate: _dateRange.start,
       initialEntryMode: DatePickerEntryMode.calendarOnly,
       helpText: 'Tentukan Waktu Asistensi',
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            dialogBackgroundColor: Palette.purple40,
+            dialogBackgroundColor: Palette.purple30,
             appBarTheme: Theme.of(context).appBarTheme.copyWith(
                   iconTheme: const IconThemeData(color: Palette.purple80),
                 ),
             colorScheme: Theme.of(context).colorScheme.copyWith(
-                  primary: Palette.purple40,
+                  primary: Palette.purple30,
                   onPrimary: Palette.purple80,
                 ),
           ),
