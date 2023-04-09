@@ -19,6 +19,7 @@ import 'package:asco/src/presentations/providers/auth_notifier.dart';
 import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:asco/src/presentations/widgets/app_bar_title.dart';
 import 'package:asco/src/presentations/widgets/asco_loading.dart';
+import 'package:asco/src/presentations/widgets/circle_network_image.dart';
 import 'package:asco/src/presentations/widgets/side_menu/side_menu_parent.dart';
 
 void showHomePage({required BuildContext context, required int roleId}) {
@@ -137,6 +138,11 @@ class _HomePageState extends State<HomePage> {
                             ? userPracticum[i].group!.uid!
                             : '',
                         practicumId: classroom.practicum!.uid!,
+                        studentImgUrls: classroom.students != null
+                            ? classroom.students!
+                                .map((e) => e.profilePhoto)
+                                .toList()
+                            : <String?>[],
                       );
                     },
                   );
@@ -167,6 +173,7 @@ class CourseCard extends StatelessWidget {
   final String classroomId;
   final String groupId;
   final String practicumId;
+  final List<String?> studentImgUrls;
 
   const CourseCard({
     Key? key,
@@ -178,6 +185,7 @@ class CourseCard extends StatelessWidget {
     required this.classroomId,
     required this.groupId,
     required this.practicumId,
+    required this.studentImgUrls,
   }) : super(key: key);
 
   @override
@@ -260,48 +268,44 @@ class CourseCard extends StatelessWidget {
                     const Spacer(),
                     Row(
                       children: List.generate(
-                        4,
+                        studentImgUrls.length >= 4 ? 4 : studentImgUrls.length,
                         (index) => Transform.translate(
                           offset: Offset((-18 * index).toDouble(), 0),
                           child: Builder(
                             builder: (context) {
                               if (index == 3) {
-                                return Container(
-                                  width: 25,
-                                  height: 25,
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Palette.grey,
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      '+10',
-                                      style: kTextTheme.bodySmall?.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        color: Palette.black,
+                                if (studentImgUrls.length - 3 >= 1) {
+                                  return Container(
+                                    width: 25,
+                                    height: 25,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Palette.grey,
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        '+${studentImgUrls.length - 3}',
+                                        style: kTextTheme.bodySmall?.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          color: Palette.black,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                );
+                                  );
+                                }
+
+                                return const SizedBox.shrink();
                               }
-                              return Container(
+
+                              return CircleNetworkImage(
                                 width: 30,
                                 height: 30,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    width: 1,
-                                    color: Palette.grey,
-                                  ),
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: AssetImage(
-                                      AssetPath.getImage(
-                                        'avatar${index + 1}.jpg',
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                                imgUrl: '${studentImgUrls[index]}',
+                                placeholderSize: 0,
+                                errorIcon: Icons.person_rounded,
+                                withBorder: true,
+                                borderWidth: 1,
+                                borderColor: Palette.white,
                               );
                             },
                           ),

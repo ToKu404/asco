@@ -223,8 +223,8 @@ class _AssistanceDialogState extends State<AssistanceDialog> {
     final newDate = await showDatePicker(
       context: context,
       initialDate: _date,
-      firstDate: DateTime.now().subtract(const Duration(days: 90)),
-      lastDate: DateTime.now().add(const Duration(days: 90)),
+      firstDate: DateTime(_date.year),
+      lastDate: DateTime(_date.year, 12, 31),
       currentDate: _date,
       initialEntryMode: DatePickerEntryMode.calendarOnly,
       helpText: 'Pilih Tanggal Asistensi',

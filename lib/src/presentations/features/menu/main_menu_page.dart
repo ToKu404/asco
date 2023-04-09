@@ -82,7 +82,9 @@ class _MainMenuPageState extends State<MainMenuPage> {
 
     final pages = roleId == 1
         ? [
-            StudentLaboratoryPage(classroomId: widget.classroomId),
+            StudentLaboratoryPage(
+              classroomId: widget.classroomId,
+            ),
             StudentAssistancePage(
               userId: widget.userId,
               groupId: widget.groupId,
@@ -90,7 +92,9 @@ class _MainMenuPageState extends State<MainMenuPage> {
             ),
             const StudentLeaderboardPage(),
             const ExtrasPage(),
-            PeoplePage(practicumUid: widget.practicumId),
+            PeoplePage(
+              practicumUid: widget.practicumId,
+            ),
           ]
         : [
             AssistantLaboratoryPage(
@@ -103,7 +107,9 @@ class _MainMenuPageState extends State<MainMenuPage> {
             ),
             const AssistantLeaderboardPage(),
             const ExtrasPage(),
-            PeoplePage(practicumUid: widget.practicumId),
+            PeoplePage(
+              practicumUid: widget.practicumId,
+            ),
           ];
 
     if (userNotifier.isLoadingState('single') || userNotifier.data == null) {
