@@ -1,3 +1,4 @@
+import 'package:asco/src/presentations/providers/control_card_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -52,9 +53,9 @@ class AscoApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => di.locator<AssistanceNotifier>(),
         ),
-        // ChangeNotifierProvider(
-        //   create: (_) => di.locator<UserPracticumNotifier>(),
-        // ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<ControlCardNotifier>(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

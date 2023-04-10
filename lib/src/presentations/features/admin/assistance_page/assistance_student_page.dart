@@ -6,6 +6,7 @@ import 'package:asco/core/helpers/reusable_helper.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:asco/src/presentations/features/admin/providers/asset_select_provider.dart';
 import 'package:asco/src/presentations/providers/assistance_notifier.dart';
+import 'package:asco/src/presentations/providers/control_card_notifier.dart';
 import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -91,6 +92,7 @@ class _AdminAssistanceStudentPageState
             ),
         builder: (context, _) {
           final userSelect = context.watch<UserSelectedProvider>();
+          final ccNotifier = context.watch<ControlCardNotifier>();
 
           return Scaffold(
             backgroundColor: Palette.grey,
@@ -120,6 +122,11 @@ class _AdminAssistanceStudentPageState
                         practicumUid: widget.practicumUid,
                       );
                       await profileNotifier.multiplePracticumUpdate(data: data);
+                      await ccNotifier.initStudent(
+                          practicumUid: widget.practicumUid,
+                          addedStudentId:
+                              userSelect.user.map((e) => e.uid!).toList(),
+                          removeStudentId: []);
                     },
                     icon: const Icon(
                       Icons.check_rounded,

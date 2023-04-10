@@ -1,18 +1,21 @@
+import 'package:asco/src/domain/entities/entities.dart';
 import 'package:equatable/equatable.dart';
-import 'package:asco/src/domain/entities/assistance_entities/control_card_entity.dart';
 
 class ControlCardResultEntity extends Equatable {
-  final String? studentId;
+  final ProfileEntity? student;
+  final String? practicumUid;
   final List<ControlCardEntity>? controlCards;
 
   const ControlCardResultEntity({
-    this.studentId,
+    this.student,
     this.controlCards,
+    this.practicumUid,
   });
 
   @override
   List<Object?> get props => [
-        studentId,
+        student,
         controlCards,
+        practicumUid,
       ];
 }

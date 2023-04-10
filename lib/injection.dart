@@ -1,3 +1,7 @@
+import 'package:asco/src/domain/usecases/control_card_usecases/init_student_control_card.dart';
+import 'package:asco/src/domain/usecases/control_card_usecases/get_list_control_card.dart';
+import 'package:asco/src/domain/usecases/control_card_usecases/get_single_control_card.dart';
+import 'package:asco/src/presentations/providers/control_card_notifier.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
 import 'package:asco/core/services/preference_service.dart';
@@ -69,6 +73,14 @@ void init() {
     ),
   );
 
+  locator.registerFactory(
+    () => ControlCardNotifier(
+      createUsecase: locator(),
+      getListDataUsecase: locator(),
+      getSingleDataUsecase: locator(),
+    ),
+  );
+
   //! repositories
   locator.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(
@@ -98,6 +110,12 @@ void init() {
 
   locator.registerLazySingleton<AssistanceGroupRepository>(
     () => AssistanceGroupRepositoryImpl(
+      datasource: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<ControlCardRepository>(
+    () => ControlCardRepositoryImpl(
       datasource: locator(),
     ),
   );
@@ -252,6 +270,23 @@ void init() {
     ),
   );
 
+  //* Control Card Usecase
+  locator.registerLazySingleton(
+    () => InitStudentControlCard(
+      repository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => GetListControlCard(
+      repository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => GetSingleControlCard(
+      repository: locator(),
+    ),
+  );
+
   //! datasources
   locator.registerLazySingleton<AuthDataSource>(
     () => AuthDataSourceImpl(
@@ -283,6 +318,12 @@ void init() {
   );
   locator.registerLazySingleton<AssistanceGroupDataSource>(
     () => AssistanceGroupDataSourceImpl(
+      firestore: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<ControlCardDataSource>(
+    () => ControlCardDataSourceImpl(
       firestore: locator(),
     ),
   );
