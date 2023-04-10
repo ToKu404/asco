@@ -1,3 +1,4 @@
+import 'package:asco/src/presentations/providers/classroom_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
@@ -93,6 +94,7 @@ class _HomePageState extends State<HomePage> {
 
                   if (provider.isLoadingState('self') ||
                       provider.data == null) {
+                    print("Status");
                     return const AscoLoading();
                   }
 
@@ -138,11 +140,6 @@ class _HomePageState extends State<HomePage> {
                             ? userPracticum[i].group!.uid!
                             : '',
                         practicumId: classroom.practicum!.uid!,
-                        studentImgUrls: classroom.students != null
-                            ? classroom.students!
-                                .map((e) => e.profilePhoto)
-                                .toList()
-                            : <String?>[],
                       );
                     },
                   );
@@ -164,7 +161,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class CourseCard extends StatelessWidget {
+class CourseCard extends StatefulWidget {
   final String badge;
   final String title;
   final String time;
@@ -173,7 +170,6 @@ class CourseCard extends StatelessWidget {
   final String classroomId;
   final String groupId;
   final String practicumId;
-  final List<String?> studentImgUrls;
 
   const CourseCard({
     Key? key,
@@ -185,27 +181,41 @@ class CourseCard extends StatelessWidget {
     required this.classroomId,
     required this.groupId,
     required this.practicumId,
-    required this.studentImgUrls,
   }) : super(key: key);
 
   @override
+  State<CourseCard> createState() => _CourseCardState();
+}
+
+class _CourseCardState extends State<CourseCard> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      final imageProvider = context.read<ClassroomNotifier>();
+      imageProvider.getDetail(uid: widget.classroomId);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final imageProvider = context.watch<ClassroomNotifier>();
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         onTap: () => showMainMenuPage(
           context: context,
-          userId: userId,
-          classroomId: classroomId,
-          groupId: groupId,
-          practicumId: practicumId,
+          userId: widget.userId,
+          classroomId: widget.classroomId,
+          groupId: widget.groupId,
+          practicumId: widget.practicumId,
         ),
         child: Stack(
           children: <Widget>[
             Container(
               width: AppSize.getAppWidth(context),
               height: 180,
-              color: colorBg,
+              color: widget.colorBg,
             ),
             Positioned(
               right: 0,
@@ -242,7 +252,7 @@ class CourseCard extends StatelessWidget {
                         SizedBox(
                           width: 200,
                           child: Text(
-                            title,
+                            widget.title,
                             style: kTextTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.w600,
                               color: Palette.white,
@@ -254,64 +264,75 @@ class CourseCard extends StatelessWidget {
                         SizedBox(
                           width: 43,
                           height: 47,
-                          child: SvgPicture.asset(badge),
+                          child: SvgPicture.asset(widget.badge),
                         ),
                       ],
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      time,
+                      widget.time,
                       style: kTextTheme.bodyMedium?.copyWith(
                         color: Palette.white,
                       ),
                     ),
                     const Spacer(),
-                    Row(
-                      children: List.generate(
-                        studentImgUrls.length >= 4 ? 4 : studentImgUrls.length,
-                        (index) => Transform.translate(
-                          offset: Offset((-18 * index).toDouble(), 0),
-                          child: Builder(
-                            builder: (context) {
-                              if (index == 3) {
-                                if (studentImgUrls.length - 3 >= 1) {
-                                  return Container(
-                                    width: 25,
-                                    height: 25,
-                                    decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Palette.grey,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        '+${studentImgUrls.length - 3}',
-                                        style: kTextTheme.bodySmall?.copyWith(
-                                          fontWeight: FontWeight.w600,
-                                          color: Palette.black,
+                    Builder(builder: (context) {
+                      if (imageProvider.isLoadingState('single') ||
+                          imageProvider.data == null) {
+                        return const SizedBox();
+                      }
+                      final studentImgUrls = imageProvider.data!.students!
+                          .map((e) => e.profilePhoto)
+                          .toList();
+                      return Row(
+                        children: List.generate(
+                          studentImgUrls.length >= 4
+                              ? 4
+                              : studentImgUrls.length,
+                          (index) => Transform.translate(
+                            offset: Offset((-18 * index).toDouble(), 0),
+                            child: Builder(
+                              builder: (context) {
+                                if (index == 3) {
+                                  if (studentImgUrls.length - 3 >= 1) {
+                                    return Container(
+                                      width: 25,
+                                      height: 25,
+                                      decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Palette.grey,
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          '+${studentImgUrls.length - 3}',
+                                          style: kTextTheme.bodySmall?.copyWith(
+                                            fontWeight: FontWeight.w600,
+                                            color: Palette.black,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  );
+                                    );
+                                  }
+
+                                  return const SizedBox.shrink();
                                 }
 
-                                return const SizedBox.shrink();
-                              }
-
-                              return CircleNetworkImage(
-                                width: 30,
-                                height: 30,
-                                imgUrl: '${studentImgUrls[index]}',
-                                placeholderSize: 0,
-                                errorIcon: Icons.person_rounded,
-                                withBorder: true,
-                                borderWidth: 1,
-                                borderColor: Palette.white,
-                              );
-                            },
+                                return CircleNetworkImage(
+                                  width: 30,
+                                  height: 30,
+                                  imgUrl: '${studentImgUrls[index]}',
+                                  placeholderSize: 0,
+                                  errorIcon: Icons.person_rounded,
+                                  withBorder: true,
+                                  borderWidth: 1,
+                                  borderColor: Palette.white,
+                                );
+                              },
+                            ),
                           ),
                         ),
-                      ),
-                    )
+                      );
+                    })
                   ],
                 ),
               ),

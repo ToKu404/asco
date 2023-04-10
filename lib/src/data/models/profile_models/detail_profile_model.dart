@@ -77,6 +77,7 @@ class DetailProfileModel extends DetailProfileEntity {
       profilePhoto: documentSnapshot['profile_photo'],
       userRole: UserRoleModel.fromMap(documentSnapshot.get('role')),
       userPracticums: userPracticums,
+      
     );
   }
 

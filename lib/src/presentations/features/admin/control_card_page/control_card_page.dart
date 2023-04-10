@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
+import 'control_card_list_page.dart';
+
 void showAdminControlCardPage({
   required BuildContext context,
   required String practicumUid,
@@ -170,6 +172,7 @@ class _AdminControlCardPageState extends State<AdminControlCardPage> {
                           : null,
                       fullname: student.fullName,
                       username: student.username,
+                      uid: student.uid,
                     );
                   },
                   itemCount: profileNotifier.listData.length,
@@ -188,12 +191,14 @@ class StudentCard extends StatefulWidget {
   final String? groupName;
   final String? username;
   final String? fullname;
+  final String? uid;
   const StudentCard({
     super.key,
     this.classCode,
     this.groupName,
     required this.fullname,
     required this.username,
+    required this.uid,
   });
 
   @override
@@ -205,7 +210,13 @@ class _StudentCardState extends State<StudentCard> {
   Widget build(BuildContext context) {
     return InkWellContainer(
       color: Palette.white,
-      onTap: () {},
+      onTap: () {
+        showAdminListControlCardPage(
+          context: context,
+          studentId: widget.uid ?? "",
+          studentName: widget.fullname ?? "",
+        );
+      },
       padding: const EdgeInsets.all(8),
       margin: const EdgeInsets.only(bottom: 12),
       radius: 12,

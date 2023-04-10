@@ -4,8 +4,9 @@ import 'package:asco/src/domain/entities/assistance_entities/control_card_entity
 
 class ControlCardModel extends ControlCardEntity {
   const ControlCardModel({
-    required super.assistance1,
-    required super.assistance2,
+    super.assistance1,
+    super.assistance2,
+    super.meeting,
   });
 
   Map<String, dynamic> toDocument() {
@@ -16,6 +17,7 @@ class ControlCardModel extends ControlCardEntity {
       'assistance2': (assistance2 != null)
           ? AssistanceAttendanceModel.fromEntity(assistance2!).toDocument()
           : null,
+      'meeting': null,
     };
   }
 

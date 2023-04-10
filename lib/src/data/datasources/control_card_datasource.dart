@@ -1,12 +1,15 @@
+import 'package:asco/src/data/models/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:asco/core/utils/exception.dart';
 import 'package:asco/src/data/models/assistance_models/control_card_model.dart';
 
 abstract class ControlCardDataSource {
-  Future<bool> create({required ControlCardModel controlCard});
-
+  Future<bool> initForStudent({
+    required List<String>? addedStudentId,
+    required List<String>? removeStudentId,
+    required String practicumUid,
+  });
   Future<ControlCardModel> single({required String uid});
-
   Future<List<ControlCardModel>> find({String? studentId});
 }
 
@@ -20,24 +23,36 @@ class ControlCardDataSourceImpl implements ControlCardDataSource {
   }
 
   @override
-  Future<bool> create({required ControlCardModel controlCard}) async {
+  Future<bool> initForStudent({
+    List<String>? addedStudentId,
+    List<String>? removeStudentId,
+    String? practicumUid,
+  }) async {
     try {
-      final uid = collectionReference.doc().id;
-
-      collectionReference.doc(uid).get().then((value) {
-        final data = ControlCardModel(
-          assistance1: controlCard.assistance1,
-          assistance2: controlCard.assistance2,
-        );
-
-        if (!value.exists) {
-          collectionReference.doc(uid).set(data.toDocument());
+      for (String sId in addedStudentId!) {
+        final snapshot =
+            await collectionReference.where('student_id', isEqualTo: sId).get();
+        if (snapshot.docs.isEmpty) {
+          final uid = collectionReference.doc().id;
+          collectionReference.doc(uid).get().then((value) {
+            if (!value.exists) {
+              collectionReference.doc(uid).set({
+                "uid": uid,
+                "student_id": sId,
+                "student": firestore.collection('profiles').doc(sId),
+                "practicum_uid": practicumUid,
+                "data": List.generate(
+                  16,
+                  (index) => const ControlCardModel(
+                          assistance1: null, assistance2: null, meeting: null)
+                      .toDocument(),
+                ),
+              });
+            }
+          }).catchError((e) => throw FirestoreException(e.toString()));
         }
-
-        return true;
-      }).catchError((e) => throw FirestoreException(e.toString()));
-
-      return false;
+      }
+      return true;
     } catch (e) {
       throw FirestoreException(e.toString());
     }

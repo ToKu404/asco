@@ -2,9 +2,9 @@ import 'package:asco/src/domain/entities/assistance_entities/assistance_attendan
 
 class AssistanceAttendanceModel extends AssistanceAttendanceEntity {
   const AssistanceAttendanceModel({
-    required super.assistanceDateTime,
-    required super.status,
-    required super.note,
+    super.assistanceDateTime,
+    super.status,
+    super.note,
   });
 
   Map<String, dynamic> toDocument() {
