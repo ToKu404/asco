@@ -38,6 +38,7 @@ class ReferenceHelper {
 
       return users;
     } catch (e) {
+      print("Error disini 3");
       throw FirestoreException(e.toString());
     }
   }
