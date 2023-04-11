@@ -1,11 +1,14 @@
 import 'package:asco/src/domain/entities/entities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'control_card_model.dart';
+
 class ControlCardResultModel extends ControlCardResultEntity {
   const ControlCardResultModel({
-    required super.student,
-    required super.controlCards,
-    required super.practicumUid,
+    super.student,
+    super.data,
+    super.practicumUid,
+    super.uid,
   });
 
   Map<String, dynamic> toDocument() {
@@ -14,25 +17,32 @@ class ControlCardResultModel extends ControlCardResultEntity {
 
   ControlCardResultEntity toEntity() {
     return ControlCardResultEntity(
-      controlCards: controlCards,
+      data: data,
       student: student,
+      practicumUid: practicumUid,
+      uid: uid,
     );
   }
 
   factory ControlCardResultModel.fromSnapshot(
-      DocumentSnapshot documentSnapshot) {
+    DocumentSnapshot documentSnapshot,
+    List<ControlCardEntity> data,
+    ProfileEntity? student,
+  ) {
     return ControlCardResultModel(
-      controlCards: null,
-      student: null,
-      practicumUid: null,
+      data: data,
+      student: student,
+      practicumUid: documentSnapshot['practicum_uid'],
+      uid: documentSnapshot['uid'],
     );
   }
 
   factory ControlCardResultModel.fromEntity(ControlCardResultEntity entity) {
     return ControlCardResultModel(
-      controlCards: entity.controlCards,
+      data: entity.data,
       student: entity.student,
       practicumUid: entity.practicumUid,
+      uid: entity.uid,
     );
   }
 }

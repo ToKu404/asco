@@ -83,17 +83,14 @@ class ClassroomDataSourceImpl implements ClassroomDataSource {
                     ).toEntity()
                   : null,
             );
-            print(data.toString());
             return data;
           } else {
-            print("Error disini 2");
 
             throw FirestoreException('document is not exists.');
           }
         },
       );
     } catch (e) {
-      print("Error disini");
       throw FirestoreException(e.toString());
     }
   }

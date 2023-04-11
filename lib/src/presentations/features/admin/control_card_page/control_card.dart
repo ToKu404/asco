@@ -1,4 +1,5 @@
-import 'package:asco/src/domain/entities/assistance_entities/assistance_entities.dart';
+import 'package:asco/core/helpers/helpers.dart';
+import 'package:asco/src/domain/entities/entities.dart';
 import 'package:flutter/material.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
@@ -6,6 +7,7 @@ import 'package:asco/src/presentations/widgets/circle_border_container.dart';
 
 class ControlCard extends StatelessWidget {
   final ControlCardEntity controlCardEntity;
+  final MeetingEntity? meetingEntity;
   final bool hasTrailing;
   final Widget? trailing;
   final bool isThreeLine;
@@ -20,6 +22,7 @@ class ControlCard extends StatelessWidget {
     this.trailing,
     this.isThreeLine = false,
     this.thirdLine,
+    this.meetingEntity,
     this.verticalAlignment = CrossAxisAlignment.center,
     this.onTap,
   });
@@ -50,7 +53,7 @@ class ControlCard extends StatelessWidget {
                 CircleBorderContainer(
                   size: 50,
                   borderWidth: 1.5,
-                  child: false
+                  child: meetingEntity == null
                       ? const Icon(
                           Icons.lock_outline_rounded,
                           color: Palette.greyDark,
@@ -71,22 +74,31 @@ class ControlCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        "asd",
+                        meetingEntity == null
+                            ? "-"
+                            : meetingEntity!.topic ?? '',
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: kTextTheme.bodyLarge?.copyWith(
                           fontWeight: FontWeight.w600,
-                          color: true ? Palette.greyDark : Palette.purple100,
+                          color: meetingEntity == null
+                              ? Palette.greyDark
+                              : Palette.purple100,
                           height: 1.2,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        "ASdsad",
+                        meetingEntity == null
+                            ? "-"
+                            : ReusableHelper.dateTimeToString(
+                                meetingEntity!.meetingDate!),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: kTextTheme.bodyMedium?.copyWith(
-                          color: true ? Palette.grey50 : Palette.purple60,
+                          color: meetingEntity == null
+                              ? Palette.grey50
+                              : Palette.purple60,
                         ),
                       ),
                       if (isThreeLine) ...[

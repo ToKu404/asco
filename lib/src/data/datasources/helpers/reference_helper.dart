@@ -1,3 +1,6 @@
+import 'package:asco/src/data/models/assistance_models/assistance_models.dart';
+import 'package:asco/src/data/models/meeting_models/meeting_model.dart';
+import 'package:asco/src/domain/entities/assistance_entities/assistance_entities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:asco/core/utils/exception.dart';
 import 'package:asco/src/data/models/profile_models/profile_model.dart';
@@ -38,7 +41,38 @@ class ReferenceHelper {
 
       return users;
     } catch (e) {
-      print("Error disini 3");
+      throw FirestoreException(e.toString());
+    }
+  }
+
+  static Future<List<ControlCardEntity>> referenceCC(List<dynamic> refs) async {
+    try {
+      final documentReferences = <Map<String, dynamic>>[];
+      final users = <ControlCardEntity>[];
+
+      for (var item in refs) {
+        if (item is Map<String, dynamic>) {
+          documentReferences.add(item);
+        }
+      }
+
+      for (var userRef in documentReferences) {
+        final user = ControlCardModel.fromMap(
+            userRef,
+            userRef['meeting'] != null
+                ? MeetingModel.fromMap(
+                    await referenceSingle<ProfileModel>(
+                      userRef,
+                      'meeting',
+                    ),
+                  ).toEntity()
+                : null);
+
+        users.add(user);
+      }
+
+      return users;
+    } catch (e) {
       throw FirestoreException(e.toString());
     }
   }
