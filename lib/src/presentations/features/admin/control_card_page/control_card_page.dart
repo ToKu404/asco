@@ -159,20 +159,30 @@ class _AdminControlCardPageState extends State<AdminControlCardPage> {
                     final student = profileNotifier.listData[index];
                     return StudentCard(
                       classCode: student.userPracticums != null &&
-                              student.userPracticums?[widget] != null &&
-                              student.userPracticums?[widget]?.classroom != null
+                              student.userPracticums?[widget.practicumUid] !=
+                                  null &&
+                              student.userPracticums?[widget.practicumUid]
+                                      ?.classroom !=
+                                  null
                           ? student.userPracticums![widget.practicumUid]!
                               .classroom!.classCode
                           : null,
                       groupName: student.userPracticums != null &&
-                              student.userPracticums?[widget] != null &&
-                              student.userPracticums?[widget]?.group != null
+                              student.userPracticums?[widget.practicumUid] !=
+                                  null &&
+                              student.userPracticums?[widget.practicumUid]
+                                      ?.group !=
+                                  null
                           ? student
                               .userPracticums![widget.practicumUid]!.group!.name
                           : null,
                       fullname: student.fullName,
                       username: student.username,
                       uid: student.uid,
+                      classroomUid: student.userPracticums != null
+                          ? student.userPracticums![widget.practicumUid]
+                              ?.classroom?.uid!
+                          : null,
                     );
                   },
                   itemCount: profileNotifier.listData.length,
@@ -191,11 +201,13 @@ class StudentCard extends StatefulWidget {
   final String? groupName;
   final String? username;
   final String? fullname;
+  final String? classroomUid;
   final String? uid;
   const StudentCard({
     super.key,
     this.classCode,
     this.groupName,
+    required this.classroomUid,
     required this.fullname,
     required this.username,
     required this.uid,
@@ -215,6 +227,7 @@ class _StudentCardState extends State<StudentCard> {
           context: context,
           studentId: widget.uid ?? "",
           studentName: widget.fullname ?? "",
+          classroomUid: widget.classroomUid ?? '',
         );
       },
       padding: const EdgeInsets.all(8),

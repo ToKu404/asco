@@ -9,6 +9,7 @@ class DetailMeetingEntity extends Equatable {
   final DateTime? meetingDate;
   final String? topic;
   final String? modulPath;
+  final int? meetingNumber;
   final List<AttendanceEntity>? attendances;
 
   const DetailMeetingEntity({
@@ -19,6 +20,7 @@ class DetailMeetingEntity extends Equatable {
     this.meetingDate,
     this.topic,
     this.modulPath,
+    this.meetingNumber,
     this.attendances,
   });
 
@@ -32,5 +34,6 @@ class DetailMeetingEntity extends Equatable {
         topic,
         modulPath,
         attendances,
+        meetingNumber,
       ];
 }

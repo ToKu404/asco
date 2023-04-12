@@ -94,7 +94,7 @@ class _HomePageState extends State<HomePage> {
 
                   if (provider.isLoadingState('self') ||
                       provider.data == null) {
-                    print("Status");
+  
                     return const AscoLoading();
                   }
 

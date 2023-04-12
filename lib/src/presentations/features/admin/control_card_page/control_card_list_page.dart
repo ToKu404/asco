@@ -2,9 +2,10 @@ import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/helpers/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/src/domain/entities/assistance_entities/assistance_entities.dart';
+import 'package:asco/src/domain/entities/entities.dart';
 import 'package:asco/src/presentations/features/admin/control_card_page/control_card.dart';
 import 'package:asco/src/presentations/providers/control_card_notifier.dart';
+import 'package:asco/src/presentations/providers/meeting_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +14,7 @@ void showAdminListControlCardPage({
   required BuildContext context,
   required String studentId,
   required String studentName,
+  required String classroomUid,
 }) {
   Navigator.push(
     context,
@@ -20,6 +22,7 @@ void showAdminListControlCardPage({
       builder: (context) => AdminListControlCardPage(
         studentId: studentId,
         studentName: studentName,
+        classroomId: classroomUid,
       ),
       settings: const RouteSettings(
         name: AppRoute.adminUsersPage,
@@ -31,11 +34,13 @@ void showAdminListControlCardPage({
 class AdminListControlCardPage extends StatefulWidget {
   final String studentId;
   final String studentName;
+  final String classroomId;
 
   const AdminListControlCardPage({
     super.key,
     required this.studentId,
     required this.studentName,
+    required this.classroomId,
   });
 
   @override
@@ -58,6 +63,8 @@ class _AdminListControlCardPageState extends State<AdminListControlCardPage> {
     Future.microtask(() {
       Provider.of<ControlCardNotifier>(context, listen: false)
           .fetch(studentId: widget.studentId);
+      Provider.of<MeetingNotifier>(context, listen: false)
+          .fetch(classroomUid: widget.classroomId);
     });
   }
 
@@ -141,13 +148,19 @@ class _AdminListControlCardPageState extends State<AdminListControlCardPage> {
             Expanded(
               child: Builder(builder: (context) {
                 final ccNotifier = context.watch<ControlCardNotifier>();
+                final meetingNotifier = context.watch<MeetingNotifier>();
 
                 // Todo : Add Shimmer
-                if (ccNotifier.isLoadingState('find')) {
+                if (ccNotifier.isLoadingState('find') ||
+                    meetingNotifier.isLoadingState('find') ||
+                    ccNotifier.data == null) {
                   return const SizedBox.shrink();
-                } else if (ccNotifier.isErrorState('find')) {
+                } else if (ccNotifier.isErrorState('find') ||
+                    meetingNotifier.isErrorState('find')) {
                   return const SizedBox.shrink();
                 }
+                final cardEntity = ccNotifier.data!.data!;
+                final listMeetingData = meetingNotifier.listData;
 
                 return ListView.builder(
                   padding: const EdgeInsets.only(
@@ -156,10 +169,14 @@ class _AdminListControlCardPageState extends State<AdminListControlCardPage> {
                     bottom: 16 + 65,
                   ),
                   itemBuilder: (context, index) {
-                    final cardEntity = ccNotifier.listData[index];
-                    return buildControlCard(context, cardEntity);
+                    return buildControlCard(
+                        context,
+                        cardEntity[index],
+                        index + 1 > listMeetingData.length
+                            ? null
+                            : MeetingEntity.fromDetail(listMeetingData[index]));
                   },
-                  itemCount: ccNotifier.listData.length,
+                  itemCount: cardEntity.length,
                 );
               }),
             ),
@@ -170,12 +187,16 @@ class _AdminListControlCardPageState extends State<AdminListControlCardPage> {
   }
 
   ControlCard buildControlCard(
-      BuildContext context, ControlCardEntity cardEntity) {
+    BuildContext context,
+    ControlCardEntity cardEntity,
+    MeetingEntity? meetingEntity,
+  ) {
     return ControlCard(
       controlCardEntity: cardEntity,
+      meetingEntity: meetingEntity,
       hasTrailing: true,
-      trailing: AssistanceStatusBadge(),
-      onTap: false ? null : () {},
+      trailing: const AssistanceStatusBadge(),
+      onTap: meetingEntity == null ? null : () {},
     );
   }
 }

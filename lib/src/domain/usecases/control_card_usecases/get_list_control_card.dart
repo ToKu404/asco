@@ -8,7 +8,7 @@ class GetListControlCard {
 
   GetListControlCard({required this.repository});
 
-  Future<Either<Failure, List<ControlCardEntity>>> execute({
+  Future<Either<Failure, ControlCardResultEntity>> execute({
     required String id,
   }) {
     return repository.find(studentId: id);

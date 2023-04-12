@@ -5,6 +5,8 @@ import 'package:asco/src/data/datasources/control_card_datasource.dart';
 import 'package:asco/src/domain/entities/assistance_entities/control_card_entity.dart';
 import 'package:asco/src/domain/repositories/control_card_repository.dart';
 
+import '../../domain/entities/assistance_entities/control_card_result_entity.dart';
+
 class ControlCardRepositoryImpl implements ControlCardRepository {
   final ControlCardDataSource datasource;
 
@@ -43,7 +45,7 @@ class ControlCardRepositoryImpl implements ControlCardRepository {
   }
 
   @override
-  Future<Either<Failure, List<ControlCardEntity>>> find({
+  Future<Either<Failure, ControlCardResultEntity>> find({
     String? studentId,
   }) async {
     try {

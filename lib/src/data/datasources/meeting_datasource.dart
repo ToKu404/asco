@@ -44,6 +44,7 @@ class MeetingDataSourceImpl implements MeetingDataSource {
         meetingDate: meeting.meetingDate,
         topic: meeting.topic,
         modulPath: meeting.modulPath,
+        // meetingNumber: meeting.meetingNumber,
         attendances: listStudentId
             .map((id) => AttendanceEntity(
                   studentUid: id,
@@ -94,14 +95,11 @@ class MeetingDataSourceImpl implements MeetingDataSource {
   Future<List<DetailMeetingModel>> find({String? classroomUid}) async {
     try {
       var snapshot = collectionReference.get();
-
-      if (classroomUid != null) {
-        if (classroomUid.isNotEmpty) {
-          snapshot = collectionReference
-              .where('classroom_uid', isEqualTo: classroomUid)
-              .orderBy('meeting_date')
-              .get();
-        }
+      if (classroomUid != null && classroomUid.isNotEmpty) {
+        snapshot = collectionReference
+            .where('classroom_uid', isEqualTo: classroomUid)
+            .orderBy('meeting_date')
+            .get();
       }
 
       return await snapshot.then((value) {

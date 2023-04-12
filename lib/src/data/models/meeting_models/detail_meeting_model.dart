@@ -14,6 +14,7 @@ class DetailMeetingModel extends DetailMeetingEntity {
     required super.topic,
     required super.modulPath,
     required super.attendances,
+    // required super.meetingNumber,
   });
 
   Map<String, dynamic> toDocument() {
@@ -25,6 +26,7 @@ class DetailMeetingModel extends DetailMeetingEntity {
       'meeting_date': meetingDate,
       'topic': topic,
       'modul_path': modulPath,
+      // 'meeting_number': meetingNumber,
       'attendances': (attendances != null)
           ? attendances!
               .map((entity) => AttendanceModel.fromEntity(entity).toDocument())
@@ -42,6 +44,7 @@ class DetailMeetingModel extends DetailMeetingEntity {
       meetingDate: meetingDate,
       topic: topic,
       modulPath: modulPath,
+      // meetingNumber: meetingNumber,
       attendances: attendances,
     );
   }
@@ -55,6 +58,9 @@ class DetailMeetingModel extends DetailMeetingEntity {
       meetingDate: (documentSnapshot['meeting_date'] as Timestamp).toDate(),
       topic: documentSnapshot['topic'],
       modulPath: documentSnapshot['modul_path'],
+      // meetingNumber: ReadHelper.isKeyExist(documentSnapshot, 'meeting_number')
+      //     ? documentSnapshot['meeting_number']
+      //     : null,
       attendances: ReadHelper.isKeyExist(documentSnapshot, 'attendances')
           ? documentSnapshot['attendances']
               .map((map) => AttendanceModel.fromMap(map).toEntity())
@@ -74,6 +80,7 @@ class DetailMeetingModel extends DetailMeetingEntity {
       topic: entity.topic,
       modulPath: entity.modulPath,
       attendances: entity.attendances,
+      // meetingNumber: entity.meetingNumber,
     );
   }
 }

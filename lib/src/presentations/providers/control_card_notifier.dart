@@ -5,7 +5,7 @@ import 'package:asco/src/domain/usecases/control_card_usecases/init_student_cont
 import 'package:asco/src/domain/usecases/control_card_usecases/get_list_control_card.dart';
 import 'package:asco/src/domain/usecases/control_card_usecases/get_single_control_card.dart';
 
-class ControlCardNotifier extends CrudDataService<ControlCardEntity> {
+class ControlCardNotifier extends CrudDataService<ControlCardResultEntity> {
   final InitStudentControlCard createUsecase;
   final GetSingleControlCard getSingleDataUsecase;
   final GetListControlCard getListDataUsecase;
@@ -43,26 +43,26 @@ class ControlCardNotifier extends CrudDataService<ControlCardEntity> {
     );
   }
 
-  Future<void> getDetail({required String uuid}) async {
-    updateState(state: RequestState.loading, key: 'single');
+  // Future<void> getDetail({required String uuid}) async {
+  //   updateState(state: RequestState.loading, key: 'single');
 
-    final result = await getSingleDataUsecase.execute(
-      uuid: uuid,
-    );
+  //   final result = await getSingleDataUsecase.execute(
+  //     uuid: uuid,
+  //   );
 
-    result.fold(
-      (l) {
-        updateState(state: RequestState.error, key: 'single');
+  //   result.fold(
+  //     (l) {
+  //       updateState(state: RequestState.error, key: 'single');
 
-        setErrorMessage(l.message);
-      },
-      (r) {
-        updateState(state: RequestState.success, key: 'single');
+  //       setErrorMessage(l.message);
+  //     },
+  //     (r) {
+  //       updateState(state: RequestState.success, key: 'single');
 
-        setData(r);
-      },
-    );
-  }
+  //       setData(r);
+  //     },
+  //   );
+  // }
 
   Future<void> fetch({required String studentId}) async {
     updateState(state: RequestState.loading, key: 'find');
@@ -78,7 +78,7 @@ class ControlCardNotifier extends CrudDataService<ControlCardEntity> {
       (r) {
         updateState(state: RequestState.success, key: 'find');
 
-        setListData(r);
+        setData(r);
       },
     );
   }

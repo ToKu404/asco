@@ -3,12 +3,14 @@ import 'package:asco/src/domain/entities/meeting_entities/detail_meeting_entity.
 
 class MeetingEntity extends Equatable {
   final String? uid;
+  final int? meetingNumber;
   final String? topic;
   final DateTime? meetingDate;
 
   const MeetingEntity({
     this.uid,
     this.topic,
+    this.meetingNumber,
     this.meetingDate,
   });
 
@@ -16,6 +18,7 @@ class MeetingEntity extends Equatable {
     return MeetingEntity(
       uid: detail.uid,
       topic: detail.topic,
+      meetingNumber: detail.meetingNumber,
       meetingDate: detail.meetingDate,
     );
   }
@@ -24,6 +27,7 @@ class MeetingEntity extends Equatable {
   List<Object?> get props => [
         uid,
         topic,
+        meetingNumber,
         meetingDate,
       ];
 }

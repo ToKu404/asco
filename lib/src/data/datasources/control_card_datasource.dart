@@ -1,4 +1,8 @@
+import 'package:asco/src/data/datasources/helpers/helpers.dart';
+import 'package:asco/src/data/datasources/helpers/reference_helper.dart';
+import 'package:asco/src/data/models/assistance_models/control_card_result_model.dart';
 import 'package:asco/src/data/models/models.dart';
+import 'package:asco/src/domain/entities/assistance_entities/assistance_entities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:asco/core/utils/exception.dart';
 import 'package:asco/src/data/models/assistance_models/control_card_model.dart';
@@ -10,7 +14,7 @@ abstract class ControlCardDataSource {
     required String practicumUid,
   });
   Future<ControlCardModel> single({required String uid});
-  Future<List<ControlCardModel>> find({String? studentId});
+  Future<ControlCardResultModel> find({String? studentId});
 }
 
 class ControlCardDataSourceImpl implements ControlCardDataSource {
@@ -29,6 +33,7 @@ class ControlCardDataSourceImpl implements ControlCardDataSource {
     String? practicumUid,
   }) async {
     try {
+      int id = 0;
       for (String sId in addedStudentId!) {
         final snapshot =
             await collectionReference.where('student_id', isEqualTo: sId).get();
@@ -43,14 +48,17 @@ class ControlCardDataSourceImpl implements ControlCardDataSource {
                 "practicum_uid": practicumUid,
                 "data": List.generate(
                   16,
-                  (index) => const ControlCardModel(
-                          assistance1: null, assistance2: null, meeting: null)
+                  (index) => ControlCardModel(
+                          assistance1: null,
+                          assistance2: null,
+                          meetingNumber: id)
                       .toDocument(),
                 ),
               });
             }
           }).catchError((e) => throw FirestoreException(e.toString()));
         }
+        id++;
       }
       return true;
     } catch (e) {
@@ -76,15 +84,30 @@ class ControlCardDataSourceImpl implements ControlCardDataSource {
   }
 
   @override
-  Future<List<ControlCardModel>> find({String? studentId}) async {
+  Future<ControlCardResultModel> find({String? studentId}) async {
     try {
       final snapshot =
           collectionReference.where('student_id', isEqualTo: studentId).get();
 
-      return await snapshot.then((value) {
-        return value.docs
-            .map((snapshot) => ControlCardModel.fromSnapshot(snapshot))
-            .toList();
+      return await snapshot.then((value) async {
+        final data = value.docs.first;
+        //REPAIR
+        return ControlCardResultModel.fromSnapshot(
+          data,
+          ReadHelper.isKeyExist(data, 'data')
+              ? await ReferenceHelper.referenceCC(
+                  data['data'],
+                )
+              : <ControlCardEntity>[],
+          data['student'] != null
+              ? ProfileModel.fromMap(
+                  await ReferenceHelper.referenceSingle<ProfileModel>(
+                    data,
+                    'student',
+                  ),
+                ).toEntity()
+              : null,
+        );
       });
     } catch (e) {
       throw FirestoreException(e.toString());
