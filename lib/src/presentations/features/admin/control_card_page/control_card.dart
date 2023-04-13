@@ -1,8 +1,9 @@
-import 'package:asco/core/helpers/helpers.dart';
-import 'package:asco/src/domain/entities/entities.dart';
 import 'package:flutter/material.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/core/helpers/helpers.dart';
+import 'package:asco/src/domain/entities/assistance_entities/control_card_entity.dart';
+import 'package:asco/src/domain/entities/meeting_entities/meeting_entity.dart';
 import 'package:asco/src/presentations/widgets/circle_border_container.dart';
 
 class ControlCard extends StatelessWidget {
@@ -128,34 +129,32 @@ class AssistanceStatusBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        if (true) ...[
-          const CircleBorderContainer(size: 30),
-          const SizedBox(width: 4),
-          const CircleBorderContainer(size: 30),
-        ] else ...[
-          const CircleBorderContainer(
-            size: 30,
-            borderColor: Palette.purple80,
-            fillColor: Palette.purple60,
-            child: Icon(
-              Icons.check_rounded,
-              size: 16,
-              color: Palette.white,
-            ),
-          ),
-          const SizedBox(width: 4),
-          const CircleBorderContainer(
-            size: 30,
-            borderColor: Color(0xFFD35380),
-            fillColor: Color(0xFFFA78A6),
-            child: Icon(
-              Icons.close_rounded,
-              size: 16,
-              color: Palette.white,
-            ),
-          ),
-        ],
+      children: const <Widget>[
+        CircleBorderContainer(size: 30),
+        SizedBox(width: 4),
+        CircleBorderContainer(size: 30),
+
+        // const CircleBorderContainer(
+        //   size: 30,
+        //   borderColor: Palette.purple80,
+        //   fillColor: Palette.purple60,
+        //   child: Icon(
+        //     Icons.check_rounded,
+        //     size: 16,
+        //     color: Palette.white,
+        //   ),
+        // ),
+        // const SizedBox(width: 4),
+        // const CircleBorderContainer(
+        //   size: 30,
+        //   borderColor: Color(0xFFD35380),
+        //   fillColor: Color(0xFFFA78A6),
+        //   child: Icon(
+        //     Icons.close_rounded,
+        //     size: 16,
+        //     color: Palette.white,
+        //   ),
+        // ),
       ],
     );
   }

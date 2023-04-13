@@ -1,7 +1,7 @@
-import 'package:asco/src/domain/entities/entities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'control_card_model.dart';
+import 'package:asco/src/domain/entities/assistance_entities/control_card_entity.dart';
+import 'package:asco/src/domain/entities/assistance_entities/control_card_result_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 
 class ControlCardResultModel extends ControlCardResultEntity {
   const ControlCardResultModel({

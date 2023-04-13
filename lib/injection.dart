@@ -1,9 +1,6 @@
-import 'package:asco/src/domain/usecases/control_card_usecases/init_student_control_card.dart';
-import 'package:asco/src/domain/usecases/control_card_usecases/get_list_control_card.dart';
-import 'package:asco/src/domain/usecases/control_card_usecases/get_single_control_card.dart';
-import 'package:asco/src/presentations/providers/control_card_notifier.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
+
 import 'package:asco/core/services/preference_service.dart';
 import 'package:asco/src/data/datasources/datasources.dart';
 import 'package:asco/src/data/repositories/repositories.dart';
@@ -14,7 +11,7 @@ import 'package:asco/src/presentations/providers/providers.dart';
 final locator = GetIt.instance;
 
 void init() {
-  //! state_management
+  //! state management
   locator.registerFactory(
     () => AuthNotifier(
       createUsecase: locator(),
