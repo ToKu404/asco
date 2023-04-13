@@ -1,9 +1,9 @@
 import 'package:asco/core/services/data_service.dart';
 import 'package:asco/core/states/request_state.dart';
 import 'package:asco/src/domain/entities/assistance_entities/assistance_entities.dart';
-import 'package:asco/src/domain/usecases/control_card_usecases/init_student_control_card.dart';
 import 'package:asco/src/domain/usecases/control_card_usecases/get_list_control_card.dart';
 import 'package:asco/src/domain/usecases/control_card_usecases/get_single_control_card.dart';
+import 'package:asco/src/domain/usecases/control_card_usecases/init_student_control_card.dart';
 
 class ControlCardNotifier extends CrudDataService<ControlCardResultEntity> {
   final InitStudentControlCard createUsecase;

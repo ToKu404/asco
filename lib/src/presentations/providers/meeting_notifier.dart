@@ -66,6 +66,7 @@ class MeetingNotifier extends CrudDataService<DetailMeetingEntity> {
     result.fold(
       (l) {
         updateState(state: RequestState.error, key: 'find');
+
         setErrorMessage(l.message);
       },
       (r) {

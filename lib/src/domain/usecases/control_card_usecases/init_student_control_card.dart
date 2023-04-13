@@ -1,7 +1,6 @@
-import 'package:asco/src/domain/entities/assistance_entities/assistance_entities.dart';
-import 'package:asco/src/domain/repositories/control_card_repository.dart';
 import 'package:dartz/dartz.dart';
 import 'package:asco/core/utils/failure.dart';
+import 'package:asco/src/domain/repositories/control_card_repository.dart';
 
 class InitStudentControlCard {
   final ControlCardRepository repository;

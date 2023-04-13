@@ -1,4 +1,3 @@
-import 'package:asco/src/presentations/providers/classroom_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
@@ -17,6 +16,7 @@ import 'package:asco/src/presentations/features/menu/main_menu_page.dart';
 import 'package:asco/src/presentations/features/menu/profile/assistant/assistant_profile_page.dart';
 import 'package:asco/src/presentations/features/menu/profile/student/profile_page.dart';
 import 'package:asco/src/presentations/providers/auth_notifier.dart';
+import 'package:asco/src/presentations/providers/classroom_notifier.dart';
 import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:asco/src/presentations/widgets/app_bar_title.dart';
 import 'package:asco/src/presentations/widgets/asco_loading.dart';
@@ -94,7 +94,6 @@ class _HomePageState extends State<HomePage> {
 
                   if (provider.isLoadingState('self') ||
                       provider.data == null) {
-  
                     return const AscoLoading();
                   }
 
@@ -191,15 +190,17 @@ class _CourseCardState extends State<CourseCard> {
   @override
   void initState() {
     super.initState();
+
     Future.microtask(() {
-      final imageProvider = context.read<ClassroomNotifier>();
-      imageProvider.getDetail(uid: widget.classroomId);
+      Provider.of<ClassroomNotifier>(context, listen: false)
+          .getDetail(uid: widget.classroomId);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final imageProvider = context.watch<ClassroomNotifier>();
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
@@ -276,67 +277,72 @@ class _CourseCardState extends State<CourseCard> {
                       ),
                     ),
                     const Spacer(),
-                    Builder(builder: (context) {
-                      if (imageProvider.isLoadingState('single') ||
-                          imageProvider.data == null) {
-                        return const SizedBox();
-                      }
-                      final studentImgUrls = imageProvider.data!.students!
-                          .map((e) => e.profilePhoto)
-                          .toList();
-                      return Row(
-                        children: List.generate(
-                          studentImgUrls.length >= 4
-                              ? 4
-                              : studentImgUrls.length,
-                          (index) => Transform.translate(
-                            offset: Offset((-18 * index).toDouble(), 0),
-                            child: Builder(
-                              builder: (context) {
-                                if (index == 3) {
-                                  if (studentImgUrls.length - 3 >= 1) {
-                                    return Container(
-                                      width: 25,
-                                      height: 25,
-                                      decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Palette.grey,
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          '+${studentImgUrls.length - 3}',
-                                          style: kTextTheme.bodySmall?.copyWith(
-                                            fontWeight: FontWeight.w600,
-                                            color: Palette.black,
+                    Builder(
+                      builder: (context) {
+                        if (imageProvider.isLoadingState('single') ||
+                            imageProvider.data == null) {
+                          return const SizedBox();
+                        }
+
+                        final studentImgUrls = imageProvider.data!.students!
+                            .map((e) => e.profilePhoto)
+                            .toList();
+
+                        return Row(
+                          children: List.generate(
+                            studentImgUrls.length >= 4
+                                ? 4
+                                : studentImgUrls.length,
+                            (index) => Transform.translate(
+                              offset: Offset((-18 * index).toDouble(), 0),
+                              child: Builder(
+                                builder: (context) {
+                                  if (index == 3) {
+                                    if (studentImgUrls.length - 3 >= 1) {
+                                      return Container(
+                                        width: 25,
+                                        height: 25,
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Palette.grey,
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            '+${studentImgUrls.length - 3}',
+                                            style:
+                                                kTextTheme.bodySmall?.copyWith(
+                                              fontWeight: FontWeight.w600,
+                                              color: Palette.black,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    );
+                                      );
+                                    }
+
+                                    return const SizedBox.shrink();
                                   }
 
-                                  return const SizedBox.shrink();
-                                }
-
-                                return CircleNetworkImage(
-                                  width: 30,
-                                  height: 30,
-                                  imgUrl: '${studentImgUrls[index]}',
-                                  placeholderSize: 0,
-                                  errorIcon: Icons.person_rounded,
-                                  withBorder: true,
-                                  borderWidth: 1,
-                                  borderColor: Palette.white,
-                                );
-                              },
+                                  return CircleNetworkImage(
+                                    width: 30,
+                                    height: 30,
+                                    imgUrl: '${studentImgUrls[index]}',
+                                    placeholderSize: 0,
+                                    errorIcon: Icons.person_rounded,
+                                    withBorder: true,
+                                    borderWidth: 1,
+                                    borderColor: Palette.white,
+                                  );
+                                },
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    })
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
