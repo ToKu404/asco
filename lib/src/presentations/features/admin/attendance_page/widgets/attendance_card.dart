@@ -25,6 +25,7 @@ class _AdminAttendanceCardState extends State<AdminAttendanceCard> {
   @override
   Widget build(BuildContext context) {
     return InkWellContainer(
+      margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(
         12,
       ),
