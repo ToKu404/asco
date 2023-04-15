@@ -4,6 +4,8 @@ import 'package:asco/src/data/datasources/profile_datasource.dart';
 import 'package:asco/src/data/models/meeting_models/detail_meeting_model.dart';
 import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 
+import '../models/attendance_models/attendance_model.dart';
+
 abstract class MeetingDataSource {
   Future<bool> create({
     required DetailMeetingModel meeting,
@@ -11,7 +13,9 @@ abstract class MeetingDataSource {
   });
 
   Future<DetailMeetingModel> single({required String uid});
-
+  Future<bool> updateAttendance(
+      {required List<AttendanceModel> listAttendanceModel,
+      required String uid});
   Future<List<DetailMeetingModel>> find({String? classroomUid});
 }
 
@@ -107,6 +111,31 @@ class MeetingDataSourceImpl implements MeetingDataSource {
             .map((snapshot) => DetailMeetingModel.fromSnapshot(snapshot))
             .toList();
       });
+    } catch (e) {
+      throw FirestoreException(e.toString());
+    }
+  }
+
+  @override
+  Future<bool> updateAttendance(
+      {required List<AttendanceModel> listAttendanceModel,
+      required String uid}) async {
+    try {
+      return collectionReference
+          .doc(uid)
+          .update({
+            'attendances': listAttendanceModel
+                .map((am) => AttendanceModel(
+                      studentUid: am.studentUid,
+                      attendanceTime: am.attendanceTime,
+                      attendanceStatus: am.attendanceStatus,
+                      pointPlus: am.pointPlus,
+                      note: am.note,
+                    ).toDocument())
+                .toList()
+          })
+          .then((value) => true)
+          .catchError((error) => false);
     } catch (e) {
       throw FirestoreException(e.toString());
     }

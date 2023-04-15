@@ -185,6 +185,7 @@ class CustomStudentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isAttend = attendance.attendanceStatus != null;
     return Card(
       elevation: 0,
       margin: const EdgeInsets.only(bottom: 12),
@@ -247,14 +248,21 @@ class CustomStudentCard extends StatelessWidget {
                 ],
               ),
             ),
-            const CircleBorderContainer(
+            CircleBorderContainer(
               size: 30,
               borderColor: Palette.purple80,
-              fillColor: Palette.purple60,
-              child: Icon(
-                Icons.check_rounded,
-                size: 16,
-                color: Palette.white,
+              fillColor: isAttend ? Palette.purple60 : Palette.grey10,
+              child: InkWell(
+                onTap: () {
+                  
+                },
+                child: isAttend
+                    ? const Icon(
+                        Icons.check_rounded,
+                        size: 16,
+                        color: Palette.white,
+                      )
+                    : const SizedBox(),
               ),
             ),
           ],

@@ -389,8 +389,21 @@ class _AssistantLaboratoryCourseDetailPageState
         barrierDismissible: false,
         builder: (_) => AttendanceDialog(
           student: ProfileEntity.fromDetail(student),
+          meetingUid: widget.meetingDetail.uid ?? '',
+          listAttendance: widget.meetingDetail.attendances ?? [],
+          initStatus: attendance.attendanceStatus,
         ),
-      ),
+      ).then((value) {
+        Provider.of<ProfileNotifier>(context, listen: false).fetchMultiple(
+          multipleId: <String>[
+            widget.meetingDetail.assistant1Uid!,
+            widget.meetingDetail.assistant2Uid!,
+            ...widget.meetingDetail.attendances!
+                .map((e) => e.studentUid!)
+                .toList()
+          ],
+        );
+      }),
       isThreeLine: true,
       thirdLine: Text(
         setStudentCardText(attendance),
@@ -416,29 +429,43 @@ class _AssistantLaboratoryCourseDetailPageState
   }
 
   CircleBorderContainer buildStudentCardTrailing(AttendanceEntity attendance) {
-    return attendance.attendanceStatus == null
-        ? const CircleBorderContainer(size: 32)
-        : attendance.attendanceStatus == 3
-            ? const CircleBorderContainer(
-                size: 32,
-                borderColor: Palette.purple80,
-                fillColor: Palette.purple60,
-                child: Icon(
-                  Icons.check_rounded,
-                  size: 18,
-                  color: Palette.white,
-                ),
-              )
-            : const CircleBorderContainer(
-                size: 32,
-                borderColor: Color(0xFF8A6913),
-                fillColor: Color(0xFFE4CC4B),
-                child: Icon(
-                  Icons.remove_rounded,
-                  size: 18,
-                  color: Palette.white,
-                ),
-              );
+    final listStatus = <FaceStatus>[
+      const FaceStatus(
+        status: 'Alfa',
+        icon: 'face_dizzy_filled.svg',
+        color: Color(0xFFFA78A6),
+      ),
+      const FaceStatus(
+        status: 'Izin',
+        icon: 'face_neutral_filled.svg',
+        color: Color(0xFF788DFA),
+      ),
+      const FaceStatus(
+        status: 'Sakit',
+        icon: 'face_sick_filled.svg',
+        color: Color(0xFFFAC678),
+      ),
+      const FaceStatus(
+        status: 'Hadir',
+        icon: 'face_smile_filled.svg',
+        color: Palette.purple60,
+      ),
+    ];
+    if (attendance.attendanceStatus == null) {
+      return const CircleBorderContainer(size: 32);
+    } else {
+      final attendanceStatus = listStatus[attendance.attendanceStatus!];
+      return CircleBorderContainer(
+        size: 32,
+        borderColor: attendanceStatus.color,
+        fillColor: Palette.white,
+        child: SvgPicture.asset(
+          AssetPath.getIcon(attendanceStatus.icon),
+          color: attendanceStatus.color,
+          width: 30,
+        ),
+      );
+    }
   }
 
   void searchMeeting(String query) {

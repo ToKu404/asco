@@ -1,3 +1,4 @@
+import 'package:asco/src/domain/usecases/meeting_usecases/update_attendance.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
 
@@ -58,6 +59,7 @@ void init() {
       createUsecase: locator(),
       getListDataUsecase: locator(),
       getSingleDataUsecase: locator(),
+      updateAttendanceUsecase: locator(),
     ),
   );
 
@@ -229,6 +231,11 @@ void init() {
   );
 
   //* Meeting Usecase
+  locator.registerLazySingleton(
+    () => UpdateAttendance(
+      repository: locator(),
+    ),
+  );
   locator.registerLazySingleton(
     () => CreateMeeting(
       repository: locator(),

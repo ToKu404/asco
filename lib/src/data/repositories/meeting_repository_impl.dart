@@ -1,3 +1,6 @@
+import 'package:asco/src/data/models/attendance_models/attendance_model.dart';
+import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:asco/core/utils/exception.dart';
 import 'package:asco/core/utils/failure.dart';
@@ -51,6 +54,22 @@ class MeetingRepositoryImpl implements MeetingRepository {
       return Right(result);
     } on FirestoreException {
       return const Left(FirestoreFailure('failed to find data'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> updateAttendance(
+      {required List<AttendanceEntity> listAttendanceModel,
+      required String uid}) async {
+    try {
+      final result = await datasource.updateAttendance(
+          listAttendanceModel: listAttendanceModel
+              .map((e) => AttendanceModel.fromEntity(e))
+              .toList(),
+          uid: uid);
+      return Right(result);
+    } on FirebaseException {
+      return const Left(FirestoreFailure('failed to update data'));
     }
   }
 }
