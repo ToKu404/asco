@@ -1,11 +1,11 @@
-import 'package:asco/src/data/models/attendance_models/attendance_model.dart';
-import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:asco/core/utils/exception.dart';
 import 'package:asco/core/utils/failure.dart';
 import 'package:asco/src/data/datasources/meeting_datasource.dart';
+import 'package:asco/src/data/models/attendance_models/attendance_model.dart';
 import 'package:asco/src/data/models/meeting_models/detail_meeting_model.dart';
+import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 import 'package:asco/src/domain/entities/meeting_entities/detail_meeting_entity.dart';
 import 'package:asco/src/domain/repositories/meeting_repository.dart';
 
@@ -58,15 +58,18 @@ class MeetingRepositoryImpl implements MeetingRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> updateAttendance(
-      {required List<AttendanceEntity> listAttendanceModel,
-      required String uid}) async {
+  Future<Either<Failure, bool>> updateAttendance({
+    required String uid,
+    required List<AttendanceEntity> listAttendanceModel,
+  }) async {
     try {
       final result = await datasource.updateAttendance(
-          listAttendanceModel: listAttendanceModel
-              .map((e) => AttendanceModel.fromEntity(e))
-              .toList(),
-          uid: uid);
+        uid: uid,
+        listAttendanceModel: listAttendanceModel
+            .map((e) => AttendanceModel.fromEntity(e))
+            .toList(),
+      );
+
       return Right(result);
     } on FirebaseException {
       return const Left(FirestoreFailure('failed to update data'));

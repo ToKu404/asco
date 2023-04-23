@@ -1,27 +1,26 @@
-import 'package:asco/src/data/datasources/helpers/update_data_helper.dart';
-import 'package:asco/src/presentations/providers/meeting_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/core/helpers/asset_path.dart';
+import 'package:asco/src/data/datasources/helpers/update_data_helper.dart';
+import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
+import 'package:asco/src/presentations/providers/meeting_notifier.dart';
 import 'package:asco/src/presentations/widgets/circle_border_container.dart';
-import 'package:provider/provider.dart';
-
-import '../../../../../domain/entities/attendance_entities/attendance_entities.dart';
 
 class AttendanceDialog extends StatefulWidget {
   final ProfileEntity student;
   final String meetingUid;
-  final List<AttendanceEntity> listAttendance;
+  final List<AttendanceEntity> listAttendances;
   final int? initStatus;
 
   const AttendanceDialog({
     super.key,
     required this.student,
     required this.meetingUid,
-    required this.listAttendance,
+    required this.listAttendances,
     required this.initStatus,
   });
 
@@ -61,9 +60,11 @@ class _AttendanceDialogState extends State<AttendanceDialog> {
 
   @override
   void initState() {
-    _statusNotifier = ValueNotifier(widget.initStatus == null
-        ? _listStatus.first
-        : _listStatus[widget.initStatus!]);
+    _statusNotifier = ValueNotifier(
+      widget.initStatus == null
+          ? _listStatus.first
+          : _listStatus[widget.initStatus!],
+    );
     _pointNotifier = ValueNotifier(_listPoints.first);
     _noteController = TextEditingController();
 
@@ -123,29 +124,32 @@ class _AttendanceDialogState extends State<AttendanceDialog> {
                   ),
                   IconButton(
                     onPressed: () {
-                      final mettingNotifier = context.read<MeetingNotifier>();
-                      int index = _listStatus.indexWhere((element) =>
-                          element.status == _statusNotifier.value.status);
-                      String point = _pointNotifier.value;
-                      final result = UpdateDataHelper.updateAttendance(
-                        attendanceList: widget.listAttendance,
-                        studentUid: widget.student.uid ?? '',
-                        updateAttendance: AttendanceEntity(
-                            attendanceStatus: index,
-                            attendanceTime: DateTime.now(),
-                            note: index == 3 ? null : _noteController.text,
-                            pointPlus: index == 3
-                                ? int.parse(point.replaceAll('+', ''))
-                                : null),
-                      );
-                      mettingNotifier
-                          .updateAttendance(
-                        listAttendanceModel: result,
-                        uid: widget.meetingUid,
-                      )
-                          .then((value) {
-                        Navigator.pop(context);
+                      final index = _listStatus.indexWhere((e) {
+                        return e.status == _statusNotifier.value.status;
                       });
+
+                      final point = _pointNotifier.value;
+
+                      final result = UpdateDataHelper.updateAttendance(
+                        studentUid: widget.student.uid ?? '',
+                        attendanceList: widget.listAttendances,
+                        updateAttendance: AttendanceEntity(
+                          attendanceStatus: index,
+                          attendanceTime: DateTime.now(),
+                          note: index == 3 ? null : _noteController.text,
+                          pointPlus: index == 3
+                              ? int.parse(point.replaceAll('+', ''))
+                              : null,
+                        ),
+                      );
+
+                      context
+                          .read<MeetingNotifier>()
+                          .updateAttendance(
+                            uid: widget.meetingUid,
+                            listAttendanceModel: result,
+                          )
+                          .then((value) => Navigator.pop(context));
                     },
                     icon: const Icon(
                       Icons.check_rounded,

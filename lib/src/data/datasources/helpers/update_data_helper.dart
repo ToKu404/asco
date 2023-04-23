@@ -1,9 +1,9 @@
-import 'package:asco/src/domain/entities/attendance_entities/attendance_entities.dart';
+import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 
 class UpdateDataHelper {
   static List<AttendanceEntity> updateAttendance({
-    required List<AttendanceEntity> attendanceList,
     required String studentUid,
+    required List<AttendanceEntity> attendanceList,
     required AttendanceEntity updateAttendance,
   }) {
     for (var i = 0; i < attendanceList.length; i++) {
@@ -18,6 +18,7 @@ class UpdateDataHelper {
         );
       }
     }
+
     return attendanceList;
   }
 }
