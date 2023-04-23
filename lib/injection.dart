@@ -1,7 +1,5 @@
-import 'package:asco/src/domain/usecases/meeting_usecases/update_attendance.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
-
 import 'package:asco/core/services/preference_service.dart';
 import 'package:asco/src/data/datasources/datasources.dart';
 import 'package:asco/src/data/repositories/repositories.dart';

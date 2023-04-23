@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:asco/core/utils/exception.dart';
 import 'package:asco/src/data/datasources/profile_datasource.dart';
+import 'package:asco/src/data/models/attendance_models/attendance_model.dart';
 import 'package:asco/src/data/models/meeting_models/detail_meeting_model.dart';
 import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
-
-import '../models/attendance_models/attendance_model.dart';
 
 abstract class MeetingDataSource {
   Future<bool> create({
@@ -13,10 +12,13 @@ abstract class MeetingDataSource {
   });
 
   Future<DetailMeetingModel> single({required String uid});
-  Future<bool> updateAttendance(
-      {required List<AttendanceModel> listAttendanceModel,
-      required String uid});
+
   Future<List<DetailMeetingModel>> find({String? classroomUid});
+
+  Future<bool> updateAttendance({
+    required String uid,
+    required List<AttendanceModel> listAttendanceModel,
+  });
 }
 
 class MeetingDataSourceImpl implements MeetingDataSource {
@@ -50,13 +52,15 @@ class MeetingDataSourceImpl implements MeetingDataSource {
         modulPath: meeting.modulPath,
         // meetingNumber: meeting.meetingNumber,
         attendances: listStudentId
-            .map((id) => AttendanceEntity(
-                  studentUid: id,
-                  attendanceTime: null,
-                  attendanceStatus: null,
-                  pointPlus: null,
-                  note: null,
-                ))
+            .map(
+              (id) => AttendanceEntity(
+                studentUid: id,
+                attendanceTime: null,
+                attendanceStatus: null,
+                pointPlus: null,
+                note: null,
+              ),
+            )
             .toList(),
         // controlCard: {
         //   for (String k in listStudentId)
@@ -99,6 +103,7 @@ class MeetingDataSourceImpl implements MeetingDataSource {
   Future<List<DetailMeetingModel>> find({String? classroomUid}) async {
     try {
       var snapshot = collectionReference.get();
+
       if (classroomUid != null && classroomUid.isNotEmpty) {
         snapshot = collectionReference
             .where('classroom_uid', isEqualTo: classroomUid)
@@ -117,9 +122,10 @@ class MeetingDataSourceImpl implements MeetingDataSource {
   }
 
   @override
-  Future<bool> updateAttendance(
-      {required List<AttendanceModel> listAttendanceModel,
-      required String uid}) async {
+  Future<bool> updateAttendance({
+    required String uid,
+    required List<AttendanceModel> listAttendanceModel,
+  }) async {
     try {
       return collectionReference
           .doc(uid)

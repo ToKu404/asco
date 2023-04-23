@@ -95,8 +95,9 @@ class _AssistantLaboratoryPageState extends State<AssistantLaboratoryPage> {
 
         if (classroomNotifier.isErrorState('single') ||
             meetingNotifier.isErrorState('find')) {
-          return const Center(
-            child: Text('unknown error occured'),
+          return Center(
+            child: Text(
+                '${classroomNotifier.message} - ${meetingNotifier.message}'),
           );
         }
 

@@ -1,10 +1,8 @@
 import 'package:asco/core/services/data_service.dart';
 import 'package:asco/core/states/request_state.dart';
+import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 import 'package:asco/src/domain/entities/meeting_entities/detail_meeting_entity.dart';
 import 'package:asco/src/domain/usecases/meeting_usecases/meeting_usecases.dart';
-import 'package:asco/src/domain/usecases/meeting_usecases/update_attendance.dart';
-
-import '../../domain/entities/attendance_entities/attendance_entities.dart';
 
 class MeetingNotifier extends CrudDataService<DetailMeetingEntity> {
   final CreateMeeting createUsecase;
@@ -30,28 +28,6 @@ class MeetingNotifier extends CrudDataService<DetailMeetingEntity> {
     final result = await createUsecase.execute(
       meeting: entity,
       listStudentId: listStudentId,
-    );
-
-    result.fold(
-      (l) {
-        updateState(state: RequestState.error, key: 'create');
-
-        setErrorMessage(l.message);
-      },
-      (r) {
-        updateState(state: RequestState.success, key: 'create');
-      },
-    );
-  }
-
-  Future<void> updateAttendance(
-      {required List<AttendanceEntity> listAttendanceModel,
-      required String uid}) async {
-    updateState(state: RequestState.loading, key: 'update_attendance!');
-
-    final result = await updateAttendanceUsecase.execute(
-      listAttendanceModel: listAttendanceModel,
-      uid: uid,
     );
 
     result.fold(
@@ -100,6 +76,29 @@ class MeetingNotifier extends CrudDataService<DetailMeetingEntity> {
         updateState(state: RequestState.success, key: 'find');
 
         setListData(r);
+      },
+    );
+  }
+
+  Future<void> updateAttendance({
+    required String uid,
+    required List<AttendanceEntity> listAttendanceModel,
+  }) async {
+    updateState(state: RequestState.loading, key: 'update_attendance');
+
+    final result = await updateAttendanceUsecase.execute(
+      uid: uid,
+      listAttendanceModel: listAttendanceModel,
+    );
+
+    result.fold(
+      (l) {
+        updateState(state: RequestState.error, key: 'update_attendance');
+
+        setErrorMessage(l.message);
+      },
+      (r) {
+        updateState(state: RequestState.success, key: 'update_attendance');
       },
     );
   }

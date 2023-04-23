@@ -390,10 +390,10 @@ class _AssistantLaboratoryCourseDetailPageState
         builder: (_) => AttendanceDialog(
           student: ProfileEntity.fromDetail(student),
           meetingUid: widget.meetingDetail.uid ?? '',
-          listAttendance: widget.meetingDetail.attendances ?? [],
+          listAttendances: widget.meetingDetail.attendances ?? [],
           initStatus: attendance.attendanceStatus,
         ),
-      ).then((value) {
+      ).then((_) {
         Provider.of<ProfileNotifier>(context, listen: false).fetchMultiple(
           multipleId: <String>[
             widget.meetingDetail.assistant1Uid!,
@@ -425,7 +425,7 @@ class _AssistantLaboratoryCourseDetailPageState
                 isShowTime: true,
                 format: 'HH:MM',
               )}'
-            : '${MapHelper.getAttendanceStatus(attendance.attendanceStatus!)} ${attendance.note != null ? "(${attendance.note})" : ""}';
+            : '${MapHelper.getAttendanceStatus(attendance.attendanceStatus!)} ${attendance.note != null ? (attendance.note!.isNotEmpty ? "(${attendance.note})" : "") : ""}';
   }
 
   CircleBorderContainer buildStudentCardTrailing(AttendanceEntity attendance) {
@@ -451,21 +451,23 @@ class _AssistantLaboratoryCourseDetailPageState
         color: Palette.purple60,
       ),
     ];
+
     if (attendance.attendanceStatus == null) {
       return const CircleBorderContainer(size: 32);
-    } else {
-      final attendanceStatus = listStatus[attendance.attendanceStatus!];
-      return CircleBorderContainer(
-        size: 32,
-        borderColor: attendanceStatus.color,
-        fillColor: Palette.white,
-        child: SvgPicture.asset(
-          AssetPath.getIcon(attendanceStatus.icon),
-          color: attendanceStatus.color,
-          width: 30,
-        ),
-      );
     }
+
+    final faceStatus = listStatus[attendance.attendanceStatus!];
+
+    return CircleBorderContainer(
+      size: 32,
+      borderColor: faceStatus.color,
+      fillColor: Palette.white,
+      child: SvgPicture.asset(
+        AssetPath.getIcon(faceStatus.icon),
+        color: faceStatus.color,
+        width: 30,
+      ),
+    );
   }
 
   void searchMeeting(String query) {
