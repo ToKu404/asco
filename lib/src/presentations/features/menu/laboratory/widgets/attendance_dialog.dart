@@ -140,6 +140,7 @@ class _AttendanceDialogState extends State<AttendanceDialog> {
                           pointPlus: index == 3
                               ? int.parse(point.replaceAll('+', ''))
                               : null,
+                          quizScore: null,
                         ),
                       );
 

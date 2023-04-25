@@ -1,3 +1,5 @@
+import 'package:asco/src/data/dummy_data.dart';
+import 'package:asco/src/presentations/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -42,16 +44,17 @@ class AssistantLaboratoryCourseDetailPage extends StatefulWidget {
 class _AssistantLaboratoryCourseDetailPageState
     extends State<AssistantLaboratoryCourseDetailPage> {
   late final ValueNotifier<String> _queryNotifier;
-  late final ValueNotifier<List<Map<int, dynamic>>?> _meetingsNotifier;
+  late final ValueNotifier<List<DetailProfileEntity>?> _meetingsNotifier;
 
-  List<Map<int, dynamic>> meetings = <Map<int, dynamic>>[];
+  // List<Map<int, dynamic>> meetings = <Map<int, dynamic>>[];
+  List<DetailProfileEntity> listProfile = [];
 
   @override
   void initState() {
     super.initState();
 
-    Future.microtask(
-      () => Provider.of<ProfileNotifier>(context, listen: false).fetchMultiple(
+    Future.microtask(() {
+      Provider.of<ProfileNotifier>(context, listen: false).fetchMultiple(
         multipleId: <String>[
           widget.meetingDetail.assistant1Uid!,
           widget.meetingDetail.assistant2Uid!,
@@ -59,8 +62,11 @@ class _AssistantLaboratoryCourseDetailPageState
               .map((e) => e.studentUid!)
               .toList()
         ],
-      ),
-    );
+      );
+      Provider.of<MeetingNotifier>(context, listen: false).getDetail(
+        uid: widget.meetingDetail.uid!,
+      );
+    });
 
     _queryNotifier = ValueNotifier('');
     _meetingsNotifier = ValueNotifier(null);
@@ -76,10 +82,13 @@ class _AssistantLaboratoryCourseDetailPageState
 
   @override
   Widget build(BuildContext context) {
+    final meetingNotifier = context.watch<MeetingNotifier>();
+
     return Consumer<ProfileNotifier>(
       builder: (context, profileNotifier, child) {
-        if (profileNotifier.isSuccessState('multiple')) {
-          final listData = <Map<int, dynamic>>[];
+        if (profileNotifier.isSuccessState('multiple') ||
+            meetingNotifier.isSuccessState('single')) {
+          // final listData = <Map<int, dynamic>>[];
 
           final students = profileNotifier.listData
               .where((e) =>
@@ -88,14 +97,15 @@ class _AssistantLaboratoryCourseDetailPageState
               .toList()
             ..sort((a, b) => a.uid!.compareTo(b.uid!));
 
-          final attendances = widget.meetingDetail.attendances!
-            ..sort((a, b) => a.studentUid!.compareTo(b.studentUid!));
+          // final attendances = meetingNotifier.data!.attendances!
+          //   ..sort((a, b) => a.studentUid!.compareTo(b.studentUid!));
 
-          for (var i = 0; i < students.length; i++) {
-            listData.add({0: students[i], 1: attendances[i]});
-          }
+          // for (var i = 0; i < students.length; i++) {
+          //   listData.add({0: students[i], 1: attendances[i]});
+          // }
 
-          meetings = listData;
+          // meetings = listData;
+          listProfile = students;
 
           return buildMainPage(
             context,
@@ -105,10 +115,14 @@ class _AssistantLaboratoryCourseDetailPageState
             assistant2: profileNotifier.listData
                 .where((e) => e.uid == widget.meetingDetail.assistant2Uid!)
                 .first,
+            listAttendance: meetingNotifier.data!.attendances!,
+            students: listProfile,
           );
         }
 
-        if (profileNotifier.isErrorState('multiple')) {
+        if (profileNotifier.isErrorState('multiple') ||
+            meetingNotifier.isErrorState('single') ||
+            meetingNotifier.data == null) {
           return const Scaffold(
             backgroundColor: Palette.grey,
             body: Center(
@@ -128,6 +142,8 @@ class _AssistantLaboratoryCourseDetailPageState
     BuildContext context, {
     required DetailProfileEntity assistant1,
     required DetailProfileEntity assistant2,
+    required List<AttendanceEntity> listAttendance,
+    required List<DetailProfileEntity> students,
   }) {
     return Scaffold(
       backgroundColor: Palette.grey,
@@ -280,6 +296,10 @@ class _AssistantLaboratoryCourseDetailPageState
                             onPressed: () {
                               showAssistantLaboratoryQuizValueInputPage(
                                 context,
+                                listProfile
+                                    .map((e) => ProfileEntity.fromDetail(e))
+                                    .toList(),
+                                meetingUid: widget.meetingDetail.uid!,
                               );
                             },
                             style: FilledButton.styleFrom(
@@ -338,13 +358,16 @@ class _AssistantLaboratoryCourseDetailPageState
                 builder: (context, values, child) {
                   return SliverList(
                     delegate: SliverChildBuilderDelegate(
-                      childCount: values?.length ?? meetings.length,
+                      childCount: values?.length ?? students.length,
                       (_, index) {
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 10),
                           child: buildStudentCard(
                             context,
-                            meeting: values?[index] ?? meetings[index],
+                            student: values?[index] ?? students[index],
+                            attendance: listAttendance.firstWhere((element) =>
+                                element.studentUid == students[index].uid!),
+                            listAttendance: listAttendance,
                           ),
                         );
                       },
@@ -375,35 +398,29 @@ class _AssistantLaboratoryCourseDetailPageState
 
   CustomStudentCard buildStudentCard(
     BuildContext context, {
-    required Map<int, dynamic> meeting,
+    required DetailProfileEntity student,
+    required AttendanceEntity attendance,
+    required List<AttendanceEntity> listAttendance,
   }) {
-    final student = meeting[0] as DetailProfileEntity;
-    final attendance = meeting[1] as AttendanceEntity;
-
     return CustomStudentCard(
       studentDetail: student,
       hasAvatarBorder: true,
-      onTap: () => showDialog(
-        context: context,
-        barrierLabel: '',
-        barrierDismissible: false,
-        builder: (_) => AttendanceDialog(
-          student: ProfileEntity.fromDetail(student),
-          meetingUid: widget.meetingDetail.uid ?? '',
-          listAttendances: widget.meetingDetail.attendances ?? [],
-          initStatus: attendance.attendanceStatus,
-        ),
-      ).then((_) {
-        Provider.of<ProfileNotifier>(context, listen: false).fetchMultiple(
-          multipleId: <String>[
-            widget.meetingDetail.assistant1Uid!,
-            widget.meetingDetail.assistant2Uid!,
-            ...widget.meetingDetail.attendances!
-                .map((e) => e.studentUid!)
-                .toList()
-          ],
-        );
-      }),
+      onTap: () {
+        showDialog(
+          context: context,
+          barrierLabel: '',
+          barrierDismissible: false,
+          builder: (_) => AttendanceDialog(
+            student: ProfileEntity.fromDetail(student),
+            meetingUid: widget.meetingDetail.uid ?? '',
+            listAttendances: listAttendance,
+            initStatus: attendance.attendanceStatus,
+          ),
+        ).then((_) {
+          Provider.of<MeetingNotifier>(context, listen: false)
+              .getDetail(uid: widget.meetingDetail.uid!);
+        });
+      },
       isThreeLine: true,
       thirdLine: Text(
         setStudentCardText(attendance),
@@ -471,11 +488,9 @@ class _AssistantLaboratoryCourseDetailPageState
   }
 
   void searchMeeting(String query) {
-    final result = meetings.where((meeting) {
-      final fullnameLower =
-          (meeting[0] as DetailProfileEntity).fullName!.toLowerCase();
-      final usernameLower =
-          (meeting[0] as DetailProfileEntity).username!.toLowerCase();
+    final result = listProfile.where((student) {
+      final fullnameLower = student.fullName!.toLowerCase();
+      final usernameLower = student.username!.toLowerCase();
 
       final queryLower = query.toLowerCase();
 

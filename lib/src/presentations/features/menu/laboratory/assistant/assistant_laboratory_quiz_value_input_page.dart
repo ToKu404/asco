@@ -1,19 +1,58 @@
+import 'package:asco/src/data/datasources/helpers/update_data_helper.dart';
+import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
+import 'package:asco/src/presentations/providers/providers.dart';
+import 'package:asco/src/presentations/widgets/asco_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/src/data/dummy_data.dart';
 import 'package:asco/src/presentations/widgets/avatar.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:asco/src/presentations/widgets/input_field/search_field.dart';
+import 'package:provider/provider.dart';
 
-class AssistantLaboratoryQuizValueInputPage extends StatelessWidget {
-  const AssistantLaboratoryQuizValueInputPage({super.key});
+class AssistantLaboratoryQuizValueInputPage extends StatefulWidget {
+  final String meetingUid;
+  final List<ProfileEntity> listStudent;
+  const AssistantLaboratoryQuizValueInputPage(
+      {super.key, required this.listStudent, required this.meetingUid});
+
+  @override
+  State<AssistantLaboratoryQuizValueInputPage> createState() =>
+      _AssistantLaboratoryQuizValueInputPageState();
+}
+
+class _AssistantLaboratoryQuizValueInputPageState
+    extends State<AssistantLaboratoryQuizValueInputPage> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(
+      () => context.read<MeetingNotifier>().getDetail(
+            uid: widget.meetingUid,
+          ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    final meetingNotifier = context.watch<MeetingNotifier>();
+
+    if (meetingNotifier.isLoadingState('single') ||
+        meetingNotifier.data == null) {
+      return const AscoLoading(
+        withScaffold: true,
+      );
+    }
+    if (meetingNotifier.isErrorState('single')) {
+      return Center(
+        child: Text(meetingNotifier.message),
+      );
+    }
+    final meetingData = meetingNotifier.data;
     return Scaffold(
       backgroundColor: Palette.grey,
       body: NestedScrollView(
@@ -39,7 +78,9 @@ class AssistantLaboratoryQuizValueInputPage extends StatelessWidget {
                 tooltip: 'Back',
               ),
               forceElevated: innerBoxIsScrolled,
-              bottom: const BottomAppBar(),
+              bottom: BottomAppBar(
+                maxScore: meetingData?.maxQuizScore,
+              ),
               shadowColor: Palette.grey,
               backgroundColor: Palette.purple80,
             ),
@@ -52,25 +93,43 @@ class AssistantLaboratoryQuizValueInputPage extends StatelessWidget {
           ),
           mainAxisSpacing: 24,
           crossAxisSpacing: 16,
-          itemCount: students.length,
-          itemBuilder: (_, i) => QuizValueCard(student: students[i]),
+          itemCount: widget.listStudent.length,
+          itemBuilder: (_, i) => QuizValueCard(
+            student: widget.listStudent[i],
+            score: meetingData!.attendances
+                ?.firstWhere((s) => s.studentUid == widget.listStudent[i].uid)
+                .quizScore,
+            maxScore: meetingData.maxQuizScore!,
+            listAttendance: meetingData.attendances!,
+            meetingId: widget.meetingUid,
+          ),
         ),
       ),
     );
   }
 }
 
-class BottomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const BottomAppBar({super.key});
+class BottomAppBar extends StatefulWidget implements PreferredSizeWidget {
+  final int? maxScore;
+  const BottomAppBar({
+    super.key,
+    required this.maxScore,
+  });
 
   @override
-  Size get preferredSize => const Size.fromHeight(150); // default is 56.0
+  State<BottomAppBar> createState() => _BottomAppBarState();
 
+  @override
+  Size get preferredSize => const Size.fromHeight(150);
+}
+
+class _BottomAppBarState extends State<BottomAppBar> {
+  // default is 56.0
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: preferredSize.height,
+      height: widget.preferredSize.height,
       color: Palette.white,
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -102,7 +161,7 @@ class BottomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
                 Flexible(
                   child: Text(
-                    '100',
+                    widget.maxScore == null ? "-" : widget.maxScore.toString(),
                     style: kTextTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.w600,
                       color: Palette.white,
@@ -124,9 +183,20 @@ class BottomAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class QuizValueCard extends StatelessWidget {
-  final Student student;
+  final ProfileEntity student;
+  final List<AttendanceEntity> listAttendance;
+  final int? score;
+  final int maxScore;
+  final String meetingId;
 
-  const QuizValueCard({super.key, required this.student});
+  const QuizValueCard({
+    super.key,
+    required this.student,
+    required this.score,
+    required this.maxScore,
+    required this.listAttendance,
+    required this.meetingId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +214,11 @@ class QuizValueCard extends StatelessWidget {
       ],
       onTap: () => showBottomSheet(
         context: context,
-        builder: (context) => CustomBottomSheet(student: student),
+        builder: (context) => CustomBottomSheet(
+          student: student,
+          listAttendance: listAttendance,
+          meetingUid: meetingId,
+        ),
       ),
       child: Column(
         children: <Widget>[
@@ -159,7 +233,7 @@ class QuizValueCard extends StatelessWidget {
                       direction: Axis.vertical,
                       children: <Text>[
                         Text(
-                          '27',
+                          score != null ? score.toString() : "-",
                           style: kTextTheme.bodyLarge?.copyWith(
                             fontWeight: FontWeight.w600,
                             color: Palette.purple80,
@@ -179,7 +253,7 @@ class QuizValueCard extends StatelessWidget {
                       direction: Axis.vertical,
                       children: <Text>[
                         Text(
-                          '30',
+                          maxScore.toString(),
                           style: kTextTheme.bodyLarge?.copyWith(
                             fontWeight: FontWeight.w600,
                             color: Palette.purple80,
@@ -204,7 +278,7 @@ class QuizValueCard extends StatelessWidget {
                 reverse: true,
                 radius: 35,
                 lineWidth: 8,
-                percent: .75,
+                percent: score == null ? 0 : score! / maxScore,
                 progressColor: Palette.purple60,
                 backgroundColor: Colors.transparent,
                 circularStrokeCap: CircularStrokeCap.round,
@@ -218,7 +292,7 @@ class QuizValueCard extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(
-                      '75.0',
+                      (score ?? 0 / maxScore * 100).toStringAsFixed(1),
                       style: kTextTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w700,
                         color: Palette.white,
@@ -232,8 +306,8 @@ class QuizValueCard extends StatelessWidget {
           const SizedBox(height: 12),
           Row(
             children: <Widget>[
-              Avatar(
-                imageAsset: 'avatar${student.id}.jpg',
+              const Avatar(
+                imageAsset: 'avatar1.jpg',
                 radius: 18,
                 color: Palette.purple80,
               ),
@@ -243,13 +317,13 @@ class QuizValueCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Text>[
                     Text(
-                      student.nim,
+                      student.username ?? '',
                       style: kTextTheme.bodySmall?.copyWith(
                         color: Palette.purple60,
                       ),
                     ),
                     Text(
-                      student.name,
+                      student.nickName ?? '',
                       style: kTextTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                         color: Palette.purple80,
@@ -266,10 +340,30 @@ class QuizValueCard extends StatelessWidget {
   }
 }
 
-class CustomBottomSheet extends StatelessWidget {
-  final Student student;
+class CustomBottomSheet extends StatefulWidget {
+  final List<AttendanceEntity> listAttendance;
+  final ProfileEntity student;
+  final String meetingUid;
 
-  const CustomBottomSheet({super.key, required this.student});
+  const CustomBottomSheet({
+    super.key,
+    required this.student,
+    required this.listAttendance,
+    required this.meetingUid,
+  });
+
+  @override
+  State<CustomBottomSheet> createState() => _CustomBottomSheetState();
+}
+
+class _CustomBottomSheetState extends State<CustomBottomSheet> {
+  final TextEditingController textEditingController = TextEditingController();
+
+  @override
+  void dispose() {
+    textEditingController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -297,14 +391,14 @@ class CustomBottomSheet extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            student.name,
+            widget.student.nickName ?? '',
             style: kTextTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.w600,
               color: Palette.white,
             ),
           ),
           Text(
-            student.nim,
+            widget.student.username ?? '',
             style: kTextTheme.bodyLarge?.copyWith(
               color: Palette.grey,
             ),
@@ -320,6 +414,7 @@ class CustomBottomSheet extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: TextField(
+                    controller: textEditingController,
                     keyboardType: TextInputType.number,
                     textAlignVertical: TextAlignVertical.center,
                     style: kTextTheme.bodyLarge?.copyWith(
@@ -345,10 +440,29 @@ class CustomBottomSheet extends StatelessWidget {
                 width: 44,
                 height: 44,
                 child: IconButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () {
+                    if (textEditingController.text.isNotEmpty) {
+                      final result = UpdateDataHelper.updateAttendance(
+                        studentUid: widget.student.uid ?? '',
+                        attendanceList: widget.listAttendance,
+                        updateAttendance: AttendanceEntity(
+                          quizScore: int.parse(textEditingController.text),
+                        ),
+                      );
+                      context
+                          .read<MeetingNotifier>()
+                          .updateAttendance(
+                            uid: widget.meetingUid,
+                            listAttendanceModel: result,
+                          )
+                          .then((value) => Navigator.pop(context));
+                    } else {
+                      Navigator.pop(context);
+                    }
+                  },
                   icon: const Icon(
                     Icons.arrow_upward,
-                    color: Palette.purple60,
+                    color: Color.fromRGBO(116, 75, 228, 1),
                     size: 20,
                   ),
                   tooltip: 'Submit',
@@ -368,14 +482,21 @@ class CustomBottomSheet extends StatelessWidget {
   }
 }
 
-void showAssistantLaboratoryQuizValueInputPage(BuildContext context) {
+void showAssistantLaboratoryQuizValueInputPage(
+  BuildContext context,
+  List<ProfileEntity> listStudent, {
+  required String meetingUid,
+}) {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (_) => const AssistantLaboratoryQuizValueInputPage(),
+      builder: (_) => AssistantLaboratoryQuizValueInputPage(
+        listStudent: listStudent,
+        meetingUid: meetingUid,
+      ),
       settings: const RouteSettings(
         name: AppRoute.assistantLaboratoryQuizValueInputPage,
       ),
     ),
-  );
+  ).then((value) => context.read<MeetingNotifier>().getDetail(uid: meetingUid));
 }
