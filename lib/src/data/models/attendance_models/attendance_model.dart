@@ -33,7 +33,9 @@ class AttendanceModel extends AttendanceEntity {
   factory AttendanceModel.fromMap(Map<String, dynamic> documentSnapshot) {
     return AttendanceModel(
       studentUid: documentSnapshot['student_uid'],
-      attendanceTime: documentSnapshot['attendance_time'],
+      attendanceTime: documentSnapshot['attendance_time'] != null
+          ? documentSnapshot['attendance_time']!.toDate()
+          : null,
       attendanceStatus: documentSnapshot['attendance_status'],
       pointPlus: documentSnapshot['point_plus'],
       note: documentSnapshot['note'],
