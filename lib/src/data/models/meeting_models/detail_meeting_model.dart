@@ -14,7 +14,8 @@ class DetailMeetingModel extends DetailMeetingEntity {
     required super.topic,
     required super.modulPath,
     required super.attendances,
-    // required super.meetingNumber,
+    required super.meetingNumber,
+    required super.maxQuizScore,
   });
 
   Map<String, dynamic> toDocument() {
@@ -26,7 +27,8 @@ class DetailMeetingModel extends DetailMeetingEntity {
       'meeting_date': meetingDate,
       'topic': topic,
       'modul_path': modulPath,
-      // 'meeting_number': meetingNumber,
+      'meeting_number': meetingNumber,
+      'max_quiz_score': maxQuizScore,
       'attendances': (attendances != null)
           ? attendances!
               .map((entity) => AttendanceModel.fromEntity(entity).toDocument())
@@ -44,7 +46,8 @@ class DetailMeetingModel extends DetailMeetingEntity {
       meetingDate: meetingDate,
       topic: topic,
       modulPath: modulPath,
-      // meetingNumber: meetingNumber,
+      meetingNumber: meetingNumber,
+      maxQuizScore: maxQuizScore,
       attendances: attendances,
     );
   }
@@ -58,9 +61,10 @@ class DetailMeetingModel extends DetailMeetingEntity {
       meetingDate: (documentSnapshot['meeting_date'] as Timestamp).toDate(),
       topic: documentSnapshot['topic'],
       modulPath: documentSnapshot['modul_path'],
-      // meetingNumber: ReadHelper.isKeyExist(documentSnapshot, 'meeting_number')
-      //     ? documentSnapshot['meeting_number']
-      //     : null,
+      meetingNumber: ReadHelper.isKeyExist(documentSnapshot, 'meeting_number')
+          ? documentSnapshot['meeting_number']
+          : null,
+      maxQuizScore: documentSnapshot['max_quiz_score'],
       attendances: ReadHelper.isKeyExist(documentSnapshot, 'attendances')
           ? documentSnapshot['attendances']
               .map((map) => AttendanceModel.fromMap(map).toEntity())
@@ -80,7 +84,8 @@ class DetailMeetingModel extends DetailMeetingEntity {
       topic: entity.topic,
       modulPath: entity.modulPath,
       attendances: entity.attendances,
-      // meetingNumber: entity.meetingNumber,
+      meetingNumber: entity.meetingNumber,
+      maxQuizScore: entity.maxQuizScore,
     );
   }
 }

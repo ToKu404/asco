@@ -50,7 +50,8 @@ class MeetingDataSourceImpl implements MeetingDataSource {
         meetingDate: meeting.meetingDate,
         topic: meeting.topic,
         modulPath: meeting.modulPath,
-        // meetingNumber: meeting.meetingNumber,
+        meetingNumber: meeting.meetingNumber,
+        maxQuizScore: meeting.maxQuizScore,
         attendances: listStudentId
             .map(
               (id) => AttendanceEntity(
@@ -59,6 +60,7 @@ class MeetingDataSourceImpl implements MeetingDataSource {
                 attendanceStatus: null,
                 pointPlus: null,
                 note: null,
+                quizScore: null,
               ),
             )
             .toList(),
@@ -137,6 +139,7 @@ class MeetingDataSourceImpl implements MeetingDataSource {
                       attendanceStatus: am.attendanceStatus,
                       pointPlus: am.pointPlus,
                       note: am.note,
+                      quizScore: am.quizScore,
                     ).toDocument())
                 .toList()
           })

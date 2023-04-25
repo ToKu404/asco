@@ -6,6 +6,7 @@ class AttendanceEntity extends Equatable {
   final DateTime? attendanceTime;
   final int? attendanceStatus;
   final int? pointPlus;
+  final int? quizScore;
   final String? note;
 
   const AttendanceEntity({
@@ -15,6 +16,7 @@ class AttendanceEntity extends Equatable {
     this.attendanceStatus,
     this.pointPlus,
     this.note,
+    this.quizScore,
   });
 
   @override
@@ -25,5 +27,6 @@ class AttendanceEntity extends Equatable {
         attendanceStatus,
         pointPlus,
         note,
+        quizScore,
       ];
 }

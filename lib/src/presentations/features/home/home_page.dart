@@ -103,6 +103,10 @@ class _HomePageState extends State<HomePage> {
                     );
                   }
 
+                  if (provider.data!.userPracticums == null) {
+                    return const SizedBox();
+                  }
+
                   final userPracticum = <UserPracticumEntity>[];
 
                   for (var k in provider.data!.userPracticums!.keys) {

@@ -10,6 +10,7 @@ class DetailMeetingEntity extends Equatable {
   final String? topic;
   final String? modulPath;
   final int? meetingNumber;
+  final int? maxQuizScore;
   final List<AttendanceEntity>? attendances;
 
   const DetailMeetingEntity({
@@ -22,6 +23,7 @@ class DetailMeetingEntity extends Equatable {
     this.modulPath,
     this.meetingNumber,
     this.attendances,
+    this.maxQuizScore,
   });
 
   @override
@@ -35,5 +37,6 @@ class DetailMeetingEntity extends Equatable {
         modulPath,
         attendances,
         meetingNumber,
+        maxQuizScore,
       ];
 }

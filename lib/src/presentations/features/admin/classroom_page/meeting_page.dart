@@ -68,6 +68,7 @@ class _AdminClassroomMeetingPageState extends State<AdminClassroomMeetingPage> {
 
   @override
   Widget build(BuildContext context) {
+    int? countMeeting;
     return Scaffold(
       backgroundColor: Palette.grey,
       appBar: AppBar(
@@ -96,11 +97,14 @@ class _AdminClassroomMeetingPageState extends State<AdminClassroomMeetingPage> {
             color: Palette.white,
           ),
           onPressed: () {
-            showAdminCreateMeetingPage(
-              context: context,
-              classroomUid: widget.classroomId,
-              students: widget.students,
-            );
+            if (countMeeting != null) {
+              showAdminCreateMeetingPage(
+                context: context,
+                classroomUid: widget.classroomId,
+                students: widget.students,
+                countMeeting: countMeeting ?? 0,
+              );
+            }
           }),
       body: SafeArea(
         child: Column(
@@ -160,7 +164,7 @@ class _AdminClassroomMeetingPageState extends State<AdminClassroomMeetingPage> {
                   } else if (dataProvider.isErrorState('find')) {
                     return const SizedBox.shrink();
                   }
-
+                  countMeeting = dataProvider.listData.length;
                   return ListView.builder(
                     padding: const EdgeInsets.only(
                       left: 16,

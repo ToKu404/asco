@@ -16,6 +16,7 @@ void showAdminCreateMeetingPage({
   required BuildContext context,
   bool isEdit = false,
   required String classroomUid,
+  required int countMeeting,
   required List<ProfileEntity> students,
 }) {
   Navigator.push(
@@ -25,6 +26,7 @@ void showAdminCreateMeetingPage({
         isEdit: isEdit,
         classroomUid: classroomUid,
         students: students,
+        countMeeting: countMeeting,
       ),
       settings: const RouteSettings(
         name: AppRoute.adminUsersPage,
@@ -37,11 +39,13 @@ class CreateMeetingPage extends StatefulWidget {
   final String classroomUid;
   final bool isEdit;
   final List<ProfileEntity> students;
+  final int countMeeting;
   const CreateMeetingPage({
     super.key,
     required this.isEdit,
     required this.classroomUid,
     required this.students,
+    required this.countMeeting,
   });
 
   @override
@@ -133,6 +137,8 @@ class _CreateMeetingPageState extends State<CreateMeetingPage> {
                       meetingDate: meetingDate,
                       modulPath: '',
                       topic: _topicController.text,
+                      meetingNumber: widget.countMeeting + 1,
+                      maxQuizScore: 100,
                     ),
                     listStudentId: widget.students.map((e) => e.uid!).toList());
               }

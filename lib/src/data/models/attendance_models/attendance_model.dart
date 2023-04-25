@@ -7,6 +7,7 @@ class AttendanceModel extends AttendanceEntity {
     required super.attendanceStatus,
     required super.pointPlus,
     required super.note,
+    required super.quizScore,
   });
 
   Map<String, dynamic> toDocument() {
@@ -16,6 +17,7 @@ class AttendanceModel extends AttendanceEntity {
       'attendance_status': attendanceStatus,
       'point_plus': pointPlus,
       'note': note,
+      'quiz_score': quizScore,
     };
   }
 
@@ -27,6 +29,7 @@ class AttendanceModel extends AttendanceEntity {
       attendanceStatus: attendanceStatus,
       pointPlus: pointPlus,
       note: note,
+      quizScore: quizScore,
     );
   }
 
@@ -39,6 +42,7 @@ class AttendanceModel extends AttendanceEntity {
       attendanceStatus: documentSnapshot['attendance_status'],
       pointPlus: documentSnapshot['point_plus'],
       note: documentSnapshot['note'],
+      quizScore: documentSnapshot['quiz_score'],
     );
   }
 
@@ -49,6 +53,7 @@ class AttendanceModel extends AttendanceEntity {
       attendanceStatus: entity.attendanceStatus,
       pointPlus: entity.pointPlus,
       note: entity.note,
+      quizScore: entity.quizScore,
     );
   }
 }
