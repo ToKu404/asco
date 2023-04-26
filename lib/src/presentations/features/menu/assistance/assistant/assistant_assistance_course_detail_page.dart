@@ -252,7 +252,11 @@ class _AssistantAssistanceCourseDetailPageState
                 width: double.infinity,
                 child: FilledButton(
                   onPressed: () {
-                    showAssistantAssistancePracticumValueInputPage(context);
+                    showAssistantAssistancePracticumValueInputPage(
+                      context,
+                      listStudent: widget.students,
+                      meetingNumber: widget.meetingNumber,
+                    );
                   },
                   style: FilledButton.styleFrom(
                     backgroundColor: Palette.purple60,

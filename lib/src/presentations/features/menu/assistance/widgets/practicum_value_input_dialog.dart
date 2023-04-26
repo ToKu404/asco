@@ -1,13 +1,25 @@
+import 'package:asco/src/data/datasources/const_data/score_scheme.dart';
+import 'package:asco/src/domain/entities/entities.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/src/data/dummy_data.dart';
+import 'package:provider/provider.dart';
+
+import '../../../../../data/datasources/helpers/update_data_helper.dart';
+import '../../../../providers/control_card_notifier.dart';
 
 class PracticumValueInputDialog extends StatefulWidget {
-  final Student student;
+  final ProfileEntity student;
+  final ControlCardResultEntity controlCardResultEntity;
+  final int meetingNumber;
 
-  const PracticumValueInputDialog({super.key, required this.student});
+  const PracticumValueInputDialog({
+    super.key,
+    required this.student,
+    required this.controlCardResultEntity,
+    required this.meetingNumber,
+  });
 
   @override
   State<PracticumValueInputDialog> createState() =>
@@ -15,21 +27,16 @@ class PracticumValueInputDialog extends StatefulWidget {
 }
 
 class _PracticumValueInputDialogState extends State<PracticumValueInputDialog> {
-  final _values = <ValueType>[
-    ValueType(1, 'D', Palette.red),
-    ValueType(2, 'C', Palette.red),
-    ValueType(3, 'B-', Palette.purple60),
-    ValueType(4, 'B', Palette.purple60),
-    ValueType(5, 'B+', Palette.purple60),
-    ValueType(6, 'A-', Palette.purple80),
-    ValueType(7, 'A', Palette.purple80),
-  ];
-
   late final ValueNotifier<ValueType> _valueNotifier;
 
   @override
   void initState() {
-    _valueNotifier = ValueNotifier(_values[3]);
+    _valueNotifier = ValueNotifier(ScoreScheme.valuesScheme[widget
+                .controlCardResultEntity.data![widget.meetingNumber - 1].star !=
+            null
+        ? widget.controlCardResultEntity.data![widget.meetingNumber - 1].star! -
+            1
+        : 3]);
 
     super.initState();
   }
@@ -85,7 +92,21 @@ class _PracticumValueInputDialogState extends State<PracticumValueInputDialog> {
                     ),
                   ),
                   IconButton(
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () {
+                      context
+                          .read<ControlCardNotifier>()
+                          .updateControlCard(
+                              uid: widget.controlCardResultEntity.uid!,
+                              listCC: UpdateDataHelper.updateControlCard(
+                                ccEntityList:
+                                    widget.controlCardResultEntity.data!,
+                                newCC: ControlCardEntity(
+                                  star: _valueNotifier.value.value,
+                                ),
+                                meetingNumber: widget.meetingNumber,
+                              ))
+                          .then((value) => Navigator.pop(context));
+                    },
                     icon: const Icon(
                       Icons.check_rounded,
                       color: Palette.purple60,
@@ -102,14 +123,14 @@ class _PracticumValueInputDialogState extends State<PracticumValueInputDialog> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    widget.student.nim,
+                    widget.student.username!,
                     style: kTextTheme.bodyLarge?.copyWith(
                       color: Palette.purple60,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    widget.student.name,
+                    widget.student.fullName ?? '',
                     style: kTextTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w700,
                       color: Palette.purple80,
@@ -142,7 +163,8 @@ class _PracticumValueInputDialogState extends State<PracticumValueInputDialog> {
                             onRatingUpdate: (value) {
                               final newValue = value.toInt();
 
-                              _valueNotifier.value = _values[newValue - 1];
+                              _valueNotifier.value =
+                                  ScoreScheme.valuesScheme[newValue - 1];
                             },
                           ),
                           const SizedBox(height: 12),
@@ -175,6 +197,14 @@ class ValueType {
   final int value;
   final String description;
   final Color color;
+  final int score;
+  final String descScore;
 
-  ValueType(this.value, this.description, this.color);
+  ValueType(
+    this.value,
+    this.description,
+    this.color,
+    this.score,
+    this.descScore,
+  );
 }

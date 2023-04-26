@@ -20,6 +20,7 @@ class UpdateDataHelper {
           quizScore: updateAttendance.quizScore ?? attendanceList[i].quizScore,
           studentUid: attendanceList[i].studentUid,
         );
+        break;
       }
     }
 
@@ -40,7 +41,9 @@ class UpdateDataHelper {
               : newCC.assistance1 ?? ccEntityList[i].assistance1,
           assistance2: newCC.assistance2 ?? ccEntityList[i].assistance2,
           meetingNumber: newCC.meetingNumber ?? ccEntityList[i].meetingNumber,
+          star: newCC.star ?? ccEntityList[i].star,
         );
+        break;
       }
     }
     return ccEntityList;

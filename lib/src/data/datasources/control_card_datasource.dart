@@ -64,6 +64,7 @@ class ControlCardDataSourceImpl implements ControlCardDataSource {
                     assistance1: null,
                     assistance2: null,
                     meetingNumber: id,
+                    star: null,
                   ).toDocument(),
                 ),
               });
@@ -154,7 +155,6 @@ class ControlCardDataSourceImpl implements ControlCardDataSource {
         return listData;
       });
     } catch (e) {
-      print(e.toString());
       throw FirestoreException(e.toString());
     }
   }
@@ -169,8 +169,10 @@ class ControlCardDataSourceImpl implements ControlCardDataSource {
           .update({
             'data': listControlCardModel
                 .map((e) => ControlCardModel(
-                        assistance1: e.assistance1, assistance2: e.assistance2)
-                    .toDocument())
+                      assistance1: e.assistance1,
+                      assistance2: e.assistance2,
+                      star: e.star,
+                    ).toDocument())
                 .toList()
           })
           .then((value) => true)

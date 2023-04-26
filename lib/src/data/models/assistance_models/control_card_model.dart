@@ -7,6 +7,7 @@ class ControlCardModel extends ControlCardEntity {
     super.assistance1,
     super.assistance2,
     super.meetingNumber,
+    super.star,
   });
 
   Map<String, dynamic> toDocument() {
@@ -18,6 +19,7 @@ class ControlCardModel extends ControlCardEntity {
           ? AssistanceAttendanceModel.fromEntity(assistance2!).toDocument()
           : null,
       'meeting_number': meetingNumber,
+      'star': star,
     };
   }
 
@@ -26,6 +28,7 @@ class ControlCardModel extends ControlCardEntity {
       assistance1: assistance1,
       assistance2: assistance2,
       meetingNumber: meetingNumber,
+      star: star,
     );
   }
 
@@ -38,6 +41,7 @@ class ControlCardModel extends ControlCardEntity {
           AssistanceAttendanceModel.fromMap(documentSnapshot['assistance2'])
               .toEntity(),
       meetingNumber: documentSnapshot['meeting_number'],
+      star: documentSnapshot['star'],
     );
   }
 
@@ -54,6 +58,7 @@ class ControlCardModel extends ControlCardEntity {
               .toEntity()
           : null,
       meetingNumber: documentSnapshot['meeting_number'],
+      star: documentSnapshot['star'],
     );
   }
 
@@ -62,6 +67,7 @@ class ControlCardModel extends ControlCardEntity {
       assistance1: entity.assistance1,
       assistance2: entity.assistance2,
       meetingNumber: entity.meetingNumber,
+      star: entity.star,
     );
   }
 }

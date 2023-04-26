@@ -5,11 +5,13 @@ class ControlCardEntity extends Equatable {
   final int? meetingNumber;
   final AssistanceAttendanceEntity? assistance1;
   final AssistanceAttendanceEntity? assistance2;
+  final int? star;
 
   const ControlCardEntity({
     this.meetingNumber,
     this.assistance1,
     this.assistance2,
+    this.star,
   });
 
   @override
@@ -17,5 +19,6 @@ class ControlCardEntity extends Equatable {
         meetingNumber,
         assistance1,
         assistance2,
+        star,
       ];
 }
