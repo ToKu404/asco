@@ -414,70 +414,82 @@ class _BuildStudentCardState extends State<BuildStudentCard> {
       child: CustomStudentCard(
         student: widget.student,
         hasTrailing: true,
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            CircleBorderContainer(
-              size: 30,
-              borderColor: Palette.purple80,
-              fillColor: Palette.purple60,
-              onTap: () => showDialog(
-                context: context,
-                barrierLabel: '',
-                barrierDismissible: false,
-                builder: (_) => AssistanceDialog(
-                  number: widget.meetingNumber,
-                  student: widget.student,
-                ),
-              ).then((value) {
-                final isSubmitted = value == null ? false : value as bool;
+        trailing: ccEntity != null
+            ? Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  CircleBorderContainer(
+                      size: 30,
+                      borderColor: ccEntity.assistance1 != null
+                          ? Palette.purple80
+                          : const Color(0xFFD35380),
+                      fillColor: ccEntity.assistance1 == null
+                          ? const Color(0xFFFA78A6)
+                          : Palette.purple60,
+                      onTap: () => showDialog(
+                            context: context,
+                            barrierLabel: '',
+                            barrierDismissible: false,
+                            builder: (_) => AssistanceDialog(
+                              number: widget.meetingNumber,
+                              student: widget.student,
+                              isFirstAssistance: true,
+                              controlCardResultEntity: widget.ccEntity,
+                            ),
+                          ).then((value) {
+                            final isSubmitted =
+                                value == null ? false : value as bool;
 
-                if (isSubmitted) {
-                  showStatusDialog(context, number: 1, student: widget.student);
-                }
-              }),
-              child: ccEntity != null
-                  ? Icon(
-                      ccEntity.assistance1 != null
-                          ? Icons.check
-                          : Icons.close_rounded,
-                      size: 16,
-                      color: Palette.white,
-                    )
-                  : null,
-            ),
-            const SizedBox(width: 4),
-            CircleBorderContainer(
-              size: 30,
-              borderColor: const Color(0xFFD35380),
-              fillColor: const Color(0xFFFA78A6),
-              onTap: () => showDialog(
-                context: context,
-                barrierLabel: '',
-                barrierDismissible: false,
-                builder: (_) => AssistanceDialog(
-                  number: 2,
-                  student: widget.student,
-                ),
-              ).then((value) {
-                final isSubmitted = value == null ? false : value as bool;
+                            if (isSubmitted) {
+                              showStatusDialog(context,
+                                  number: 1, student: widget.student);
+                            }
+                          }),
+                      child: Icon(
+                        ccEntity.assistance1 != null
+                            ? Icons.check
+                            : Icons.close_rounded,
+                        size: 16,
+                        color: Palette.white,
+                      )),
+                  const SizedBox(width: 4),
+                  CircleBorderContainer(
+                      size: 30,
+                      borderColor: ccEntity.assistance2 != null
+                          ? Palette.purple80
+                          : const Color(0xFFD35380),
+                      fillColor: ccEntity.assistance2 == null
+                          ? const Color(0xFFFA78A6)
+                          : Palette.purple60,
+                      onTap: () => showDialog(
+                            context: context,
+                            barrierLabel: '',
+                            barrierDismissible: false,
+                            builder: (_) => AssistanceDialog(
+                              number: 2,
+                              student: widget.student,
+                              isFirstAssistance: false,
+                              controlCardResultEntity: widget.ccEntity,
+                            ),
+                          ).then((value) {
+                            final isSubmitted =
+                                value == null ? false : value as bool;
 
-                if (isSubmitted) {
-                  showStatusDialog(context, number: 2, student: widget.student);
-                }
-              }),
-              child: ccEntity != null
-                  ? Icon(
-                      ccEntity.assistance2 != null
-                          ? Icons.check
-                          : Icons.close_rounded,
-                      size: 16,
-                      color: Palette.white,
-                    )
-                  : null,
-            ),
-          ],
-        ),
+                            if (isSubmitted) {
+                              showStatusDialog(context,
+                                  number: 2, student: widget.student);
+                            }
+                          }),
+                      child: Icon(
+                        ccEntity.assistance2 != null
+                            ? Icons.check
+                            : Icons.close_rounded,
+                        size: 16,
+                        color: Palette.white,
+                      )),
+                ],
+              )
+            : null,
       ),
     );
   }

@@ -43,7 +43,6 @@ class ControlCardModel extends ControlCardEntity {
 
   factory ControlCardModel.fromMap(
     Map<String, dynamic> documentSnapshot,
-    MeetingEntity? meetingEntity,
   ) {
     return ControlCardModel(
       assistance1: documentSnapshot['assistance1'] != null

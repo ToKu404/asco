@@ -9,6 +9,7 @@ class ControlCardResultModel extends ControlCardResultEntity {
     super.data,
     super.practicumUid,
     super.uid,
+    super.studentId,
   });
 
   Map<String, dynamic> toDocument() {
@@ -21,6 +22,7 @@ class ControlCardResultModel extends ControlCardResultEntity {
       student: student,
       practicumUid: practicumUid,
       uid: uid,
+      studentId: studentId,
     );
   }
 
@@ -34,6 +36,7 @@ class ControlCardResultModel extends ControlCardResultEntity {
       student: student,
       practicumUid: documentSnapshot['practicum_uid'],
       uid: documentSnapshot['uid'],
+      studentId: documentSnapshot['student_id'],
     );
   }
 

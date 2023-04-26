@@ -19,6 +19,11 @@ abstract class ControlCardDataSource {
 
   Future<List<ControlCardResultEntity>> multiple(
       {required List<String> multipleId});
+
+  Future<bool> updateAssistance({
+    required String uid,
+    required List<ControlCardModel> listControlCardModel,
+  });
 }
 
 class ControlCardDataSourceImpl implements ControlCardDataSource {
@@ -149,7 +154,29 @@ class ControlCardDataSourceImpl implements ControlCardDataSource {
         return listData;
       });
     } catch (e) {
+      print(e.toString());
       throw FirestoreException(e.toString());
+    }
+  }
+
+  @override
+  Future<bool> updateAssistance(
+      {required String uid,
+      required List<ControlCardModel> listControlCardModel}) async {
+    try {
+      return collectionReference
+          .doc(uid)
+          .update({
+            'data': listControlCardModel
+                .map((e) => ControlCardModel(
+                        assistance1: e.assistance1, assistance2: e.assistance2)
+                    .toDocument())
+                .toList()
+          })
+          .then((value) => true)
+          .catchError((e) => false);
+    } catch (e) {
+      throw Exception(e.toString());
     }
   }
 }

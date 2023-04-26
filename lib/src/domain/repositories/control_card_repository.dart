@@ -17,4 +17,9 @@ abstract class ControlCardRepository {
   Future<Either<Failure, List<ControlCardResultEntity>>> multiple({
     required List<String> multipleId,
   });
+
+  Future<Either<Failure, bool>> updateAssistance({
+    required String uid,
+    required List<ControlCardEntity> listCC,
+  });
 }

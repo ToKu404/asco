@@ -1,16 +1,24 @@
+import 'package:asco/src/data/datasources/helpers/update_data_helper.dart';
+import 'package:asco/src/domain/entities/assistance_entities/assistance_entities.dart';
+import 'package:asco/src/presentations/providers/control_card_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
+import 'package:provider/provider.dart';
 
 class AssistanceDialog extends StatefulWidget {
   final int number;
   final ProfileEntity student;
+  final bool isFirstAssistance;
+  final ControlCardResultEntity controlCardResultEntity;
 
   const AssistanceDialog({
     super.key,
     required this.number,
     required this.student,
+    required this.controlCardResultEntity,
+    required this.isFirstAssistance,
   });
 
   @override
@@ -29,6 +37,26 @@ class _AssistanceDialogState extends State<AssistanceDialog> {
     _dateController = TextEditingController();
     _noteController = TextEditingController();
     _dateNotifier = ValueNotifier('');
+    try {
+      final oldData = widget.controlCardResultEntity.data![widget.number - 1];
+      if (widget.isFirstAssistance) {
+        if (oldData.assistance1 != null &&
+            oldData.assistance1!.assistanceDateTime != null) {
+          _date = oldData.assistance1!.assistanceDateTime!;
+          _dateController.text = '${_date.day}/${_date.month}/${_date.year}';
+          _noteController.text = oldData.assistance1!.note ?? "";
+        }
+      } else {
+        if (oldData.assistance2 != null &&
+            oldData.assistance2!.assistanceDateTime != null) {
+          _date = oldData.assistance2!.assistanceDateTime!;
+          _dateController.text = '${_date.day}/${_date.month}/${_date.year}';
+          _noteController.text = oldData.assistance2!.note ?? "";
+        }
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
 
     super.initState();
   }
@@ -86,7 +114,15 @@ class _AssistanceDialogState extends State<AssistanceDialog> {
                     ),
                   ),
                   IconButton(
-                    onPressed: () => onPressedSubmitButton(context),
+                    onPressed: () => onPressedSubmitButton(
+                        context,
+                        _dateController.text.isNotEmpty
+                            ? AssistanceAttendanceEntity(
+                                assistanceDateTime: _date,
+                                note: _noteController.text,
+                                status: 'ontime',
+                              )
+                            : null),
                     icon: const Icon(
                       Icons.check_rounded,
                       color: Palette.purple60,
@@ -135,7 +171,7 @@ class _AssistanceDialogState extends State<AssistanceDialog> {
                             Icons.today_rounded,
                             color: Palette.greyDark,
                           ),
-                          suffixIcon: value.isEmpty
+                          suffixIcon: _dateController.text.isEmpty
                               ? const SizedBox()
                               : IconButton(
                                   icon: const Icon(
@@ -239,11 +275,24 @@ class _AssistanceDialogState extends State<AssistanceDialog> {
     }
   }
 
-  void onPressedSubmitButton(BuildContext context) {
+  void onPressedSubmitButton(BuildContext context,
+      AssistanceAttendanceEntity? assistanceAttendanceEntity) {
     // remove the focus of keybooard
     FocusScope.of(context).unfocus();
 
-    // Do something else
+    context.read<ControlCardNotifier>().updateControlCard(
+        uid: widget.controlCardResultEntity.uid!,
+        listCC: UpdateDataHelper.updateControlCard(
+            meetingNumber: widget.number,
+            ccEntityList: widget.controlCardResultEntity.data!,
+            isFirstAssistant: widget.isFirstAssistance,
+            newCC: ControlCardEntity(
+              meetingNumber: widget.number,
+              assistance1:
+                  widget.isFirstAssistance ? assistanceAttendanceEntity : null,
+              assistance2:
+                  !widget.isFirstAssistance ? assistanceAttendanceEntity : null,
+            )));
     Navigator.pop(context, true);
   }
 }
