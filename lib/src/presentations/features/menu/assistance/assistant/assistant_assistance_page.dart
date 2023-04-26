@@ -1,5 +1,7 @@
 import 'dart:math' as math;
 
+import 'package:asco/src/domain/entities/entities.dart';
+import 'package:asco/src/presentations/providers/meeting_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -25,11 +27,13 @@ import 'package:asco/src/presentations/widgets/circle_network_image.dart';
 class AssistantAssistancePage extends StatefulWidget {
   final String groupId;
   final String practicumId;
+  final String classroomId;
 
   const AssistantAssistancePage({
     super.key,
     required this.groupId,
     required this.practicumId,
+    required this.classroomId,
   });
 
   @override
@@ -43,8 +47,12 @@ class _AssistantAssistancePageState extends State<AssistantAssistancePage> {
     super.initState();
 
     Future.microtask(
-      () => Provider.of<AssistanceNotifier>(context, listen: false)
-          .getDetail(uuid: widget.groupId),
+      () {
+        Provider.of<AssistanceNotifier>(context, listen: false)
+            .getDetail(uuid: widget.groupId);
+        Provider.of<MeetingNotifier>(context, listen: false)
+            .fetch(classroomUid: widget.classroomId);
+      },
     );
   }
 
@@ -75,6 +83,7 @@ class _AssistantAssistancePageState extends State<AssistantAssistancePage> {
     required AssistanceGroupEntity? assistanceGroup,
   }) {
     final students = assistanceGroup?.students ?? <ProfileEntity>[];
+    final meetingNotifier = context.watch<MeetingNotifier>();
 
     return Scaffold(
       backgroundColor: Palette.grey,
@@ -298,14 +307,29 @@ class _AssistantAssistancePageState extends State<AssistantAssistancePage> {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  ...courses
-                      .where((course) => course.isLocked == false)
-                      .map((course) => buildControlCard(
-                            context,
-                            course: course,
-                            students: students,
-                          ))
-                      .toList(),
+                  Builder(
+                    builder: (context) {
+                      if (meetingNotifier.isLoadingState('find')) {
+                        return const AscoLoading();
+                      }
+                      if (meetingNotifier.isErrorState('find')) {
+                        return Center(
+                          child: Text(meetingNotifier.message),
+                        );
+                      }
+                      final meetingData = meetingNotifier.listData;
+                      return ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: meetingData.length,
+                          itemBuilder: (context, index) {
+                            return buildControlCard(context,
+                                meeting: MeetingEntity.fromDetail(
+                                    meetingData[index]),
+                                students: students);
+                          });
+                    },
+                  ),
                 ],
               ),
             ),
@@ -317,18 +341,19 @@ class _AssistantAssistancePageState extends State<AssistantAssistancePage> {
 
   ControlCard buildControlCard(
     BuildContext context, {
-    required Course course,
+    required MeetingEntity meeting,
     required List<ProfileEntity> students,
   }) {
     return ControlCard(
-      course: course,
+      course: meeting,
       verticalAlignment: CrossAxisAlignment.start,
       isThreeLine: true,
       thirdLine: const AssistanceStatistics(),
       onTap: () => showAssistantAssistanceCourseDetailPage(
         context,
-        title: course.topic,
+        title: meeting.topic ?? '',
         students: students,
+        meetingNumber: meeting.meetingNumber!,
       ),
     );
   }

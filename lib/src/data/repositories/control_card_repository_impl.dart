@@ -55,4 +55,15 @@ class ControlCardRepositoryImpl implements ControlCardRepository {
       return const Left(FirestoreFailure('failed to find data'));
     }
   }
+
+  @override
+  Future<Either<Failure, List<ControlCardResultEntity>>> multiple(
+      {required List<String> multipleId}) async {
+    try {
+      final result = await datasource.multiple(multipleId: multipleId);
+      return Right(result);
+    } on FirestoreException {
+      return const Left(FirestoreFailure('failed to get multiple data'));
+    }
+  }
 }

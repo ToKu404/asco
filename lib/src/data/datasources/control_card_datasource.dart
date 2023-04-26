@@ -16,6 +16,9 @@ abstract class ControlCardDataSource {
   Future<ControlCardModel> single({required String uid});
 
   Future<ControlCardResultModel> find({String? studentId});
+
+  Future<List<ControlCardResultEntity>> multiple(
+      {required List<String> multipleId});
 }
 
 class ControlCardDataSourceImpl implements ControlCardDataSource {
@@ -112,6 +115,38 @@ class ControlCardDataSourceImpl implements ControlCardDataSource {
                 ).toEntity()
               : null,
         );
+      });
+    } catch (e) {
+      throw FirestoreException(e.toString());
+    }
+  }
+
+  @override
+  Future<List<ControlCardResultEntity>> multiple(
+      {required List<String> multipleId}) async {
+    try {
+      final snapshot =
+          collectionReference.where('student_id', whereIn: multipleId).get();
+      return await snapshot.then((value) async {
+        final listData = <ControlCardResultEntity>[];
+        for (var data in value.docs) {
+          final studentData = ControlCardResultModel.fromSnapshot(
+            data,
+            ReadHelper.isKeyExist(data, 'data')
+                ? await ReferenceHelper.referenceCC(data['data'])
+                : <ControlCardEntity>[],
+            data['student'] != null
+                ? ProfileModel.fromMap(
+                    await ReferenceHelper.referenceSingle<ProfileModel>(
+                      data,
+                      'student',
+                    ),
+                  ).toEntity()
+                : null,
+          );
+          listData.add(studentData);
+        }
+        return listData;
       });
     } catch (e) {
       throw FirestoreException(e.toString());

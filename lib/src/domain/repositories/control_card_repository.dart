@@ -13,4 +13,8 @@ abstract class ControlCardRepository {
   Future<Either<Failure, ControlCardEntity>> single({required String uid});
 
   Future<Either<Failure, ControlCardResultEntity>> find({String? studentId});
+
+  Future<Either<Failure, List<ControlCardResultEntity>>> multiple({
+    required List<String> multipleId,
+  });
 }

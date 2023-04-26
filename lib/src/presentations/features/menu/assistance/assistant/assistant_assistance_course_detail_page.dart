@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:asco/src/domain/entities/assistance_entities/assistance_entities.dart';
+import 'package:asco/src/presentations/providers/control_card_notifier.dart';
+import 'package:asco/src/presentations/widgets/asco_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -17,15 +20,18 @@ import 'package:asco/src/presentations/widgets/circle_border_container.dart';
 import 'package:asco/src/presentations/widgets/custom_student_card.dart';
 import 'package:asco/src/presentations/widgets/purple_app_bar.dart';
 import 'package:asco/src/presentations/widgets/title_section.dart';
+import 'package:provider/provider.dart';
 
 class AssistantAssistanceCourseDetailPage extends StatefulWidget {
   final String title;
   final List<ProfileEntity> students;
+  final int meetingNumber;
 
   const AssistantAssistanceCourseDetailPage({
     super.key,
     required this.title,
     required this.students,
+    required this.meetingNumber,
   });
 
   @override
@@ -35,26 +41,28 @@ class AssistantAssistanceCourseDetailPage extends StatefulWidget {
 
 class _AssistantAssistanceCourseDetailPageState
     extends State<AssistantAssistanceCourseDetailPage> {
+  @override
+  void initState() {
+    Future.microtask(() {
+      context.read<ControlCardNotifier>().fetchMultiple(
+          listStudentId:
+              widget.students.map((e) => e.uid).toList().cast<String>());
+    });
+    super.initState();
+  }
+
   DateTimeRange _dateRange = DateTimeRange(
     start: DateTime.now(),
     end: DateTime.now().add(const Duration(days: 6)),
   );
 
-  Timer? _timer;
-
-  @override
-  void dispose() {
-    if (_timer != null) _timer!.cancel();
-
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final ccNotifier = context.watch<ControlCardNotifier>();
     return Scaffold(
       backgroundColor: Palette.grey,
       appBar: PurpleAppBar(
-        titleText: 'Pertemuan 1',
+        titleText: 'Pertemuan ${widget.meetingNumber}',
         onPressedBackButton: () => Navigator.pop(context),
       ),
       body: NestedScrollView(
@@ -260,9 +268,40 @@ class _AssistantAssistanceCourseDetailPageState
                 title: 'Asistensi',
                 paddingBottom: 12,
               ),
-              ...widget.students
-                  .map((student) => buildStudentCard(context, student: student))
-                  .toList(),
+              Builder(builder: (context) {
+                if (ccNotifier.isLoadingState('multiple')) {
+                  return const AscoLoading();
+                }
+                if (ccNotifier.isErrorState('multiple')) {
+                  return Center(
+                    child: Text(ccNotifier.message),
+                  );
+                }
+                final data = ccNotifier.listData;
+
+                return ListView.builder(
+                  itemBuilder: (context, index) {
+                    ControlCardResultEntity? ccEntity;
+                    for (int i = 0; i < data.length; i++) {
+                      if (data[i].student?.uid == widget.students[index].uid) {
+                        ccEntity = data[i];
+                        break;
+                      }
+                    }
+                    return ccEntity != null
+                        ? BuildStudentCard(
+                            student: widget.students[index],
+                            meetingNumber: widget.meetingNumber,
+                            ccEntity: ccEntity,
+                          )
+                        : Text(
+                            'Error: No data found for student ${widget.students[index].uid}');
+                  },
+                  itemCount: widget.students.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                );
+              }),
             ],
           ),
         ),
@@ -282,105 +321,6 @@ class _AssistantAssistanceCourseDetailPageState
         child: const Icon(Icons.qr_code_scanner_outlined),
       ),
     );
-  }
-
-  Padding buildStudentCard(
-    BuildContext context, {
-    required ProfileEntity student,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: CustomStudentCard(
-        student: student,
-        hasTrailing: true,
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            CircleBorderContainer(
-              size: 30,
-              borderColor: Palette.purple80,
-              fillColor: Palette.purple60,
-              onTap: () => showDialog(
-                context: context,
-                barrierLabel: '',
-                barrierDismissible: false,
-                builder: (_) => AssistanceDialog(
-                  number: 1,
-                  student: student,
-                ),
-              ).then((value) {
-                final isSubmitted = value == null ? false : value as bool;
-
-                if (isSubmitted) {
-                  showStatusDialog(context, number: 1, student: student);
-                }
-              }),
-              child: const Icon(
-                Icons.check_rounded,
-                size: 16,
-                color: Palette.white,
-              ),
-            ),
-            const SizedBox(width: 4),
-            CircleBorderContainer(
-              size: 30,
-              borderColor: const Color(0xFFD35380),
-              fillColor: const Color(0xFFFA78A6),
-              onTap: () => showDialog(
-                context: context,
-                barrierLabel: '',
-                barrierDismissible: false,
-                builder: (_) => AssistanceDialog(
-                  number: 2,
-                  student: student,
-                ),
-              ).then((value) {
-                final isSubmitted = value == null ? false : value as bool;
-
-                if (isSubmitted) {
-                  showStatusDialog(context, number: 2, student: student);
-                }
-              }),
-              child: const Icon(
-                Icons.close_rounded,
-                size: 16,
-                color: Palette.white,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void showStatusDialog(
-    BuildContext context, {
-    required int number,
-    required ProfileEntity student,
-  }) {
-    showDialog(
-      context: context,
-      builder: (_) {
-        _timer = Timer(
-          const Duration(milliseconds: 4000),
-          () => Navigator.popUntil(
-            context,
-            ModalRoute.withName(
-              AppRoute.assistantAssistanceCourseDetailPage,
-            ),
-          ),
-        );
-
-        return AssistanceStatusDialog(
-          number: number,
-          student: student,
-        );
-      },
-    ).then((_) {
-      if (_timer == null) return;
-
-      if (_timer!.isActive) _timer!.cancel();
-    });
   }
 
   Future<void> showAssistanceDateRangePicker(BuildContext context) async {
@@ -419,11 +359,13 @@ void showAssistantAssistanceCourseDetailPage(
   BuildContext context, {
   required String title,
   required List<ProfileEntity> students,
+  required int meetingNumber,
 }) {
   Navigator.push(
     context,
     MaterialPageRoute(
       builder: (_) => AssistantAssistanceCourseDetailPage(
+        meetingNumber: meetingNumber,
         title: title,
         students: students,
       ),
@@ -432,4 +374,141 @@ void showAssistantAssistanceCourseDetailPage(
       ),
     ),
   );
+}
+
+class BuildStudentCard extends StatefulWidget {
+  final int meetingNumber;
+  final ProfileEntity student;
+  final ControlCardResultEntity ccEntity;
+  const BuildStudentCard({
+    super.key,
+    required this.meetingNumber,
+    required this.student,
+    required this.ccEntity,
+  });
+
+  @override
+  State<BuildStudentCard> createState() => _BuildStudentCardState();
+}
+
+class _BuildStudentCardState extends State<BuildStudentCard> {
+  Timer? _timer;
+
+  @override
+  void dispose() {
+    if (_timer != null) _timer!.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ControlCardEntity? ccEntity;
+    for (var i = 0; i < widget.ccEntity.data!.length; i++) {
+      if (widget.meetingNumber == i + 1) {
+        ccEntity = widget.ccEntity.data![i];
+        break;
+      }
+    }
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: CustomStudentCard(
+        student: widget.student,
+        hasTrailing: true,
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            CircleBorderContainer(
+              size: 30,
+              borderColor: Palette.purple80,
+              fillColor: Palette.purple60,
+              onTap: () => showDialog(
+                context: context,
+                barrierLabel: '',
+                barrierDismissible: false,
+                builder: (_) => AssistanceDialog(
+                  number: widget.meetingNumber,
+                  student: widget.student,
+                ),
+              ).then((value) {
+                final isSubmitted = value == null ? false : value as bool;
+
+                if (isSubmitted) {
+                  showStatusDialog(context, number: 1, student: widget.student);
+                }
+              }),
+              child: ccEntity != null
+                  ? Icon(
+                      ccEntity.assistance1 != null
+                          ? Icons.check
+                          : Icons.close_rounded,
+                      size: 16,
+                      color: Palette.white,
+                    )
+                  : null,
+            ),
+            const SizedBox(width: 4),
+            CircleBorderContainer(
+              size: 30,
+              borderColor: const Color(0xFFD35380),
+              fillColor: const Color(0xFFFA78A6),
+              onTap: () => showDialog(
+                context: context,
+                barrierLabel: '',
+                barrierDismissible: false,
+                builder: (_) => AssistanceDialog(
+                  number: 2,
+                  student: widget.student,
+                ),
+              ).then((value) {
+                final isSubmitted = value == null ? false : value as bool;
+
+                if (isSubmitted) {
+                  showStatusDialog(context, number: 2, student: widget.student);
+                }
+              }),
+              child: ccEntity != null
+                  ? Icon(
+                      ccEntity.assistance2 != null
+                          ? Icons.check
+                          : Icons.close_rounded,
+                      size: 16,
+                      color: Palette.white,
+                    )
+                  : null,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void showStatusDialog(
+    BuildContext context, {
+    required int number,
+    required ProfileEntity student,
+  }) {
+    showDialog(
+      context: context,
+      builder: (_) {
+        _timer = Timer(
+          const Duration(milliseconds: 4000),
+          () => Navigator.popUntil(
+            context,
+            ModalRoute.withName(
+              AppRoute.assistantAssistanceCourseDetailPage,
+            ),
+          ),
+        );
+
+        return AssistanceStatusDialog(
+          number: number,
+          student: student,
+        );
+      },
+    ).then((_) {
+      if (_timer == null) return;
+
+      if (_timer!.isActive) _timer!.cancel();
+    });
+  }
 }
