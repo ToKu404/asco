@@ -2,20 +2,26 @@ import 'package:asco/core/services/data_service.dart';
 import 'package:asco/core/states/request_state.dart';
 import 'package:asco/src/domain/entities/assistance_entities/assistance_entities.dart';
 import 'package:asco/src/domain/usecases/control_card_usecases/get_list_control_card.dart';
+import 'package:asco/src/domain/usecases/control_card_usecases/get_multiple_control_card.dart';
 import 'package:asco/src/domain/usecases/control_card_usecases/get_single_control_card.dart';
 import 'package:asco/src/domain/usecases/control_card_usecases/init_student_control_card.dart';
+import 'package:asco/src/domain/usecases/control_card_usecases/update_control_card.dart';
 
 class ControlCardNotifier extends CrudDataService<ControlCardResultEntity> {
   final InitStudentControlCard createUsecase;
   final GetSingleControlCard getSingleDataUsecase;
   final GetListControlCard getListDataUsecase;
+  final GetMultipleControlCard getMultipleControlCard;
+  final UpdateControlCard updateControlCardUsecase;
 
   ControlCardNotifier({
     required this.createUsecase,
     required this.getSingleDataUsecase,
     required this.getListDataUsecase,
+    required this.getMultipleControlCard,
+    required this.updateControlCardUsecase,
   }) {
-    createState(['create', 'single', 'find']);
+    createState(['create', 'single', 'find', 'multiple', 'update']);
   }
 
   Future<void> initStudent({
@@ -79,6 +85,48 @@ class ControlCardNotifier extends CrudDataService<ControlCardResultEntity> {
         updateState(state: RequestState.success, key: 'find');
 
         setData(r);
+      },
+    );
+  }
+
+  Future<void> fetchMultiple({required List<String> listStudentId}) async {
+    updateState(state: RequestState.loading, key: 'multiple');
+
+    final result = await getMultipleControlCard.execute(listId: listStudentId);
+
+    result.fold(
+      (l) {
+        updateState(state: RequestState.error, key: 'multiple');
+
+        setErrorMessage(l.message);
+      },
+      (r) {
+        updateState(state: RequestState.success, key: 'multiple');
+
+        setListData(r);
+      },
+    );
+  }
+
+  Future<void> updateControlCard({
+    required String uid,
+    required List<ControlCardEntity> listCC,
+  }) async {
+    updateState(state: RequestState.loading, key: 'update');
+
+    final result = await updateControlCardUsecase.execute(
+      uid: uid,
+      listCC: listCC,
+    );
+
+    result.fold(
+      (l) {
+        updateState(state: RequestState.error, key: 'update');
+
+        setErrorMessage(l.message);
+      },
+      (r) {
+        updateState(state: RequestState.success, key: 'update');
       },
     );
   }

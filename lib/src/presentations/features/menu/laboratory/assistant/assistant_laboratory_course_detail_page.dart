@@ -86,7 +86,7 @@ class _AssistantLaboratoryCourseDetailPageState
 
     return Consumer<ProfileNotifier>(
       builder: (context, profileNotifier, child) {
-        if (profileNotifier.isSuccessState('multiple') ||
+        if (profileNotifier.isSuccessState('multiple') &&
             meetingNotifier.isSuccessState('single')) {
           // final listData = <Map<int, dynamic>>[];
 

@@ -1,3 +1,4 @@
+import 'package:asco/src/data/models/assistance_models/assistance_models.dart';
 import 'package:dartz/dartz.dart';
 import 'package:asco/core/utils/exception.dart';
 import 'package:asco/core/utils/failure.dart';
@@ -53,6 +54,33 @@ class ControlCardRepositoryImpl implements ControlCardRepository {
       return Right(result);
     } on FirestoreException {
       return const Left(FirestoreFailure('failed to find data'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ControlCardResultEntity>>> multiple(
+      {required List<String> multipleId}) async {
+    try {
+      final result = await datasource.multiple(multipleId: multipleId);
+      return Right(result);
+    } on FirestoreException {
+      return const Left(FirestoreFailure('failed to get multiple data'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> updateAssistance(
+      {required String uid, required List<ControlCardEntity> listCC}) async {
+    try {
+      final result = await datasource.updateAssistance(
+        uid: uid,
+        listControlCardModel:
+            listCC.map((e) => ControlCardModel.fromEntity(e)).toList(),
+      );
+
+      return Right(result);
+    } on FirestoreException {
+      return const Left(FirestoreFailure('failed to update data'));
     }
   }
 }

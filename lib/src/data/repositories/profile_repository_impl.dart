@@ -98,7 +98,6 @@ class ProfileRepositoryImpl implements ProfileRepository {
   }) async {
     try {
       final result = await datasource.multiple(multipleId: multipleId);
-
       return Right(result);
     } on FirestoreException {
       return const Left(FirestoreFailure('failed to get multiple data'));

@@ -16,6 +16,14 @@ abstract class ControlCardDataSource {
   Future<ControlCardModel> single({required String uid});
 
   Future<ControlCardResultModel> find({String? studentId});
+
+  Future<List<ControlCardResultEntity>> multiple(
+      {required List<String> multipleId});
+
+  Future<bool> updateAssistance({
+    required String uid,
+    required List<ControlCardModel> listControlCardModel,
+  });
 }
 
 class ControlCardDataSourceImpl implements ControlCardDataSource {
@@ -56,6 +64,7 @@ class ControlCardDataSourceImpl implements ControlCardDataSource {
                     assistance1: null,
                     assistance2: null,
                     meetingNumber: id,
+                    star: null,
                   ).toDocument(),
                 ),
               });
@@ -115,6 +124,61 @@ class ControlCardDataSourceImpl implements ControlCardDataSource {
       });
     } catch (e) {
       throw FirestoreException(e.toString());
+    }
+  }
+
+  @override
+  Future<List<ControlCardResultEntity>> multiple(
+      {required List<String> multipleId}) async {
+    try {
+      final snapshot =
+          collectionReference.where('student_id', whereIn: multipleId).get();
+      return await snapshot.then((value) async {
+        final listData = <ControlCardResultEntity>[];
+        for (var data in value.docs) {
+          final studentData = ControlCardResultModel.fromSnapshot(
+            data,
+            ReadHelper.isKeyExist(data, 'data')
+                ? await ReferenceHelper.referenceCC(data['data'])
+                : <ControlCardEntity>[],
+            data['student'] != null
+                ? ProfileModel.fromMap(
+                    await ReferenceHelper.referenceSingle<ProfileModel>(
+                      data,
+                      'student',
+                    ),
+                  ).toEntity()
+                : null,
+          );
+          listData.add(studentData);
+        }
+        return listData;
+      });
+    } catch (e) {
+      throw FirestoreException(e.toString());
+    }
+  }
+
+  @override
+  Future<bool> updateAssistance(
+      {required String uid,
+      required List<ControlCardModel> listControlCardModel}) async {
+    try {
+      return collectionReference
+          .doc(uid)
+          .update({
+            'data': listControlCardModel
+                .map((e) => ControlCardModel(
+                      assistance1: e.assistance1,
+                      assistance2: e.assistance2,
+                      star: e.star,
+                    ).toDocument())
+                .toList()
+          })
+          .then((value) => true)
+          .catchError((e) => false);
+    } catch (e) {
+      throw Exception(e.toString());
     }
   }
 }

@@ -1,3 +1,5 @@
+import 'package:asco/src/domain/usecases/control_card_usecases/get_multiple_control_card.dart';
+import 'package:asco/src/domain/usecases/control_card_usecases/update_control_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
 import 'package:asco/core/services/preference_service.dart';
@@ -75,6 +77,8 @@ void init() {
       createUsecase: locator(),
       getListDataUsecase: locator(),
       getSingleDataUsecase: locator(),
+      getMultipleControlCard: locator(),
+      updateControlCardUsecase: locator(),
     ),
   );
 
@@ -284,7 +288,17 @@ void init() {
     ),
   );
   locator.registerLazySingleton(
+    () => GetMultipleControlCard(
+      repository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
     () => GetSingleControlCard(
+      repository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => UpdateControlCard(
       repository: locator(),
     ),
   );

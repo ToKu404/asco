@@ -1,42 +1,95 @@
+import 'package:asco/src/data/datasources/const_data/score_scheme.dart';
+import 'package:asco/src/domain/entities/entities.dart';
+import 'package:asco/src/presentations/widgets/asco_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/helpers/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:asco/src/data/dummy_data.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/practicum_value_input_dialog.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:asco/src/presentations/widgets/purple_app_bar.dart';
+import 'package:provider/provider.dart';
 
-class AssistantAssistancePracticumValueInputPage extends StatelessWidget {
-  const AssistantAssistancePracticumValueInputPage({super.key});
+import '../../../../providers/control_card_notifier.dart';
+
+class AssistantAssistancePracticumValueInputPage extends StatefulWidget {
+  final List<ProfileEntity> listStudent;
+  final int meetingNumber;
+  const AssistantAssistancePracticumValueInputPage({
+    super.key,
+    required this.listStudent,
+    required this.meetingNumber,
+  });
+
+  @override
+  State<AssistantAssistancePracticumValueInputPage> createState() =>
+      _AssistantAssistancePracticumValueInputPageState();
+}
+
+class _AssistantAssistancePracticumValueInputPageState
+    extends State<AssistantAssistancePracticumValueInputPage> {
+  @override
+  void initState() {
+    Future.microtask(() {
+      context.read<ControlCardNotifier>().fetchMultiple(
+          listStudentId:
+              widget.listStudent.map((e) => e.uid).toList().cast<String>());
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final ccNotifier = context.watch<ControlCardNotifier>();
+
     return Scaffold(
       backgroundColor: Palette.grey,
       appBar: PurpleAppBar(
         titleText: 'Input Nilai Praktikum',
         onPressedBackButton: () => Navigator.pop(context),
       ),
-      body: ListView.separated(
-        padding: const EdgeInsets.symmetric(
-          vertical: 24,
-          horizontal: 16,
-        ),
-        itemCount: students.length,
-        itemBuilder: (_, i) => PracticumValueCard(student: students[i]),
-        separatorBuilder: (_, __) => const SizedBox(height: 16),
-      ),
+      body: Builder(builder: (context) {
+        if (ccNotifier.isLoadingState('multiple')) {
+          return const AscoLoading();
+        }
+        if (ccNotifier.isErrorState('multiple')) {
+          return Center(
+            child: Text(ccNotifier.message),
+          );
+        }
+        final controlCardResultEntity = ccNotifier.listData;
+        return ListView.separated(
+          padding: const EdgeInsets.symmetric(
+            vertical: 24,
+            horizontal: 16,
+          ),
+          itemCount: widget.listStudent.length,
+          itemBuilder: (_, i) => PracticumValueCard(
+            student: widget.listStudent[i],
+            meetingNumber: widget.meetingNumber,
+            cardResultEntity: controlCardResultEntity.firstWhere(
+                (element) => element.studentId == widget.listStudent[i].uid),
+          ),
+          separatorBuilder: (_, __) => const SizedBox(height: 16),
+        );
+      }),
     );
   }
 }
 
 class PracticumValueCard extends StatelessWidget {
-  final Student student;
+  final int meetingNumber;
+  final ControlCardResultEntity cardResultEntity;
+  final ProfileEntity student;
 
-  const PracticumValueCard({super.key, required this.student});
+  const PracticumValueCard({
+    super.key,
+    required this.student,
+    required this.cardResultEntity,
+    required this.meetingNumber,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +108,11 @@ class PracticumValueCard extends StatelessWidget {
         context: context,
         barrierLabel: '',
         barrierDismissible: false,
-        builder: (_) => PracticumValueInputDialog(student: student),
+        builder: (_) => PracticumValueInputDialog(
+          student: student,
+          meetingNumber: meetingNumber,
+          controlCardResultEntity: cardResultEntity,
+        ),
       ),
       child: Column(
         children: <Widget>[
@@ -67,7 +124,7 @@ class PracticumValueCard extends StatelessWidget {
                 child: CircleAvatar(
                   radius: 22,
                   foregroundImage: AssetImage(
-                    AssetPath.getImage('avatar${student.id}.jpg'),
+                    AssetPath.getImage('avatar1.jpg'),
                   ),
                 ),
               ),
@@ -77,14 +134,14 @@ class PracticumValueCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      student.nim,
+                      student.username ?? '',
                       style: kTextTheme.bodyMedium?.copyWith(
                         color: Palette.purple60,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      student.name,
+                      student.fullName ?? '',
                       style: kTextTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w600,
                         color: Palette.purple80,
@@ -96,60 +153,68 @@ class PracticumValueCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const <Widget>[
-                    PracticumBadge(
-                      badgeTitle: 'Waktu asistensi',
-                      badgeContent: 'Tepat waktu',
-                      badgeColor: Palette.purple60,
-                    ),
-                    SizedBox(height: 8),
-                    PracticumBadge(
-                      badgeTitle: 'Nilai asistensi',
-                      badgeContent: 'Kurang bagus',
-                      badgeColor: Palette.red,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 12),
-              CircularPercentIndicator(
-                animation: true,
-                animationDuration: 1000,
-                curve: Curves.easeOut,
-                reverse: true,
-                radius: 45,
-                lineWidth: 10,
-                percent: .75,
-                progressColor: Palette.purple60,
-                backgroundColor: Colors.transparent,
-                circularStrokeCap: CircularStrokeCap.round,
-                center: Container(
-                  width: 90,
-                  height: 90,
-                  margin: const EdgeInsets.all(9),
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Palette.purple80,
+          Builder(builder: (context) {
+            ValueType? val =
+                cardResultEntity.data![meetingNumber - 1].star != null
+                    ? ScoreScheme.valuesScheme[
+                        cardResultEntity.data![meetingNumber - 1].star! - 1]
+                    : null;
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      const PracticumBadge(
+                        badgeTitle: 'Waktu asistensi',
+                        badgeContent: 'Tepat waktu',
+                        badgeColor: Palette.purple60,
+                      ),
+                      const SizedBox(height: 8),
+                      if (val != null)
+                        PracticumBadge(
+                          badgeTitle: 'Nilai asistensi',
+                          badgeContent: val.descScore,
+                          badgeColor: Palette.red,
+                        ),
+                    ],
                   ),
-                  child: Center(
-                    child: Text(
-                      '75.0',
-                      style: kTextTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: Palette.white,
+                ),
+                const SizedBox(width: 12),
+                CircularPercentIndicator(
+                  animation: true,
+                  animationDuration: 1000,
+                  curve: Curves.easeOut,
+                  reverse: true,
+                  radius: 45,
+                  lineWidth: 10,
+                  percent: val != null ? val.score / 100 : 1,
+                  progressColor: Palette.purple60,
+                  backgroundColor: Colors.transparent,
+                  circularStrokeCap: CircularStrokeCap.round,
+                  center: Container(
+                    width: 90,
+                    height: 90,
+                    margin: const EdgeInsets.all(9),
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Palette.purple80,
+                    ),
+                    child: Center(
+                      child: Text(
+                        val != null ? val.score.toStringAsFixed(1) : '-',
+                        style: kTextTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: Palette.white,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            );
+          }),
         ],
       ),
     );
@@ -205,11 +270,18 @@ class PracticumBadge extends StatelessWidget {
   }
 }
 
-void showAssistantAssistancePracticumValueInputPage(BuildContext context) {
+void showAssistantAssistancePracticumValueInputPage(
+  BuildContext context, {
+  required int meetingNumber,
+  required List<ProfileEntity> listStudent,
+}) {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (_) => const AssistantAssistancePracticumValueInputPage(),
+      builder: (_) => AssistantAssistancePracticumValueInputPage(
+        listStudent: listStudent,
+        meetingNumber: meetingNumber,
+      ),
       settings: const RouteSettings(
         name: AppRoute.assistantAssistancePracticumValueInputPage,
       ),

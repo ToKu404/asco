@@ -26,7 +26,7 @@ class AssistanceAttendanceModel extends AssistanceAttendanceEntity {
   factory AssistanceAttendanceModel.fromMap(
       Map<String, dynamic> documentSnapshot) {
     return AssistanceAttendanceModel(
-      assistanceDateTime: documentSnapshot['assistance_datetime'],
+      assistanceDateTime: documentSnapshot['assistance_datetime'].toDate(),
       status: documentSnapshot['status'],
       note: documentSnapshot['note'],
     );
