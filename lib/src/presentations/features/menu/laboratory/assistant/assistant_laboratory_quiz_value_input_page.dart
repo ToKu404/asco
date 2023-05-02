@@ -1,25 +1,30 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:provider/provider.dart';
+
+import 'package:asco/core/constants/app_route.dart';
+import 'package:asco/core/constants/color_const.dart';
+import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/data/datasources/helpers/update_data_helper.dart';
 import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:asco/src/presentations/providers/providers.dart';
 import 'package:asco/src/presentations/providers/score_notifier.dart';
 import 'package:asco/src/presentations/widgets/asco_loading.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:asco/core/constants/app_route.dart';
-import 'package:asco/core/constants/color_const.dart';
-import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/presentations/widgets/avatar.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:asco/src/presentations/widgets/input_field/search_field.dart';
-import 'package:provider/provider.dart';
 
 class AssistantLaboratoryQuizValueInputPage extends StatefulWidget {
   final String meetingUid;
-  final List<ProfileEntity> listStudent;
-  const AssistantLaboratoryQuizValueInputPage(
-      {super.key, required this.listStudent, required this.meetingUid});
+  final List<ProfileEntity> listStudents;
+
+  const AssistantLaboratoryQuizValueInputPage({
+    super.key,
+    required this.meetingUid,
+    required this.listStudents,
+  });
 
   @override
   State<AssistantLaboratoryQuizValueInputPage> createState() =>
@@ -31,10 +36,9 @@ class _AssistantLaboratoryQuizValueInputPageState
   @override
   void initState() {
     super.initState();
+
     Future.microtask(
-      () => context.read<MeetingNotifier>().getDetail(
-            uid: widget.meetingUid,
-          ),
+      () => context.read<MeetingNotifier>().getDetail(uid: widget.meetingUid),
     );
   }
 
@@ -48,12 +52,15 @@ class _AssistantLaboratoryQuizValueInputPageState
         withScaffold: true,
       );
     }
+
     if (meetingNotifier.isErrorState('single')) {
       return Center(
         child: Text(meetingNotifier.message),
       );
     }
+
     final meetingData = meetingNotifier.data;
+
     return Scaffold(
       backgroundColor: Palette.grey,
       body: NestedScrollView(
@@ -94,11 +101,11 @@ class _AssistantLaboratoryQuizValueInputPageState
           ),
           mainAxisSpacing: 24,
           crossAxisSpacing: 16,
-          itemCount: widget.listStudent.length,
+          itemCount: widget.listStudents.length,
           itemBuilder: (_, i) => QuizValueCard(
-            student: widget.listStudent[i],
+            student: widget.listStudents[i],
             score: meetingData!.attendances
-                ?.firstWhere((s) => s.studentUid == widget.listStudent[i].uid)
+                ?.firstWhere((s) => s.studentUid == widget.listStudents[i].uid)
                 .quizScore,
             maxScore: meetingData.maxQuizScore!,
             listAttendance: meetingData.attendances!,
@@ -468,7 +475,6 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                             // if (result[i].quizScore != null) {
                             sum += result[i].quizScore ?? 0;
                             count++;
-                   
                           }
 
                           double avgScore = count > 0 ? sum / count : 0;
@@ -518,16 +524,16 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
 }
 
 void showAssistantLaboratoryQuizValueInputPage(
-  BuildContext context,
-  List<ProfileEntity> listStudent, {
+  BuildContext context, {
   required String meetingUid,
+  required List<ProfileEntity> listStudents,
 }) {
   Navigator.push(
     context,
     MaterialPageRoute(
       builder: (_) => AssistantLaboratoryQuizValueInputPage(
-        listStudent: listStudent,
         meetingUid: meetingUid,
+        listStudents: listStudents,
       ),
       settings: const RouteSettings(
         name: AppRoute.assistantLaboratoryQuizValueInputPage,

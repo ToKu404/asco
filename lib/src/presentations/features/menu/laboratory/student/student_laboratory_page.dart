@@ -243,7 +243,6 @@ class _StudentLaboratoryPageState extends State<StudentLaboratoryPage> {
             const SizedBox(height: 8),
             for (var i = 0; i < meetings.length; i++)
               MeetingCard(
-                number: i + 1,
                 meeting: meetings[i],
                 onTap: () => showStudentLaboratoryCourseDetailPage(
                   context,

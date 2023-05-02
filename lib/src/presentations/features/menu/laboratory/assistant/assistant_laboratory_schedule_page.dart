@@ -30,7 +30,6 @@ class AssistantLaboratorySchedulePage extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(16, 24, 16, 14),
               itemCount: listMeetingMap.length,
               itemBuilder: (_, i) => MeetingCard(
-                number: i + 1,
                 meeting: listMeetingMap[i].values.first,
                 isThreeLine: true,
                 thirdLine: listMeetingMap[i].keys.first == 0
