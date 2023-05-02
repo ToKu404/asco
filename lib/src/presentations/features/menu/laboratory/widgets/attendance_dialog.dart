@@ -1,27 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:provider/provider.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/core/helpers/asset_path.dart';
 import 'package:asco/src/data/datasources/helpers/update_data_helper.dart';
 import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
-import 'package:asco/src/presentations/providers/meeting_notifier.dart';
 import 'package:asco/src/presentations/widgets/circle_border_container.dart';
 
 class AttendanceDialog extends StatefulWidget {
   final ProfileEntity student;
-  final String meetingUid;
+  final AttendanceEntity attendance;
   final List<AttendanceEntity> listAttendances;
-  final int? initStatus;
 
   const AttendanceDialog({
     super.key,
     required this.student,
-    required this.meetingUid,
+    required this.attendance,
     required this.listAttendances,
-    required this.initStatus,
   });
 
   @override
@@ -52,20 +48,26 @@ class _AttendanceDialogState extends State<AttendanceDialog> {
     ),
   ];
 
-  final _listPoints = <String>['+5', '+10', '+15', '+20', '+25', '+30'];
+  final _listPoints = <int>[5, 10, 15, 20, 25, 30];
 
   late final ValueNotifier<FaceStatus> _statusNotifier;
-  late final ValueNotifier<String> _pointNotifier;
+  late final ValueNotifier<int> _pointNotifier;
   late final TextEditingController _noteController;
 
   @override
   void initState() {
     _statusNotifier = ValueNotifier(
-      widget.initStatus == null
+      widget.attendance.attendanceStatus == null
           ? _listStatus.first
-          : _listStatus[widget.initStatus!],
+          : _listStatus[widget.attendance.attendanceStatus!],
     );
-    _pointNotifier = ValueNotifier(_listPoints.first);
+
+    _pointNotifier = ValueNotifier(
+      widget.attendance.pointPlus == null
+          ? _listPoints.first
+          : _listPoints.firstWhere((e) => e == widget.attendance.pointPlus!),
+    );
+
     _noteController = TextEditingController();
 
     super.initState();
@@ -137,20 +139,12 @@ class _AttendanceDialogState extends State<AttendanceDialog> {
                           attendanceStatus: index,
                           attendanceTime: DateTime.now(),
                           note: index == 3 ? null : _noteController.text,
-                          pointPlus: index == 3
-                              ? int.parse(point.replaceAll('+', ''))
-                              : null,
+                          pointPlus: index == 3 ? point : null,
                           quizScore: null,
                         ),
                       );
 
-                      context
-                          .read<MeetingNotifier>()
-                          .updateAttendance(
-                            uid: widget.meetingUid,
-                            listAttendanceModel: result,
-                          )
-                          .then((value) => Navigator.pop(context));
+                      Navigator.pop(context, result);
                     },
                     icon: const Icon(
                       Icons.check_rounded,
@@ -201,10 +195,10 @@ class _AttendanceDialogState extends State<AttendanceDialog> {
 
 class AttendanceOptions extends StatelessWidget {
   final ValueNotifier<FaceStatus> statusNotifier;
-  final ValueNotifier<String> pointNotifier;
+  final ValueNotifier<int> pointNotifier;
   final TextEditingController noteController;
   final List<FaceStatus> listStatus;
-  final List<String> listPoints;
+  final List<int> listPoints;
 
   const AttendanceOptions({
     super.key,
@@ -351,7 +345,7 @@ class FaceStatusWidget extends StatelessWidget {
 }
 
 class ExtraPointWidget extends StatelessWidget {
-  final String point;
+  final int point;
   final bool isSelected;
   final VoidCallback? onTap;
 
@@ -370,7 +364,7 @@ class ExtraPointWidget extends StatelessWidget {
       fillColor: isSelected ? Palette.purple60 : null,
       onTap: onTap,
       child: Text(
-        point,
+        '+$point',
         style: kTextTheme.bodyMedium?.copyWith(
           color: isSelected ? Palette.white : Palette.greyDark,
         ),

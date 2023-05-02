@@ -51,19 +51,13 @@ class ControlCard extends StatelessWidget {
                 CircleBorderContainer(
                   size: 50,
                   borderWidth: 1.5,
-                  child: false
-                      ? const Icon(
-                          Icons.lock_outline_rounded,
-                          color: Palette.greyDark,
-                          size: 20,
-                        )
-                      : Text(
-                          '${course?.meetingNumber}',
-                          style: kTextTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: Palette.greyDark,
-                          ),
-                        ),
+                  child: Text(
+                    '${course?.meetingNumber}',
+                    style: kTextTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: Palette.greyDark,
+                    ),
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -77,7 +71,7 @@ class ControlCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: kTextTheme.bodyLarge?.copyWith(
                           fontWeight: FontWeight.w600,
-                          color: false ? Palette.greyDark : Palette.purple100,
+                          color: Palette.purple100,
                           height: 1.2,
                         ),
                       ),
@@ -90,7 +84,7 @@ class ControlCard extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: kTextTheme.bodyMedium?.copyWith(
-                          color: false ? Palette.grey50 : Palette.purple60,
+                          color: Palette.purple60,
                         ),
                       ),
                       if (isThreeLine) ...[
