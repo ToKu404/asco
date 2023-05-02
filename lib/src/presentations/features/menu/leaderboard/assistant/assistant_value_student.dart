@@ -1,6 +1,7 @@
 import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/domain/entities/entities.dart';
 import 'package:asco/src/presentations/features/menu/leaderboard/assistant/assistant_value_recap.dart';
 import 'package:asco/src/presentations/widgets/avatar.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
@@ -9,7 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:super_banners/super_banners.dart';
 
 class AssistantValueStudent extends StatelessWidget {
-  const AssistantValueStudent({super.key});
+  final List<ProfileEntity> students;
+  final List<ScoreEntity> scores;
+  const AssistantValueStudent(
+      {super.key, required this.students, required this.scores});
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +30,15 @@ class AssistantValueStudent extends StatelessWidget {
             shrinkWrap: true,
             controller: ScrollController(keepScrollOffset: false),
             itemBuilder: (context, index) {
-              return const StudentScoreCard();
+              final scoreStudent = scores
+                  .where((element) => element.studentId == students[index].uid);
+              return StudentScoreCard(
+                profileEntity: students[index],
+                scoreEntity: scoreStudent.isEmpty ? null : scoreStudent.first,
+              );
             },
             separatorBuilder: (context, index) => const SizedBox(height: 12),
-            itemCount: 3,
+            itemCount: students.length,
           ),
         ),
       ),
@@ -38,8 +47,12 @@ class AssistantValueStudent extends StatelessWidget {
 }
 
 class StudentScoreCard extends StatelessWidget {
+  final ProfileEntity profileEntity;
+  final ScoreEntity? scoreEntity;
   const StudentScoreCard({
     super.key,
+    required this.profileEntity,
+    this.scoreEntity,
   });
 
   @override
@@ -72,7 +85,7 @@ class StudentScoreCard extends StatelessWidget {
                 children: [
                   Flexible(
                     child: Text(
-                      'H071191049',
+                      profileEntity.username!,
                       style: kTextTheme.bodyMedium?.copyWith(
                         color: Palette.purple60,
                       ),
@@ -80,30 +93,30 @@ class StudentScoreCard extends StatelessWidget {
                   ),
                   Flexible(
                     child: Text(
-                      'Erwin',
+                      profileEntity.nickName!,
                       style: kTextTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Palette.purple60,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    child: Text(
-                      'Kelas B',
-                      style: kTextTheme.bodySmall?.copyWith(
-                        color: Palette.white,
-                      ),
-                    ),
-                  ),
+                  //   Container(
+                  //     decoration: BoxDecoration(
+                  //       color: Palette.purple60,
+                  //       borderRadius: BorderRadius.circular(8),
+                  //     ),
+                  //     padding:
+                  //         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  //     child: Text(
+                  //       'Kelas ${profileEntity.}',
+                  //       style: kTextTheme.bodySmall?.copyWith(
+                  //         color: Palette.white,
+                  //       ),
+                  //     ),
+                  //   ),
                 ],
               ),
               trailing: Text(
-                '${97}',
+                '${scoreEntity == null ? '-' : scoreEntity!.recapScore}',
                 style: kTextTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),

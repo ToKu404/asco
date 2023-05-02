@@ -2,94 +2,175 @@ import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/helpers/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/data/dummy_data.dart';
+import 'package:asco/src/domain/entities/entities.dart';
 import 'package:asco/src/presentations/features/menu/leaderboard/assistant/assistant_value_recap.dart';
 import 'package:asco/src/presentations/features/menu/leaderboard/assistant/assistant_value_student.dart';
+import 'package:asco/src/presentations/providers/assistance_notifier.dart';
+import 'package:asco/src/presentations/providers/profile_notifier.dart';
+import 'package:asco/src/presentations/providers/score_notifier.dart';
+import 'package:asco/src/presentations/widgets/asco_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
-class AssistantLeaderboardPage extends StatelessWidget {
-  const AssistantLeaderboardPage({super.key});
+class AssistantLeaderboardPage extends StatefulWidget {
+  final String practicumUid;
+  final String groupId;
+  const AssistantLeaderboardPage(
+      {super.key, required this.practicumUid, required this.groupId});
+
+  @override
+  State<AssistantLeaderboardPage> createState() =>
+      _AssistantLeaderboardPageState();
+}
+
+class _AssistantLeaderboardPageState extends State<AssistantLeaderboardPage> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(
+      () {
+        Provider.of<ProfileNotifier>(context, listen: false)
+            .fetchAll(practicumUid: widget.practicumUid);
+        Provider.of<AssistanceNotifier>(context, listen: false)
+            .getDetail(uuid: widget.groupId);
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Palette.purple80,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.only(top: 24, left: 24, right: 24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Flexible(
+      body: Builder(
+        builder: (context) {
+          final profileNotifier = context.watch<ProfileNotifier>();
+          final assistanceNo = context.watch<AssistanceNotifier>();
+
+          if (profileNotifier.isSuccessState('find') &&
+              assistanceNo.isSuccessState('single')) {
+            return _BuildLeaderBoard(
+              students: profileNotifier.listData,
+              assistStudents: assistanceNo.data!.students!,
+            );
+          }
+          return const AscoLoading();
+        },
+      ),
+    );
+  }
+}
+
+class _BuildLeaderBoard extends StatefulWidget {
+  final List<ProfileEntity> assistStudents;
+  final List<DetailProfileEntity> students;
+  const _BuildLeaderBoard(
+      {required this.students, required this.assistStudents});
+
+  @override
+  State<_BuildLeaderBoard> createState() => _BuildLeaderBoardState();
+}
+
+class _BuildLeaderBoardState extends State<_BuildLeaderBoard> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      context.read<ScoreNotifier>().fetchMultiple(
+          listStudentId: widget.students.map((e) => e.uid!).toList());
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scoreNotifier = context.watch<ScoreNotifier>();
+    if (scoreNotifier.isLoadingState('multiple')) {
+      return const AscoLoading();
+    }
+    if (scoreNotifier.isErrorState('multiple')) {
+      return Text(scoreNotifier.message);
+    }
+
+    final sortedData = scoreNotifier.listData;
+    sortedData.sort((a, b) => a.recapScore!.compareTo(b.recapScore!));
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.only(top: 24, left: 24, right: 24),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Flexible(
+            child: Text(
+              'Leaderboard',
+              style: kTextTheme.headlineMedium?.copyWith(
+                color: Palette.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          InkWell(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AssistantValueStudent(
+                  students: widget.assistStudents,
+                  scores: sortedData,
+                ),
+                settings: const RouteSettings(
+                  name: AppRoute.assistantValueRecapLeaderboardPage,
+                ),
+              ),
+            ),
+            child: LeaderboardCard(
+              students: widget.assistStudents,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Align(
+            alignment: Alignment.topRight,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Palette.purple100,
+                borderRadius: BorderRadius.circular(24),
+              ),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
               child: Text(
-                'Leaderboard',
-                style: kTextTheme.headlineMedium?.copyWith(
+                'Rekap',
+                style: kTextTheme.bodyMedium?.copyWith(
                   color: Palette.white,
-                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
-            const SizedBox(height: 12),
-            InkWell(
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const AssistantValueStudent(),
-                  settings: const RouteSettings(
-                    name: AppRoute.assistantValueRecapLeaderboardPage,
-                  ),
-                ),
-              ),
-              child: const LeaderboardCard(
-                leaderboard: '#4',
-                text: 'Kamu memperoleh nilai sementara 80.2',
-                detail: 'Klik untuk melihat detail',
+          ),
+          const SizedBox(height: 10),
+          Leaderboard(
+            scores: sortedData,
+            profileEntity: widget.students,
+          ),
+          Container(
+            decoration: const BoxDecoration(
+              color: Palette.grey10,
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(16),
+                topLeft: Radius.circular(16),
               ),
             ),
-            const SizedBox(height: 12),
-            Align(
-              alignment: Alignment.topRight,
-              child: InkWell(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const AssistantValueRecap(),
-                    settings: const RouteSettings(
-                      name: AppRoute.assistantValueRecapLeaderboardPage,
-                    ),
-                  ),
-                ),
-                splashColor: Colors.transparent,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Palette.purple100,
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
-                  child: Text(
-                    'Rekap',
-                    style: kTextTheme.bodyMedium?.copyWith(
-                      color: Palette.white,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            const Leaderboard(),
-            Container(
-              decoration: const BoxDecoration(
-                color: Palette.grey10,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(16),
-                  topLeft: Radius.circular(16),
-                ),
-              ),
-              child: ListView.builder(
-                shrinkWrap: true,
-                controller: ScrollController(keepScrollOffset: false),
-                itemBuilder: (context, index) {
+            child: ListView.builder(
+              shrinkWrap: true,
+              controller: ScrollController(keepScrollOffset: false),
+              itemBuilder: (context, index) {
+                if (index + 3 < sortedData.length) {
+                  ProfileEntity? current;
+                  for (int i = 0; i < widget.students.length; i++) {
+                    if (sortedData[index + 3].studentId ==
+                        widget.students[i].uid) {
+                      current = ProfileEntity.fromDetail(widget.students[i]);
+                    }
+                  }
                   return Container(
                     decoration: BoxDecoration(
                       color: Palette.white,
@@ -97,35 +178,45 @@ class AssistantLeaderboardPage extends StatelessWidget {
                     ),
                     margin: const EdgeInsets.only(top: 12, left: 12, right: 12),
                     child: CardTile(
-                      name: 'Erwin',
-                      value: 88.0,
                       position: index + 4,
-                      assetName: 'avatar1.jpg',
+                      scoreEntity: sortedData[index + 3],
+                      student: current!,
                     ),
                   );
-                },
-                itemCount: 3,
-              ),
-            )
-          ],
-        ),
+                } else {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: Palette.grey10,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    margin: const EdgeInsets.only(top: 12, left: 12, right: 12),
+                    height: 85,
+                  );
+                }
+              },
+              itemCount: sortedData.length > 6
+                  ? sortedData.length > 10
+                      ? 7
+                      : sortedData.length - 3
+                  : 3,
+            ),
+          )
+        ],
       ),
     );
   }
 }
 
 class CardTile extends StatelessWidget {
-  final String name;
-  final double value;
+  final ProfileEntity student;
+  final ScoreEntity scoreEntity;
   final int position;
-  final String assetName;
 
   const CardTile({
     super.key,
-    required this.name,
-    required this.value,
+    required this.student,
+    required this.scoreEntity,
     required this.position,
-    required this.assetName,
   });
 
   @override
@@ -133,15 +224,15 @@ class CardTile extends StatelessWidget {
     return ListTile(
       leading: CircleAvatar(
         foregroundImage: AssetImage(
-          AssetPath.getImage(assetName),
+          AssetPath.getImage('avatar1.jpg'),
         ),
       ),
       title: Text(
-        'Erwin',
+        student.nickName!,
         style: kTextTheme.bodyMedium,
       ),
       subtitle: Text(
-        '$value',
+        '${scoreEntity.recapScore}',
         style: kTextTheme.bodySmall,
       ),
       trailing: Column(
@@ -164,7 +255,10 @@ class CardTile extends StatelessWidget {
 }
 
 class Leaderboard extends StatelessWidget {
-  const Leaderboard({super.key});
+  final List<DetailProfileEntity> profileEntity;
+  final List<ScoreEntity> scores;
+  const Leaderboard(
+      {super.key, required this.scores, required this.profileEntity});
 
   @override
   Widget build(BuildContext context) {
@@ -178,38 +272,55 @@ class Leaderboard extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Avatar(
-                  imageAsset: 'avatar1.jpg',
-                  svgAsset: 'polygon_silver.svg',
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Flexible(
-                  child: Text(
-                    'Arif',
-                    style: kTextTheme.bodyMedium?.copyWith(
-                      color: Palette.white,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Palette.purple30,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-                  child: Text(
-                    '93.7',
-                    style: kTextTheme.bodyMedium?.copyWith(
-                      color: Palette.white,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
+                Builder(builder: (context) {
+                  if (scores.length < 2) {
+                    return const SizedBox.shrink();
+                  }
+                  ProfileEntity? current;
+                  for (int i = 0; i < profileEntity.length; i++) {
+                    if (scores[1].studentId == profileEntity[i].uid) {
+                      current = ProfileEntity.fromDetail(profileEntity[i]);
+                    }
+                  }
+                  if (current == null) {
+                    return const SizedBox.shrink();
+                  }
+                  return Column(
+                    children: [
+                      const Avatar(
+                        imageAsset: 'avatar3.jpg',
+                        svgAsset: 'polygon_silver.svg',
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        current.nickName ?? '',
+                        style: kTextTheme.bodyMedium?.copyWith(
+                          color: Palette.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        maxLines: 1,
+                      ),
+                      const SizedBox(height: 4),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Palette.purple30,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 4),
+                        child: Text(
+                          scores[1].recapScore.toString(),
+                          style: kTextTheme.bodyMedium?.copyWith(
+                            color: Palette.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }),
                 const SizedBox(height: 8),
                 ClipPath(
                   clipper: CustomClipPathSilver(),
@@ -240,38 +351,55 @@ class Leaderboard extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Avatar(
-                  imageAsset: 'avatar1.jpg',
-                  svgAsset: 'polygon_gold.svg',
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Flexible(
-                  child: Text(
-                    'Arif',
-                    style: kTextTheme.bodyMedium?.copyWith(
-                      color: Palette.white,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Palette.purple30,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-                  child: Text(
-                    '93.7',
-                    style: kTextTheme.bodyMedium?.copyWith(
-                      color: Palette.white,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
+                Builder(builder: (context) {
+                  if (scores.isEmpty) {
+                    return const SizedBox.shrink();
+                  }
+                  ProfileEntity? current;
+                  for (int i = 0; i < profileEntity.length; i++) {
+                    if (scores[0].studentId == profileEntity[i].uid) {
+                      current = ProfileEntity.fromDetail(profileEntity[i]);
+                    }
+                  }
+                  if (current == null) {
+                    return const SizedBox.shrink();
+                  }
+                  return Column(
+                    children: [
+                      const Avatar(
+                        imageAsset: 'avatar1.jpg',
+                        svgAsset: 'polygon_gold.svg',
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        current.nickName ?? '',
+                        style: kTextTheme.bodyMedium?.copyWith(
+                          color: Palette.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        maxLines: 1,
+                      ),
+                      const SizedBox(height: 4),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Palette.purple30,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 4),
+                        child: Text(
+                          scores[0].recapScore.toString(),
+                          style: kTextTheme.bodyMedium?.copyWith(
+                            color: Palette.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }),
                 const SizedBox(height: 8),
                 ClipPath(
                   clipper: CustomClipPathGold(),
@@ -309,38 +437,55 @@ class Leaderboard extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Avatar(
-                  imageAsset: 'avatar1.jpg',
-                  svgAsset: 'polygon_bronze.svg',
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Flexible(
-                  child: Text(
-                    'Arif',
-                    style: kTextTheme.bodyMedium?.copyWith(
-                      color: Palette.white,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Palette.purple30,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-                  child: Text(
-                    '93.7',
-                    style: kTextTheme.bodyMedium?.copyWith(
-                      color: Palette.white,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
+                Builder(builder: (context) {
+                  if (scores.length < 3) {
+                    return const SizedBox.shrink();
+                  }
+                  ProfileEntity? current;
+                  for (int i = 0; i < profileEntity.length; i++) {
+                    if (scores[2].studentId == profileEntity[i].uid) {
+                      current = ProfileEntity.fromDetail(profileEntity[i]);
+                    }
+                  }
+                  if (current == null) {
+                    return const SizedBox.shrink();
+                  }
+                  return Column(
+                    children: [
+                      const Avatar(
+                        imageAsset: 'avatar3.jpg',
+                        svgAsset: 'polygon_bronze.svg',
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        current.nickName ?? '',
+                        style: kTextTheme.bodyMedium?.copyWith(
+                          color: Palette.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        maxLines: 1,
+                      ),
+                      const SizedBox(height: 4),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Palette.purple30,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 4),
+                        child: Text(
+                          scores[2].recapScore.toString(),
+                          style: kTextTheme.bodyMedium?.copyWith(
+                            color: Palette.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }),
                 const SizedBox(height: 8),
                 ClipPath(
                   clipper: CustomClipPathBronze(),
@@ -473,15 +618,11 @@ class Avatar extends StatelessWidget {
 }
 
 class LeaderboardCard extends StatelessWidget {
-  final String leaderboard;
-  final String text;
-  final String detail;
+  final List<ProfileEntity> students;
 
   const LeaderboardCard({
     super.key,
-    required this.leaderboard,
-    required this.text,
-    required this.detail,
+    required this.students,
   });
 
   @override
@@ -497,7 +638,7 @@ class LeaderboardCard extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: List.generate(
-                4,
+                students.length,
                 (index) => Transform.translate(
                   offset: Offset((-14 * index).toDouble(), 0),
                   child: Builder(builder: (context) {
@@ -511,7 +652,7 @@ class LeaderboardCard extends StatelessWidget {
                         ),
                         child: Center(
                           child: Text(
-                            '+10',
+                            '${students.length - 3}',
                             style: kTextTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.w600,
                               color: Palette.black,
