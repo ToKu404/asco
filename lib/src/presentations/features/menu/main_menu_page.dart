@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-
 import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/src/presentations/features/home/home_page.dart';
@@ -17,7 +16,8 @@ import 'package:asco/src/presentations/features/menu/leaderboard/student/leaderb
 import 'package:asco/src/presentations/features/menu/people/people_page.dart';
 import 'package:asco/src/presentations/features/menu/profile/assistant/assistant_profile_page.dart';
 import 'package:asco/src/presentations/features/menu/profile/student/profile_page.dart';
-import 'package:asco/src/presentations/providers/providers.dart';
+import 'package:asco/src/presentations/providers/auth_notifier.dart';
+import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:asco/src/presentations/widgets/app_bar_title.dart';
 import 'package:asco/src/presentations/widgets/asco_loading.dart';
 import 'package:asco/src/presentations/widgets/side_menu/side_menu_parent.dart';

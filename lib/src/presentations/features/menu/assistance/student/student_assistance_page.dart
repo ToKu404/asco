@@ -299,7 +299,7 @@ class _StudentAssistancePageState extends State<StudentAssistancePage> {
 
   ControlCard buildControlCard(BuildContext context, Course course) {
     return ControlCard(
-      course: null,
+      meeting: null,
       hasTrailing: true,
       trailing: AssistanceStatusBadge(course: course),
       onTap: course.isLocked

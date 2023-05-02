@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/core/helpers/app_size.dart';
@@ -40,12 +39,13 @@ class _AssistantLaboratoryPageState extends State<AssistantLaboratoryPage> {
   void initState() {
     super.initState();
 
-    Future.microtask(() => {
-          Provider.of<ClassroomNotifier>(context, listen: false)
-              .getDetail(uid: widget.classroomId),
-          Provider.of<MeetingNotifier>(context, listen: false)
-              .fetch(classroomUid: widget.classroomId),
-        });
+    Future.microtask(() {
+      Provider.of<ClassroomNotifier>(context, listen: false)
+          .getDetail(uid: widget.classroomId);
+
+      Provider.of<MeetingNotifier>(context, listen: false)
+          .fetch(classroomUid: widget.classroomId);
+    });
   }
 
   @override
@@ -95,9 +95,8 @@ class _AssistantLaboratoryPageState extends State<AssistantLaboratoryPage> {
 
         if (classroomNotifier.isErrorState('single') ||
             meetingNotifier.isErrorState('find')) {
-          return Center(
-            child: Text(
-                '${classroomNotifier.message} - ${meetingNotifier.message}'),
+          return const Center(
+            child: Text('unknown error occured'),
           );
         }
 
