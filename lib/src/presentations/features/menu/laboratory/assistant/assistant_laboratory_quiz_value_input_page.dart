@@ -2,6 +2,7 @@ import 'package:asco/src/data/datasources/helpers/update_data_helper.dart';
 import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:asco/src/presentations/providers/providers.dart';
+import 'package:asco/src/presentations/providers/score_notifier.dart';
 import 'package:asco/src/presentations/widgets/asco_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -357,6 +358,13 @@ class CustomBottomSheet extends StatefulWidget {
 }
 
 class _CustomBottomSheetState extends State<CustomBottomSheet> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() => context.read<ScoreNotifier>()
+      ..fetchMultiple(listStudentId: [widget.student.uid!]));
+  }
+
   final TextEditingController textEditingController = TextEditingController();
 
   @override
@@ -367,118 +375,145 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(24, 16, 24, 30),
-      decoration: const BoxDecoration(
-        color: Palette.purple100,
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(16),
+    final notifier = context.watch<ScoreNotifier>();
+    if (notifier.isSuccessState('multiple')) {
+      return Container(
+        padding: const EdgeInsets.fromLTRB(24, 16, 24, 30),
+        decoration: const BoxDecoration(
+          color: Palette.purple100,
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(16),
+          ),
         ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Center(
-            child: Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(2),
-                color: Palette.grey50,
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            widget.student.nickName ?? '',
-            style: kTextTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w600,
-              color: Palette.white,
-            ),
-          ),
-          Text(
-            widget.student.username ?? '',
-            style: kTextTheme.bodyLarge?.copyWith(
-              color: Palette.grey,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: Container(
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: Palette.white,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: TextField(
-                    controller: textEditingController,
-                    keyboardType: TextInputType.number,
-                    textAlignVertical: TextAlignVertical.center,
-                    style: kTextTheme.bodyLarge?.copyWith(
-                      color: Palette.purple80,
-                    ),
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(
-                        vertical: 14,
-                        horizontal: 16,
-                      ),
-                      border: InputBorder.none,
-                      hintText: 'Tambahan poin',
-                      hintStyle: kTextTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.w400,
-                        color: Palette.purple20,
-                      ),
-                    ),
-                  ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(2),
+                  color: Palette.grey50,
                 ),
               ),
-              const SizedBox(width: 12),
-              SizedBox(
-                width: 44,
-                height: 44,
-                child: IconButton(
-                  onPressed: () {
-                    if (textEditingController.text.isNotEmpty) {
-                      final result = UpdateDataHelper.updateAttendance(
-                        studentUid: widget.student.uid ?? '',
-                        attendanceList: widget.listAttendance,
-                        updateAttendance: AttendanceEntity(
-                          quizScore: int.parse(textEditingController.text),
-                        ),
-                      );
-                      context
-                          .read<MeetingNotifier>()
-                          .updateAttendance(
-                            uid: widget.meetingUid,
-                            listAttendanceModel: result,
-                          )
-                          .then((value) => Navigator.pop(context));
-                    } else {
-                      Navigator.pop(context);
-                    }
-                  },
-                  icon: const Icon(
-                    Icons.arrow_upward,
-                    color: Color.fromRGBO(116, 75, 228, 1),
-                    size: 20,
-                  ),
-                  tooltip: 'Submit',
-                  style: IconButton.styleFrom(
-                    backgroundColor: Palette.white,
-                    shape: RoundedRectangleBorder(
+            ),
+            const SizedBox(height: 16),
+            Text(
+              widget.student.nickName ?? '',
+              style: kTextTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: Palette.white,
+              ),
+            ),
+            Text(
+              widget.student.username ?? '',
+              style: kTextTheme.bodyLarge?.copyWith(
+                color: Palette.grey,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: Container(
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: Palette.white,
                       borderRadius: BorderRadius.circular(8),
                     ),
+                    child: TextField(
+                      controller: textEditingController,
+                      keyboardType: TextInputType.number,
+                      textAlignVertical: TextAlignVertical.center,
+                      style: kTextTheme.bodyLarge?.copyWith(
+                        color: Palette.purple80,
+                      ),
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 14,
+                          horizontal: 16,
+                        ),
+                        border: InputBorder.none,
+                        hintText: 'Tambahan poin',
+                        hintStyle: kTextTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.w400,
+                          color: Palette.purple20,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+                const SizedBox(width: 12),
+                SizedBox(
+                  width: 44,
+                  height: 44,
+                  child: IconButton(
+                    onPressed: () {
+                      if (textEditingController.text.isNotEmpty) {
+                        final result = UpdateDataHelper.updateAttendance(
+                          studentUid: widget.student.uid ?? '',
+                          attendanceList: widget.listAttendance,
+                          updateAttendance: AttendanceEntity(
+                            quizScore: int.parse(textEditingController.text),
+                          ),
+                        );
+
+                        if (notifier.listData.isNotEmpty) {
+                          double sum = 0;
+                          int count = 0;
+
+                          for (int i = 0; i < result.length; i++) {
+                            // if (result[i].quizScore != null) {
+                            sum += result[i].quizScore ?? 0;
+                            count++;
+                   
+                          }
+
+                          double avgScore = count > 0 ? sum / count : 0;
+
+                          final score = UpdateDataHelper.updateScore(
+                            updateScoreType: UpdateScoreType.quiz,
+                            scoreEntity: notifier.listData.first,
+                            newScore: avgScore,
+                          );
+                          context
+                              .read<ScoreNotifier>()
+                              .update(uid: widget.student.uid!, score: score);
+                        }
+                        context
+                            .read<MeetingNotifier>()
+                            .updateAttendance(
+                              uid: widget.meetingUid,
+                              listAttendanceModel: result,
+                            )
+                            .then((value) => Navigator.pop(context));
+                      } else {
+                        Navigator.pop(context);
+                      }
+                    },
+                    icon: const Icon(
+                      Icons.arrow_upward,
+                      color: Color.fromRGBO(116, 75, 228, 1),
+                      size: 20,
+                    ),
+                    tooltip: 'Submit',
+                    style: IconButton.styleFrom(
+                      backgroundColor: Palette.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    }
+    return const SizedBox.shrink();
   }
 }
 
