@@ -1,5 +1,11 @@
+import 'package:asco/src/data/datasources/score_data_source.dart';
+import 'package:asco/src/data/repositories/score_repository_impl.dart';
+import 'package:asco/src/domain/repositories/score_repository.dart';
 import 'package:asco/src/domain/usecases/control_card_usecases/get_multiple_control_card.dart';
 import 'package:asco/src/domain/usecases/control_card_usecases/update_control_card.dart';
+import 'package:asco/src/domain/usecases/score_usecases/get_multiple_score.dart';
+import 'package:asco/src/domain/usecases/score_usecases/update_score.dart';
+import 'package:asco/src/presentations/providers/score_notifier.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
 import 'package:asco/core/services/preference_service.dart';
@@ -82,6 +88,13 @@ void init() {
     ),
   );
 
+  locator.registerFactory(
+    () => ScoreNotifier(
+      getMultipleScore: locator(),
+      updateScore: locator(),
+    ),
+  );
+
   //! repositories
   locator.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(
@@ -117,6 +130,12 @@ void init() {
 
   locator.registerLazySingleton<ControlCardRepository>(
     () => ControlCardRepositoryImpl(
+      datasource: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton<ScoreRepository>(
+    () => ScoreRepositoryImpl(
       datasource: locator(),
     ),
   );
@@ -303,6 +322,19 @@ void init() {
     ),
   );
 
+  //* Score Usecase
+  locator.registerLazySingleton(
+    () => GetMultipleScore(
+      repository: locator(),
+    ),
+  );
+
+  locator.registerLazySingleton(
+    () => UpdateScore(
+      repository: locator(),
+    ),
+  );
+
   //! datasources
   locator.registerLazySingleton<AuthDataSource>(
     () => AuthDataSourceImpl(
@@ -340,6 +372,11 @@ void init() {
 
   locator.registerLazySingleton<ControlCardDataSource>(
     () => ControlCardDataSourceImpl(
+      firestore: locator(),
+    ),
+  );
+  locator.registerLazySingleton<ScoreDataSource>(
+    () => ScoreDataSourceImpl(
       firestore: locator(),
     ),
   );

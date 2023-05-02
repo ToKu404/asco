@@ -1,4 +1,5 @@
 import 'package:asco/src/data/models/models.dart';
+import 'package:asco/src/domain/entities/entities.dart';
 import 'package:asco/src/domain/entities/practicum_entities/practicum_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:asco/core/services/preference_service.dart';
@@ -69,6 +70,19 @@ class ProfileDataSourceImpl implements ProfileDataSource {
           userRole: userProfileModel.userRole,
           userPracticums: const {},
         );
+        if (userProfileModel.userRole?.id == 1) {
+          firestore.collection('scores').doc(id).set(
+                ScoreModel(
+                  studentId: id,
+                  assistanceScore: 0,
+                  examScore: 0,
+                  midScore: 0,
+                  predicate: 'E',
+                  quizScore: 0,
+                  recapScore: 0,
+                ).toDocument(),
+              );
+        }
 
         if (!value.exists) {
           collectionReference.doc(id).set(data.toDocument());

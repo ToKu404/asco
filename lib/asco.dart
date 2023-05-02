@@ -1,3 +1,4 @@
+import 'package:asco/src/presentations/providers/score_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -47,6 +48,9 @@ class AscoApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => di.locator<ControlCardNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<ScoreNotifier>(),
         ),
       ],
       child: MaterialApp(

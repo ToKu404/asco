@@ -63,7 +63,6 @@ class ReferenceHelper {
 
       return users;
     } catch (e) {
-      print("disini");
       throw FirestoreException(e.toString());
     }
   }

@@ -1,23 +1,34 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:equatable/equatable.dart';
 
 class ScoreEntity extends Equatable {
-  final String? studentId;
-  final double? score;
-  final String? predicate;
-  final String? note;
+  final double? quizScore;
+  final double? assistanceScore;
+  final double? midScore;
+  final double? examScore;
+  double? recapScore;
+  String? predicate;
+  final String studentId;
 
-  const ScoreEntity({
-    this.studentId,
-    this.score,
+  ScoreEntity({
+    this.assistanceScore,
+    this.quizScore,
+    this.examScore,
+    this.midScore,
     this.predicate,
-    this.note,
+    this.recapScore,
+    required this.studentId,
   });
 
   @override
   List<Object?> get props => [
-        studentId,
-        score,
+        assistanceScore,
+        quizScore,
+        examScore,
+        midScore,
+        recapScore,
         predicate,
-        note,
+        studentId,
       ];
 }
