@@ -1,15 +1,10 @@
-import 'package:asco/src/data/models/models.dart';
-import 'package:asco/src/domain/entities/entities.dart';
-import 'package:asco/src/domain/entities/practicum_entities/practicum_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:asco/core/services/preference_service.dart';
 import 'package:asco/core/utils/exception.dart';
 import 'package:asco/src/data/datasources/helpers/ds_helper.dart';
 import 'package:asco/src/data/datasources/helpers/reference_helper.dart';
-import 'package:asco/src/domain/entities/assistance_entities/assistance_group_entity.dart';
-import 'package:asco/src/domain/entities/classroom_entities/classroom_entity.dart';
-import 'package:asco/src/domain/entities/profile_entities/user_practicum_entity.dart';
-import 'package:asco/src/domain/entities/profile_entities/user_practicum_helper.dart';
+import 'package:asco/src/data/models/models.dart';
+import 'package:asco/src/domain/entities/entities.dart';
 
 abstract class ProfileDataSource {
   Future<bool> create({required DetailProfileModel userProfileModel});

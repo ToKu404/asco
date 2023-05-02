@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-
 import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
@@ -104,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                   }
 
                   if (provider.data!.userPracticums == null) {
-                    return const SizedBox();
+                    return const SizedBox.expand();
                   }
 
                   final userPracticum = <UserPracticumEntity>[];

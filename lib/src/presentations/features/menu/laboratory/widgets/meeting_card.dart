@@ -5,7 +5,6 @@ import 'package:asco/core/helpers/helpers.dart';
 import 'package:asco/src/domain/entities/meeting_entities/detail_meeting_entity.dart';
 
 class MeetingCard extends StatelessWidget {
-  final int number;
   final DetailMeetingEntity meeting;
   final double paddingBottom;
   final bool isThreeLine;
@@ -14,7 +13,6 @@ class MeetingCard extends StatelessWidget {
 
   const MeetingCard({
     super.key,
-    required this.number,
     required this.meeting,
     this.paddingBottom = 10,
     this.isThreeLine = false,
@@ -44,7 +42,7 @@ class MeetingCard extends StatelessWidget {
                   radius: 36,
                   backgroundColor: Palette.purple80,
                   child: Text(
-                    '#$number',
+                    '#${meeting.meetingNumber}',
                     style: kTextTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w700,
                       color: Palette.white,

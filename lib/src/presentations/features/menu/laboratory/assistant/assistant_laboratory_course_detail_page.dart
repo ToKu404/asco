@@ -1,5 +1,3 @@
-import 'package:asco/src/data/dummy_data.dart';
-import 'package:asco/src/presentations/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +16,7 @@ import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/assistant/assistant_laboratory_quiz_value_input_page.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/widgets/attendance_dialog.dart';
 import 'package:asco/src/presentations/features/menu/laboratory/widgets/mentor_tile.dart';
+import 'package:asco/src/presentations/providers/meeting_notifier.dart';
 import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:asco/src/presentations/widgets/asco_loading.dart';
 import 'package:asco/src/presentations/widgets/circle_border_container.dart';
@@ -27,12 +26,10 @@ import 'package:asco/src/presentations/widgets/purple_app_bar.dart';
 import 'package:asco/src/presentations/widgets/title_section.dart';
 
 class AssistantLaboratoryCourseDetailPage extends StatefulWidget {
-  final int meetingNumber;
   final DetailMeetingEntity meetingDetail;
 
   const AssistantLaboratoryCourseDetailPage({
     super.key,
-    required this.meetingNumber,
     required this.meetingDetail,
   });
 
@@ -46,7 +43,6 @@ class _AssistantLaboratoryCourseDetailPageState
   late final ValueNotifier<String> _queryNotifier;
   late final ValueNotifier<List<DetailProfileEntity>?> _meetingsNotifier;
 
-  // List<Map<int, dynamic>> meetings = <Map<int, dynamic>>[];
   List<DetailProfileEntity> listProfile = [];
 
   @override
@@ -63,6 +59,7 @@ class _AssistantLaboratoryCourseDetailPageState
               .toList()
         ],
       );
+
       Provider.of<MeetingNotifier>(context, listen: false).getDetail(
         uid: widget.meetingDetail.uid!,
       );
@@ -82,14 +79,10 @@ class _AssistantLaboratoryCourseDetailPageState
 
   @override
   Widget build(BuildContext context) {
-    final meetingNotifier = context.watch<MeetingNotifier>();
-
-    return Consumer<ProfileNotifier>(
-      builder: (context, profileNotifier, child) {
+    return Consumer2<ProfileNotifier, MeetingNotifier>(
+      builder: (context, profileNotifier, meetingNotifier, child) {
         if (profileNotifier.isSuccessState('multiple') &&
             meetingNotifier.isSuccessState('single')) {
-          // final listData = <Map<int, dynamic>>[];
-
           final students = profileNotifier.listData
               .where((e) =>
                   e.uid != widget.meetingDetail.assistant1Uid! &&
@@ -97,14 +90,6 @@ class _AssistantLaboratoryCourseDetailPageState
               .toList()
             ..sort((a, b) => a.uid!.compareTo(b.uid!));
 
-          // final attendances = meetingNotifier.data!.attendances!
-          //   ..sort((a, b) => a.studentUid!.compareTo(b.studentUid!));
-
-          // for (var i = 0; i < students.length; i++) {
-          //   listData.add({0: students[i], 1: attendances[i]});
-          // }
-
-          // meetings = listData;
           listProfile = students;
 
           return buildMainPage(
@@ -115,14 +100,13 @@ class _AssistantLaboratoryCourseDetailPageState
             assistant2: profileNotifier.listData
                 .where((e) => e.uid == widget.meetingDetail.assistant2Uid!)
                 .first,
-            listAttendance: meetingNotifier.data!.attendances!,
+            attendances: meetingNotifier.data!.attendances!,
             students: listProfile,
           );
         }
 
         if (profileNotifier.isErrorState('multiple') ||
-            meetingNotifier.isErrorState('single') ||
-            meetingNotifier.data == null) {
+            meetingNotifier.isErrorState('single')) {
           return const Scaffold(
             backgroundColor: Palette.grey,
             body: Center(
@@ -142,13 +126,13 @@ class _AssistantLaboratoryCourseDetailPageState
     BuildContext context, {
     required DetailProfileEntity assistant1,
     required DetailProfileEntity assistant2,
-    required List<AttendanceEntity> listAttendance,
+    required List<AttendanceEntity> attendances,
     required List<DetailProfileEntity> students,
   }) {
     return Scaffold(
       backgroundColor: Palette.grey,
       appBar: PurpleAppBar(
-        titleText: 'Pertemuan ${widget.meetingNumber}',
+        titleText: 'Pertemuan ${widget.meetingDetail.meetingNumber}',
         onPressedBackButton: () => Navigator.pop(context),
       ),
       body: NestedScrollView(
@@ -296,10 +280,10 @@ class _AssistantLaboratoryCourseDetailPageState
                             onPressed: () {
                               showAssistantLaboratoryQuizValueInputPage(
                                 context,
-                                listProfile
+                                meetingUid: widget.meetingDetail.uid!,
+                                listStudents: listProfile
                                     .map((e) => ProfileEntity.fromDetail(e))
                                     .toList(),
-                                meetingUid: widget.meetingDetail.uid!,
                               );
                             },
                             style: FilledButton.styleFrom(
@@ -365,9 +349,10 @@ class _AssistantLaboratoryCourseDetailPageState
                           child: buildStudentCard(
                             context,
                             student: values?[index] ?? students[index],
-                            attendance: listAttendance.firstWhere((element) =>
-                                element.studentUid == students[index].uid!),
-                            listAttendance: listAttendance,
+                            attendance: attendances.firstWhere((e) {
+                              return e.studentUid == students[index].uid!;
+                            }),
+                            listAttendances: attendances,
                           ),
                         );
                       },
@@ -400,7 +385,7 @@ class _AssistantLaboratoryCourseDetailPageState
     BuildContext context, {
     required DetailProfileEntity student,
     required AttendanceEntity attendance,
-    required List<AttendanceEntity> listAttendance,
+    required List<AttendanceEntity> listAttendances,
   }) {
     return CustomStudentCard(
       studentDetail: student,
@@ -412,13 +397,27 @@ class _AssistantLaboratoryCourseDetailPageState
           barrierDismissible: false,
           builder: (_) => AttendanceDialog(
             student: ProfileEntity.fromDetail(student),
-            meetingUid: widget.meetingDetail.uid ?? '',
-            listAttendances: listAttendance,
-            initStatus: attendance.attendanceStatus,
+            attendance: attendance,
+            listAttendances: listAttendances,
           ),
-        ).then((_) {
-          Provider.of<MeetingNotifier>(context, listen: false)
-              .getDetail(uid: widget.meetingDetail.uid!);
+        ).then((value) {
+          if (value != null) {
+            final attendances = value as List<AttendanceEntity>;
+
+            context
+                .read<MeetingNotifier>()
+                .updateAttendance(
+                  uid: widget.meetingDetail.uid ?? '',
+                  listAttendanceModel: attendances,
+                )
+                .then(
+              (_) {
+                context
+                    .read<MeetingNotifier>()
+                    .getDetail(uid: widget.meetingDetail.uid ?? '');
+              },
+            );
+          }
         });
       },
       isThreeLine: true,
@@ -505,14 +504,12 @@ class _AssistantLaboratoryCourseDetailPageState
 
 void showAssistantLaboratoryCourseDetailPage(
   BuildContext context, {
-  required int meetingNumber,
   required DetailMeetingEntity meetingDetail,
 }) {
   Navigator.push(
     context,
     MaterialPageRoute(
       builder: (_) => AssistantLaboratoryCourseDetailPage(
-        meetingNumber: meetingNumber,
         meetingDetail: meetingDetail,
       ),
       settings: const RouteSettings(

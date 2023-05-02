@@ -1,7 +1,5 @@
 import 'dart:math' as math;
 
-import 'package:asco/src/domain/entities/entities.dart';
-import 'package:asco/src/presentations/providers/meeting_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -11,12 +9,16 @@ import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/core/helpers/app_size.dart';
 import 'package:asco/core/helpers/asset_path.dart';
 import 'package:asco/core/helpers/reusable_helper.dart';
+import 'package:asco/src/domain/entities/assistance_entities/assistance_group_entity.dart';
+import 'package:asco/src/domain/entities/meeting_entities/meeting_entity.dart';
+import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:asco/src/presentations/features/menu/assistance/assistant/assistant_assistance_course_detail_page.dart';
 import 'package:asco/src/presentations/features/menu/assistance/assistant/assistant_assistance_practitioner_page.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/control_card.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/github_dialog.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/student_avatar.dart';
 import 'package:asco/src/presentations/providers/assistance_notifier.dart';
+import 'package:asco/src/presentations/providers/meeting_notifier.dart';
 import 'package:asco/src/presentations/providers/profile_notifier.dart';
 import 'package:asco/src/presentations/widgets/asco_loading.dart';
 import 'package:asco/src/presentations/widgets/circle_network_image.dart';
