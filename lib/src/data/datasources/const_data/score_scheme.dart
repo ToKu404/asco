@@ -1,5 +1,5 @@
-import '../../../../core/constants/constants.dart';
-import '../../../presentations/features/menu/assistance/widgets/practicum_value_input_dialog.dart';
+import 'package:asco/core/constants/color_const.dart';
+import 'package:asco/src/presentations/features/menu/assistance/widgets/practicum_value_input_dialog.dart';
 
 class ScoreScheme {
   static final valuesScheme = <ValueType>[

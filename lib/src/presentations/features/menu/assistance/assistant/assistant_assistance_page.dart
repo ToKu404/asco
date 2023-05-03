@@ -1,9 +1,7 @@
 import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/core/helpers/app_size.dart';
@@ -24,15 +22,15 @@ import 'package:asco/src/presentations/widgets/asco_loading.dart';
 import 'package:asco/src/presentations/widgets/circle_network_image.dart';
 
 class AssistantAssistancePage extends StatefulWidget {
-  final String groupId;
   final String practicumId;
   final String classroomId;
+  final String groupId;
 
   const AssistantAssistancePage({
     super.key,
-    required this.groupId,
     required this.practicumId,
     required this.classroomId,
+    required this.groupId,
   });
 
   @override
@@ -45,14 +43,13 @@ class _AssistantAssistancePageState extends State<AssistantAssistancePage> {
   void initState() {
     super.initState();
 
-    Future.microtask(
-      () {
-        Provider.of<AssistanceNotifier>(context, listen: false)
-            .getDetail(uuid: widget.groupId);
-        Provider.of<MeetingNotifier>(context, listen: false)
-            .fetch(classroomUid: widget.classroomId);
-      },
-    );
+    Future.microtask(() {
+      Provider.of<AssistanceNotifier>(context, listen: false)
+          .getDetail(uuid: widget.groupId);
+
+      Provider.of<MeetingNotifier>(context, listen: false)
+          .fetch(classroomUid: widget.classroomId);
+    });
   }
 
   @override
@@ -319,16 +316,13 @@ class _AssistantAssistancePageState extends State<AssistantAssistancePage> {
                         ],
                       ),
                       const SizedBox(height: 8),
-                      ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: meetingData.length,
-                          itemBuilder: (context, index) {
-                            return buildControlCard(context,
-                                meeting: MeetingEntity.fromDetail(
-                                    meetingData[index]),
-                                students: students);
-                          }),
+                      ...meetingData.map((data) {
+                        return buildControlCard(
+                          context,
+                          meeting: MeetingEntity.fromDetail(data),
+                          students: students,
+                        );
+                      }).toList(),
                     ],
                   );
                 },

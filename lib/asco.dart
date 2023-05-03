@@ -1,8 +1,6 @@
-import 'package:asco/src/presentations/providers/score_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-
 import 'package:asco/core/constants/app_info.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/injection.dart' as di;
