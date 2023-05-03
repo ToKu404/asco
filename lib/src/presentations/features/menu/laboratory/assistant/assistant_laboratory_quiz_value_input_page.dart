@@ -8,7 +8,7 @@ import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/data/datasources/helpers/update_data_helper.dart';
 import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
-import 'package:asco/src/presentations/providers/providers.dart';
+import 'package:asco/src/presentations/providers/meeting_notifier.dart';
 import 'package:asco/src/presentations/providers/score_notifier.dart';
 import 'package:asco/src/presentations/widgets/asco_loading.dart';
 import 'package:asco/src/presentations/widgets/circle_network_image.dart';
@@ -314,18 +314,15 @@ class QuizValueCard extends StatelessWidget {
           const SizedBox(height: 12),
           Row(
             children: <Widget>[
-              Hero(
-                tag: student,
-                child: CircleNetworkImage(
-                  width: 36,
-                  height: 36,
-                  imgUrl: student.profilePhoto ?? '',
-                  placeholderSize: 16,
-                  errorIcon: Icons.person_rounded,
-                  withBorder: true,
-                  borderWidth: 2,
-                  borderColor: Palette.purple80,
-                ),
+              CircleNetworkImage(
+                width: 36,
+                height: 36,
+                imgUrl: student.profilePhoto ?? '',
+                placeholderSize: 12,
+                errorIcon: Icons.person_rounded,
+                withBorder: true,
+                borderWidth: 1.5,
+                borderColor: Palette.purple80,
               ),
               const SizedBox(width: 8),
               Expanded(

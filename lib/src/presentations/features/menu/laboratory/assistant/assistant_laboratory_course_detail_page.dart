@@ -438,7 +438,7 @@ class _AssistantLaboratoryCourseDetailPageState
             ? 'Waktu absensi: ${ReusableHelper.dateTimeToString(
                 attendance.attendanceTime!,
                 isShowTime: true,
-                format: 'HH:MM',
+                format: 'hh:mm',
               )}'
             : '${MapHelper.getAttendanceStatus(attendance.attendanceStatus!)} ${attendance.note != null ? (attendance.note!.isNotEmpty ? "(${attendance.note})" : "") : ""}';
   }

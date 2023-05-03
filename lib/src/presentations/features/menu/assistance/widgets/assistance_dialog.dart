@@ -1,24 +1,26 @@
-import 'package:asco/src/data/datasources/helpers/update_data_helper.dart';
-import 'package:asco/src/domain/entities/assistance_entities/assistance_entities.dart';
-import 'package:asco/src/presentations/providers/control_card_notifier.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/src/data/datasources/helpers/update_data_helper.dart';
+import 'package:asco/src/domain/entities/assistance_entities/assistance_attendance_entity.dart';
+import 'package:asco/src/domain/entities/assistance_entities/control_card_entity.dart';
+import 'package:asco/src/domain/entities/assistance_entities/control_card_result_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
-import 'package:provider/provider.dart';
+import 'package:asco/src/presentations/providers/control_card_notifier.dart';
 
 class AssistanceDialog extends StatefulWidget {
   final int number;
   final ProfileEntity student;
   final bool isFirstAssistance;
-  final ControlCardResultEntity controlCardResultEntity;
+  final ControlCardResultEntity controlCardResult;
 
   const AssistanceDialog({
     super.key,
     required this.number,
     required this.student,
-    required this.controlCardResultEntity,
     required this.isFirstAssistance,
+    required this.controlCardResult,
   });
 
   @override
@@ -37,8 +39,10 @@ class _AssistanceDialogState extends State<AssistanceDialog> {
     _dateController = TextEditingController();
     _noteController = TextEditingController();
     _dateNotifier = ValueNotifier('');
+
     try {
-      final oldData = widget.controlCardResultEntity.data![widget.number - 1];
+      final oldData = widget.controlCardResult.data![widget.number - 1];
+
       if (widget.isFirstAssistance) {
         if (oldData.assistance1 != null &&
             oldData.assistance1!.assistanceDateTime != null) {
@@ -275,16 +279,18 @@ class _AssistanceDialogState extends State<AssistanceDialog> {
     }
   }
 
-  void onPressedSubmitButton(BuildContext context,
-      AssistanceAttendanceEntity? assistanceAttendanceEntity) {
+  void onPressedSubmitButton(
+    BuildContext context,
+    AssistanceAttendanceEntity? assistanceAttendanceEntity,
+  ) {
     // remove the focus of keybooard
     FocusScope.of(context).unfocus();
 
     context.read<ControlCardNotifier>().updateControlCard(
-        uid: widget.controlCardResultEntity.uid!,
-        listCC: UpdateDataHelper.updateControlCard(
+          uid: widget.controlCardResult.uid!,
+          listCC: UpdateDataHelper.updateControlCard(
             meetingNumber: widget.number,
-            ccEntityList: widget.controlCardResultEntity.data!,
+            ccEntityList: widget.controlCardResult.data!,
             isFirstAssistant: widget.isFirstAssistance,
             newCC: ControlCardEntity(
               meetingNumber: widget.number,
@@ -292,7 +298,10 @@ class _AssistanceDialogState extends State<AssistanceDialog> {
                   widget.isFirstAssistance ? assistanceAttendanceEntity : null,
               assistance2:
                   !widget.isFirstAssistance ? assistanceAttendanceEntity : null,
-            )));
+            ),
+          ),
+        );
+
     Navigator.pop(context, true);
   }
 }

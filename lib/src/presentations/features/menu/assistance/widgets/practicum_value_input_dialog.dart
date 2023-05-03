@@ -1,25 +1,24 @@
-import 'package:asco/src/data/datasources/const_data/score_scheme.dart';
-import 'package:asco/src/domain/entities/entities.dart';
-import 'package:asco/src/presentations/providers/score_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:provider/provider.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
-import 'package:provider/provider.dart';
-
-import '../../../../../data/datasources/helpers/update_data_helper.dart';
-import '../../../../providers/control_card_notifier.dart';
+import 'package:asco/src/data/datasources/const_data/score_scheme.dart';
+import 'package:asco/src/data/datasources/helpers/update_data_helper.dart';
+import 'package:asco/src/domain/entities/entities.dart';
+import 'package:asco/src/presentations/providers/control_card_notifier.dart';
+import 'package:asco/src/presentations/providers/score_notifier.dart';
 
 class PracticumValueInputDialog extends StatefulWidget {
-  final ProfileEntity student;
-  final ControlCardResultEntity controlCardResultEntity;
   final int meetingNumber;
+  final ProfileEntity student;
+  final ControlCardResultEntity controlCardResult;
 
   const PracticumValueInputDialog({
     super.key,
-    required this.student,
-    required this.controlCardResultEntity,
     required this.meetingNumber,
+    required this.student,
+    required this.controlCardResult,
   });
 
   @override
@@ -32,23 +31,22 @@ class _PracticumValueInputDialogState extends State<PracticumValueInputDialog> {
 
   @override
   void initState() {
-    _valueNotifier = ValueNotifier(ScoreScheme.valuesScheme[widget
-                .controlCardResultEntity.data![widget.meetingNumber - 1].star !=
-            null
-        ? widget.controlCardResultEntity.data![widget.meetingNumber - 1].star! -
-            1
-        : 3]);
+    super.initState();
+
+    _valueNotifier = ValueNotifier(ScoreScheme.valuesScheme[
+        widget.controlCardResult.data![widget.meetingNumber - 1].star != null
+            ? widget.controlCardResult.data![widget.meetingNumber - 1].star! - 1
+            : 3]);
+
     Future.microtask(() => context.read<ScoreNotifier>()
       ..fetchMultiple(listStudentId: [widget.student.uid!]));
-
-    super.initState();
   }
 
   @override
   void dispose() {
-    _valueNotifier.dispose();
-
     super.dispose();
+
+    _valueNotifier.dispose();
   }
 
   @override
@@ -94,59 +92,69 @@ class _PracticumValueInputDialogState extends State<PracticumValueInputDialog> {
                       ),
                     ),
                   ),
-                  Builder(builder: (context) {
-                    final notifier = context.watch<ScoreNotifier>();
-                    if (notifier.isSuccessState('multiple')) {
-                      return IconButton(
-                        onPressed: () {
-                          final result = UpdateDataHelper.updateControlCard(
-                            ccEntityList: widget.controlCardResultEntity.data!,
-                            newCC: ControlCardEntity(
-                              star: _valueNotifier.value.value,
-                            ),
-                            meetingNumber: widget.meetingNumber,
-                          );
-                          if (notifier.listData.isNotEmpty) {
-                            double sum = 0;
-                            int count = 0;
+                  Builder(
+                    builder: (context) {
+                      final notifier = context.watch<ScoreNotifier>();
 
-                            for (int i = 0; i < result.length; i++) {
-                              if (result[i].star != null) {
-                                sum += ScoreScheme.valuesScheme
-                                    .firstWhere((element) =>
-                                        element.value == result[i].star!)
-                                    .score;
+                      if (notifier.isSuccessState('multiple')) {
+                        return IconButton(
+                          onPressed: () {
+                            final result = UpdateDataHelper.updateControlCard(
+                              ccEntityList: widget.controlCardResult.data!,
+                              newCC: ControlCardEntity(
+                                star: _valueNotifier.value.value,
+                              ),
+                              meetingNumber: widget.meetingNumber,
+                            );
+
+                            if (notifier.listData.isNotEmpty) {
+                              double sum = 0;
+                              int count = 0;
+
+                              for (int i = 0; i < result.length; i++) {
+                                if (result[i].star != null) {
+                                  sum += ScoreScheme.valuesScheme
+                                      .firstWhere((element) =>
+                                          element.value == result[i].star!)
+                                      .score;
+                                }
+
+                                count++;
                               }
-                              count++;
+
+                              double avgScore = count > 0 ? sum / count : 0;
+
+                              final score = UpdateDataHelper.updateScore(
+                                updateScoreType: UpdateScoreType.assistance,
+                                scoreEntity: notifier.listData.first,
+                                newScore: avgScore,
+                              );
+
+                              context.read<ScoreNotifier>().update(
+                                    uid: widget.student.uid!,
+                                    score: score,
+                                  );
                             }
 
-                            double avgScore = count > 0 ? sum / count : 0;
-                            final score = UpdateDataHelper.updateScore(
-                              updateScoreType: UpdateScoreType.assistance,
-                              scoreEntity: notifier.listData.first,
-                              newScore: avgScore,
-                            );
                             context
-                                .read<ScoreNotifier>()
-                                .update(uid: widget.student.uid!, score: score);
-                          }
+                                .read<ControlCardNotifier>()
+                                .updateControlCard(
+                                  uid: widget.controlCardResult.uid!,
+                                  listCC: result,
+                                )
+                                .then((value) => Navigator.pop(context));
+                          },
+                          icon: const Icon(
+                            Icons.check_rounded,
+                            color: Palette.purple60,
+                          ),
+                          tooltip: 'Submit',
+                        );
+                      }
 
-                          context
-                              .read<ControlCardNotifier>()
-                              .updateControlCard(
-                                  uid: widget.controlCardResultEntity.uid!,
-                                  listCC: result)
-                              .then((value) => Navigator.pop(context));
-                        },
-                        icon: const Icon(
-                          Icons.check_rounded,
-                          color: Palette.purple60,
-                        ),
-                        tooltip: 'Submit',
-                      );
-                    }
-                    return const SizedBox.shrink();
-                  }),
+                      return const SizedBox.shrink();
+                    },
+                  ),
                 ],
               ),
             ),
@@ -157,7 +165,7 @@ class _PracticumValueInputDialogState extends State<PracticumValueInputDialog> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    widget.student.username!,
+                    widget.student.username ?? '',
                     style: kTextTheme.bodyLarge?.copyWith(
                       color: Palette.purple60,
                     ),

@@ -5,3 +5,4 @@ export 'control_card_notifier.dart';
 export 'meeting_notifier.dart';
 export 'practicum_notifier.dart';
 export 'profile_notifier.dart';
+export 'score_notifier.dart';
