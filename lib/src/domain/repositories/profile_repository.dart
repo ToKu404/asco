@@ -31,4 +31,15 @@ abstract class ProfileRepository {
     int? roleId,
     String? practicumUid,
   });
+
+  Future<Either<Failure, String>> uploadProfilePicture(
+    String path,
+    String uid,
+    String filename,
+  );
+
+  Future<Either<Failure, void>> deleteProfilePicture(
+    String uid,
+    String filename,
+  );
 }

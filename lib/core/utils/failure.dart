@@ -19,3 +19,8 @@ class FirestoreFailure extends Failure {
 class PreferenceFailure extends Failure {
   const PreferenceFailure(super.message);
 }
+
+/// A class that will be returned when a **Storage Failure** occurs.
+class StorageFailure extends Failure {
+  const StorageFailure(String message) : super(message);
+}
