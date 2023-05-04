@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:asco/core/services/preference_service.dart';
 import 'package:asco/core/utils/exception.dart';
 import 'package:asco/src/data/datasources/helpers/ds_helper.dart';
@@ -28,16 +30,34 @@ abstract class ProfileDataSource {
     int? roleId,
     String? practicumUid,
   });
+
+  Future<String> uploadProfilePicture(
+    String path,
+    String uid,
+    String filename,
+  );
+
+  Future<void> deleteProfilePicture(
+    String uid,
+    String filename,
+  );
 }
 
 class ProfileDataSourceImpl implements ProfileDataSource {
   late CollectionReference collectionReference;
+  late Reference storageReference;
 
   final FirebaseFirestore firestore;
+  final FirebaseStorage storage;
   final AuthPreferenceHelper pref;
 
-  ProfileDataSourceImpl({required this.firestore, required this.pref}) {
+  ProfileDataSourceImpl({
+    required this.firestore,
+    required this.storage,
+    required this.pref,
+  }) {
     collectionReference = firestore.collection('profiles');
+    storageReference = storage.ref('profiles');
   }
 
   @override
@@ -402,6 +422,36 @@ class ProfileDataSourceImpl implements ProfileDataSource {
       });
     } catch (e) {
       throw FirestoreException(e.toString());
+    }
+  }
+
+  @override
+  Future<String> uploadProfilePicture(
+    String path,
+    String uid,
+    String filename,
+  ) async {
+    final file = File(path);
+
+    try {
+      final uploadTask =
+          await storageReference.child('$uid/$filename').putFile(file);
+
+      return uploadTask.ref.getDownloadURL();
+    } catch (e) {
+      throw StorageException(e.toString());
+    }
+  }
+
+  @override
+  Future<void> deleteProfilePicture(
+    String uid,
+    String filename,
+  ) async {
+    try {
+      await storageReference.child('$uid/$filename.jpg').delete();
+    } catch (e) {
+      throw StorageException(e.toString());
     }
   }
 }

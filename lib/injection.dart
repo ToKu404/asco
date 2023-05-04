@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:asco/core/services/preference_service.dart';
 import 'package:asco/src/data/datasources/datasources.dart';
@@ -31,6 +32,8 @@ void init() {
       selfDataUsecase: locator(),
       getMultipleUsecase: locator(),
       updateMultiplePracticumsUsecase: locator(),
+      uploadProfilePictureUseCase: locator(),
+      deleteProfilePictureUseCase: locator(),
     ),
   );
 
@@ -200,6 +203,16 @@ void init() {
       repository: locator(),
     ),
   );
+  locator.registerLazySingleton(
+    () => UploadProfilePicture(
+      repository: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => DeleteProfilePicture(
+      repository: locator(),
+    ),
+  );
   //* Practicum Usecase
   locator.registerLazySingleton(
     () => CreatePracticum(
@@ -337,6 +350,7 @@ void init() {
   locator.registerLazySingleton<ProfileDataSource>(
     () => ProfileDataSourceImpl(
       firestore: locator(),
+      storage: locator(),
       pref: locator(),
     ),
   );
@@ -375,7 +389,12 @@ void init() {
 
   //! external
   final firestore = FirebaseFirestore.instance;
+  final storage = FirebaseStorage.instance;
+
   locator.registerLazySingleton(() => firestore);
+  locator.registerLazySingleton(() => storage);
+
   locator.registerLazySingleton<AuthPreferenceHelper>(
-      () => AuthPreferenceHelper());
+    () => AuthPreferenceHelper(),
+  );
 }
