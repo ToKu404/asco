@@ -414,6 +414,9 @@ class _AssistantLaboratoryCourseDetailPageState
                 context
                     .read<MeetingNotifier>()
                     .getDetail(uid: widget.meetingDetail.uid ?? '');
+
+                _queryNotifier.value = '';
+                _meetingsNotifier.value = listProfile;
               },
             );
           }
