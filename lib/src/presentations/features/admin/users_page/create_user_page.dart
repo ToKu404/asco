@@ -17,11 +17,16 @@ import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
 void showAdminCreateUserPage(
-    {required BuildContext context, bool isEdit = false}) {
+    {required BuildContext context,
+    bool isEdit = false,
+    DetailProfileEntity? profile}) {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => CreateUserPage(isEdit: isEdit),
+      builder: (context) => CreateUserPage(
+        isEdit: isEdit,
+        profile: profile,
+      ),
       settings: const RouteSettings(
         name: AppRoute.adminUsersPage,
       ),
@@ -31,7 +36,9 @@ void showAdminCreateUserPage(
 
 class CreateUserPage extends StatefulWidget {
   final bool isEdit;
-  const CreateUserPage({super.key, required this.isEdit});
+  final DetailProfileEntity? profile;
+  const CreateUserPage(
+      {super.key, required this.isEdit, required this.profile});
 
   @override
   State<CreateUserPage> createState() => _CreateUserPageState();
@@ -67,6 +74,14 @@ class _CreateUserPageState extends State<CreateUserPage> {
     _batchNotifier.value = _listBatch.first;
     _roleNotifier.value = _listRole.first;
     _genderNotifier.value = _listGender.first;
+    if (widget.isEdit) {
+      _fullnameController.text = widget.profile?.fullName ?? '';
+      _githubController.text = widget.profile?.github ?? '';
+      _instagramController.text = widget.profile?.instagram ?? '';
+      _nicknameController.text = widget.profile?.nickName ?? '';
+      _batchNotifier.value = widget.profile?.classOf ?? _listBatch.first;
+      _genderNotifier.value = widget.profile?.gender ?? _listGender.first;
+    }
     super.initState();
   }
 
@@ -162,20 +177,22 @@ class _CreateUserPageState extends State<CreateUserPage> {
               const SizedBox(
                 height: 16,
               ),
-              InputTextField(
-                controller: _usernameController,
-                title: 'Username',
-                isRequired: true,
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              InputTextField(
-                  controller: _passwordController,
-                  title: 'Password (Auto Generate)'),
-              const SizedBox(
-                height: 16,
-              ),
+              if (!widget.isEdit) ...[
+                InputTextField(
+                  controller: _usernameController,
+                  title: 'Username',
+                  isRequired: true,
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                InputTextField(
+                    controller: _passwordController,
+                    title: 'Password (Auto Generate)'),
+                const SizedBox(
+                  height: 16,
+                ),
+              ],
               InputTextField(
                 controller: _fullnameController,
                 title: 'Nama Lengkap',
@@ -244,42 +261,69 @@ class _CreateUserPageState extends State<CreateUserPage> {
         _genderNotifier.value != null &&
         _roleNotifier.value != null) {
       /// Create new user
-      String password = '';
-      if (_passwordController.text.isEmpty) {
-        password = _usernameController.text;
+      if (widget.isEdit) {
+        String nickName = '';
+        if (_nicknameController.text.isEmpty) {
+          nickName = ReusableHelper.nicknameGenerator(_fullnameController.text);
+        } else {
+          nickName = _nicknameController.text;
+        }
+        profileProvider
+            .updateProfile(
+              DetailProfileEntity(
+                classOf: _batchNotifier.value,
+                fullName: ReusableHelper.titleMaker(_fullnameController.text),
+                gender: _genderNotifier.value,
+                github: _githubController.text,
+                instagram: _instagramController.text,
+                nickName: ReusableHelper.titleMaker(nickName),
+                profilePhoto: 'https://i.mydramalist.com/e3AQef.jpg',
+                uid: widget.profile?.uid,
+              ),
+            )
+            .onError((error, stackTrace) => print(error))
+            .then((value) => Navigator.pop(context));
       } else {
-        password = _passwordController.text;
-      }
-      authProvider.createUser(
-        UserEntity(
-          username: _usernameController.text,
-          password: ReusableHelper.hashPassword(password),
-          roleId: _listRole.indexOf(_roleNotifier.value!) + 1,
-        ),
-      );
+        String password = '';
+        if (_passwordController.text.isEmpty) {
+          password = _usernameController.text;
+        } else {
+          password = _passwordController.text;
+        }
+        authProvider.createUser(
+          UserEntity(
+            username: _usernameController.text,
+            password: ReusableHelper.hashPassword(password),
+            roleId: _listRole.indexOf(_roleNotifier.value!) + 1,
+          ),
+        );
 
-      ///Create new profile
-      String nickName = '';
-      if (_nicknameController.text.isEmpty) {
-        nickName = ReusableHelper.nicknameGenerator(_fullnameController.text);
-      } else {
-        nickName = _nicknameController.text;
+        ///Create new profile
+        String nickName = '';
+        if (_nicknameController.text.isEmpty) {
+          nickName = ReusableHelper.nicknameGenerator(_fullnameController.text);
+        } else {
+          nickName = _nicknameController.text;
+        }
+        profileProvider
+            .createProfile(
+              DetailProfileEntity(
+                classOf: _batchNotifier.value,
+                fullName: ReusableHelper.titleMaker(_fullnameController.text),
+                gender: _genderNotifier.value,
+                github: _githubController.text,
+                instagram: _instagramController.text,
+                nickName: ReusableHelper.titleMaker(nickName),
+                profilePhoto: 'https://i.mydramalist.com/e3AQef.jpg',
+                username: _usernameController.text,
+                userRole: UserRoleEntity(
+                    id: MapHelper.nameToId(_roleNotifier.value!),
+                    name: _roleNotifier.value!),
+              ),
+            )
+            .onError((error, stackTrace) => print('Error'))
+            .then((value) => Navigator.pop(context));
       }
-      profileProvider.createProfile(
-        DetailProfileEntity(
-          classOf: _batchNotifier.value,
-          fullName: ReusableHelper.titleMaker(_fullnameController.text),
-          gender: _genderNotifier.value,
-          github: _githubController.text,
-          instagram: _instagramController.text,
-          nickName: ReusableHelper.titleMaker(nickName),
-          profilePhoto: 'https://i.mydramalist.com/e3AQef.jpg',
-          username: _usernameController.text,
-          userRole: UserRoleEntity(
-              id: MapHelper.nameToId(_roleNotifier.value!),
-              name: _roleNotifier.value!),
-        ),
-      );
     }
   }
 

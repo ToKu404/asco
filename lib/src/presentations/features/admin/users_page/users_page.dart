@@ -240,7 +240,8 @@ class UserCard extends StatelessWidget {
                       padding: EdgeInsets.zero,
                     ),
                     onPressed: () {
-                      showAdminCreateUserPage(context: context, isEdit: true);
+                      showAdminCreateUserPage(
+                          context: context, isEdit: true, profile: profileData);
                     },
                     icon: const Icon(
                       Icons.edit,
