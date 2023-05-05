@@ -17,11 +17,16 @@ import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
 void showAdminCreateUserPage(
-    {required BuildContext context, bool isEdit = false}) {
+    {required BuildContext context,
+    bool isEdit = false,
+    DetailProfileEntity? profile}) {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => CreateUserPage(isEdit: isEdit),
+      builder: (context) => CreateUserPage(
+        isEdit: isEdit,
+        profile: profile,
+      ),
       settings: const RouteSettings(
         name: AppRoute.adminUsersPage,
       ),
@@ -31,7 +36,9 @@ void showAdminCreateUserPage(
 
 class CreateUserPage extends StatefulWidget {
   final bool isEdit;
-  const CreateUserPage({super.key, required this.isEdit});
+  final DetailProfileEntity? profile;
+  const CreateUserPage(
+      {super.key, required this.isEdit, required this.profile});
 
   @override
   State<CreateUserPage> createState() => _CreateUserPageState();
@@ -67,6 +74,15 @@ class _CreateUserPageState extends State<CreateUserPage> {
     _batchNotifier.value = _listBatch.first;
     _roleNotifier.value = _listRole.first;
     _genderNotifier.value = _listGender.first;
+    if (widget.isEdit) {
+      _usernameController.text = widget.profile?.username ?? '';
+      _fullnameController.text = widget.profile?.fullName ?? '';
+      _githubController.text = widget.profile?.github ?? '';
+      _instagramController.text = widget.profile?.instagram ?? '';
+      _nicknameController.text = widget.profile?.nickName ?? '';
+      _batchNotifier.value = widget.profile?.classOf ?? _listBatch.first;
+      _genderNotifier.value = widget.profile?.gender ?? _listGender.first;
+    }
     super.initState();
   }
 
@@ -170,12 +186,14 @@ class _CreateUserPageState extends State<CreateUserPage> {
               const SizedBox(
                 height: 16,
               ),
-              InputTextField(
-                  controller: _passwordController,
-                  title: 'Password (Auto Generate)'),
-              const SizedBox(
-                height: 16,
-              ),
+              if (!widget.isEdit) ...[
+                InputTextField(
+                    controller: _passwordController,
+                    title: 'Password (Auto Generate)'),
+                const SizedBox(
+                  height: 16,
+                ),
+              ],
               InputTextField(
                 controller: _fullnameController,
                 title: 'Nama Lengkap',

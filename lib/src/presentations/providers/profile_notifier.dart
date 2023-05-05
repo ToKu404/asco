@@ -30,7 +30,25 @@ class ProfileNotifier extends CrudDataService<DetailProfileEntity> {
       'self',
       'multiple',
       'update_practicums',
+      'update',
     ]);
+  }
+
+  Future<void> updateProfile(DetailProfileEntity newEntity) async {
+    updateState(state: RequestState.loading, key: 'update');
+    final result =
+        await updateDataUsecase.execute(userProfileEntity: newEntity);
+
+    result.fold(
+      (l) {
+        updateState(state: RequestState.error, key: 'update');
+
+        setErrorMessage(l.message);
+      },
+      (r) {
+        updateState(state: RequestState.success, key: 'update');
+      },
+    );
   }
 
   Future<void> createProfile(DetailProfileEntity entity) async {
