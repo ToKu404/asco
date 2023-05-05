@@ -29,6 +29,34 @@ class DetailProfileEntity extends Equatable {
     this.userPracticums,
   });
 
+  DetailProfileEntity copyWith({
+    String? uid,
+    String? username,
+    String? fullName,
+    String? nickName,
+    String? gender,
+    String? classOf,
+    String? github,
+    String? instagram,
+    String? profilePhoto,
+    UserRoleEntity? userRole,
+    Map<String, UserPracticumEntity>? userPracticums,
+  }) {
+    return DetailProfileEntity(
+      uid: uid ?? this.uid,
+      username: username ?? this.username,
+      fullName: fullName ?? this.fullName,
+      nickName: nickName ?? this.nickName,
+      gender: gender ?? this.gender,
+      classOf: classOf ?? this.classOf,
+      github: github ?? this.github,
+      instagram: instagram ?? this.instagram,
+      profilePhoto: profilePhoto ?? this.profilePhoto,
+      userRole: userRole ?? this.userRole,
+      userPracticums: userPracticums ?? this.userPracticums,
+    );
+  }
+
   @override
   List<Object?> get props => [
         uid,

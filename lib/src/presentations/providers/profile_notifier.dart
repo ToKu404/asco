@@ -13,6 +13,8 @@ class ProfileNotifier extends CrudDataService<DetailProfileEntity> {
   final RemoveProfile removeDataUsecase;
   final SelfProfile selfDataUsecase;
   final UpdateMultiplePracticums updateMultiplePracticumsUsecase;
+  final UploadProfilePicture uploadProfilePictureUseCase;
+  final DeleteProfilePicture deleteProfilePictureUseCase;
 
   ProfileNotifier({
     required this.createUsecase,
@@ -23,6 +25,8 @@ class ProfileNotifier extends CrudDataService<DetailProfileEntity> {
     required this.removeDataUsecase,
     required this.selfDataUsecase,
     required this.updateMultiplePracticumsUsecase,
+    required this.uploadProfilePictureUseCase,
+    required this.deleteProfilePictureUseCase,
   }) {
     createState([
       'create',
@@ -31,6 +35,8 @@ class ProfileNotifier extends CrudDataService<DetailProfileEntity> {
       'multiple',
       'update_practicums',
       'update',
+      'upload_profile_photo',
+      'delete_profile_photo',
     ]);
   }
 
@@ -144,6 +150,50 @@ class ProfileNotifier extends CrudDataService<DetailProfileEntity> {
       },
       (r) {
         updateState(state: RequestState.success, key: 'update_practicums');
+      },
+    );
+  }
+
+  Future<void> uploadProfilePicture(
+    String path,
+    String uid,
+    String filename,
+  ) async {
+    updateState(state: RequestState.loading, key: 'upload_profile_photo');
+
+    final result = await uploadProfilePictureUseCase.execute(
+      path,
+      uid,
+      filename,
+    );
+
+    result.fold(
+      (l) {
+        updateState(state: RequestState.error, key: 'upload_profile_photo');
+
+        setErrorMessage(l.message);
+      },
+      (r) {
+        updateState(state: RequestState.success, key: 'upload_profile_photo');
+
+        setData(data!.copyWith(profilePhoto: r));
+      },
+    );
+  }
+
+  Future<void> deleteProfilePicture(String uid, String filename) async {
+    updateState(state: RequestState.loading, key: 'delete_profile_photo');
+
+    final result = await deleteProfilePictureUseCase.execute(uid, filename);
+
+    result.fold(
+      (l) {
+        updateState(state: RequestState.error, key: 'delete_profile_photo');
+
+        setErrorMessage(l.message);
+      },
+      (r) {
+        updateState(state: RequestState.success, key: 'delete_profile_photo');
       },
     );
   }

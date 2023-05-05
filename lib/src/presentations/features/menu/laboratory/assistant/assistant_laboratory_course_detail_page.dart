@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-
 import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
@@ -85,8 +84,8 @@ class _AssistantLaboratoryCourseDetailPageState
             meetingNotifier.isSuccessState('single')) {
           final students = profileNotifier.listData
               .where((e) =>
-                  e.uid != widget.meetingDetail.assistant1Uid! &&
-                  e.uid != widget.meetingDetail.assistant2Uid!)
+                  e.uid != meetingNotifier.data!.assistant1Uid! &&
+                  e.uid != meetingNotifier.data!.assistant2Uid!)
               .toList()
             ..sort((a, b) => a.uid!.compareTo(b.uid!));
 
@@ -95,10 +94,10 @@ class _AssistantLaboratoryCourseDetailPageState
           return buildMainPage(
             context,
             assistant1: profileNotifier.listData
-                .where((e) => e.uid == widget.meetingDetail.assistant1Uid!)
+                .where((e) => e.uid == meetingNotifier.data!.assistant1Uid!)
                 .first,
             assistant2: profileNotifier.listData
-                .where((e) => e.uid == widget.meetingDetail.assistant2Uid!)
+                .where((e) => e.uid == meetingNotifier.data!.assistant2Uid!)
                 .first,
             attendances: meetingNotifier.data!.attendances!,
             students: listProfile,
@@ -439,7 +438,7 @@ class _AssistantLaboratoryCourseDetailPageState
             ? 'Waktu absensi: ${ReusableHelper.dateTimeToString(
                 attendance.attendanceTime!,
                 isShowTime: true,
-                format: 'HH:MM',
+                format: 'hh:mm',
               )}'
             : '${MapHelper.getAttendanceStatus(attendance.attendanceStatus!)} ${attendance.note != null ? (attendance.note!.isNotEmpty ? "(${attendance.note})" : "") : ""}';
   }

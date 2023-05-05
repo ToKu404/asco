@@ -122,4 +122,33 @@ class ProfileRepositoryImpl implements ProfileRepository {
       return const Left(FirestoreFailure('failed to find data'));
     }
   }
+
+  @override
+  Future<Either<Failure, String>> uploadProfilePicture(
+    String path,
+    String uid,
+    String filename,
+  ) async {
+    try {
+      final result = await datasource.uploadProfilePicture(path, uid, filename);
+
+      return Right(result);
+    } on StorageException {
+      return const Left(StorageFailure('failed to upload file'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteProfilePicture(
+    String uid,
+    String filename,
+  ) async {
+    try {
+      final result = await datasource.deleteProfilePicture(uid, filename);
+
+      return Right(result);
+    } on StorageException {
+      return const Left(StorageFailure('failed to delete file'));
+    }
+  }
 }

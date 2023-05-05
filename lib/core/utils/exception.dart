@@ -13,3 +13,11 @@ class PreferenceException implements Exception {
 
   PreferenceException(this.message);
 }
+
+/// Exception class that will be thrown when there is a problem
+/// related to the firebase storage.
+class StorageException implements Exception {
+  final String message;
+
+  StorageException(this.message);
+}

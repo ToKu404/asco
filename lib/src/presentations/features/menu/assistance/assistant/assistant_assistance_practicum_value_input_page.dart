@@ -1,26 +1,26 @@
-import 'package:asco/src/data/datasources/const_data/score_scheme.dart';
-import 'package:asco/src/domain/entities/entities.dart';
-import 'package:asco/src/presentations/widgets/asco_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:provider/provider.dart';
 import 'package:asco/core/constants/app_route.dart';
-import 'package:asco/core/helpers/asset_path.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/core/helpers/asset_path.dart';
+import 'package:asco/src/data/datasources/const_data/score_scheme.dart';
+import 'package:asco/src/domain/entities/entities.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/practicum_value_input_dialog.dart';
+import 'package:asco/src/presentations/providers/control_card_notifier.dart';
+import 'package:asco/src/presentations/widgets/asco_loading.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:asco/src/presentations/widgets/purple_app_bar.dart';
-import 'package:provider/provider.dart';
-
-import '../../../../providers/control_card_notifier.dart';
 
 class AssistantAssistancePracticumValueInputPage extends StatefulWidget {
-  final List<ProfileEntity> listStudent;
   final int meetingNumber;
+  final List<ProfileEntity> listStudent;
+
   const AssistantAssistancePracticumValueInputPage({
     super.key,
-    required this.listStudent,
     required this.meetingNumber,
+    required this.listStudent,
   });
 
   @override
@@ -34,9 +34,11 @@ class _AssistantAssistancePracticumValueInputPageState
   void initState() {
     Future.microtask(() {
       context.read<ControlCardNotifier>().fetchMultiple(
-          listStudentId:
-              widget.listStudent.map((e) => e.uid).toList().cast<String>());
+            listStudentId:
+                widget.listStudent.map((e) => e.uid).toList().cast<String>(),
+          );
     });
+
     super.initState();
   }
 
@@ -54,12 +56,15 @@ class _AssistantAssistancePracticumValueInputPageState
         if (ccNotifier.isLoadingState('multiple')) {
           return const AscoLoading();
         }
+
         if (ccNotifier.isErrorState('multiple')) {
           return Center(
             child: Text(ccNotifier.message),
           );
         }
+
         final controlCardResultEntity = ccNotifier.listData;
+
         return ListView.separated(
           padding: const EdgeInsets.symmetric(
             vertical: 24,
@@ -70,7 +75,8 @@ class _AssistantAssistancePracticumValueInputPageState
             student: widget.listStudent[i],
             meetingNumber: widget.meetingNumber,
             cardResultEntity: controlCardResultEntity.firstWhere(
-                (element) => element.studentId == widget.listStudent[i].uid),
+              (element) => element.studentId == widget.listStudent[i].uid,
+            ),
           ),
           separatorBuilder: (_, __) => const SizedBox(height: 16),
         );
@@ -111,7 +117,7 @@ class PracticumValueCard extends StatelessWidget {
         builder: (_) => PracticumValueInputDialog(
           student: student,
           meetingNumber: meetingNumber,
-          controlCardResultEntity: cardResultEntity,
+          controlCardResult: cardResultEntity,
         ),
       ),
       child: Column(
@@ -279,8 +285,8 @@ void showAssistantAssistancePracticumValueInputPage(
     context,
     MaterialPageRoute(
       builder: (_) => AssistantAssistancePracticumValueInputPage(
-        listStudent: listStudent,
         meetingNumber: meetingNumber,
+        listStudent: listStudent,
       ),
       settings: const RouteSettings(
         name: AppRoute.assistantAssistancePracticumValueInputPage,

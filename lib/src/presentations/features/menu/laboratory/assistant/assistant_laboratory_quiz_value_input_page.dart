@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
-
 import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/src/data/datasources/helpers/update_data_helper.dart';
 import 'package:asco/src/domain/entities/attendance_entities/attendance_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
-import 'package:asco/src/presentations/providers/providers.dart';
+import 'package:asco/src/presentations/providers/meeting_notifier.dart';
 import 'package:asco/src/presentations/providers/score_notifier.dart';
 import 'package:asco/src/presentations/widgets/asco_loading.dart';
-import 'package:asco/src/presentations/widgets/avatar.dart';
+import 'package:asco/src/presentations/widgets/circle_network_image.dart';
 import 'package:asco/src/presentations/widgets/inkwell_container.dart';
 import 'package:asco/src/presentations/widgets/input_field/search_field.dart';
 
@@ -103,13 +102,13 @@ class _AssistantLaboratoryQuizValueInputPageState
           crossAxisSpacing: 16,
           itemCount: widget.listStudents.length,
           itemBuilder: (_, i) => QuizValueCard(
-            student: widget.listStudents[i],
             score: meetingData!.attendances
                 ?.firstWhere((s) => s.studentUid == widget.listStudents[i].uid)
                 .quizScore,
             maxScore: meetingData.maxQuizScore!,
-            listAttendance: meetingData.attendances!,
             meetingId: widget.meetingUid,
+            student: widget.listStudents[i],
+            listAttendance: meetingData.attendances!,
           ),
         ),
       ),
@@ -119,6 +118,7 @@ class _AssistantLaboratoryQuizValueInputPageState
 
 class BottomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final int? maxScore;
+
   const BottomAppBar({
     super.key,
     required this.maxScore,
@@ -191,19 +191,19 @@ class _BottomAppBarState extends State<BottomAppBar> {
 }
 
 class QuizValueCard extends StatelessWidget {
+  final String meetingId;
   final ProfileEntity student;
   final List<AttendanceEntity> listAttendance;
   final int? score;
   final int maxScore;
-  final String meetingId;
 
   const QuizValueCard({
     super.key,
+    required this.meetingId,
     required this.student,
+    required this.listAttendance,
     required this.score,
     required this.maxScore,
-    required this.listAttendance,
-    required this.meetingId,
   });
 
   @override
@@ -314,10 +314,15 @@ class QuizValueCard extends StatelessWidget {
           const SizedBox(height: 12),
           Row(
             children: <Widget>[
-              const Avatar(
-                imageAsset: 'avatar1.jpg',
-                radius: 18,
-                color: Palette.purple80,
+              CircleNetworkImage(
+                width: 36,
+                height: 36,
+                imgUrl: student.profilePhoto ?? '',
+                placeholderSize: 12,
+                errorIcon: Icons.person_rounded,
+                withBorder: true,
+                borderWidth: 1.5,
+                borderColor: Palette.purple80,
               ),
               const SizedBox(width: 8),
               Expanded(
@@ -349,15 +354,15 @@ class QuizValueCard extends StatelessWidget {
 }
 
 class CustomBottomSheet extends StatefulWidget {
-  final List<AttendanceEntity> listAttendance;
-  final ProfileEntity student;
   final String meetingUid;
+  final ProfileEntity student;
+  final List<AttendanceEntity> listAttendance;
 
   const CustomBottomSheet({
     super.key,
+    required this.meetingUid,
     required this.student,
     required this.listAttendance,
-    required this.meetingUid,
   });
 
   @override
@@ -368,6 +373,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
   @override
   void initState() {
     super.initState();
+
     Future.microtask(() => context.read<ScoreNotifier>()
       ..fetchMultiple(listStudentId: [widget.student.uid!]));
   }
@@ -376,13 +382,15 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
 
   @override
   void dispose() {
-    textEditingController.dispose();
     super.dispose();
+
+    textEditingController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final notifier = context.watch<ScoreNotifier>();
+
     if (notifier.isSuccessState('multiple')) {
       return Container(
         padding: const EdgeInsets.fromLTRB(24, 16, 24, 30),
@@ -484,10 +492,12 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                             scoreEntity: notifier.listData.first,
                             newScore: avgScore,
                           );
+
                           context
                               .read<ScoreNotifier>()
                               .update(uid: widget.student.uid!, score: score);
                         }
+
                         context
                             .read<MeetingNotifier>()
                             .updateAttendance(
@@ -519,6 +529,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
         ),
       );
     }
+
     return const SizedBox.shrink();
   }
 }

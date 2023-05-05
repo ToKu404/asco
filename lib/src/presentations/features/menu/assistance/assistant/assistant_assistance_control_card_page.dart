@@ -1,8 +1,6 @@
 import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
@@ -248,7 +246,7 @@ class AssistantAssistanceControlCardPage extends StatelessWidget {
 
   ControlCard buildControlCard(BuildContext context, Course course) {
     return ControlCard(
-      course: null,
+      meeting: null,
       hasTrailing: true,
       trailing: AssistanceStatusBadge(course: course),
     );

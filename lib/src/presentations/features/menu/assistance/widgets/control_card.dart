@@ -1,12 +1,12 @@
-import 'package:asco/core/helpers/helpers.dart';
-import 'package:asco/src/domain/entities/entities.dart';
 import 'package:flutter/material.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
+import 'package:asco/core/helpers/reusable_helper.dart';
+import 'package:asco/src/domain/entities/meeting_entities/meeting_entity.dart';
 import 'package:asco/src/presentations/widgets/circle_border_container.dart';
 
 class ControlCard extends StatelessWidget {
-  final MeetingEntity? course;
+  final MeetingEntity? meeting;
   final bool hasTrailing;
   final Widget? trailing;
   final bool isThreeLine;
@@ -16,7 +16,7 @@ class ControlCard extends StatelessWidget {
 
   const ControlCard({
     super.key,
-    required this.course,
+    required this.meeting,
     this.hasTrailing = false,
     this.trailing,
     this.isThreeLine = false,
@@ -52,7 +52,7 @@ class ControlCard extends StatelessWidget {
                   size: 50,
                   borderWidth: 1.5,
                   child: Text(
-                    '${course?.meetingNumber}',
+                    '${meeting?.meetingNumber}',
                     style: kTextTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w600,
                       color: Palette.greyDark,
@@ -66,7 +66,7 @@ class ControlCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        course?.topic ?? '',
+                        meeting?.topic ?? '',
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: kTextTheme.bodyLarge?.copyWith(
@@ -77,9 +77,10 @@ class ControlCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        course!.meetingDate != null
+                        meeting!.meetingDate != null
                             ? ReusableHelper.dateTimeToString(
-                                course!.meetingDate!)
+                                meeting!.meetingDate!,
+                              )
                             : '',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,

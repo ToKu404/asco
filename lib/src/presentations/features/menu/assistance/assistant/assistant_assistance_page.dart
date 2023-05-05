@@ -1,9 +1,7 @@
 import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/core/helpers/app_size.dart';
@@ -24,15 +22,15 @@ import 'package:asco/src/presentations/widgets/asco_loading.dart';
 import 'package:asco/src/presentations/widgets/circle_network_image.dart';
 
 class AssistantAssistancePage extends StatefulWidget {
-  final String groupId;
   final String practicumId;
   final String classroomId;
+  final String groupId;
 
   const AssistantAssistancePage({
     super.key,
-    required this.groupId,
     required this.practicumId,
     required this.classroomId,
+    required this.groupId,
   });
 
   @override
@@ -45,14 +43,13 @@ class _AssistantAssistancePageState extends State<AssistantAssistancePage> {
   void initState() {
     super.initState();
 
-    Future.microtask(
-      () {
-        Provider.of<AssistanceNotifier>(context, listen: false)
-            .getDetail(uuid: widget.groupId);
-        Provider.of<MeetingNotifier>(context, listen: false)
-            .fetch(classroomUid: widget.classroomId);
-      },
-    );
+    Future.microtask(() {
+      Provider.of<AssistanceNotifier>(context, listen: false)
+          .getDetail(uuid: widget.groupId);
+
+      Provider.of<MeetingNotifier>(context, listen: false)
+          .fetch(classroomUid: widget.classroomId);
+    });
   }
 
   @override
@@ -82,7 +79,6 @@ class _AssistantAssistancePageState extends State<AssistantAssistancePage> {
     required AssistanceGroupEntity? assistanceGroup,
   }) {
     final students = assistanceGroup?.students ?? <ProfileEntity>[];
-    final meetingNotifier = context.watch<MeetingNotifier>();
 
     return Scaffold(
       backgroundColor: Palette.grey,
@@ -283,53 +279,53 @@ class _AssistantAssistancePageState extends State<AssistantAssistancePage> {
                 vertical: 24,
                 horizontal: 16,
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Consumer<MeetingNotifier>(
+                builder: (context, meetingNotifier, child) {
+                  if (meetingNotifier.isLoadingState('find')) {
+                    return const AscoLoading();
+                  }
+
+                  if (meetingNotifier.isErrorState('find')) {
+                    return Center(
+                      child: Text(meetingNotifier.message),
+                    );
+                  }
+
+                  final meetingData = meetingNotifier.listData;
+
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Text(
-                        'Kartu Kontrol',
-                        style: kTextTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: Palette.purple100,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            'Kartu Kontrol',
+                            style: kTextTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: Palette.purple100,
+                            ),
+                          ),
+                          Text(
+                            '${meetingData.length} Materi',
+                            style: kTextTheme.bodyLarge?.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: Palette.purple60,
+                            ),
+                          ),
+                        ],
                       ),
-                      Text(
-                        '5 Materi',
-                        style: kTextTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.w500,
-                          color: Palette.purple60,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Builder(
-                    builder: (context) {
-                      if (meetingNotifier.isLoadingState('find')) {
-                        return const AscoLoading();
-                      }
-                      if (meetingNotifier.isErrorState('find')) {
-                        return Center(
-                          child: Text(meetingNotifier.message),
+                      const SizedBox(height: 8),
+                      ...meetingData.map((data) {
+                        return buildControlCard(
+                          context,
+                          meeting: MeetingEntity.fromDetail(data),
+                          students: students,
                         );
-                      }
-                      final meetingData = meetingNotifier.listData;
-                      return ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: meetingData.length,
-                          itemBuilder: (context, index) {
-                            return buildControlCard(context,
-                                meeting: MeetingEntity.fromDetail(
-                                    meetingData[index]),
-                                students: students);
-                          });
-                    },
-                  ),
-                ],
+                      }).toList(),
+                    ],
+                  );
+                },
               ),
             ),
           ],
@@ -344,7 +340,7 @@ class _AssistantAssistancePageState extends State<AssistantAssistancePage> {
     required List<ProfileEntity> students,
   }) {
     return ControlCard(
-      course: meeting,
+      meeting: meeting,
       verticalAlignment: CrossAxisAlignment.start,
       isThreeLine: true,
       thirdLine: const AssistanceStatistics(),

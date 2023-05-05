@@ -1,26 +1,25 @@
 import 'dart:async';
-
-import 'package:asco/src/domain/entities/assistance_entities/assistance_entities.dart';
-import 'package:asco/src/presentations/providers/control_card_notifier.dart';
-import 'package:asco/src/presentations/widgets/asco_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-
+import 'package:provider/provider.dart';
 import 'package:asco/core/constants/app_route.dart';
 import 'package:asco/core/constants/color_const.dart';
 import 'package:asco/core/constants/text_const.dart';
 import 'package:asco/core/helpers/app_size.dart';
 import 'package:asco/core/helpers/asset_path.dart';
+import 'package:asco/src/domain/entities/assistance_entities/control_card_entity.dart';
+import 'package:asco/src/domain/entities/assistance_entities/control_card_result_entity.dart';
 import 'package:asco/src/domain/entities/profile_entities/profile_entity.dart';
 import 'package:asco/src/presentations/features/menu/assistance/assistant/assistant_assistance_practicum_value_input_page.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/assistance_dialog.dart';
 import 'package:asco/src/presentations/features/menu/assistance/widgets/assistance_status_dialog.dart';
+import 'package:asco/src/presentations/providers/control_card_notifier.dart';
+import 'package:asco/src/presentations/widgets/asco_loading.dart';
 import 'package:asco/src/presentations/widgets/circle_border_container.dart';
 import 'package:asco/src/presentations/widgets/custom_student_card.dart';
 import 'package:asco/src/presentations/widgets/purple_app_bar.dart';
 import 'package:asco/src/presentations/widgets/title_section.dart';
-import 'package:provider/provider.dart';
 
 class AssistantAssistanceCourseDetailPage extends StatefulWidget {
   final String title;
@@ -45,9 +44,11 @@ class _AssistantAssistanceCourseDetailPageState
   void initState() {
     Future.microtask(() {
       context.read<ControlCardNotifier>().fetchMultiple(
-          listStudentId:
-              widget.students.map((e) => e.uid).toList().cast<String>());
+            listStudentId:
+                widget.students.map((e) => e.uid).toList().cast<String>(),
+          );
     });
+
     super.initState();
   }
 
@@ -59,6 +60,7 @@ class _AssistantAssistanceCourseDetailPageState
   @override
   Widget build(BuildContext context) {
     final ccNotifier = context.watch<ControlCardNotifier>();
+
     return Scaffold(
       backgroundColor: Palette.grey,
       appBar: PurpleAppBar(
@@ -276,22 +278,27 @@ class _AssistantAssistanceCourseDetailPageState
                 if (ccNotifier.isLoadingState('multiple')) {
                   return const AscoLoading();
                 }
+
                 if (ccNotifier.isErrorState('multiple')) {
                   return Center(
                     child: Text(ccNotifier.message),
                   );
                 }
+
                 final data = ccNotifier.listData;
 
                 return ListView.builder(
                   itemBuilder: (context, index) {
                     ControlCardResultEntity? ccEntity;
+
                     for (int i = 0; i < data.length; i++) {
                       if (data[i].student?.uid == widget.students[index].uid) {
                         ccEntity = data[i];
+
                         break;
                       }
                     }
+
                     return ccEntity != null
                         ? BuildStudentCard(
                             student: widget.students[index],
@@ -299,7 +306,8 @@ class _AssistantAssistanceCourseDetailPageState
                             ccEntity: ccEntity,
                           )
                         : Text(
-                            'Error: No data found for student ${widget.students[index].uid}');
+                            'Error: No data found for student ${widget.students[index].uid}',
+                          );
                   },
                   itemCount: widget.students.length,
                   shrinkWrap: true,
@@ -362,15 +370,15 @@ class _AssistantAssistanceCourseDetailPageState
 void showAssistantAssistanceCourseDetailPage(
   BuildContext context, {
   required String title,
-  required List<ProfileEntity> students,
   required int meetingNumber,
+  required List<ProfileEntity> students,
 }) {
   Navigator.push(
     context,
     MaterialPageRoute(
       builder: (_) => AssistantAssistanceCourseDetailPage(
-        meetingNumber: meetingNumber,
         title: title,
+        meetingNumber: meetingNumber,
         students: students,
       ),
       settings: const RouteSettings(
@@ -384,6 +392,7 @@ class BuildStudentCard extends StatefulWidget {
   final int meetingNumber;
   final ProfileEntity student;
   final ControlCardResultEntity ccEntity;
+
   const BuildStudentCard({
     super.key,
     required this.meetingNumber,
@@ -401,18 +410,22 @@ class _BuildStudentCardState extends State<BuildStudentCard> {
   @override
   void dispose() {
     if (_timer != null) _timer!.cancel();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     ControlCardEntity? ccEntity;
+
     for (var i = 0; i < widget.ccEntity.data!.length; i++) {
       if (widget.meetingNumber == i + 1) {
         ccEntity = widget.ccEntity.data![i];
+
         break;
       }
     }
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: CustomStudentCard(
@@ -423,39 +436,42 @@ class _BuildStudentCardState extends State<BuildStudentCard> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   CircleBorderContainer(
-                      size: 30,
-                      borderColor: ccEntity.assistance1 != null
-                          ? Palette.purple80
-                          : const Color(0xFFD35380),
-                      fillColor: ccEntity.assistance1 == null
-                          ? const Color(0xFFFA78A6)
-                          : Palette.purple60,
-                      onTap: () => showDialog(
-                            context: context,
-                            barrierLabel: '',
-                            barrierDismissible: false,
-                            builder: (_) => AssistanceDialog(
-                              number: widget.meetingNumber,
-                              student: widget.student,
-                              isFirstAssistance: true,
-                              controlCardResultEntity: widget.ccEntity,
-                            ),
-                          ).then((value) {
-                            final isSubmitted =
-                                value == null ? false : value as bool;
+                    size: 30,
+                    borderColor: ccEntity.assistance1 != null
+                        ? Palette.purple80
+                        : const Color(0xFFD35380),
+                    fillColor: ccEntity.assistance1 == null
+                        ? const Color(0xFFFA78A6)
+                        : Palette.purple60,
+                    onTap: () => showDialog(
+                      context: context,
+                      barrierLabel: '',
+                      barrierDismissible: false,
+                      builder: (_) => AssistanceDialog(
+                        number: widget.meetingNumber,
+                        student: widget.student,
+                        isFirstAssistance: true,
+                        controlCardResult: widget.ccEntity,
+                      ),
+                    ).then((value) {
+                      final isSubmitted = value == null ? false : value as bool;
 
-                            if (isSubmitted) {
-                              showStatusDialog(context,
-                                  number: 1, student: widget.student);
-                            }
-                          }),
-                      child: Icon(
-                        ccEntity.assistance1 != null
-                            ? Icons.check
-                            : Icons.close_rounded,
-                        size: 16,
-                        color: Palette.white,
-                      )),
+                      if (isSubmitted) {
+                        showStatusDialog(
+                          context,
+                          number: 1,
+                          student: widget.student,
+                        );
+                      }
+                    }),
+                    child: Icon(
+                      ccEntity.assistance1 != null
+                          ? Icons.check
+                          : Icons.close_rounded,
+                      size: 16,
+                      color: Palette.white,
+                    ),
+                  ),
                   const SizedBox(width: 4),
                   CircleBorderContainer(
                       size: 30,
@@ -473,15 +489,18 @@ class _BuildStudentCardState extends State<BuildStudentCard> {
                               number: 2,
                               student: widget.student,
                               isFirstAssistance: false,
-                              controlCardResultEntity: widget.ccEntity,
+                              controlCardResult: widget.ccEntity,
                             ),
                           ).then((value) {
                             final isSubmitted =
                                 value == null ? false : value as bool;
 
                             if (isSubmitted) {
-                              showStatusDialog(context,
-                                  number: 2, student: widget.student);
+                              showStatusDialog(
+                                context,
+                                number: 2,
+                                student: widget.student,
+                              );
                             }
                           }),
                       child: Icon(
